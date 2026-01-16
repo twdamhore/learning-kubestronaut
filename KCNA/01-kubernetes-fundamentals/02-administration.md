@@ -613,19 +613,19 @@ D) Secure inter-node communication
 ### Question 27
 [HARD]
 
-In which order do control plane components start during cluster bootstrap?
+Which control plane components must be available before the scheduler can function?
 
-A) etcd → scheduler → controller-manager → apiserver
-B) apiserver → etcd → scheduler → controller-manager
-C) etcd → apiserver → controller-manager → scheduler
-D) controller-manager → scheduler → etcd → apiserver
+A) Only etcd
+B) etcd and kube-apiserver
+C) All other control plane components
+D) None, scheduler can start independently
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
 
-**Explanation:** etcd must start first as it's the data store. The API server starts next as it needs etcd and all other components communicate through it. The controller-manager and scheduler can start after the API server (order between them is less critical), but typically controller-manager precedes scheduler.
+**Explanation:** The scheduler depends on the API server to watch for unscheduled Pods and to bind Pods to nodes. The API server in turn requires etcd for persistent storage. Official docs describe component roles and dependencies but don't prescribe a fixed startup order beyond these dependencies.
 
 **Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
 
@@ -2460,9 +2460,9 @@ D) An error is thrown for all operations
 
 **Answer:** B
 
-**Explanation:** Deprecated APIs continue to work but generate warnings. Kubernetes follows a deprecation policy: deprecated APIs are supported for at least 12 months or 3 releases (whichever is longer for beta) before removal. Users should migrate to newer API versions.
+**Explanation:** Deprecated APIs continue to work but generate warnings. Kubernetes deprecation policy: beta APIs are supported for at least 9 months or 3 releases (whichever is longer), GA/stable APIs for at least 12 months or 3 releases. Users should migrate to newer API versions before removal.
 
-**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+**Source:** [Kubernetes Deprecation Policy | Kubernetes](https://kubernetes.io/docs/reference/using-api/deprecation-policy/)
 
 </details>
 
@@ -2506,7 +2506,7 @@ D) To log API requests
 
 **Answer:** B
 
-**Explanation:** Admission controllers are plugins that intercept API requests after authentication and authorization but before persistence. They can modify (mutating) or reject (validating) requests. Examples include PodSecurityPolicy, LimitRanger, and ResourceQuota.
+**Explanation:** Admission controllers are plugins that intercept API requests after authentication and authorization but before persistence. They can modify (mutating) or reject (validating) requests. Examples include NamespaceLifecycle, LimitRanger, ServiceAccount, NodeRestriction, and ResourceQuota.
 
 **Source:** [Admission Controllers Reference | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
 
