@@ -3078,6 +3078,13 @@ B) An infrastructure layer for handling service-to-service communication
 C) A type of CNI plugin
 D) A load balancer
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 162
@@ -3089,6 +3096,13 @@ A) Calico
 B) Istio
 C) Flannel
 D) CoreDNS
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3102,6 +3116,13 @@ B) A proxy container injected alongside the application container
 C) A logging container
 D) A storage container
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 164
@@ -3113,6 +3134,13 @@ A) Multi-tier Load Balancing Service
 B) Mutual TLS for encrypting pod-to-pod communication
 C) Managed TLS certificates
 D) Micro TLS protocol
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3126,6 +3154,13 @@ B) The sidecar proxies that handle actual traffic
 C) The storage layer
 D) The monitoring system
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 166
@@ -3137,6 +3172,13 @@ A) The proxy containers
 B) The components that configure and manage the data plane
 C) The networking hardware
 D) The Kubernetes control plane
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3150,6 +3192,13 @@ B) Controlling request routing, retries, timeouts, and traffic splitting
 C) Managing bandwidth
 D) Filtering malicious traffic
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 168
@@ -3161,6 +3210,13 @@ A) A security feature
 B) A pattern to prevent cascading failures by stopping requests to failing services
 C) A network isolation technique
 D) A debugging tool
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3174,6 +3230,13 @@ B) Duplicating traffic to a secondary service for testing
 C) Reflecting attacks
 D) Creating traffic backups
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 170
@@ -3185,6 +3248,13 @@ A) Only logging
 B) Distributed tracing, metrics, and logging
 C) Only metrics
 D) Only tracing
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3198,6 +3268,13 @@ B) Using mutating admission webhooks
 C) Through the CNI plugin
 D) By modifying container images
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 172
@@ -3209,6 +3286,13 @@ A) A Kubernetes component
 B) A high-performance proxy used as the data plane in many service meshes
 C) A type of load balancer
 D) A DNS server
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3222,6 +3306,13 @@ B) A configuration for request routing rules
 C) A type of Kubernetes Service
 D) A storage abstraction
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 174
@@ -3233,6 +3324,13 @@ A) A firewall rule
 B) A configuration for policies applied to traffic after routing
 C) A routing destination
 D) A DNS rule
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3246,6 +3344,13 @@ B) By splitting traffic percentages between service versions
 C) By using separate clusters
 D) By DNS-based routing
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 176
@@ -3257,6 +3362,13 @@ A) No difference
 B) eBPF operates in kernel space with better performance; iptables uses netfilter
 C) iptables is more modern
 D) eBPF is user-space only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3270,6 +3382,13 @@ B) Uses eBPF to reduce or eliminate sidecar overhead
 C) Uses hardware acceleration
 D) Uses userspace networking
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 178
@@ -3281,6 +3400,13 @@ A) To authenticate users
 B) To configure mTLS requirements between workloads
 C) To authenticate API requests
 D) To configure RBAC
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3294,6 +3420,13 @@ B) They handle it at the proxy layer, removing the need for application-level im
 C) They use kernel-level handling
 D) They require application changes
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 180
@@ -3305,6 +3438,13 @@ A) A replacement for Kubernetes API
 B) A standard API for advanced traffic management that service meshes can implement
 C) A specific service mesh implementation
 D) A deprecated API
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3320,6 +3460,13 @@ B) curl or wget to the Service name/IP
 C) kubectl test-connection
 D) ping only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 182
@@ -3331,6 +3478,13 @@ A) kubectl get endpoints <service-name>
 B) kubectl describe pod
 C) kubectl logs
 D) kubectl get nodes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -3344,6 +3498,13 @@ B) No Pods match the Service's selector or Pods aren't ready
 C) The cluster is overloaded
 D) DNS is not configured
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 184
@@ -3355,6 +3516,13 @@ A) kubectl dns-debug
 B) nslookup, dig, or host commands from within the Pod
 C) kubectl describe dns
 D) The Kubernetes dashboard
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3368,6 +3536,13 @@ B) kubectl get services
 C) kubectl describe nodes
 D) kubectl logs apiserver
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 186
@@ -3379,6 +3554,13 @@ A) Service doesn't exist
 B) CoreDNS Pods are not running or misconfigured
 C) Too many Services
 D) Node is overloaded
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3392,6 +3574,13 @@ B) Attempting connections from allowed and denied sources
 C) kubectl get networkpolicy
 D) Checking the API server logs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 188
@@ -3403,6 +3592,13 @@ A) To store temporary data
 B) To attach a debugging container to a running Pod for troubleshooting
 C) To run tests
 D) To collect metrics
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3416,6 +3612,13 @@ B) Using tcpdump in the Pod or a debug container
 C) From the Kubernetes dashboard
 D) Using kubectl logs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 190
@@ -3427,6 +3630,13 @@ A) DNS caching
 B) Network policy changes, Pod rescheduling, or CNI issues
 C) Too many namespaces
 D) API server load
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3440,6 +3650,13 @@ B) Running iptables -L -n -v on the node and checking KUBE-* chains
 C) Checking CoreDNS logs
 D) Using kubectl debug
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 192
@@ -3451,6 +3668,13 @@ A) kubectl visualize
 B) Tools like Cilium's Hubble, NetworkPolicy Editor, or similar visualization tools
 C) The Kubernetes dashboard
 D) kube-proxy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3464,6 +3688,13 @@ B) Using ping, iperf, or packet capture tools
 C) Checking the API server
 D) Reviewing kubelet logs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 194
@@ -3475,6 +3706,13 @@ A) Too many labels
 B) Network congestion, long proxy chains, or backend Pod issues
 C) Too many namespaces
 D) Large ConfigMaps
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3488,6 +3726,13 @@ B) Using traceroute, packet captures, and examining iptables/IPVS rules
 C) kubectl describe path
 D) Using the Kubernetes API
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 196
@@ -3499,6 +3744,13 @@ A) To permanently expose a Service
 B) To create a temporary tunnel from local machine to a Pod/Service for debugging
 C) To configure port mappings
 D) To forward ports between Pods
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3512,6 +3764,13 @@ B) Check policy selectors, verify Pod labels, and test with explicit allow rules
 C) Restart kube-proxy
 D) Restart the CNI
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 198
@@ -3523,6 +3782,13 @@ A) Network traffic statistics
 B) Service configuration, endpoints, and events
 C) Pod logs
 D) Node status
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -3536,6 +3802,13 @@ B) Check CNI Pod logs, verify Pod IP assignment, and test Pod connectivity
 C) kubectl describe cni
 D) Check the API server
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 200
@@ -3547,5 +3820,12 @@ A) Restart all components
 B) Systematic isolation: check DNS, endpoints, network policies, CNI, and kube-proxy sequentially
 C) Delete and recreate all Services
 D) Scale down to one node
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
