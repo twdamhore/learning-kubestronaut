@@ -1156,6 +1156,14 @@ B) For batch jobs that should retry on failure but not restart on success
 C) For containers that should never restart
 D) For init containers
 
+<details><summary>Answer</summary>
+
+**B) For batch jobs that should retry on failure but not restart on success**
+
+`OnFailure` restarts containers only when they exit with a non-zero exit code. This is ideal for Jobs that should retry on failure but complete when successful. Unlike `Always`, successful completion (exit code 0) doesn't trigger a restart.
+
+</details>
+
 ### Question 73
 What is the purpose of restartPolicy 'Never'?
 
@@ -1163,6 +1171,14 @@ A) To ensure containers always restart
 B) To prevent any container restarts, typically used for one-time jobs
 C) To restart containers on a schedule
 D) To restart only on specific errors
+
+<details><summary>Answer</summary>
+
+**B) To prevent any container restarts, typically used for one-time jobs**
+
+`Never` prevents any container restarts regardless of exit status. This is used for one-time tasks where you want to see the final state, or when retry logic is handled externally. Common in debugging scenarios or when running ad-hoc commands.
+
+</details>
 
 ### Question 74
 How does Kubernetes handle container restart backoff?
@@ -1172,6 +1188,14 @@ B) Exponential backoff starting at 10 seconds, doubling with each restart
 C) Fixed 30-second delay between restarts
 D) Random delay between restarts
 
+<details><summary>Answer</summary>
+
+**B) Exponential backoff starting at 10 seconds, doubling with each restart**
+
+Kubernetes uses exponential backoff for container restarts: 10s, 20s, 40s, 80s, etc. This prevents crash loops from overwhelming the system. The backoff resets after the container runs successfully for 10 minutes. You see "CrashLoopBackOff" status during this delay.
+
+</details>
+
 ### Question 75
 What is the maximum backoff delay for container restarts?
 
@@ -1179,6 +1203,14 @@ A) 1 minute
 B) 5 minutes
 C) 10 minutes
 D) 30 minutes
+
+<details><summary>Answer</summary>
+
+**B) 5 minutes**
+
+The maximum backoff delay is capped at 5 minutes (300 seconds). The exponential backoff (10s, 20s, 40s, 80s, 160s, 300s) stops increasing at 5 minutes. After that, restart attempts continue every 5 minutes until the container starts successfully.
+
+</details>
 
 ## Container Probes
 
@@ -1190,6 +1222,14 @@ B) To determine if the container is running and should be restarted if unhealthy
 C) To validate container configuration
 D) To measure container performance
 
+<details><summary>Answer</summary>
+
+**B) To determine if the container is running and should be restarted if unhealthy**
+
+Liveness probes detect when a container is in a broken state (deadlocked, unresponsive) and needs to be restarted. If the liveness probe fails, kubelet kills the container and restarts it based on the restart policy. This helps recover from situations where the process is running but not functioning correctly.
+
+</details>
+
 ### Question 77
 What happens when a liveness probe fails?
 
@@ -1197,6 +1237,14 @@ A) The container is marked as not ready
 B) The kubelet kills the container, and it is restarted based on the restart policy
 C) The Pod is deleted
 D) Traffic is redirected to other Pods
+
+<details><summary>Answer</summary>
+
+**B) The kubelet kills the container, and it is restarted based on the restart policy**
+
+When a liveness probe fails (after failureThreshold attempts), the kubelet kills the container. The container is then restarted according to the Pod's restartPolicy. This is more aggressive than readiness probe failure, which only removes traffic.
+
+</details>
 
 ### Question 78
 What is the purpose of a readiness probe?
@@ -1206,6 +1254,14 @@ B) To determine if the container is ready to accept traffic
 C) To check if the image was pulled correctly
 D) To validate container security
 
+<details><summary>Answer</summary>
+
+**B) To determine if the container is ready to accept traffic**
+
+Readiness probes determine when a container is ready to serve requests. When the probe fails, the Pod's IP is removed from Service endpoints, stopping traffic to that Pod. Unlike liveness probes, readiness probe failures don't restart the container - they just remove it from load balancing.
+
+</details>
+
 ### Question 79
 What happens when a readiness probe fails?
 
@@ -1213,6 +1269,14 @@ A) The container is restarted
 B) The container's Pod IP is removed from Service endpoints
 C) The Pod is deleted
 D) The node is marked as unhealthy
+
+<details><summary>Answer</summary>
+
+**B) The container's Pod IP is removed from Service endpoints**
+
+When a readiness probe fails, the Pod is marked as not ready and its IP is removed from all Service endpoints. Traffic stops being routed to this Pod. The container keeps running and the probe continues checking. When the probe succeeds again, the Pod is added back to endpoints.
+
+</details>
 
 ### Question 80
 What is the purpose of a startup probe?
@@ -1222,6 +1286,14 @@ B) To allow slow-starting containers time to initialize before liveness probes t
 C) To validate the container image
 D) To check network connectivity
 
+<details><summary>Answer</summary>
+
+**B) To allow slow-starting containers time to initialize before liveness probes take over**
+
+Startup probes protect slow-starting containers from being killed by liveness probes before they're ready. The liveness probe is disabled until the startup probe succeeds. This is useful for legacy applications that need significant initialization time.
+
+</details>
+
 ### Question 81
 How does a startup probe interact with liveness and readiness probes?
 
@@ -1229,6 +1301,14 @@ A) They all run simultaneously
 B) Liveness and readiness probes are disabled until the startup probe succeeds
 C) Startup probe replaces liveness probe
 D) They are mutually exclusive
+
+<details><summary>Answer</summary>
+
+**B) Liveness and readiness probes are disabled until the startup probe succeeds**
+
+When a startup probe is defined, liveness and readiness probes are disabled until the startup probe succeeds. Once the startup probe passes, it's never run again and the regular liveness/readiness probes take over.
+
+</details>
 
 ### Question 82
 What are the three types of probe mechanisms in Kubernetes?
@@ -1238,6 +1318,14 @@ B) exec, httpGet, tcpSocket
 C) REST, gRPC, WebSocket
 D) ping, curl, telnet
 
+<details><summary>Answer</summary>
+
+**B) exec, httpGet, tcpSocket**
+
+Kubernetes supports three probe mechanisms: exec (runs a command inside the container), httpGet (sends HTTP GET request), and tcpSocket (opens TCP connection). Additionally, gRPC health checking is supported as a fourth option in newer Kubernetes versions.
+
+</details>
+
 ### Question 83
 How does an HTTP probe work?
 
@@ -1245,6 +1333,14 @@ A) It sends a TCP packet to a port
 B) It performs an HTTP GET request to a specified path and port
 C) It executes a command inside the container
 D) It checks DNS resolution
+
+<details><summary>Answer</summary>
+
+**B) It performs an HTTP GET request to a specified path and port**
+
+HTTP probes send an HTTP GET request to a specified path and port on the container. You configure the path, port, host, HTTP headers, and scheme (HTTP/HTTPS). The probe succeeds if the response status code is between 200 and 399.
+
+</details>
 
 ### Question 84
 What constitutes a successful HTTP probe response?
@@ -1254,6 +1350,14 @@ B) HTTP status code between 200 and 399
 C) HTTP status code 200 only
 D) Response within 1 second
 
+<details><summary>Answer</summary>
+
+**B) HTTP status code between 200 and 399**
+
+An HTTP probe is successful if it receives a response with status code >= 200 and < 400. This includes all 2xx (success) and 3xx (redirect) codes. Status codes 4xx (client error) and 5xx (server error) are considered failures.
+
+</details>
+
 ### Question 85
 How does a TCP probe work?
 
@@ -1261,6 +1365,14 @@ A) It sends an HTTP request
 B) It attempts to open a TCP connection to a specified port
 C) It executes a command inside the container
 D) It checks UDP connectivity
+
+<details><summary>Answer</summary>
+
+**B) It attempts to open a TCP connection to a specified port**
+
+TCP probes attempt to establish a TCP connection to the specified port. If the connection succeeds (the port is open and accepting connections), the probe passes. This is useful for services that don't expose HTTP endpoints, like databases or message queues.
+
+</details>
 
 ### Question 86
 What is an exec probe?
@@ -1270,6 +1382,14 @@ B) A probe that runs a command inside the container
 C) A probe that checks file existence
 D) A probe that monitors CPU usage
 
+<details><summary>Answer</summary>
+
+**B) A probe that runs a command inside the container**
+
+Exec probes run a specified command inside the container. The probe is successful if the command exits with status code 0. This is flexible and can check anything the command can verify, like file existence, process status, or custom health scripts.
+
+</details>
+
 ### Question 87
 What determines success for an exec probe?
 
@@ -1277,6 +1397,14 @@ A) The command produces output
 B) The command exits with status code 0
 C) The command runs within the timeout
 D) The command doesn't produce errors
+
+<details><summary>Answer</summary>
+
+**B) The command exits with status code 0**
+
+An exec probe succeeds when the command exits with status code 0 (standard Unix success code). Any non-zero exit code is considered a failure. The command's output (stdout/stderr) is ignored for success determination.
+
+</details>
 
 ### Question 88
 What is the initialDelaySeconds parameter in a probe configuration?
@@ -1286,6 +1414,14 @@ B) The time to wait before starting the first probe after container start
 C) The maximum probe duration
 D) The delay between failed probes
 
+<details><summary>Answer</summary>
+
+**B) The time to wait before starting the first probe after container start**
+
+initialDelaySeconds specifies how long to wait after the container starts before performing the first probe. This gives the application time to initialize. Default is 0 seconds. With startup probes available, this parameter is less critical than before.
+
+</details>
+
 ### Question 89
 What is the periodSeconds parameter in a probe configuration?
 
@@ -1293,6 +1429,14 @@ A) The initial delay before probing
 B) How often to perform the probe
 C) The timeout for each probe
 D) The total probe duration
+
+<details><summary>Answer</summary>
+
+**B) How often to perform the probe**
+
+periodSeconds specifies how frequently the probe is executed. Default is 10 seconds. The probe runs every periodSeconds after the initial delay. Setting this too low increases overhead; too high means slower detection of problems.
+
+</details>
 
 ### Question 90
 What is the timeoutSeconds parameter in a probe configuration?
@@ -1302,6 +1446,14 @@ B) How long to wait for a probe response before considering it failed
 C) The time between probe attempts
 D) The maximum container runtime
 
+<details><summary>Answer</summary>
+
+**B) How long to wait for a probe response before considering it failed**
+
+timeoutSeconds specifies how long to wait for a probe response before considering it failed. Default is 1 second. If the probe doesn't respond within this time, it counts as a failure. This should be set based on expected response time of your health endpoint.
+
+</details>
+
 ### Question 91
 What is the failureThreshold parameter in a probe configuration?
 
@@ -1309,6 +1461,14 @@ A) The number of times a probe can fail before taking action
 B) The percentage of acceptable failures
 C) The maximum number of probe attempts
 D) The error code threshold
+
+<details><summary>Answer</summary>
+
+**A) The number of times a probe can fail before taking action**
+
+failureThreshold specifies how many consecutive probe failures are needed before taking action (restart for liveness, mark unready for readiness). Default is 3. This prevents transient failures from triggering actions.
+
+</details>
 
 ### Question 92
 What is the successThreshold parameter in a probe configuration?
@@ -1318,6 +1478,14 @@ B) The percentage of successful probes required
 C) The response time threshold
 D) The minimum uptime requirement
 
+<details><summary>Answer</summary>
+
+**A) The number of successes needed to mark a container as healthy after a failure**
+
+successThreshold specifies how many consecutive successful probes are needed before the container is considered healthy again (after being marked unhealthy). Default is 1. For liveness and startup probes, this must be 1. For readiness probes, it can be set higher.
+
+</details>
+
 ### Question 93
 Which probe type supports gRPC health checking?
 
@@ -1325,6 +1493,14 @@ A) Only httpGet
 B) Only exec
 C) grpc (native gRPC health checking)
 D) gRPC is not supported in probes
+
+<details><summary>Answer</summary>
+
+**C) grpc (native gRPC health checking)**
+
+Kubernetes 1.24+ supports native gRPC health checking as a probe type. You specify the port and optional service name. The probe calls the standard gRPC health checking protocol (grpc.health.v1.Health). This is more efficient than using exec with grpc_health_probe.
+
+</details>
 
 ### Question 94
 What is a common mistake when configuring liveness probes?
@@ -1334,6 +1510,14 @@ B) Setting too aggressive timing that restarts containers during normal operatio
 C) Probing on port 80
 D) Using the same probe for multiple containers
 
+<details><summary>Answer</summary>
+
+**B) Setting too aggressive timing that restarts containers during normal operation**
+
+A common mistake is setting initialDelaySeconds too low or failureThreshold too low, causing containers to be restarted during slow startups or temporary high load. This can create restart loops and cascading failures. Always tune probe timing based on actual application behavior and startup time.
+
+</details>
+
 ### Question 95
 Why should readiness probes not have the same endpoint as liveness probes?
 
@@ -1341,6 +1525,14 @@ A) It's technically not allowed
 B) Different checks may be needed - readiness for dependencies, liveness for process health
 C) It causes probe conflicts
 D) It increases network traffic
+
+<details><summary>Answer</summary>
+
+**B) Different checks may be needed - readiness for dependencies, liveness for process health**
+
+Readiness and liveness probes serve different purposes. Liveness checks if the process is alive and should be restarted if it fails. Readiness checks if the app can handle traffic, including verifying dependencies like databases. A failing readiness check (e.g., database down) shouldn't restart the container - it should just stop routing traffic until the issue resolves.
+
+</details>
 
 ## Multi-Container Pods
 
@@ -1352,6 +1544,14 @@ B) A helper container that runs alongside the main container to provide supporti
 C) A container that runs before the main container
 D) A backup container
 
+<details><summary>Answer</summary>
+
+**B) A helper container that runs alongside the main container to provide supporting features**
+
+A sidecar container runs alongside the main application container in the same Pod, providing supporting functionality. Common use cases include logging agents, proxies (like Envoy in service mesh), file synchronization, and configuration management. Sidecars share the Pod's network and storage resources.
+
+</details>
+
 ### Question 97
 What is a common use case for sidecar containers?
 
@@ -1359,6 +1559,14 @@ A) Running the primary application
 B) Log collection, proxying, or syncing data
 C) Database hosting
 D) Load balancing across clusters
+
+<details><summary>Answer</summary>
+
+**B) Log collection, proxying, or syncing data**
+
+Common sidecar use cases include: log collection (Fluentd, Filebeat) to ship logs from the main container, service mesh proxies (Envoy) to handle traffic routing and security, syncing configuration or data from external sources, and providing TLS termination or authentication services.
+
+</details>
 
 ### Question 98
 What is an init container?
@@ -1368,6 +1576,14 @@ B) A container that runs to completion before the main containers start
 C) The first container listed in the Pod spec
 D) A container that initializes the cluster
 
+<details><summary>Answer</summary>
+
+**B) A container that runs to completion before the main containers start**
+
+Init containers are specialized containers that run before app containers start. They run to completion (exit with status 0) in order. Use cases include waiting for dependencies, setting up configuration files, cloning git repos, or performing database migrations. Main containers won't start until all init containers succeed.
+
+</details>
+
 ### Question 99
 How do init containers differ from regular containers?
 
@@ -1376,6 +1592,14 @@ B) Init containers run to completion sequentially before app containers start
 C) Init containers share the same image as app containers
 D) Init containers can access host resources directly
 
+<details><summary>Answer</summary>
+
+**B) Init containers run to completion sequentially before app containers start**
+
+Key differences: init containers run sequentially (one at a time), must complete successfully (exit 0) before the next starts, don't support probes, and are defined in a separate `initContainers` field. They can have different images and access different secrets than app containers. If an init container fails, the Pod restarts (subject to restartPolicy).
+
+</details>
+
 ### Question 100
 In what order do init containers execute?
 
@@ -1383,6 +1607,14 @@ A) In parallel for faster startup
 B) Sequentially in the order they are defined
 C) In alphabetical order by name
 D) In random order
+
+<details><summary>Answer</summary>
+
+**B) Sequentially in the order they are defined**
+
+Init containers execute one at a time in the exact order they're listed in the Pod spec's `initContainers` array. Each must complete successfully before the next begins. This sequential execution ensures proper dependency ordering - for example, waiting for a service before downloading configuration that depends on it.
+
+</details>
 
 ### Question 101
 What happens if an init container fails?
