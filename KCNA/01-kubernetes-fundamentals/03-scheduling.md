@@ -1962,17 +1962,17 @@ D) Only system pods
 [HARD]
 What is resource overcommitment?
 
-A) Using more resources than requested
-B) Scheduling pods whose total requests exceed node capacity
+A) When actual resource usage exceeds requested amounts
+B) When the sum of resource limits exceeds node capacity
 C) Requesting infinite resources
 D) Resource sharing
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** A
+**Answer:** B
 
-**Explanation:** Overcommitment happens when pods use more resources than requested (up to their limits). The scheduler prevents total requests from exceeding capacity, but actual usage can exceed requests.
+**Explanation:** Overcommitment occurs when the total resource limits of all pods on a node exceed the node's capacity. Kubernetes allows this because pods rarely use their full limits simultaneously. The scheduler uses requests (not limits) for placement, so limits can sum to more than 100% of capacity.
 
 **Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
@@ -2294,17 +2294,17 @@ D) Default namespace
 [HARD]
 Can preemption evict pods protected by PodDisruptionBudget?
 
-A) Yes, always
-B) No, PDB is respected
-C) Only for critical pods
-D) PDB is ignored during preemption
+A) Yes, always ignores PDB
+B) No, PDB is always strictly enforced
+C) PDB is supported but not guaranteed during preemption
+D) Only system pods can violate PDB
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Preemption respects PodDisruptionBudgets. The scheduler won't preempt pods if it would violate a PDB. However, if the only option is to violate PDB, preemption might still occur for system-critical pods.
+**Explanation:** During preemption, PodDisruptionBudget is supported but not guaranteed. The scheduler attempts to respect PDBs when selecting victims, but if no preemption candidates exist without violating PDB, preemption may still proceed. This is a best-effort consideration, not a hard constraint.
 
 **Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
@@ -2517,7 +2517,7 @@ D) Only in namespaces
 What is minDomains in topology spread constraints?
 
 A) Minimum nodes
-B) Minimum number of domains that must have matching pods
+B) Minimum number of eligible domains for scheduling calculation
 C) Minimum skew
 D) Minimum pods
 
@@ -2526,9 +2526,9 @@ D) Minimum pods
 
 **Answer:** B
 
-**Explanation:** minDomains specifies the minimum number of eligible domains. If fewer domains exist, the scheduler uses the actual count. This prevents over-concentration when domains are added later.
+**Explanation:** minDomains specifies the minimum number of eligible domains to consider. When the number of eligible domains is less than minDomains, the global minimum is treated as 0 for skew calculation. This ensures pods spread across at least minDomains domains as they become available.
 
-**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+**Source:** [Pod Topology Spread Constraints | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
 
 </details>
 
@@ -2616,7 +2616,7 @@ D) Only NoSchedule is respected
 
 **Answer:** B
 
-**Explanation:** DaemonSets respect taints but automatically add tolerations for certain taints (not-ready, unreachable, disk-pressure, memory-pressure, unschedulable) to ensure system pods run.
+**Explanation:** DaemonSets respect taints but the DaemonSet controller automatically adds NoExecute tolerations for node.kubernetes.io/not-ready and node.kubernetes.io/unreachable. This ensures DaemonSet pods aren't evicted from unhealthy nodes, which is important for monitoring and logging workloads.
 
 **Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
