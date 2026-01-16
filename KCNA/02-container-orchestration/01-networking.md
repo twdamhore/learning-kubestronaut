@@ -184,8 +184,8 @@ D) Automatic SSL/TLS encryption
 
 In a multi-node cluster, what ensures that Pod IP addresses don't conflict?
 
-A) The kube-scheduler
-B) IPAM (IP Address Management) with cluster-wide coordination
+A) The kube-scheduler assigns IPs during scheduling
+B) Per-node PodCIDR allocation plus CNI IPAM within each node's range
 C) The API server's validation webhook
 D) etcd's unique key constraints
 
@@ -193,6 +193,8 @@ D) etcd's unique key constraints
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The kube-controller-manager allocates a unique PodCIDR range to each node from the cluster's Pod network CIDR. The CNI plugin's IPAM then assigns IPs from that node-local range. This two-tier approach (cluster-level CIDR allocation + node-local IPAM) prevents conflicts without requiring cluster-wide IP coordination for every Pod.
 
 </details>
 
@@ -1009,19 +1011,19 @@ D) To configure port mapping
 ### Question 53
 [HARD]
 
-When using AWS NLB (Network Load Balancer) in instance target mode, how is client IP preservation handled?
+When using AWS NLB (Network Load Balancer) in instance target mode, what is required to preserve the client IP end-to-end?
 
-A) It requires service.beta.kubernetes.io/aws-load-balancer-type: "nlb" annotation
-B) It requires service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*" annotation
-C) It requires explicit target group attributes configuration
-D) Client IP is preserved by default; no additional annotation is needed
+A) Only the NLB annotation; client IP is automatically preserved
+B) Set externalTrafficPolicy: Local on the Service to prevent kube-proxy SNAT
+C) Enable proxy protocol on both NLB and application
+D) Client IP preservation is not possible with instance target mode
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
 
-**Explanation:** AWS NLB in instance target mode preserves the client source IP by default without requiring any special annotations. The NLB operates at Layer 4 and maintains the original client IP in the packet headers. Note that in IP target mode, client IP preservation behavior differs and may require additional configuration.
+**Explanation:** While AWS NLB preserves the client IP at Layer 4, kube-proxy with the default `externalTrafficPolicy: Cluster` will SNAT the traffic when forwarding to Pods on other nodes. To preserve the client IP end-to-end, you must set `externalTrafficPolicy: Local` on the Service, which prevents kube-proxy from masquerading the source IP.
 
 </details>
 
@@ -1203,17 +1205,19 @@ D) Define them in a separate YAML file
 ### Question 63
 [HARD]
 
-What is the DNS format for individual Pods with a headless Service?
+What is the DNS format for StatefulSet Pods with a headless Service?
 
 A) pod-ip.service.namespace.svc.cluster.local
-B) pod-name.service.namespace.svc.cluster.local
+B) pod-name.service-name.namespace.svc.cluster.local
 C) pod-ip-dashed.namespace.pod.cluster.local
-D) hostname.subdomain.namespace.svc.cluster.local
+D) service-name.pod-name.namespace.svc.cluster.local
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
+
+**Explanation:** For StatefulSet Pods using a headless Service, the DNS format is `<pod-name>.<service-name>.<namespace>.svc.cluster.local`. For example, a StatefulSet named "web" with serviceName "nginx" creates Pods addressable as `web-0.nginx.default.svc.cluster.local`. This predictable naming enables stable network identities for stateful workloads.
 
 </details>
 
