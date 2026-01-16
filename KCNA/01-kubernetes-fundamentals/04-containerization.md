@@ -1648,6 +1648,8 @@ D) The error code threshold
 
 failureThreshold specifies how many consecutive probe failures are needed before taking action (restart for liveness, mark unready for readiness). Default is 3. This prevents transient failures from triggering actions.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 92
@@ -1663,6 +1665,8 @@ D) The minimum uptime requirement
 **A) The number of successes needed to mark a container as healthy after a failure**
 
 successThreshold specifies how many consecutive successful probes are needed before the container is considered healthy again (after being marked unhealthy). Default is 1. For liveness and startup probes, this must be 1. For readiness probes, it can be set higher.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1680,6 +1684,8 @@ D) gRPC is not supported in probes
 
 Kubernetes 1.24+ supports native gRPC health checking as a probe type. You specify the port and optional service name. The probe calls the standard gRPC health checking protocol (grpc.health.v1.Health). This is more efficient than using exec with grpc_health_probe.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 94
@@ -1696,6 +1702,8 @@ D) Using the same probe for multiple containers
 
 A common mistake is setting initialDelaySeconds too low or failureThreshold too low, causing containers to be restarted during slow startups or temporary high load. This can create restart loops and cascading failures. Always tune probe timing based on actual application behavior and startup time.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 95
@@ -1711,6 +1719,8 @@ D) It increases network traffic
 **B) Different checks may be needed - readiness for dependencies, liveness for process health**
 
 Readiness and liveness probes serve different purposes. Liveness checks if the process is alive and should be restarted if it fails. Readiness checks if the app can handle traffic, including verifying dependencies like databases. A failing readiness check (e.g., database down) shouldn't restart the container - it should just stop routing traffic until the issue resolves.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1730,6 +1740,8 @@ D) A backup container
 
 A sidecar container runs alongside the main application container in the same Pod, providing supporting functionality. Common use cases include logging agents, proxies (like Envoy in service mesh), file synchronization, and configuration management. Sidecars share the Pod's network and storage resources.
 
+**Source:** [Sidecar Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
+
 </details>
 
 ### Question 97
@@ -1745,6 +1757,8 @@ D) Load balancing across clusters
 **B) Log collection, proxying, or syncing data**
 
 Common sidecar use cases include: log collection (Fluentd, Filebeat) to ship logs from the main container, service mesh proxies (Envoy) to handle traffic routing and security, syncing configuration or data from external sources, and providing TLS termination or authentication services.
+
+**Source:** [Sidecar Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
 
 </details>
 
@@ -1762,6 +1776,8 @@ D) A container that initializes the cluster
 
 Init containers are specialized containers that run before app containers start. They run to completion (exit with status 0) in order. Use cases include waiting for dependencies, setting up configuration files, cloning git repos, or performing database migrations. Main containers won't start until all init containers succeed.
 
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+
 </details>
 
 ### Question 99
@@ -1778,6 +1794,8 @@ D) Init containers can access host resources directly
 
 Key differences: init containers run sequentially (one at a time), must complete successfully (exit 0) before the next starts, don't support probes, and are defined in a separate `initContainers` field. They can have different images and access different secrets than app containers. If an init container fails, the Pod restarts (subject to restartPolicy).
 
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+
 </details>
 
 ### Question 100
@@ -1793,6 +1811,8 @@ D) In random order
 **B) Sequentially in the order they are defined**
 
 Init containers execute one at a time in the exact order they're listed in the Pod spec's `initContainers` array. Each must complete successfully before the next begins. This sequential execution ensures proper dependency ordering - for example, waiting for a service before downloading configuration that depends on it.
+
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
 </details>
 

@@ -2602,6 +2602,8 @@ D) kubectl logs pod-name --last
 
 **Explanation:** `kubectl logs --previous` shows logs from the previous container instance. This is useful when a container has crashed and restarted—you can see what happened before the crash. Also useful with `-p` shorthand.
 
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+
 </details>
 
 ---
@@ -3369,6 +3371,8 @@ D) kubectl list events
 
 **Explanation:** `kubectl get events` lists events in the current namespace. Events provide information about what's happening in the cluster—pod scheduling, image pulls, container starts, errors, etc. Add `--sort-by=.lastTimestamp` to sort by time.
 
+**Source:** [Events | Kubernetes](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
+
 </details>
 
 ---
@@ -3412,6 +3416,8 @@ D) Low, Medium, and High
 **Answer:** B
 
 **Explanation:** Kubernetes events have two types: Normal (informational, things working as expected) and Warning (something unexpected but not necessarily an error). There's no Error type—problems are reported as Warning events with appropriate messages.
+
+**Source:** [Events | Kubernetes](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
 
 </details>
 
@@ -3576,6 +3582,8 @@ D) Network capabilities
 
 **Explanation:** Linux capabilities break down root privileges into fine-grained units. Containers can drop unnecessary capabilities (drop: ALL) or add specific ones (add: NET_BIND_SERVICE). This follows the principle of least privilege—only granting what's needed.
 
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
 </details>
 
 ---
@@ -3691,6 +3699,8 @@ D) The container crashes
 
 **Explanation:** ConfigMaps mounted as volumes are updated automatically (kubelet sync period + cache propagation delay, typically under a minute). However, ConfigMaps used as environment variables don't update—the pod must be restarted. The application must also re-read the files.
 
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
 </details>
 
 ---
@@ -3782,6 +3792,8 @@ D) ConfigMap
 **Answer:** C
 
 **Explanation:** PersistentVolumes are cluster-scoped—they exist independently of namespaces and can be claimed by PersistentVolumeClaims from any namespace. Pods, Services, and ConfigMaps are all namespaced resources.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
 
 </details>
 
@@ -3971,6 +3983,8 @@ D) From a plugin registry
 
 **Explanation:** kubectl discovers plugins by looking for executable files named `kubectl-<plugin-name>` in your PATH. For example, `kubectl-foo` is invoked as `kubectl foo`. Plugins can be written in any language—they just need to be executable.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -4086,6 +4100,8 @@ D) Yes, using kubectl debug --remove
 
 **Explanation:** Ephemeral containers cannot be removed from a pod once added—they exist until the pod is deleted. However, they can be stopped (exited). This limitation exists because ephemeral containers are part of the pod spec which is immutable after creation.
 
+**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
+
 </details>
 
 ---
@@ -4108,6 +4124,8 @@ D) A semantic version number
 **Answer:** B
 
 **Explanation:** `resourceVersion` is an opaque string that represents the internal version of an object as stored in etcd. It changes on every modification. It's used for optimistic concurrency control—updates can fail if the resourceVersion has changed (conflict).
+
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
 </details>
 
@@ -4341,6 +4359,8 @@ D) Connects to node's kubelet
 
 **Explanation:** `kubectl debug node/<node-name>` creates a privileged debugging pod with host filesystem access. It mounts the host root filesystem at /host, enabling inspection of node configuration, logs, and system processes. Useful for debugging node-level issues.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -4364,6 +4384,8 @@ D) kubectl auth token
 
 **Explanation:** `kubectl create token <serviceaccount>` generates a new time-limited token using the TokenRequest API. You can specify duration with `--duration` and audience with `--audience`. This is the preferred method since Kubernetes 1.24 removed auto-generated secret tokens.
 
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
+
 </details>
 
 ---
@@ -4385,6 +4407,8 @@ D) Never expires
 
 **Explanation:** Tokens created with `kubectl create token` default to 1 hour expiration. You can customize with `--duration=8h` or `--duration=87600h` for longer-lived tokens. Short-lived tokens are more secure as they reduce the window for token theft.
 
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
+
 </details>
 
 ---
@@ -4405,6 +4429,8 @@ D) Logging token usage
 **Answer:** B
 
 **Explanation:** Audience binding restricts tokens to specific recipients (audiences). A token created with `--audience=vault.example.com` is only valid for that audience. This prevents tokens meant for one service from being used with another, improving security.
+
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
 </details>
 
@@ -4429,6 +4455,8 @@ D) Network topology diagram
 
 **Explanation:** `kubectl cluster-info dump` outputs detailed diagnostic information including pod logs from kube-system, events, and resource states. It's useful for troubleshooting and collecting information for bug reports. Output can be saved to a directory with `--output-directory`.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -4449,6 +4477,8 @@ D) kubectl verify
 **Answer:** B
 
 **Explanation:** `kubectl cluster-info` quickly verifies connectivity by showing the API server endpoint and core services. If this fails, you know there's a connectivity or authentication issue. For more detail, add `dump` to get comprehensive diagnostics.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -4473,6 +4503,8 @@ D) Client is for creates, server is for updates
 
 **Explanation:** `--dry-run=client` processes the request client-side without contacting the server (useful for generating YAML). `--dry-run=server` sends the request to the API server for validation but doesn't persist (catches admission webhook rejections, quota violations).
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -4493,6 +4525,8 @@ D) For performance
 **Answer:** B
 
 **Explanation:** Server-side dry run validates against the actual cluster state, including admission webhooks, resource quotas, and validation webhooks. Client-side dry run cannot catch these. Use server-side when you need complete validation before applying.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -4517,6 +4551,8 @@ D) They produce different events
 
 **Explanation:** `--cascade=background` (default) deletes the owner immediately while garbage collector deletes dependents asynchronously. `--cascade=foreground` blocks until all dependents are deleted, then deletes the owner. Foreground gives more control over deletion order.
 
+**Source:** [Garbage Collection | Kubernetes](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)
+
 </details>
 
 ---
@@ -4537,6 +4573,8 @@ D) An encrypted field
 **Answer:** C
 
 **Explanation:** Managed fields (metadata.managedFields) track which field manager owns which fields in an object. This metadata is used by Server-Side Apply to determine conflict resolution. Each manager only modifies fields it owns.
+
+**Source:** [Server-Side Apply | Kubernetes](https://kubernetes.io/docs/reference/using-api/server-side-apply/)
 
 </details>
 
@@ -4559,6 +4597,8 @@ D) kubectl configmap diff my-config
 
 **Explanation:** `kubectl diff -f new-configmap.yaml` shows what would change if you applied the file. It compares the local file against the live cluster state. This works for any resource type, not just ConfigMaps.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -4579,6 +4619,8 @@ D) Setting retry interval
 **Answer:** B
 
 **Explanation:** `--grace-period` specifies seconds to wait for graceful termination during deletion. Pods receive SIGTERM, then SIGKILL after the grace period. Default is from the pod spec (usually 30s). `--grace-period=0` with `--force` enables immediate deletion.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -4601,6 +4643,8 @@ D) Password information
 
 **Explanation:** `kubectl auth whoami` (available in newer kubectl versions) shows your authenticated identity including username, UID, groups, and extra attributes. This is useful for debugging authentication issues and understanding your effective identity.
 
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+
 </details>
 
 ---
@@ -4621,6 +4665,8 @@ D) Shows deprecated fields
 **Answer:** B
 
 **Explanation:** `--show-managed-fields` includes the managedFields metadata in output (normally hidden for readability). This shows which field managers own which fields, useful for debugging Server-Side Apply conflicts and understanding who modified what.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 

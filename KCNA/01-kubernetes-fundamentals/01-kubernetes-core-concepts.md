@@ -3255,6 +3255,8 @@ D) To map containers to nodes
 
 **Explanation:** ConfigMaps store non-sensitive configuration data as key-value pairs. They decouple configuration from container images, allowing the same image to be used with different configurations. For sensitive data like passwords, use Secrets instead.
 
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
 </details>
 
 ---
@@ -3275,6 +3277,8 @@ D) All of the above
 **Answer:** D
 
 **Explanation:** ConfigMaps can be consumed as: (1) environment variables via `envFrom` or `env.valueFrom`, (2) files by mounting as a volume, or (3) command arguments by referencing environment variables set from the ConfigMap.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -3297,6 +3301,8 @@ D) There is no difference
 
 **Explanation:** Secrets are intended for sensitive data and are base64 encoded (not encrypted by default). They can be encrypted at rest if configured. ConfigMaps are for non-sensitive config. Both have the same size limit (~1MB). The main difference is semantic and security practices around each.
 
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
 </details>
 
 ---
@@ -3317,6 +3323,8 @@ D) `kubectl create configmap my-config < config.properties`
 **Answer:** A
 
 **Explanation:** Use `kubectl create configmap <name> --from-file=<path>` to create a ConfigMap from a file. The filename becomes the key, file contents become the value. Use `--from-file=<key>=<path>` to specify a custom key name.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -3339,6 +3347,8 @@ D) Only new Pods get the update
 
 **Explanation:** When a ConfigMap is mounted as a volume, updates are automatically propagated to the Pod (with a delay up to the kubelet sync period + cache TTL, typically around a minute). However, if using `subPath`, updates are NOT propagated.
 
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
 </details>
 
 ---
@@ -3359,6 +3369,8 @@ D) It's a bug
 **Answer:** B
 
 **Explanation:** When using `subPath`, Kubernetes mounts the file directly rather than using symbolic links. This means the Pod sees a snapshot at mount time, and updates to the ConfigMap aren't reflected. Use full volume mounts for automatic updates.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -3381,6 +3393,8 @@ D) Secrets can only be created from files
 
 **Explanation:** Use `kubectl create secret generic <name> --from-literal=<key>=<value>` to create a Secret from literal values. You can specify multiple `--from-literal` flags. The values are automatically base64 encoded.
 
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
 </details>
 
 ---
@@ -3401,6 +3415,8 @@ D) `Opaque`
 **Answer:** B
 
 **Explanation:** The `kubernetes.io/service-account-token` type is automatically created for ServiceAccounts (in older versions). It contains a token for authenticating with the API server. In newer versions (1.24+), tokens are obtained via TokenRequest API instead.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
@@ -3423,6 +3439,8 @@ D) To make data readable only by specific Pods
 
 **Explanation:** Setting `immutable: true` prevents any changes to the ConfigMap or Secret after creation. This improves performance (kubelet doesn't need to watch for changes) and protects against accidental modifications. The only way to update is to delete and recreate.
 
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
 </details>
 
 ---
@@ -3443,6 +3461,8 @@ D) Secrets are automatically decoded when retrieved
 **Answer:** A
 
 **Explanation:** Secret data is stored base64-encoded. Use `kubectl get secret <name> -o jsonpath='{.data.<key>}' | base64 -d` to decode. Or use `-o go-template='{{.data.<key> | base64decode}}'`. `kubectl describe` shows keys but not values.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
