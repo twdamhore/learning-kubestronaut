@@ -16,6 +16,8 @@ D) A network storage device for application data
 
 Containers are lightweight, portable units that package an application along with its dependencies, libraries, and configuration files. Unlike VMs, containers share the host OS kernel, making them more efficient and faster to start. They provide process isolation while being much more resource-efficient than traditional virtual machines.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 2
@@ -31,6 +33,8 @@ D) File system encryption
 **B) Namespaces and cgroups**
 
 Linux namespaces provide isolation of system resources (PID, network, mount, user, etc.) while cgroups (control groups) limit and account for resource usage (CPU, memory, I/O). Together, these kernel features form the foundation of container technology, enabling process isolation without the overhead of full virtualization.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -48,6 +52,8 @@ D) Containers require a hypervisor
 
 The key difference is that containers share the host operating system's kernel, making them lightweight and fast to start. Virtual machines include a complete guest OS with its own kernel, requiring a hypervisor and more resources. Containers typically start in seconds while VMs take minutes.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 4
@@ -63,6 +69,8 @@ D) AppArmor
 **B) Namespaces**
 
 Linux namespaces provide isolated views of system resources. There are several namespace types: PID (process IDs), NET (network interfaces), MNT (mount points), UTS (hostname), IPC (inter-process communication), and USER (user IDs). Each container can have its own isolated view of these resources. Cgroups, by contrast, limit resource usage rather than provide isolation.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -80,6 +88,8 @@ D) A network configuration file
 
 A container image is an immutable, read-only template containing the application code, runtime, libraries, and dependencies needed to run a container. When you run an image, it becomes a container (running instance). Images are built in layers and stored in registries for distribution.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 6
@@ -95,6 +105,8 @@ D) As encrypted partitions
 **B) As a stack of read-only layers with a writable layer on top**
 
 Container images use a union file system with stacked layers. Each layer represents a set of filesystem changes (added, modified, or deleted files). The layers are read-only, and when a container runs, a thin writable layer is added on top for runtime changes. This layered approach enables efficient storage and sharing of common base layers.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -112,6 +124,8 @@ D) Only the first container uses the layers
 
 When multiple containers use the same base image, the shared layers are stored only once on disk. Each container gets its own thin writable layer on top, but the underlying read-only layers are shared. This copy-on-write mechanism significantly reduces disk usage and speeds up container creation.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 8
@@ -127,6 +141,8 @@ D) To monitor network traffic
 **B) To manage the lifecycle of containers including creation, running, and deletion**
 
 A container runtime is software responsible for running containers. It handles pulling images, creating container instances, managing their lifecycle (start, stop, restart, delete), and interacting with the kernel for isolation and resource management. Examples include containerd, CRI-O, and runc.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -144,6 +160,8 @@ D) kube-controller-manager
 
 The kubelet is the primary node agent that runs on each worker node. It communicates with the container runtime (via CRI) to pull images and manage container lifecycle. The kubelet receives Pod specifications from the API server and ensures the containers are running as specified.
 
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
 </details>
 
 ### Question 10
@@ -159,6 +177,8 @@ D) A network protocol for container communication
 **B) A plugin interface that allows kubelet to use different container runtimes**
 
 CRI is a plugin interface that enables the kubelet to work with any container runtime that implements the interface. It uses gRPC for communication and defines operations like pulling images, creating/starting/stopping containers. This abstraction allows Kubernetes to support multiple runtimes (containerd, CRI-O) without code changes.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -178,6 +198,8 @@ D) containerd with CRI plugin
 
 Docker Engine itself does not implement CRI natively. Kubernetes used dockershim as an adapter to communicate with Docker, but this was deprecated and removed in Kubernetes 1.24. containerd and CRI-O are native CRI implementations. Docker uses containerd under the hood, which is CRI-compliant.
 
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
 </details>
 
 ### Question 12
@@ -193,6 +215,8 @@ D) A Kubernetes distribution
 **B) An industry-standard container runtime focused on simplicity and portability**
 
 containerd is a CNCF graduated project that serves as an industry-standard container runtime. It manages the complete container lifecycle including image transfer, container execution, and storage. Originally part of Docker, it was extracted as a standalone runtime and is now used by Docker, Kubernetes, and other platforms.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -210,6 +234,8 @@ D) CRI-O requires Docker to function
 
 CRI-O was built from the ground up specifically for Kubernetes, implementing only what's needed for the CRI. containerd is a more general-purpose runtime that can be used in various contexts beyond Kubernetes. Both support OCI images and work well with Kubernetes.
 
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
 </details>
 
 ### Question 14
@@ -225,6 +251,8 @@ D) containerd replaced Docker entirely
 **B) containerd was extracted from Docker and is now used as Docker's core runtime**
 
 containerd was originally developed as part of Docker and was later extracted as a standalone project donated to the CNCF. Docker Engine still uses containerd as its core container runtime. When you run `docker run`, Docker uses containerd to actually run the container, which in turn uses runc.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -242,6 +270,8 @@ D) LXC
 
 CRI-O (Container Runtime Interface - OCI) was specifically designed for Kubernetes. It implements only the features required by the Kubernetes CRI, making it lightweight and focused. It supports OCI-compliant images and runtimes, and is optimized for Kubernetes workloads.
 
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
 </details>
 
 ### Question 16
@@ -257,6 +287,8 @@ D) A container networking plugin
 **B) A low-level container runtime that implements the OCI runtime specification**
 
 runc is a lightweight, low-level container runtime that spawns and runs containers according to the OCI Runtime Specification. It's the reference implementation of the OCI runtime spec and is used by higher-level runtimes like containerd and CRI-O to actually create and run containers.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -274,6 +306,8 @@ D) It provides container security scanning
 
 The OCI is a Linux Foundation project that creates open industry standards for container formats and runtimes. It maintains specifications including the Runtime Specification (how to run containers), Image Specification (container image format), and Distribution Specification (how to distribute images). These standards ensure interoperability across different tools and platforms.
 
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
 </details>
 
 ### Question 18
@@ -289,6 +323,8 @@ D) Network Specification
 **B) Runtime Specification**
 
 The OCI Runtime Specification defines how to run a "filesystem bundle" that is unpacked from an image. It specifies the configuration, execution environment, and lifecycle of a container. runc is the reference implementation of this specification.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -306,6 +342,8 @@ D) To outline container orchestration patterns
 
 The OCI Image Specification defines how container images are structured, including the image manifest, filesystem layers, and configuration. This standard ensures that images built with one tool can run on any OCI-compliant runtime, enabling portability across different platforms.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 20
@@ -321,6 +359,8 @@ D) Through shared file systems
 **B) Through the Container Runtime Interface (CRI) using gRPC**
 
 Kubernetes uses CRI to communicate with container runtimes. The kubelet makes gRPC calls to the runtime through the CRI interface, which defines operations for managing images and containers. This abstraction allows Kubernetes to work with any CRI-compliant runtime without modification.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -340,6 +380,8 @@ D) A container security scanner
 
 A container registry is a repository for storing, managing, and distributing container images. Registries can be public (like Docker Hub) or private (like Harbor, AWS ECR, GCR). They allow teams to share images and provide versioning through tags and digests.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 22
@@ -355,6 +397,8 @@ D) Quay.io
 **C) Docker Hub**
 
 Docker Hub is the default public registry for Docker images. When you pull an image without specifying a registry (e.g., `nginx`), Docker automatically looks for it on Docker Hub. It hosts millions of public images and also offers private repositories.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -372,6 +416,8 @@ D) To specify runtime configurations
 
 Image tags are human-readable labels that point to specific image versions. Common tagging conventions include version numbers (v1.0.0), semantic versions (1.2.3), git commit SHAs, or descriptive names. Tags make it easier to reference and deploy specific versions of an image.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 24
@@ -387,6 +433,8 @@ D) Simply a tag name with no special meaning guaranteed
 **D) Simply a tag name with no special meaning guaranteed**
 
 The 'latest' tag has no special meaning in registries - it's just a conventional tag name. It doesn't automatically point to the newest image; it only updates when someone explicitly tags an image as 'latest'. Many assume it means the most recent version, but this is not guaranteed, which is why using specific version tags is recommended.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -404,6 +452,8 @@ D) An encrypted image tag
 
 An image digest is a SHA256 hash of the image manifest, providing an immutable identifier for an exact image version. Unlike tags which can be moved to point to different images, digests are computed from the image content and never change. Format: `image@sha256:abc123...`
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 26
@@ -419,6 +469,8 @@ D) Digests are required by Kubernetes
 **B) Digests are immutable and guarantee the exact same image content**
 
 Digests are preferred in production because they're immutable - the same digest always refers to the exact same image content. Tags can be changed to point to different images, which could cause unexpected behavior or security issues. Using digests ensures reproducibility and prevents supply chain attacks.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -436,6 +488,8 @@ D) A registry that stores only proprietary images
 
 A private container registry requires authentication to pull or push images. This protects proprietary code and ensures only authorized users can access images. Private registries can be cloud-hosted (ECR, GCR, ACR) or self-hosted (Harbor, Nexus). Authentication is typically via username/password or tokens.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 28
@@ -451,6 +505,8 @@ D) Private registries are not supported
 **B) Using imagePullSecrets referenced in Pod specifications**
 
 Kubernetes authenticates to private registries using imagePullSecrets, which reference Kubernetes Secrets containing registry credentials. These secrets are attached to Pods or ServiceAccounts. Cloud providers may also offer automatic authentication through workload identity or instance metadata.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -468,6 +524,8 @@ D) A token embedded in the container
 
 An ImagePullSecret is a Kubernetes Secret of type `kubernetes.io/dockerconfigjson` that contains registry authentication credentials. It stores the registry URL, username, password, and email in a format compatible with Docker's config.json. Pods reference this secret to pull images from private registries.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 30
@@ -483,6 +541,8 @@ D) pullCredentials
 **C) imagePullSecrets**
 
 The `imagePullSecrets` field in a Pod spec is an array of references to Secrets containing registry credentials. It can also be configured on a ServiceAccount to automatically apply to all Pods using that ServiceAccount.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -500,6 +560,8 @@ D) To define image security policies
 
 The imagePullPolicy determines when the kubelet pulls the container image. Options are: `Always` (pull every time), `IfNotPresent` (pull only if not cached locally), and `Never` (use only locally cached images). This affects startup time and ensures you're running the expected image version.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 32
@@ -515,6 +577,8 @@ D) Only during cluster initialization
 **B) Only if the image is not already present on the node**
 
 With `IfNotPresent`, the kubelet checks if the image exists locally before pulling. If cached, the local image is used; if not, it's pulled from the registry. This is the default policy for images with specific tags (not `latest`) and improves startup time.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -532,6 +596,8 @@ D) OnFailure
 
 When using the `latest` tag (or no tag at all), Kubernetes defaults to `imagePullPolicy: Always`. This ensures you get the most recent version of the image, since 'latest' can change over time. For other specific tags, the default is `IfNotPresent`.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 34
@@ -548,6 +614,8 @@ D) Both B and C are correct
 
 With `imagePullPolicy: Never`, the kubelet never attempts to pull the image from a registry. It only uses images that already exist locally on the node. If the image isn't present, the container fails with an ErrImageNeverPull error. This is useful for air-gapped environments or when using pre-loaded images.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 35
@@ -563,6 +631,8 @@ D) It cannot be configured at the namespace level
 **B) Using an AlwaysPullImages admission controller**
 
 The AlwaysPullImages admission controller can be enabled to force all Pods to use `imagePullPolicy: Always`. While this is cluster-wide, it ensures images are always verified against the registry. There's no built-in namespace-level default, but policy engines like Kyverno or Gatekeeper can enforce specific policies per namespace.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -582,6 +652,8 @@ D) A registry configuration file
 
 A Dockerfile is a text file containing a series of instructions for building a container image. Each instruction (FROM, RUN, COPY, etc.) creates a layer in the image. Docker reads the Dockerfile and executes the instructions sequentially to produce the final image.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 37
@@ -597,6 +669,8 @@ D) SOURCE
 **C) FROM**
 
 The FROM instruction specifies the base image for the build. It must be the first instruction in a Dockerfile (except for ARG). You can use FROM with an image name and tag (e.g., `FROM alpine:3.18`) or with `FROM scratch` to build from an empty image.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -614,6 +688,8 @@ D) To copy files into the image
 
 The RUN instruction executes commands in a new layer on top of the current image and commits the results. It's commonly used to install packages, download files, or configure the environment. Each RUN instruction creates a new layer in the image.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 39
@@ -629,6 +705,8 @@ D) They are identical in functionality
 **B) COPY only copies local files, while ADD can also extract archives and fetch URLs**
 
 COPY is a straightforward file copy from the build context to the image. ADD has additional features: it can automatically extract tar archives and fetch files from URLs. Best practice is to use COPY unless you specifically need ADD's extra features, as COPY is more transparent.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -646,6 +724,8 @@ D) To define environment variables
 
 ENTRYPOINT configures the container to run as an executable, defining the main command that runs when the container starts. Unlike CMD, ENTRYPOINT arguments are not easily overridden at runtime (you need `--entrypoint` flag). It's typically used to set the main application or script to run.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 41
@@ -661,6 +741,8 @@ D) They serve identical purposes
 **B) CMD provides default arguments that can be overridden, while ENTRYPOINT defines the main executable**
 
 CMD specifies default arguments for the container that can be easily overridden by providing arguments at runtime. ENTRYPOINT defines the main executable and is harder to override. When both are used together, CMD provides default arguments to the ENTRYPOINT command.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -678,6 +760,8 @@ D) The build fails
 
 When both ENTRYPOINT and CMD are specified, the CMD values are appended to the ENTRYPOINT as default arguments. For example, `ENTRYPOINT ["python"]` with `CMD ["app.py"]` results in running `python app.py`. Runtime arguments replace CMD but not ENTRYPOINT.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 43
@@ -693,6 +777,8 @@ D) To specify the build context
 **B) To set the working directory for subsequent instructions**
 
 WORKDIR sets the working directory for subsequent RUN, CMD, ENTRYPOINT, COPY, and ADD instructions. If the directory doesn't exist, it's created automatically. Using WORKDIR is preferred over `RUN cd /path` because it affects all subsequent instructions and makes the Dockerfile more readable.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -710,6 +796,8 @@ D) It imports environment from the host
 
 ENV sets environment variables that are available both during the build process and when the container runs. These variables persist in the final image and can be overridden at runtime using `-e` or `--env`. Common uses include setting application configuration, paths, and versions.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 45
@@ -725,6 +813,8 @@ D) A distributed build system
 **B) A build using multiple FROM statements to create intermediate images and copy artifacts**
 
 Multi-stage builds use multiple FROM statements in a single Dockerfile. Each FROM starts a new build stage. You can selectively copy artifacts from one stage to another using `COPY --from=stage`. This allows you to build in one stage (with build tools) and copy only the final artifacts to a clean runtime stage.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -742,6 +832,8 @@ D) Automatic versioning
 
 Multi-stage builds produce smaller final images by separating the build environment from the runtime environment. Build tools, compilers, and intermediate files stay in the build stage and are not included in the final image. Only the compiled artifacts are copied to a minimal runtime image.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 47
@@ -757,6 +849,8 @@ D) To set runtime environment variables
 **B) To define build-time variables that can be passed using --build-arg**
 
 ARG defines variables that users can pass at build-time using `docker build --build-arg NAME=value`. ARG values are only available during the build, not at runtime. They're useful for parameterizing builds with versions, configurations, or credentials (though secrets should be handled carefully).
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -774,6 +868,8 @@ D) ARG is for secrets, ENV is for configuration
 
 ARG values are only available during the image build process and are not saved in the final image. ENV values persist in the built image and are available both during build and at container runtime. If you need a build-time value at runtime, you can use `ENV VAR=${ARG_VAR}` to transfer it.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 49
@@ -790,6 +886,8 @@ D) To enable network connectivity
 
 EXPOSE is primarily documentation - it indicates which ports the container listens on but doesn't actually publish them. To make ports accessible, you must use `-p` flag at runtime or publish them via Kubernetes Services. EXPOSE helps users understand which ports the application uses.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 50
@@ -805,6 +903,8 @@ D) To prevent container execution
 **B) To exclude files and directories from the build context**
 
 A .dockerignore file specifies patterns for files and directories that should be excluded from the build context sent to the Docker daemon. This speeds up builds, reduces image size, and prevents sensitive files (like .git, node_modules, or secrets) from accidentally being included in images.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -824,6 +924,8 @@ D) Specific tags are more secure
 
 Using specific tags (like v1.2.3) ensures you always deploy the same image version. The 'latest' tag can point to different images over time, leading to unexpected changes, broken deployments, or security issues. Specific tags make deployments reproducible and rollbacks reliable.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 52
@@ -839,6 +941,8 @@ D) Use the same base image for all applications
 **B) Use official, minimal, and regularly updated base images**
 
 Best practice is to use official images from trusted sources that are minimal (smaller attack surface) and regularly updated with security patches. Examples include official language runtime images, Alpine-based images, or distroless images. This reduces vulnerabilities and image size.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -856,6 +960,8 @@ D) They are required by Kubernetes
 
 Minimal base images contain only essential components, reducing the attack surface (fewer packages with potential vulnerabilities) and image size (faster pulls and less storage). Alpine is ~5MB vs ~100MB+ for full OS images. Distroless images are even smaller, containing only the application runtime.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 54
@@ -871,6 +977,8 @@ D) An uncompressed image format
 **B) An image containing only the application and its runtime dependencies, without package managers or shells**
 
 Distroless images (from Google) contain only the application and its necessary runtime dependencies. They exclude package managers, shells, and other OS utilities. This significantly reduces attack surface - attackers can't use common tools even if they compromise the container.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -888,6 +996,8 @@ D) Use larger base images
 
 Each Dockerfile instruction creates a layer. Combining commands with `&&` in a single RUN instruction reduces layers and image size. For example: `RUN apt-get update && apt-get install -y pkg && rm -rf /var/lib/apt/lists/*` is better than separate RUN commands.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 56
@@ -903,6 +1013,8 @@ D) Root containers use more memory
 **B) It minimizes the potential damage from container breakout or compromise**
 
 Running as root inside a container means if an attacker compromises the container, they have root privileges. If there's a container escape vulnerability, they could get root on the host. Running as non-root follows the principle of least privilege and limits potential damage.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -920,6 +1032,8 @@ D) NEWUSER
 
 To create a non-root user, use the RUN instruction with standard Linux commands: `RUN useradd -r -u 1001 appuser` (for most distros) or `RUN adduser -D appuser` (for Alpine). Then use `USER appuser` to switch to that user for subsequent instructions.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 58
@@ -935,6 +1049,8 @@ D) To set file permissions
 **B) To set the user (and optionally group) for running subsequent instructions and the container**
 
 The USER instruction sets the user (and optionally group) for subsequent RUN, CMD, and ENTRYPOINT instructions, and for the running container. Format: `USER username` or `USER uid:gid`. The user must already exist in the image.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -952,6 +1068,8 @@ D) It increases image size
 
 Container images store all layers, and even if you delete a secret in a later layer, it remains in the previous layer's history. Anyone with access to the image can inspect layers and extract secrets. Use Kubernetes Secrets, environment variables at runtime, or secret management tools instead.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 60
@@ -967,6 +1085,8 @@ D) Include them in the image with encryption
 **B) Use Kubernetes Secrets or external secret management systems**
 
 Secrets should be injected at runtime, not built into images. Use Kubernetes Secrets (mounted as volumes or environment variables), or external systems like HashiCorp Vault, AWS Secrets Manager, or Azure Key Vault. This keeps secrets separate from images and allows rotation without rebuilding.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -984,6 +1104,8 @@ D) Check the number of layers
 
 Use vulnerability scanners like Trivy, Grype, Clair, or Snyk to analyze images for known CVEs in packages and dependencies. Integrate scanning into CI/CD pipelines to catch vulnerabilities before deployment. Registry-integrated scanning (like Harbor or cloud registries) provides continuous monitoring.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 62
@@ -999,6 +1121,8 @@ D) Validating image signatures
 **B) Analyzing images for known vulnerabilities, misconfigurations, and compliance issues**
 
 Image scanning examines container images to identify known vulnerabilities (CVEs) in OS packages and application dependencies, detect misconfigurations, check for secrets, and verify compliance with security policies. It's a critical part of container security and shift-left security practices.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -1016,6 +1140,8 @@ D) Compressing images for security
 
 Image signing uses cryptographic signatures to verify that an image comes from a trusted source and hasn't been tampered with. Tools like cosign (Sigstore) create signatures that can be verified before deployment, preventing supply chain attacks and ensuring image integrity.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 64
@@ -1032,6 +1158,8 @@ D) GPG
 
 Kubernetes doesn't have built-in signature verification. Instead, policy controllers like Kyverno, OPA Gatekeeper, or Connaisseur enforce signature verification using cosign (from Sigstore project). These admission controllers verify signatures before allowing Pods to run with specific images.
 
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 65
@@ -1047,6 +1175,8 @@ D) To monitor container performance
 **B) To provide a comprehensive inventory of all components, libraries, and dependencies in an image**
 
 An SBOM is a detailed list of all software components in a container image, including libraries, packages, and their versions. It enables vulnerability tracking, license compliance, and supply chain security. Tools like Syft and SPDX generate SBOMs that can be attached to images.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -1066,6 +1196,8 @@ D) Init, Execute, Complete
 
 Kubernetes containers have three possible states: Waiting (not yet running, e.g., pulling image), Running (executing with PID), and Terminated (finished execution, either successfully or with failure). These states are visible in `kubectl describe pod` output.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 67
@@ -1081,6 +1213,8 @@ D) The container is being debugged
 **B) The container is not yet running, possibly pulling images or waiting for dependencies**
 
 The Waiting state means the container hasn't started yet. Common reasons include: ContainerCreating (setting up), ErrImagePull/ImagePullBackOff (image issues), or waiting for init containers to complete. The reason field provides details about why it's waiting.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -1098,6 +1232,8 @@ D) The container has completed its task
 
 A container is Running when it has been successfully created and its main process (defined by ENTRYPOINT/CMD or command/args) is executing. The state includes the startedAt timestamp showing when execution began.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 69
@@ -1113,6 +1249,8 @@ D) The container is waiting for resources
 **B) The container ran to completion or failed**
 
 Terminated means the container finished execution. The state includes exit code (0 for success, non-zero for failure), reason (Completed, Error, OOMKilled, etc.), and timestamps for when it started and finished. The container may be restarted based on restartPolicy.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -1130,6 +1268,8 @@ D) A backup policy for container data
 
 The restartPolicy field in Pod spec controls restart behavior. It applies to all containers in the Pod and determines whether and when containers should be restarted after termination. Options are Always, OnFailure, and Never.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 71
@@ -1145,6 +1285,8 @@ D) Containers are restarted once per day
 **B) Containers are restarted regardless of exit status**
 
 With `restartPolicy: Always` (the default for Pods), containers are restarted whether they exit successfully (code 0) or fail. This is appropriate for long-running services that should always be running. Used by Deployments, StatefulSets, and DaemonSets.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -1162,6 +1304,8 @@ D) For init containers
 
 `OnFailure` restarts containers only when they exit with a non-zero exit code. This is ideal for Jobs that should retry on failure but complete when successful. Unlike `Always`, successful completion (exit code 0) doesn't trigger a restart.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 73
@@ -1177,6 +1321,8 @@ D) To restart only on specific errors
 **B) To prevent any container restarts, typically used for one-time jobs**
 
 `Never` prevents any container restarts regardless of exit status. This is used for one-time tasks where you want to see the final state, or when retry logic is handled externally. Common in debugging scenarios or when running ad-hoc commands.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -1194,6 +1340,8 @@ D) Random delay between restarts
 
 Kubernetes uses exponential backoff for container restarts: 10s, 20s, 40s, 80s, etc. This prevents crash loops from overwhelming the system. The backoff resets after the container runs successfully for 10 minutes. You see "CrashLoopBackOff" status during this delay.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 75
@@ -1209,6 +1357,8 @@ D) 30 minutes
 **B) 5 minutes**
 
 The maximum backoff delay is capped at 5 minutes (300 seconds). The exponential backoff (10s, 20s, 40s, 80s, 160s, 300s) stops increasing at 5 minutes. After that, restart attempts continue every 5 minutes until the container starts successfully.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -1228,6 +1378,8 @@ D) To measure container performance
 
 Liveness probes detect when a container is in a broken state (deadlocked, unresponsive) and needs to be restarted. If the liveness probe fails, kubelet kills the container and restarts it based on the restart policy. This helps recover from situations where the process is running but not functioning correctly.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 77
@@ -1243,6 +1395,8 @@ D) Traffic is redirected to other Pods
 **B) The kubelet kills the container, and it is restarted based on the restart policy**
 
 When a liveness probe fails (after failureThreshold attempts), the kubelet kills the container. The container is then restarted according to the Pod's restartPolicy. This is more aggressive than readiness probe failure, which only removes traffic.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1260,6 +1414,8 @@ D) To validate container security
 
 Readiness probes determine when a container is ready to serve requests. When the probe fails, the Pod's IP is removed from Service endpoints, stopping traffic to that Pod. Unlike liveness probes, readiness probe failures don't restart the container - they just remove it from load balancing.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 79
@@ -1275,6 +1431,8 @@ D) The node is marked as unhealthy
 **B) The container's Pod IP is removed from Service endpoints**
 
 When a readiness probe fails, the Pod is marked as not ready and its IP is removed from all Service endpoints. Traffic stops being routed to this Pod. The container keeps running and the probe continues checking. When the probe succeeds again, the Pod is added back to endpoints.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1292,6 +1450,8 @@ D) To check network connectivity
 
 Startup probes protect slow-starting containers from being killed by liveness probes before they're ready. The liveness probe is disabled until the startup probe succeeds. This is useful for legacy applications that need significant initialization time.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 81
@@ -1307,6 +1467,8 @@ D) They are mutually exclusive
 **B) Liveness and readiness probes are disabled until the startup probe succeeds**
 
 When a startup probe is defined, liveness and readiness probes are disabled until the startup probe succeeds. Once the startup probe passes, it's never run again and the regular liveness/readiness probes take over.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1324,6 +1486,8 @@ D) ping, curl, telnet
 
 Kubernetes supports three probe mechanisms: exec (runs a command inside the container), httpGet (sends HTTP GET request), and tcpSocket (opens TCP connection). Additionally, gRPC health checking is supported as a fourth option in newer Kubernetes versions.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 83
@@ -1339,6 +1503,8 @@ D) It checks DNS resolution
 **B) It performs an HTTP GET request to a specified path and port**
 
 HTTP probes send an HTTP GET request to a specified path and port on the container. You configure the path, port, host, HTTP headers, and scheme (HTTP/HTTPS). The probe succeeds if the response status code is between 200 and 399.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1356,6 +1522,8 @@ D) Response within 1 second
 
 An HTTP probe is successful if it receives a response with status code >= 200 and < 400. This includes all 2xx (success) and 3xx (redirect) codes. Status codes 4xx (client error) and 5xx (server error) are considered failures.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 85
@@ -1371,6 +1539,8 @@ D) It checks UDP connectivity
 **B) It attempts to open a TCP connection to a specified port**
 
 TCP probes attempt to establish a TCP connection to the specified port. If the connection succeeds (the port is open and accepting connections), the probe passes. This is useful for services that don't expose HTTP endpoints, like databases or message queues.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1388,6 +1558,8 @@ D) A probe that monitors CPU usage
 
 Exec probes run a specified command inside the container. The probe is successful if the command exits with status code 0. This is flexible and can check anything the command can verify, like file existence, process status, or custom health scripts.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 87
@@ -1403,6 +1575,8 @@ D) The command doesn't produce errors
 **B) The command exits with status code 0**
 
 An exec probe succeeds when the command exits with status code 0 (standard Unix success code). Any non-zero exit code is considered a failure. The command's output (stdout/stderr) is ignored for success determination.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1420,6 +1594,8 @@ D) The delay between failed probes
 
 initialDelaySeconds specifies how long to wait after the container starts before performing the first probe. This gives the application time to initialize. Default is 0 seconds. With startup probes available, this parameter is less critical than before.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 89
@@ -1436,6 +1612,8 @@ D) The total probe duration
 
 periodSeconds specifies how frequently the probe is executed. Default is 10 seconds. The probe runs every periodSeconds after the initial delay. Setting this too low increases overhead; too high means slower detection of problems.
 
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
 </details>
 
 ### Question 90
@@ -1451,6 +1629,8 @@ D) The maximum container runtime
 **B) How long to wait for a probe response before considering it failed**
 
 timeoutSeconds specifies how long to wait for a probe response before considering it failed. Default is 1 second. If the probe doesn't respond within this time, it counts as a failure. This should be set based on expected response time of your health endpoint.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1630,6 +1810,8 @@ D) The Pod is deleted immediately
 
 When an init container fails, Kubernetes restarts the Pod according to its restartPolicy. All init containers run again from the beginning (they must be idempotent). If the Pod has `restartPolicy: Never`, the Pod is marked as Failed. This ensures the Pod enters a consistent state before main containers start.
 
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+
 </details>
 
 ### Question 102
@@ -1645,6 +1827,8 @@ D) A pattern for container orchestration
 **B) A pattern where a sidecar proxies network connections to external services**
 
 The ambassador pattern uses a sidecar container to proxy connections from the main container to external services. The main app connects to localhost, and the ambassador handles complexity like service discovery, connection pooling, or protocol translation. This simplifies the main application and centralizes connection logic.
+
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
 </details>
 
@@ -1662,6 +1846,8 @@ D) A pattern for network configuration
 
 The adapter pattern uses a sidecar to transform output from the main container into a standardized format. Common examples include log format conversion (transforming app-specific logs to JSON for centralized logging) or metrics adaptation (converting proprietary metrics to Prometheus format). This enables heterogeneous systems to present uniform interfaces.
 
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+
 </details>
 
 ### Question 104
@@ -1677,6 +1863,8 @@ D) Through shared ConfigMaps
 **B) Through localhost, as they share the network namespace**
 
 Containers in the same Pod share the network namespace, meaning they share the same IP address and can communicate via localhost. One container can bind to port 8080 and another can connect to localhost:8080. This enables tightly-coupled containers to communicate efficiently without network overhead.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -1694,6 +1882,8 @@ D) Nothing, containers are fully isolated
 
 Containers in a Pod share the network namespace (same IP, localhost communication), IPC namespace (can use shared memory and semaphores), and can mount the same volumes. PID namespace is not shared by default (each container has its own process view), though this can be enabled with `shareProcessNamespace: true`.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 106
@@ -1709,6 +1899,8 @@ D) A container managed by a DaemonSet
 **B) A container with restartPolicy: Always in an init container definition**
 
 Kubernetes 1.28+ introduced native sidecar containers as a feature. A native sidecar is defined in the `initContainers` array with `restartPolicy: Always`. Unlike regular init containers, sidecars start in order but don't need to complete - they run throughout the Pod's lifetime alongside main containers.
+
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
 </details>
 
@@ -1726,6 +1918,8 @@ D) Through a sidecar annotation
 
 Native sidecars are defined in the `initContainers` section with `restartPolicy: Always`. This tells Kubernetes the container should run continuously rather than running to completion. The sidecar starts before main containers and remains running throughout the Pod's lifecycle, but doesn't block main container startup.
 
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+
 </details>
 
 ### Question 108
@@ -1741,6 +1935,8 @@ D) They run on a schedule
 **B) They start before and run throughout the lifetime of regular containers**
 
 Native sidecar containers start before main containers (in init container order) and continue running alongside main containers. They're not terminated when they become "ready" like regular init containers. When the Pod terminates, sidecars are shut down after main containers. This solves the problem of ensuring sidecars are available during and after main container execution.
+
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
 </details>
 
@@ -1758,6 +1954,8 @@ D) A container without persistent storage
 
 Ephemeral containers are special containers added to running Pods for debugging purposes. They're useful when `kubectl exec` is insufficient - for example, when the container lacks debugging tools or has crashed. Added via `kubectl debug`, ephemeral containers can include debugging utilities not present in production images.
 
+**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
+
 </details>
 
 ### Question 110
@@ -1773,6 +1971,8 @@ D) For init processes
 **B) For troubleshooting running Pods that lack debugging utilities**
 
 Use ephemeral containers when you need to debug a Pod that uses distroless or minimal images without shells or debugging tools. Common scenarios: debugging a crashed container, inspecting network issues with tcpdump, or using strace to trace system calls. They share namespaces with other containers in the Pod.
+
+**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
 
 </details>
 
@@ -1792,6 +1992,8 @@ D) The default resource allocation
 
 Resource requests specify the minimum resources guaranteed to a container. The scheduler uses requests to decide which node has enough capacity to run the Pod. Requests affect QoS class assignment and are used in eviction decisions. A container can use more than its request (up to its limit) if resources are available.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 112
@@ -1807,6 +2009,8 @@ D) Cluster-wide resource quotas
 **B) The maximum resources a container is allowed to use**
 
 Resource limits specify the maximum resources a container can consume. The container runtime enforces these limits - CPU limits through throttling and memory limits through OOM killing. Setting appropriate limits prevents resource-hungry containers from affecting other workloads on the same node.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1824,6 +2028,8 @@ D) Requests determine Pod priority
 
 The kube-scheduler uses resource requests to find a suitable node for the Pod. It calculates each node's available capacity (allocatable minus sum of existing Pod requests) and only schedules to nodes with sufficient resources. This ensures Pods can get their requested resources and prevents overcommitment at the scheduling level.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 114
@@ -1839,6 +2045,8 @@ D) The limit is automatically increased
 **B) The container is terminated (OOMKilled)**
 
 When a container tries to use more memory than its limit, the Linux OOM (Out Of Memory) killer terminates the process. The container's exit reason shows "OOMKilled". Unlike CPU, memory cannot be throttled - it's either granted or not. The Pod may restart based on its restartPolicy.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1856,6 +2064,8 @@ D) The Pod is evicted
 
 When a container attempts to use more CPU than its limit, it gets throttled - the kernel simply doesn't allocate more CPU time. The container continues running but performs slower. This is different from memory, where exceeding limits causes termination. CPU is a "compressible" resource that can be throttled.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 116
@@ -1871,6 +2081,8 @@ D) Neither is enforced strictly
 **B) CPU is throttled (compressible), memory excess causes termination (incompressible)**
 
 CPU and memory are treated differently because of their nature. CPU is compressible - if limited, the process just runs slower. Memory is incompressible - you either have it or you don't. When a container needs more memory than its limit, the only option is to kill it (OOMKill) as there's no way to "slow down" memory usage.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1888,6 +2100,8 @@ D) Threads
 
 CPU resources in Kubernetes are specified in cores or millicores. One core equals 1000 millicores (m). For example, `500m` means half a CPU core, `2` means 2 full cores. This unit is consistent across cloud providers regardless of the underlying CPU type.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 118
@@ -1903,6 +2117,8 @@ D) 500 milliwatts
 **B) 500 millicores, equivalent to 0.5 CPU cores**
 
 The suffix 'm' stands for millicores (milli-CPU). 500m means 500/1000 = 0.5 CPU cores. This is equivalent to writing `0.5` in the spec. Common values include 100m (10% of a core), 250m (quarter core), and 1000m (one full core).
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1920,6 +2136,8 @@ D) Sectors
 
 Memory can be specified in bytes or with suffixes. Binary suffixes (Ki, Mi, Gi, Ti) use powers of 1024 (kibibytes, mebibytes, etc.). Decimal suffixes (K, M, G, T) use powers of 1000. For example, 128Mi = 128 * 1024 * 1024 bytes, while 128M = 128 * 1000 * 1000 bytes.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 120
@@ -1935,6 +2153,8 @@ D) Mi is deprecated
 **B) Mi is mebibytes (1024^2), M is megabytes (1000^2)**
 
 Mi (mebibyte) uses binary units: 1Mi = 1024 * 1024 = 1,048,576 bytes. M (megabyte) uses decimal units: 1M = 1000 * 1000 = 1,000,000 bytes. 1Mi is about 4.9% larger than 1M. Using Mi is recommended for consistency with how operating systems report memory.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1952,6 +2172,8 @@ D) A service level agreement
 
 QoS (Quality of Service) classes are automatically assigned to Pods based on their resource requests and limits. There are three classes: Guaranteed, Burstable, and BestEffort. QoS class determines eviction priority when nodes are under resource pressure - BestEffort Pods are evicted first.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 122
@@ -1967,6 +2189,8 @@ D) When using premium storage
 **B) When every container has equal requests and limits set for both CPU and memory**
 
 A Pod gets Guaranteed QoS when every container specifies both memory and CPU requests AND limits, and requests equal limits. Example: `requests: {memory: "256Mi", cpu: "500m"}` and `limits: {memory: "256Mi", cpu: "500m"}`. Guaranteed Pods are the last to be evicted under resource pressure.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1984,6 +2208,8 @@ D) When using ephemeral storage
 
 Burstable QoS is assigned when at least one container has CPU or memory requests/limits set, but the Pod doesn't qualify for Guaranteed. This includes Pods where requests don't equal limits, or where only some containers have resource specifications. Burstable Pods can burst beyond their requests up to their limits.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 124
@@ -2000,6 +2226,8 @@ D) When the Pod has the highest priority
 
 BestEffort QoS is assigned when no container in the Pod has any memory or CPU requests or limits. These Pods have the lowest priority during resource contention and are evicted first when the node is under memory pressure. They're suitable for non-critical workloads that can tolerate interruption.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 125
@@ -2015,6 +2243,8 @@ D) Eviction is random regardless of QoS
 **B) BestEffort Pods are evicted first, then Burstable, then Guaranteed**
 
 When a node faces resource pressure, the kubelet evicts Pods based on QoS class. BestEffort Pods are evicted first as they have no guarantees. Burstable Pods are evicted next, based on their resource usage relative to requests. Guaranteed Pods are evicted last and only if system services need resources.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -2034,6 +2264,8 @@ D) Environment variables cannot be passed
 
 Environment variables can be set directly in the `env` field, loaded from ConfigMaps or Secrets using `valueFrom` or `envFrom`, or populated from Pod/container metadata using the downward API. This flexibility allows separating configuration from container images.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 127
@@ -2049,6 +2281,8 @@ D) A deployment strategy
 **B) An API object for storing non-confidential configuration data as key-value pairs**
 
 ConfigMaps store non-sensitive configuration data as key-value pairs. They decouple configuration from container images, allowing the same image to be used with different configurations. ConfigMaps can store individual values, entire configuration files, or JSON/YAML documents.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2066,6 +2300,8 @@ D) Through command-line arguments only
 
 ConfigMap data can be consumed as environment variables (using `envFrom` or `valueFrom`) or mounted as files in a volume. When mounted as a volume, each key becomes a file in the mount path. Volume-mounted ConfigMaps can be updated dynamically without restarting the Pod.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 129
@@ -2081,6 +2317,8 @@ D) An authentication mechanism
 **B) An object for storing sensitive data like passwords, tokens, and keys**
 
 Secrets are Kubernetes objects designed for storing sensitive information like passwords, OAuth tokens, TLS certificates, and SSH keys. Unlike ConfigMaps, Secrets are base64-encoded and can be encrypted at rest. Access to Secrets can be restricted via RBAC for better security.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2098,6 +2336,8 @@ D) Secrets have size limits, ConfigMaps don't
 
 Secrets are base64-encoded (not encrypted by default) and designed for sensitive data. Key differences: Secrets can be encrypted at rest (when configured), are stored in tmpfs when mounted, and have different RBAC policies. Note that base64 is encoding, not encryption - encryption at rest must be explicitly configured.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 131
@@ -2113,6 +2353,8 @@ D) Secrets cannot be exposed to containers
 **B) As environment variables or mounted as files in a volume**
 
 Like ConfigMaps, Secrets can be exposed as environment variables or volume mounts. When mounted as a volume, Secrets are stored in tmpfs (memory-based filesystem) so they're not written to disk on the node. Volume mounts are generally preferred over environment variables as they're more secure.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2130,6 +2372,8 @@ D) To copy environment between containers
 
 `envFrom` allows you to inject all key-value pairs from a ConfigMap or Secret as environment variables in one declaration. Each key becomes an environment variable name, and its value becomes the variable value. You can optionally add a prefix to avoid naming conflicts.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 133
@@ -2145,6 +2389,8 @@ D) Using configKey
 **B) Using configMapKeyRef in the valueFrom field**
 
 To reference a specific key from a ConfigMap, use `valueFrom.configMapKeyRef` in the env entry. You specify the ConfigMap name and the key to extract. Example: `valueFrom: {configMapKeyRef: {name: "my-config", key: "database-url"}}`. For Secrets, use `secretKeyRef` instead.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2162,6 +2408,8 @@ D) A backup location
 
 A volume mount specifies where a Pod's volume is attached within a container's filesystem. You define the volume at the Pod level and mount it at a specific path in each container using `volumeMounts`. This allows containers to access shared storage, configuration files, or secrets at defined paths.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 135
@@ -2177,6 +2425,8 @@ D) Using an emptyDir volume
 **B) Using a configMap volume type and mounting it at a container path**
 
 To mount a ConfigMap as a volume: 1) Define a volume with `configMap` type in the Pod spec, 2) Mount the volume at a path using `volumeMounts`. Each key in the ConfigMap becomes a file in the mounted directory. You can optionally select specific keys with `items`.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2194,6 +2444,8 @@ D) A post-start command
 
 The `command` field in a container spec overrides the Docker image's ENTRYPOINT. It's an array of strings representing the executable and its initial arguments. If specified, the image's default ENTRYPOINT is completely replaced. If not specified, the image's ENTRYPOINT is used.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 137
@@ -2209,6 +2461,8 @@ D) Volume mount options
 **B) Arguments passed to the command (entrypoint), overriding CMD**
 
 The `args` field provides arguments to the container's command (entrypoint). It overrides the Docker image's CMD. If `args` is specified without `command`, the image's ENTRYPOINT is used with the new args. The args array is passed directly to the entrypoint executable.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2226,6 +2480,8 @@ D) Both override CMD only
 
 Kubernetes `command` maps to Docker's ENTRYPOINT, and `args` maps to Docker's CMD. If you set command, it replaces ENTRYPOINT. If you set args, it replaces CMD. If neither is set, the image defaults are used. This allows flexible control over container startup behavior.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 139
@@ -2242,6 +2498,8 @@ D) The mount point for volumes
 
 The working directory is the current directory (pwd) when the container's process starts. It's set by the image's WORKDIR instruction or can be overridden with the `workingDir` field in Kubernetes. Commands and relative paths in the container are resolved from this directory.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 140
@@ -2257,6 +2515,8 @@ D) Using a volume mount
 **B) Using the workingDir field in the container spec**
 
 The `workingDir` field in the container spec overrides the image's default working directory. Specify an absolute path where the container's process should start. This is useful when you need to run commands from a different directory than the image default, such as an application directory within a shared volume.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2276,6 +2536,8 @@ D) An authentication token
 
 SecurityContext defines security settings for Pods and containers, including user/group IDs, Linux capabilities, filesystem permissions, and privilege escalation. It can be set at Pod level (applies to all containers) or container level (overrides Pod settings for that container).
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 142
@@ -2291,6 +2553,8 @@ D) The service account name
 **B) The UID to run the container's entrypoint process as**
 
 `runAsUser` specifies the user ID (UID) for running the container's process. This overrides the USER directive in the image. For security, containers should run as non-root users (UID > 0). Combined with `runAsNonRoot: true`, this ensures the container doesn't run as root.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2308,6 +2572,8 @@ D) Disabling privileged mode
 
 When `runAsNonRoot: true`, Kubernetes validates that the container doesn't run as UID 0 (root). If the image is configured to run as root and no `runAsUser` is specified, the container fails to start. This prevents accidental root execution and is a security best practice.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 144
@@ -2323,6 +2589,8 @@ D) A log rotation setting
 **B) A setting that mounts the container's root filesystem as read-only**
 
 `readOnlyRootFilesystem: true` mounts the container's root filesystem as read-only, preventing any writes. This limits the impact of container compromise by preventing attackers from modifying binaries or writing malicious files. Applications that need to write files must use mounted volumes for writable directories.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2340,6 +2608,8 @@ D) Network permissions
 
 Linux capabilities divide root privileges into distinct units that can be independently enabled or disabled. Instead of running as full root, containers can have specific capabilities like NET_BIND_SERVICE (bind to low ports) or NET_RAW (raw sockets). Dropping unnecessary capabilities reduces attack surface.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 146
@@ -2355,6 +2625,8 @@ D) Using readOnlyRootFilesystem
 **B) Using securityContext.capabilities.drop**
 
 Use `securityContext.capabilities.drop` with a list of capability names to remove from the container. For maximum security, drop ALL capabilities with `drop: ["ALL"]` and then add back only the specific ones needed with `add`. This follows the principle of least privilege.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2372,6 +2644,8 @@ D) NET_ADMIN
 
 The NET_BIND_SERVICE capability allows binding to privileged ports (below 1024) without running as root. This is useful for services like web servers that need port 80 or 443. Instead of running as root, you can run as a non-root user with just this capability added.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 148
@@ -2387,6 +2661,8 @@ D) A container with network access
 **B) A container with almost all root capabilities and access to host resources**
 
 A privileged container (`privileged: true`) runs with all Linux capabilities and can access host devices (/dev), bypass many security restrictions, and potentially modify the host system. It's nearly equivalent to root access on the host. Privileged mode is needed for specific use cases like container runtimes but should be avoided otherwise.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2404,6 +2680,8 @@ D) They are deprecated
 
 Privileged containers break container isolation - if compromised, an attacker gains near-root access to the host. They can mount host filesystems, load kernel modules, access all devices, and escape to other containers. Use specific capabilities or host paths instead of privileged mode when possible.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 150
@@ -2419,6 +2697,8 @@ D) A network policy
 **B) A setting that controls whether a process can gain more privileges than its parent**
 
 `allowPrivilegeEscalation` controls whether a process can gain more privileges than its parent process. Setting it to `false` prevents setuid binaries and other privilege escalation methods. This is a security best practice and is required when running as non-root with the Restricted Pod Security Standard.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2436,6 +2716,8 @@ D) To set resource limits
 
 The `seccompProfile` field configures seccomp (secure computing mode) to restrict which system calls a container can make. Options include RuntimeDefault (use the container runtime's default profile), Localhost (use a custom profile), or Unconfined (no restrictions). Seccomp adds defense-in-depth against container escapes.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 152
@@ -2451,6 +2733,8 @@ D) A Kubernetes-specific profile
 **B) The container runtime's default seccomp profile that blocks dangerous syscalls**
 
 RuntimeDefault uses the container runtime's built-in seccomp profile, which blocks dangerous system calls like reboot, kernel module loading, and clock modifications while allowing common operations. It's a good baseline security measure that works with most applications without modification.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2468,6 +2752,8 @@ D) A network policy
 
 AppArmor is a Linux security module that restricts what files, networks, and capabilities programs can access. It uses profiles that define allowed operations. In Kubernetes, AppArmor profiles can be applied to containers to limit file access, network activity, and other operations beyond what seccomp provides.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 154
@@ -2483,6 +2769,8 @@ D) Using a custom resource
 **B) Using an annotation on the Pod**
 
 AppArmor profiles are applied via Pod annotations in the format `container.apparmor.security.beta.kubernetes.io/<container_name>: <profile>`. The profile must be loaded on the node. Common values are `runtime/default`, `localhost/<profile-name>`, or `unconfined`. Note: Kubernetes 1.30+ also supports the appArmorProfile field in securityContext.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2500,6 +2788,8 @@ D) A container runtime
 
 SELinux (Security-Enhanced Linux) is a mandatory access control system that enforces security policies beyond traditional Linux permissions. It labels processes and files with security contexts and controls interactions based on policies. In Kubernetes, SELinux options can be set to control container access to files and processes.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 156
@@ -2515,6 +2805,8 @@ D) Using environment variables
 **B) Using securityContext.seLinuxOptions**
 
 SELinux options are configured via `securityContext.seLinuxOptions`, which accepts fields like `user`, `role`, `type`, and `level`. These set the SELinux context for the container's processes. This is particularly important on SELinux-enabled systems (like RHEL/CentOS) for proper volume access and security policy enforcement.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2532,6 +2824,8 @@ D) A network security protocol
 
 Pod Security Standards (PSS) define three security policy levels for Pods: Privileged, Baseline, and Restricted. They specify which security settings are required or forbidden. Pod Security Admission enforces these standards at the namespace level, replacing the deprecated PodSecurityPolicy.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 158
@@ -2547,6 +2841,8 @@ D) Open, Controlled, Locked
 **B) Privileged, Baseline, Restricted**
 
 The three levels are: Privileged (no restrictions, allows all), Baseline (prevents known privilege escalations, suitable for most workloads), and Restricted (heavily restricted, follows Pod hardening best practices). Each level builds on the previous with more security controls.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2564,6 +2860,8 @@ D) Read-only filesystems only
 
 The Privileged level is an unrestricted policy that allows everything, including privileged containers, host namespaces, and all capabilities. It's intended for system-level and infrastructure workloads managed by trusted users. It provides no security guarantees and should only be used when necessary.
 
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
 </details>
 
 ### Question 160
@@ -2579,6 +2877,8 @@ D) All volume mounts
 **B) Known privilege escalations while allowing common configurations**
 
 Baseline restricts known privilege escalations like privileged containers, hostPID/hostIPC/hostNetwork, and dangerous volume types, while allowing common configurations like running as root (with restrictions). It's suitable for most workloads and balances security with ease of adoption.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 </details>
 
@@ -2598,6 +2898,8 @@ D) Network namespaces are optional
 
 All containers in a Pod share the same network namespace, meaning they share the same IP address and port space. They can communicate via localhost. This is fundamental to the Pod model and enables tightly-coupled containers to communicate efficiently without network overhead.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 162
@@ -2613,6 +2915,8 @@ D) Through shared volumes
 **B) Through localhost, as they share the same network namespace**
 
 Containers in the same Pod can communicate via localhost (127.0.0.1) because they share the network namespace. One container can connect to another's port using localhost:<port>. This enables patterns like sidecars where a proxy container handles traffic for the main application container.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -2630,6 +2934,8 @@ D) A resource-saving container
 
 The pause container (also called sandbox or infra container) is a minimal container that holds the network namespace for the Pod. It starts first and stays running, acting as the parent for the Pod's network namespace. Other containers join this namespace, ensuring the namespace persists even if app containers restart.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 164
@@ -2645,6 +2951,8 @@ D) It manages firewall rules
 **B) It holds the network namespace that other containers in the Pod join**
 
 The pause container's main role is to create and hold the network namespace. When application containers start, they join this existing namespace rather than creating their own. This design ensures the network namespace survives container restarts and provides a stable network identity for the Pod.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -2662,6 +2970,8 @@ D) Through the Service object only
 
 The `containerPort` field in the container spec documents which ports the container listens on. While containers can listen on any port (containerPort is primarily informational), declaring ports helps with documentation and allows Services to target specific ports. It doesn't actually open or close ports.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 166
@@ -2677,6 +2987,8 @@ D) To set up port forwarding
 **B) To document and expose the port the container listens on**
 
 `containerPort` is primarily informational, documenting which port the container application uses. It's required for port naming (used in Service targetPort by name) and for certain tools to discover ports. The container can still listen on any port regardless of this declaration.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2694,6 +3006,8 @@ D) To set DNS resolution
 
 `hostPort` maps a container port to a port on the node's IP address. Traffic to `<nodeIP>:<hostPort>` is forwarded to the container. This bypasses the Service abstraction and is used in special cases like DaemonSets that need to receive traffic directly on each node.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 168
@@ -2709,6 +3023,8 @@ D) It doesn't work with CNI plugins
 **B) It limits Pod scheduling and can cause port conflicts**
 
 Using hostPort limits Pod scheduling to nodes where that port is available, potentially causing scheduling failures. Only one Pod using a specific hostPort can run on each node. It creates tight coupling between Pods and nodes. Services or Ingress are preferred for most traffic routing needs.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2726,6 +3042,8 @@ D) The encryption protocol
 
 The `protocol` field specifies the network protocol for the port: TCP (default), UDP, or SCTP. This must match the protocol used by the application. Services also use this to route traffic correctly. Most web applications use TCP, while DNS and some streaming services use UDP.
 
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+
 </details>
 
 ### Question 170
@@ -2741,6 +3059,8 @@ D) Through shared volumes
 **B) Through selectors matching Pod labels and targetPort mapping**
 
 Services use label selectors to find matching Pods, then route traffic to the `targetPort` on those Pods. The Service's `port` receives traffic, which is forwarded to `targetPort` on the container. This provides load balancing across all matching Pods without exposing individual Pod IPs.
+
+**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
 
 </details>
 
@@ -2760,6 +3080,8 @@ D) To the Kubernetes API server
 
 Containers should write logs to stdout and stderr rather than files. The container runtime captures these streams and stores them on the node (typically under /var/log/containers/). This enables `kubectl logs` to work and allows log aggregation solutions to collect logs consistently.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 172
@@ -2775,6 +3097,8 @@ D) By accessing the API server logs
 **B) By requesting logs from the kubelet, which gets them from the container runtime**
 
 `kubectl logs` makes a request to the API server, which proxies to the kubelet on the appropriate node. The kubelet then retrieves logs from the container runtime. This chain allows centralized log access without directly connecting to nodes.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -2792,6 +3116,8 @@ D) Logs are automatically backed up
 
 When a container restarts, its log file is rotated. The current container's logs start fresh, but logs from the previous instance are preserved temporarily. Use `kubectl logs --previous` to view the terminated container's logs, helpful for debugging crash loops.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 174
@@ -2807,6 +3133,8 @@ D) Using kubectl logs --backup
 **B) Using kubectl logs --previous**
 
 The `--previous` (or `-p`) flag shows logs from the previous container instance. This is essential for debugging crash loops where the current container keeps restarting. It shows whatever logs the crashed container wrote before termination.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -2824,6 +3152,8 @@ D) Store logs in a database
 
 The twelve-factor app methodology recommends writing logs to stdout/stderr. This allows the platform to handle log collection and aggregation. Containers shouldn't be concerned with log storage or routing - this is handled by the container runtime and logging infrastructure like Fluentd, Filebeat, or cloud logging services.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 176
@@ -2839,6 +3169,8 @@ D) A container that stores log files
 **B) A helper container that collects and forwards logs from the main container**
 
 A logging sidecar runs alongside the main container, collecting logs and forwarding them to a centralized logging system. It's useful when applications write logs to files instead of stdout, or when logs need transformation. Common sidecars include Fluentd, Filebeat, and Fluent Bit.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -2856,6 +3188,8 @@ D) Redeploy the Pod
 
 For running containers, use `kubectl exec` to run commands inside the container, or `kubectl debug` to add ephemeral debug containers. You can also use `kubectl logs`, `kubectl describe`, and `kubectl port-forward` for different debugging scenarios.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 178
@@ -2871,6 +3205,8 @@ D) Copies files to a container
 **B) Executes a command inside a running container**
 
 `kubectl exec` runs a command in a running container, similar to `docker exec`. Add `-it` for interactive mode with a TTY. Useful for debugging, checking configurations, running diagnostic commands, or getting a shell inside the container.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -2888,6 +3224,8 @@ D) kubectl connect
 
 To get an interactive shell, use `kubectl exec -it <pod-name> -- /bin/sh` (or `/bin/bash` if available). The `-i` flag enables stdin, `-t` allocates a TTY. The `--` separates kubectl arguments from the command to run. Use `-c container` for multi-container Pods.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 180
@@ -2903,6 +3241,8 @@ D) Monitoring performance
 **B) Creating ephemeral containers or debug copies of Pods for troubleshooting**
 
 `kubectl debug` adds ephemeral containers to running Pods, creates debug copies of Pods with modified settings, or creates debug Pods on nodes. It's useful for troubleshooting distroless images, crash loops, or node-level issues where `kubectl exec` isn't sufficient.
+
+**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
 
 </details>
 
@@ -2920,6 +3260,8 @@ D) By changing the restart policy
 
 For crash-looping containers, use `kubectl debug --copy-to` to create a copy with a different command (like `sleep infinity`) to keep it running. Or use `kubectl debug` to add an ephemeral container that shares namespaces with the crashing container. Also check logs with `kubectl logs --previous`.
 
+**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
+
 </details>
 
 ### Question 182
@@ -2935,6 +3277,8 @@ D) A test container
 **B) An ephemeral container added to a running Pod for troubleshooting**
 
 A debug container is an ephemeral container added to a running Pod using `kubectl debug`. It can share process, network, or IPC namespaces with other containers, providing access to debug tools (curl, strace, tcpdump) that might not be in the production image. Ephemeral containers can't be removed once added.
+
+**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
 
 </details>
 
@@ -2952,6 +3296,8 @@ D) Using kubectl monitor
 
 `kubectl top pod` shows current CPU and memory usage for Pods and containers. It requires the metrics-server to be installed in the cluster. Use `--containers` to see per-container metrics. This provides real-time resource consumption data for debugging and capacity planning.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 184
@@ -2968,6 +3314,8 @@ D) Resource requests and limits
 
 `kubectl top pod` displays current CPU usage (in millicores) and memory usage (in bytes) for Pods. It shows a snapshot of actual resource consumption, not the configured requests/limits. Use this to identify resource-heavy Pods, tune resource allocations, or debug performance issues.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ### Question 185
@@ -2983,6 +3331,8 @@ D) Using kubectl get containers
 **B) Using kubectl describe pod, which shows events in the Events section**
 
 `kubectl describe pod` displays a comprehensive view including the Events section showing recent events related to the Pod and its containers. Events include image pulls, container starts/stops, probe failures, scheduling decisions, and resource issues. You can also use `kubectl get events` for cluster-wide events.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -3002,6 +3352,8 @@ D) A monitoring probe
 
 Container hooks are lifecycle event handlers that allow you to run code when specific events occur in a container's lifecycle. Kubernetes supports two hooks: PostStart (runs after container creation) and PreStop (runs before container termination). Hooks can be exec commands or HTTP requests.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 187
@@ -3017,6 +3369,8 @@ D) A scheduling hook
 **B) A hook that runs immediately after a container is created**
 
 The PostStart hook executes immediately after a container is created. It runs asynchronously with the container's ENTRYPOINT, meaning there's no guarantee about order. Common uses include waiting for dependencies, sending notifications, or performing initialization. If it fails, the container is killed.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -3034,6 +3388,8 @@ D) A pause hook
 
 The PreStop hook executes before a container is terminated (before SIGTERM is sent). It's useful for graceful shutdown tasks like deregistering from a service registry, saving state, or completing in-flight requests. The hook must complete before the grace period expires.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 189
@@ -3049,6 +3405,8 @@ D) By the Kubernetes API server
 **B) Inside the container using exec or HTTP handlers**
 
 Hooks support two handlers: exec (runs a command inside the container) and httpGet (makes an HTTP request to a container endpoint). The exec handler runs in the container's namespace and filesystem. HTTP handlers must have an endpoint the container serves.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -3066,6 +3424,8 @@ D) The Pod is rescheduled
 
 If a PostStart hook fails (returns non-zero exit code or HTTP error), the container is killed. The failure event is visible in `kubectl describe`. The container may be restarted based on restartPolicy. Ensure hooks are reliable, or the container will enter a crash loop.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 191
@@ -3081,6 +3441,8 @@ D) The probe timeout
 **B) The time Kubernetes waits for a Pod to terminate gracefully before force-killing**
 
 `terminationGracePeriodSeconds` (default 30 seconds) is the time allowed for graceful shutdown. During this period, PreStop hooks run and SIGTERM is sent. If containers don't exit within this period, SIGKILL is sent. Increase this for applications needing more time to drain connections or save state.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -3098,6 +3460,8 @@ D) Containers are paused
 
 Pod termination sequence: 1) PreStop hooks run (concurrently with SIGTERM in older versions, before SIGTERM in newer), 2) SIGTERM is sent to container processes, 3) Grace period counts down, 4) SIGKILL is sent to any remaining processes. This allows applications to shut down gracefully.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 193
@@ -3113,6 +3477,8 @@ D) Resource limit notification
 **B) Graceful shutdown request, allowing the process to clean up**
 
 SIGTERM (signal 15) is a termination request that allows processes to catch it and perform cleanup before exiting. Applications should handle SIGTERM to gracefully close connections, flush buffers, and save state. Unlike SIGKILL, SIGTERM can be caught and handled by the application.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
@@ -3130,6 +3496,8 @@ D) An error is logged but nothing happens
 
 When the grace period expires, SIGKILL (signal 9) is sent to any processes still running. SIGKILL cannot be caught or ignored - it immediately terminates processes. This ensures containers don't run indefinitely and resources are released, even if applications don't handle SIGTERM properly.
 
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+
 </details>
 
 ### Question 195
@@ -3145,6 +3513,8 @@ D) Versioning images
 **B) Storing pulled images on nodes to avoid repeated downloads**
 
 Container runtimes cache pulled images on nodes so subsequent Pod starts don't need to re-download them. This speeds up container startup and reduces network usage. The imagePullPolicy controls whether cached images are used (IfNotPresent, Never) or always pulled (Always).
+
+**Source:** [Container Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -3162,6 +3532,8 @@ D) A separate garbage collector Pod runs
 
 The kubelet periodically runs image garbage collection. When disk usage exceeds imageGCHighThresholdPercent (default 85%), unused images are deleted until disk falls below imageGCLowThresholdPercent (default 80%). Images used by running containers are never deleted. This prevents disk exhaustion.
 
+**Source:** [Container Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 197
@@ -3177,6 +3549,8 @@ D) A storage error
 **B) A state indicating repeated failures to pull an image, with exponential backoff**
 
 ImagePullBackOff occurs after repeated ErrImagePull failures. Kubernetes backs off (waits longer between attempts) to avoid overwhelming registries. Check `kubectl describe pod` for details. Common causes include image not found, authentication failures, network issues, or typos in image names.
+
+**Source:** [Container Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -3194,6 +3568,8 @@ D) Disk full
 
 ErrImagePull occurs when Kubernetes can't pull an image. Common causes: image name typos, tag doesn't exist, private registry without imagePullSecrets, network connectivity issues, registry rate limiting, or registry downtime. Check the error message in `kubectl describe pod` for specifics.
 
+**Source:** [Container Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
 </details>
 
 ### Question 199
@@ -3210,6 +3586,8 @@ D) A resource limit
 
 A sandbox runtime provides additional isolation between containers and the host kernel, beyond standard Linux namespaces and cgroups. Examples include gVisor (user-space kernel) and Kata Containers (lightweight VMs). They reduce kernel attack surface for untrusted workloads at the cost of some performance overhead.
 
+**Source:** [Runtime Class | Kubernetes](https://kubernetes.io/docs/concepts/containers/runtime-class/)
+
 </details>
 
 ### Question 200
@@ -3225,5 +3603,7 @@ D) A monitoring tool
 **B) A user-space kernel that provides additional isolation for containers**
 
 gVisor is an application kernel written in Go that implements a substantial portion of the Linux system call interface. It runs in user space and intercepts container system calls, providing strong isolation without the overhead of a full VM. gVisor is used via the runsc OCI runtime and is suitable for running untrusted code.
+
+**Source:** [Runtime Class | Kubernetes](https://kubernetes.io/docs/concepts/containers/runtime-class/)
 
 </details>

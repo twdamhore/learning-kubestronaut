@@ -25,6 +25,8 @@ D) kubectl describe cluster
 
 **Explanation:** `kubectl cluster-info` displays information about the Kubernetes cluster, including the addresses of the control plane and services. This is useful for verifying cluster connectivity and discovering service endpoints.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -45,6 +47,8 @@ D) XML
 **Answer:** C
 
 **Explanation:** By default, kubectl commands output in a human-readable plain text table format. You can change this using the `-o` flag to formats like `json`, `yaml`, `wide`, `name`, or custom columns.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -67,6 +71,8 @@ D) kubectl list resources
 
 **Explanation:** `kubectl api-resources` lists all the resource types available in the cluster, including their short names, API group, whether they're namespaced, and their kind. This is essential for understanding what resources you can manage.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -87,6 +93,8 @@ D) Shows command history
 **Answer:** B
 
 **Explanation:** `kubectl explain` provides documentation for resource fields and their structure. For example, `kubectl explain pod.spec.containers` shows the fields available under a Pod's container spec. It's invaluable for understanding resource definitions without leaving the terminal.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -109,6 +117,8 @@ D) -o full
 
 **Explanation:** The `-o wide` flag shows additional columns that aren't displayed by default, such as node name for Pods, selector for Services, and other resource-specific details. This provides more information without switching to full JSON/YAML output.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -129,6 +139,8 @@ D) They are identical in functionality
 **Answer:** B
 
 **Explanation:** `kubectl apply` is used for declarative configuration management. It creates resources if they don't exist and updates them if they do, preserving the desired state. `kubectl create` is imperative and will fail if the resource already exists. Apply tracks changes through annotations for intelligent updates.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -151,6 +163,8 @@ D) In the kube-system namespace
 
 **Explanation:** `kubectl apply` stores the last-applied configuration as an annotation (`kubectl.kubernetes.io/last-applied-configuration`) on the resource itself. This allows kubectl to perform three-way merges when applying changes, comparing the new configuration, the last-applied configuration, and the live state.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -171,6 +185,8 @@ D) kubectl changes -f file.yaml
 **Answer:** B
 
 **Explanation:** `kubectl diff -f file.yaml` shows the differences between the local configuration file and the live cluster state. This is useful for previewing changes before applying them, following infrastructure-as-code best practices.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -193,6 +209,8 @@ D) Runs in verbose mode
 
 **Explanation:** `--dry-run=client` processes the request locally without sending it to the API server. It's useful for generating manifests (e.g., `kubectl create deployment nginx --image=nginx --dry-run=client -o yaml`). Use `--dry-run=server` for server-side validation.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -213,6 +231,8 @@ D) kubectl delete pod nginx --skip-graceful
 **Answer:** B
 
 **Explanation:** Using `--force --grace-period=0` together forces immediate deletion without waiting for graceful termination. This should be used cautiously as it doesn't allow the Pod to clean up properly. The Pod may continue running momentarily but is immediately removed from the API.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -235,6 +255,8 @@ D) Skips confirmation prompt
 
 **Explanation:** `--wait=false` makes kubectl return immediately after the deletion request is accepted, without waiting for the resource to be fully removed. By default, kubectl waits for the resource to be deleted. This is useful for scripting when you don't need to block on deletion completion.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -255,6 +277,8 @@ D) kubectl get pods --continuous
 **Answer:** B
 
 **Explanation:** The `--watch` or `-w` flag enables continuous watching of resources. kubectl will keep the connection open and print updates as resources change. This is useful for monitoring deployments, debugging, or observing cluster state changes in real-time.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -279,6 +303,8 @@ D) ~/.kubernetes/config
 
 **Explanation:** The default kubeconfig file is located at `~/.kube/config` in the user's home directory. This location can be overridden using the `KUBECONFIG` environment variable or the `--kubeconfig` flag with kubectl commands.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -299,6 +325,8 @@ D) Endpoints, Tokens, Certificates
 **Answer:** B
 
 **Explanation:** A kubeconfig file contains three main sections: clusters (define server addresses and CA certificates), users (define authentication credentials), and contexts (combine a cluster with a user and optionally a default namespace). Contexts allow easy switching between different cluster/user combinations.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -321,6 +349,8 @@ D) kubectl switch-context
 
 **Explanation:** `kubectl config use-context <context-name>` switches the current context. This changes which cluster and user credentials kubectl will use for subsequent commands. You can view available contexts with `kubectl config get-contexts`.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -341,6 +371,8 @@ D) kubectl --file=/path/to/config get pods
 **Answer:** B
 
 **Explanation:** The `--kubeconfig` flag allows you to specify an alternative kubeconfig file for that command only. This is useful when managing multiple clusters without modifying your default config or KUBECONFIG environment variable.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -363,6 +395,8 @@ D) URL to remote config
 
 **Explanation:** The KUBECONFIG environment variable supports multiple colon-separated file paths (semicolon on Windows). When multiple files are specified, kubectl merges them into a single configuration at runtime. This allows you to organize configs across multiple files.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -383,6 +417,8 @@ D) Both contexts are renamed
 **Answer:** C
 
 **Explanation:** When kubeconfig files are merged, the first file in the KUBECONFIG list takes precedence for duplicate entries. If a context, cluster, or user with the same name exists in multiple files, the definition from the first file is used.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -405,6 +441,8 @@ D) kubectl config view-context
 
 **Explanation:** `kubectl config current-context` displays the name of the currently active context. This is useful in scripts or when you need to verify which cluster you're connected to before running commands.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -426,6 +464,8 @@ D) kubectl set namespace dev
 
 **Explanation:** `kubectl config set-context --current --namespace=dev` modifies the current context to use "dev" as the default namespace. Subsequent commands will operate in that namespace without requiring the `-n` flag.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -446,6 +486,8 @@ D) kubectl config display
 **Answer:** A
 
 **Explanation:** `kubectl config view` displays the merged kubeconfig content with sensitive data like tokens and certificates redacted (shown as "REDACTED" or "DATA+OMITTED"). Use `--raw` to see the actual values if needed.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -470,6 +512,8 @@ D) kube-scheduler
 
 **Explanation:** etcd is the distributed key-value store that holds all cluster configuration and state data. It's the single source of truth for the cluster. All other components read from and write to etcd through the API server.
 
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
+
 </details>
 
 ---
@@ -490,6 +534,8 @@ D) kube-proxy
 **Answer:** C
 
 **Explanation:** The kube-scheduler watches for newly created Pods that have no node assigned and selects a node for them to run on. It considers factors like resource requirements, affinity/anti-affinity rules, taints/tolerations, and data locality.
+
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
 
 </details>
 
@@ -512,6 +558,8 @@ D) Manage network routing
 
 **Explanation:** The kube-controller-manager runs various controller loops (Node Controller, Replication Controller, Endpoints Controller, etc.) that watch the shared state of the cluster and make changes to move the current state toward the desired state.
 
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
+
 </details>
 
 ---
@@ -532,6 +580,8 @@ D) kube-scheduler
 **Answer:** B
 
 **Explanation:** The kubelet is an agent that runs on each node in the cluster. It ensures that containers described in PodSpecs are running and healthy. It doesn't manage containers that weren't created by Kubernetes.
+
+**Source:** [kubelet | Kubernetes](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/)
 
 </details>
 
@@ -554,6 +604,8 @@ D) Secure inter-node communication
 
 **Explanation:** kube-proxy runs on each node and maintains network rules that allow network communication to Pods from inside or outside the cluster. It implements the Kubernetes Service concept, typically using iptables, IPVS, or other mechanisms.
 
+**Source:** [kube-proxy | Kubernetes](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/)
+
 </details>
 
 ---
@@ -574,6 +626,8 @@ D) controller-manager → scheduler → etcd → apiserver
 **Answer:** C
 
 **Explanation:** etcd must start first as it's the data store. The API server starts next as it needs etcd and all other components communicate through it. The controller-manager and scheduler can start after the API server (order between them is less critical), but typically controller-manager precedes scheduler.
+
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
 
 </details>
 
@@ -596,6 +650,8 @@ D) etcd
 
 **Explanation:** The kube-apiserver is the front end of the Kubernetes control plane. It validates and configures data for API objects like Pods, Services, and controllers. It processes REST operations, validates them, and updates the state in etcd.
 
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
+
 </details>
 
 ---
@@ -616,6 +672,8 @@ D) Nodes automatically form a new cluster
 **Answer:** B
 
 **Explanation:** If etcd becomes unavailable, existing workloads continue to run because kubelet operates independently. However, no new Pods can be scheduled, no changes can be made to any resources, and the API server cannot process requests. The cluster enters a degraded state until etcd is restored.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
 
 </details>
 
@@ -638,6 +696,8 @@ D) Namespace Controller
 
 **Explanation:** The ReplicaSet Controller (and Replication Controller for older ReplicationController resources) ensures that the specified number of pod replicas are running at any given time. It creates or deletes pods as needed to match the desired replica count.
 
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
+
 </details>
 
 ---
@@ -659,6 +719,8 @@ D) Billing and cost management
 
 **Explanation:** The cloud-controller-manager runs controllers that interact with cloud provider APIs. It includes the Node Controller (checking if nodes exist in the cloud), Route Controller (setting up routes), and Service Controller (managing cloud load balancers). It separates cloud-specific code from the core Kubernetes code.
 
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
+
 </details>
 
 ---
@@ -679,6 +741,8 @@ D) 2379
 **Answer:** C
 
 **Explanation:** The kube-apiserver typically listens on port 6443 for HTTPS traffic. Port 2379 is used by etcd, and port 8080 was historically used for insecure API access but is now disabled by default in production clusters.
+
+**Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
 
 </details>
 
@@ -703,6 +767,8 @@ D) default
 
 **Explanation:** The `kube-system` namespace contains objects created by the Kubernetes system, including system Pods like kube-dns, kube-proxy, and the metrics server. This namespace is created automatically when a cluster is bootstrapped.
 
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
 </details>
 
 ---
@@ -723,6 +789,8 @@ D) Deletion fails until namespace is empty
 **Answer:** C
 
 **Explanation:** When a namespace is deleted, all resources within that namespace are also deleted. Kubernetes uses cascading deletion for namespaces—there's no need to manually delete resources first, and resources cannot be moved to another namespace.
+
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
 </details>
 
@@ -745,6 +813,8 @@ D) Deployments and ReplicaSets
 
 **Explanation:** Nodes and PersistentVolumes are cluster-scoped (non-namespaced) resources. Other cluster-scoped resources include ClusterRoles, ClusterRoleBindings, Namespaces themselves, and StorageClasses. You can see which resources are namespaced using `kubectl api-resources --namespaced=true/false`.
 
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
 </details>
 
 ---
@@ -765,6 +835,8 @@ D) For documentation and help resources
 **Answer:** B
 
 **Explanation:** The `kube-public` namespace is readable by all users (including unauthenticated ones). It's mostly used for cluster information that should be publicly accessible, like the cluster-info ConfigMap used during bootstrapping with kubeadm.
+
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
 </details>
 
@@ -787,6 +859,8 @@ D) kubectl get pods --cluster-wide
 
 **Explanation:** The `-A` or `--all-namespaces` flag lists resources across all namespaces. This is useful for cluster-wide visibility, such as when troubleshooting or auditing resources across the entire cluster.
 
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
 </details>
 
 ---
@@ -807,6 +881,8 @@ D) To store node configuration
 **Answer:** B
 
 **Explanation:** The `kube-node-lease` namespace contains Lease objects associated with each node. These leases are used for node heartbeats, which is more scalable than updating Node status for heartbeats. The kubelet updates its lease more frequently than node status, reducing load on the control plane.
+
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
 </details>
 
@@ -829,6 +905,8 @@ D) kubectl namespace create development
 
 **Explanation:** `kubectl create namespace development` or the shorthand `kubectl create ns development` creates a new namespace. Namespaces can also be created declaratively using a YAML manifest with `kubectl apply`.
 
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
 </details>
 
 ---
@@ -849,6 +927,8 @@ D) Must start with a letter
 **Answer:** B
 
 **Explanation:** Namespace names must be valid DNS labels: lowercase alphanumeric characters or hyphens, must start with an alphanumeric character, and be at most 63 characters. This is because namespace names can be used in DNS names for services.
+
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
 </details>
 
@@ -873,6 +953,8 @@ D) To specify container images
 
 **Explanation:** Labels are key-value pairs attached to objects that are used to organize and select subsets of objects. They're used by selectors to identify resources for services, deployments, and other controllers. Labels are the primary grouping mechanism in Kubernetes.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -893,6 +975,8 @@ D) matchExpressions
 **Answer:** B
 
 **Explanation:** Equality-based selectors (also called label selectors) support `=`, `==`, and `!=` operators for exact matching. Set-based selectors (matchExpressions) support `In`, `NotIn`, `Exists`, and `DoesNotExist` operators for more flexible matching.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -915,6 +999,8 @@ D) They are aliases for the same functionality
 
 **Explanation:** `matchLabels` is a map of key-value pairs for equality matching. `matchExpressions` is a list of selector requirements using set-based operators (In, NotIn, Exists, DoesNotExist). Both can be combined in a selector, where all conditions must match (AND logic).
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -935,6 +1021,8 @@ D) kubectl get pods --select app=nginx
 **Answer:** B
 
 **Explanation:** The `-l` or `--selector` flag filters resources by label. The syntax is `kubectl get pods -l app=nginx`. You can use multiple conditions with commas (AND logic) like `-l app=nginx,tier=frontend`.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -957,6 +1045,8 @@ D) kubectl set label pod nginx app=web
 
 **Explanation:** `kubectl label` adds, modifies, or removes labels on resources. To add: `kubectl label pod nginx app=web`. To modify: add `--overwrite`. To remove: `kubectl label pod nginx app-` (note the trailing hyphen).
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -977,6 +1067,8 @@ D) The change is silently ignored
 **Answer:** B
 
 **Explanation:** The selector field in a Deployment's spec is immutable after creation. Attempting to change it results in an error. This prevents breaking the relationship between the Deployment and its ReplicaSets. You must delete and recreate the Deployment to change the selector.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -999,6 +1091,8 @@ D) All resources with env label
 
 **Explanation:** The `in` operator is a set-based selector that matches resources where the label value is one of the specified values. So `env in (prod, staging)` matches resources where the env label is either "prod" OR "staging".
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -1019,6 +1113,8 @@ D) kubectl get pods -l app!=''
 **Answer:** A
 
 **Explanation:** Using just the label key without a value (e.g., `-l app`) selects all resources that have that label key, regardless of value. This is equivalent to the `Exists` operator in set-based selectors.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -1041,6 +1137,8 @@ D) Configurable per selector
 
 **Explanation:** When multiple conditions are specified in a selector (comma-separated for equality-based or multiple matchExpressions), they are combined with AND logic. All conditions must be satisfied for a resource to be selected.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -1061,6 +1159,8 @@ D) Unlimited
 **Answer:** C
 
 **Explanation:** Label keys have two segments: an optional prefix and a name. The name must be 63 characters or less. If a prefix is specified (like `app.kubernetes.io/`), it must be a valid DNS subdomain (max 253 characters) and is separated from the name by a slash.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -1085,6 +1185,8 @@ D) There is no difference
 
 **Explanation:** Annotations are similar to labels but are not used to identify and select objects. They can store larger amounts of data (up to 256KB total) and are typically used for non-identifying metadata like build info, tool configuration, or human-readable descriptions.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -1105,6 +1207,8 @@ D) Defining replica counts
 **Answer:** B
 
 **Explanation:** Annotations are perfect for storing metadata like git commit hashes, build timestamps, release versions, tool configuration, or links to documentation. Unlike labels, annotations aren't used for selection, making them suitable for data that doesn't need to be queryable.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -1127,6 +1231,8 @@ D) 1MB
 
 **Explanation:** Individual annotation values don't have a character limit, but the total size of all annotations on an object must not exceed 256KB. This allows storing larger data like JSON configurations, certificates, or detailed descriptions.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -1148,6 +1254,8 @@ D) kubectl tag pod nginx description="Web server"
 
 **Explanation:** `kubectl annotate` is used to add, update, or remove annotations. The syntax is similar to `kubectl label`. To remove an annotation, use a trailing hyphen: `kubectl annotate pod nginx description-`.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -1168,6 +1276,8 @@ D) meta.kubernetes.io/applied-config
 **Answer:** B
 
 **Explanation:** `kubectl apply` uses the annotation `kubectl.kubernetes.io/last-applied-configuration` to store the full JSON of the last applied configuration. This enables three-way strategic merge patches when applying updates.
+
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -1192,6 +1302,8 @@ D) Requests apply to memory, limits apply to CPU
 
 **Explanation:** Requests are used by the scheduler to determine which node to place a Pod on—the node must have at least that much available. Limits are hard maximums enforced by the kubelet—containers cannot exceed their limits (CPU is throttled, memory causes OOM kill).
 
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
 </details>
 
 ---
@@ -1212,6 +1324,8 @@ D) Threads
 **Answer:** B
 
 **Explanation:** CPU is specified in cores (e.g., `1`, `0.5`) or millicores (e.g., `500m` = 0.5 cores). One core equals 1000 millicores. This unit is consistent across different hardware. Memory uses bytes (Ki, Mi, Gi).
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
 
 </details>
 
@@ -1234,6 +1348,8 @@ D) Memory is swapped to disk
 
 **Explanation:** When a container exceeds its memory limit, it's terminated by the OOM (Out of Memory) killer. If the Pod's restart policy allows, the container is restarted. Unlike CPU, memory is not compressible and cannot be throttled.
 
+**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
+
 </details>
 
 ---
@@ -1254,6 +1370,8 @@ D) The container steals CPU from other pods
 **Answer:** B
 
 **Explanation:** CPU is a compressible resource, so when a container tries to use more than its limit, it's throttled rather than killed. The container continues running but with reduced CPU time. This is different from memory, which triggers OOM kills.
+
+**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
 
 </details>
 
@@ -1276,6 +1394,8 @@ D) To control network bandwidth limits
 
 **Explanation:** LimitRange defines minimum, maximum, and default resource requests/limits for containers in a namespace. If a Pod doesn't specify resources, defaults from LimitRange are applied. It can also enforce minimum/maximum constraints and default values per container or Pod.
 
+**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
+
 </details>
 
 ---
@@ -1296,6 +1416,8 @@ D) To monitor resource usage
 **Answer:** B
 
 **Explanation:** ResourceQuota limits the total resource consumption (CPU, memory, storage) and object counts (pods, services, secrets) in a namespace. When quotas are enforced, new resources that would exceed the quota are rejected.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
 
 </details>
 
@@ -1318,6 +1440,8 @@ D) Reserved
 
 **Explanation:** Pods with requests exactly equal to limits for all containers (and for both CPU and memory) get the "Guaranteed" QoS class. These pods are least likely to be evicted during resource pressure. "Burstable" means some limits/requests, "BestEffort" means no limits/requests.
 
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
 </details>
 
 ---
@@ -1338,6 +1462,8 @@ D) They are evicted randomly
 **Answer:** C
 
 **Explanation:** During memory pressure, pods are evicted based on QoS class: BestEffort first, then Burstable (starting with those using most resources relative to their requests), and Guaranteed last. This protects workloads that have properly specified their requirements.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
 
 </details>
 
@@ -1360,6 +1486,8 @@ D) kubectl resources pods
 
 **Explanation:** `kubectl top pods` shows current CPU and memory usage for pods. This requires the metrics-server to be installed in the cluster. You can also use `kubectl top nodes` for node-level metrics.
 
+**Source:** [kubectl Reference | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -1380,6 +1508,8 @@ D) Cluster-wide defaults are applied automatically
 **Answer:** C
 
 **Explanation:** Without resource requests/limits specified (and without a LimitRange applying defaults), the Pod runs with no resource guarantees and gets BestEffort QoS class. These pods can use whatever resources are available but are first to be evicted under pressure.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
 
 </details>
 
@@ -1404,6 +1534,8 @@ D) Subjects, Objects, Actions, Targets
 
 **Explanation:** Kubernetes RBAC uses four main resources: Role (namespaced permissions), ClusterRole (cluster-wide permissions), RoleBinding (grants Role to subjects in a namespace), and ClusterRoleBinding (grants ClusterRole cluster-wide). Users, groups, and service accounts are subjects, not RBAC resources.
 
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
 </details>
 
 ---
@@ -1424,6 +1556,8 @@ D) There is no difference
 **Answer:** B
 
 **Explanation:** A Role grants permissions within a specific namespace, while a ClusterRole grants permissions across the entire cluster (or to cluster-scoped resources like nodes). ClusterRoles can also be bound to specific namespaces using RoleBindings.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
 </details>
 
@@ -1446,6 +1580,8 @@ D) Only if the ClusterRole is marked as "bindable"
 
 **Explanation:** A RoleBinding can reference a ClusterRole, which grants the ClusterRole's permissions but only within the RoleBinding's namespace. This is useful for reusing common permission sets across namespaces without duplicating Roles.
 
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
 </details>
 
 ---
@@ -1466,6 +1602,8 @@ D) To store credentials securely
 **Answer:** B
 
 **Explanation:** ServiceAccounts provide an identity for processes running in Pods. They're used to authenticate with the API server and other services. Each namespace has a "default" ServiceAccount automatically used by pods that don't specify one.
+
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
 </details>
 
@@ -1488,6 +1626,8 @@ D) new
 
 **Explanation:** RBAC uses specific verbs: `create`, `get`, `list`, `watch`, `update`, `patch`, `delete`, and `deletecollection`. The verb `create` allows creating new resources. There's no `add`, `write`, or `new` verb in Kubernetes RBAC.
 
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
 </details>
 
 ---
@@ -1508,6 +1648,8 @@ D) Update is for status, patch is for spec
 **Answer:** A
 
 **Explanation:** The `update` verb allows replacing an entire resource (like PUT), while `patch` allows modifying specific fields (like PATCH). Strategic merge patches and JSON patches use the patch verb. Update requires sending the complete resource.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
 </details>
 
@@ -1530,6 +1672,8 @@ D) kubectl access check
 
 **Explanation:** `kubectl auth can-i` checks if the current user (or specified user/serviceaccount) can perform an action. Examples: `kubectl auth can-i create pods`, `kubectl auth can-i delete deployments --as=john`. Useful for debugging RBAC issues.
 
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
 </details>
 
 ---
@@ -1550,6 +1694,8 @@ D) Required field
 **Answer:** B
 
 **Explanation:** In RBAC rules, `*` means "all" - all verbs, all resources, or all API groups depending on context. For example, `verbs: ["*"]` grants all possible actions, and `resources: ["*"]` applies to all resource types. Use with caution.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
 </details>
 
@@ -1572,6 +1718,8 @@ D) kubectl get bindings -A
 
 **Explanation:** `kubectl get rolebindings -A` or `--all-namespaces` lists RoleBindings across all namespaces. Note that ClusterRoleBindings are separate and listed with `kubectl get clusterrolebindings`.
 
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
 </details>
 
 ---
@@ -1592,6 +1740,8 @@ D) A compressed ClusterRole for efficiency
 **Answer:** B
 
 **Explanation:** Aggregated ClusterRoles use `aggregationRule` to automatically combine rules from other ClusterRoles that match specified labels. This allows extending built-in roles (like admin, edit, view) without modifying them directly. When matching ClusterRoles change, the aggregated role updates automatically.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
 </details>
 
@@ -1616,6 +1766,8 @@ D) Updates node labels
 
 **Explanation:** `kubectl cordon` marks a node as unschedulable, preventing new pods from being scheduled on it. Existing pods continue to run. This is useful when preparing for maintenance. Use `kubectl uncordon` to make the node schedulable again.
 
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
+
 </details>
 
 ---
@@ -1636,6 +1788,8 @@ D) Drain marks unschedulable, cordon evicts pods
 **Answer:** A
 
 **Explanation:** `cordon` only marks the node unschedulable for new pods. `drain` marks the node unschedulable AND evicts all pods (except DaemonSet pods by default). Drain is used before maintenance, upgrades, or decommissioning a node.
+
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
 
 </details>
 
@@ -1658,6 +1812,8 @@ D) --ignore-local
 
 **Explanation:** `--delete-emptydir-data` (previously `--delete-local-data`) allows draining a node even if pods are using emptyDir volumes. Without this flag, drain refuses to evict such pods because their local data would be lost.
 
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
+
 </details>
 
 ---
@@ -1678,6 +1834,8 @@ D) To track node health metrics
 **Answer:** B
 
 **Explanation:** Taints are applied to nodes and work with tolerations on pods. A taint "repels" pods unless they have a matching toleration. This is used to dedicate nodes for specific workloads (like GPU nodes) or to mark problematic nodes.
+
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
 
 </details>
 
@@ -1700,6 +1858,8 @@ D) Reject, Defer, Accept
 
 **Explanation:** The three taint effects are: `NoSchedule` (new pods without toleration won't schedule), `PreferNoSchedule` (scheduler avoids the node but will use it if necessary), and `NoExecute` (new pods won't schedule AND existing pods without toleration are evicted).
 
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
+
 </details>
 
 ---
@@ -1720,6 +1880,8 @@ D) kubectl set taint node worker1 key=value
 **Answer:** A
 
 **Explanation:** `kubectl taint nodes <node-name> key=value:effect` adds a taint. Example: `kubectl taint nodes worker1 dedicated=gpu:NoSchedule`. To remove a taint, add a minus sign: `kubectl taint nodes worker1 dedicated=gpu:NoSchedule-`.
+
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
 
 </details>
 
@@ -1742,6 +1904,8 @@ D) B or C depending on whether tolerationSeconds is specified
 
 **Explanation:** When NoExecute taint is added, pods without matching tolerations are evicted. If a pod has a matching toleration with `tolerationSeconds` specified, it will be evicted after that duration. Without `tolerationSeconds`, the pod remains indefinitely.
 
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
+
 </details>
 
 ---
@@ -1763,6 +1927,8 @@ D) To mark nodes reserved for system pods
 
 **Explanation:** Kubernetes automatically adds taints like `node.kubernetes.io/not-ready`, `node.kubernetes.io/unreachable`, and others based on node conditions. This helps protect workloads by preventing scheduling on problematic nodes without manual intervention.
 
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
+
 </details>
 
 ---
@@ -1783,6 +1949,8 @@ D) Both B and C
 **Answer:** D
 
 **Explanation:** Node taints can be viewed using `kubectl describe node` (shows in the Taints section) or `kubectl get node -o yaml` (shows in spec.taints). There's no direct `kubectl get taints` command.
+
+**Source:** [Nodes | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
 
 </details>
 
@@ -1807,6 +1975,8 @@ D) Graph database
 
 **Explanation:** etcd is a distributed, reliable key-value store used by Kubernetes to store all cluster data. It uses the Raft consensus algorithm for distributed consistency and is designed to be highly available and consistent.
 
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
 </details>
 
 ---
@@ -1827,6 +1997,8 @@ D) 10250
 **Answer:** B
 
 **Explanation:** etcd listens on port 2379 for client connections (from API server) and port 2380 for peer communication (between etcd cluster members). Port 6443 is for the API server, and 10250 is for kubelet.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
 
 </details>
 
@@ -1849,6 +2021,8 @@ D) Any even number
 
 **Explanation:** etcd uses Raft consensus, which requires a majority (quorum) to function. An odd number (3, 5, or 7) of members is recommended. Three members can tolerate one failure, five can tolerate two. Even numbers provide no additional fault tolerance over the odd number below them.
 
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
 </details>
 
 ---
@@ -1869,6 +2043,8 @@ D) kubectl etcd snapshot
 **Answer:** B
 
 **Explanation:** `etcdctl snapshot save <filename>` creates a backup of etcd data. You must provide the correct certificates and endpoints. Example: `ETCDCTL_API=3 etcdctl snapshot save backup.db --endpoints=https://127.0.0.1:2379 --cacert=... --cert=... --key=...`
+
+**Source:** [Backing up an etcd cluster | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster)
 
 </details>
 
@@ -1891,6 +2067,8 @@ D) To encrypt sensitive data
 
 **Explanation:** etcd compaction removes superseded key versions up to a specified revision, reclaiming storage space. After compaction, only the latest version of keys (up to that revision) is kept. This prevents unbounded storage growth from key history.
 
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
 </details>
 
 ---
@@ -1911,6 +2089,8 @@ D) kubeadm etcd restore
 **Answer:** B
 
 **Explanation:** `etcdctl snapshot restore` restores etcd data from a snapshot file. This creates a new data directory that can be used to start an etcd member. Each member in a cluster must restore from the same snapshot to reform the cluster.
+
+**Source:** [Backing up an etcd cluster | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster)
 
 </details>
 
@@ -1933,6 +2113,8 @@ D) Cluster automatically recovers
 
 **Explanation:** Without quorum, etcd cannot process writes, making the API server unable to make changes. Existing workloads continue running (kubelet operates independently), but no new pods can be scheduled, and no changes can be made until quorum is restored.
 
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
 </details>
 
 ---
@@ -1953,6 +2135,8 @@ D) /data/etcd
 **Answer:** B
 
 **Explanation:** In kubeadm-based clusters, etcd data is typically stored in `/var/lib/etcd`. This directory contains the etcd database (member directory with WAL and snap subdirectories). This location is critical for backups.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
 
 </details>
 
@@ -1977,6 +2161,8 @@ D) etcd last
 
 **Explanation:** The recommended upgrade order is: etcd (if external), control plane components (kube-apiserver, kube-controller-manager, kube-scheduler), then worker nodes. The control plane must be upgraded before workers to maintain version compatibility.
 
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+
 </details>
 
 ---
@@ -1997,6 +2183,8 @@ D) No version lag allowed
 **Answer:** B
 
 **Explanation:** Kubernetes version skew policy allows kubelet to be up to 2 minor versions older than kube-apiserver. For example, if apiserver is 1.28, kubelet can be 1.28, 1.27, or 1.26. This allows gradual node upgrades.
+
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
 
 </details>
 
@@ -2019,6 +2207,8 @@ D) cluster-upgrade
 
 **Explanation:** `kubeadm upgrade` is used to upgrade kubeadm-based clusters. The process involves: `kubeadm upgrade plan` (shows upgrade options), `kubeadm upgrade apply` (upgrades control plane), then upgrading kubelet and kubectl on each node.
 
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+
 </details>
 
 ---
@@ -2039,6 +2229,8 @@ D) Cordon all nodes
 **Answer:** C
 
 **Explanation:** Before running upgrade commands, you must first upgrade the kubeadm package to the target version. Then `kubeadm upgrade plan` checks the current state and shows available upgrades. Finally, `kubeadm upgrade apply` performs the actual upgrade.
+
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
 
 </details>
 
@@ -2061,6 +2253,8 @@ D) They are deleted and recreated
 
 **Explanation:** Upgrading control plane components doesn't affect running pods. When upgrading worker nodes, you typically drain each node first (which evicts pods), upgrade, then uncordon. Pods continue running on non-drained nodes during the process.
 
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+
 </details>
 
 ---
@@ -2081,6 +2275,8 @@ D) 3 minor versions
 **Answer:** B
 
 **Explanation:** kube-controller-manager, kube-scheduler, and cloud-controller-manager must not be newer than the apiserver and can be at most 1 minor version older. During upgrades, apiserver is upgraded first, followed by other control plane components.
+
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
 
 </details>
 
@@ -2103,6 +2299,8 @@ D) kubeadm cluster upgrade-plan
 
 **Explanation:** `kubeadm upgrade plan` checks the current cluster version, available upgrades, and shows any prerequisite steps needed. It validates the cluster state and provides the exact commands to run for the upgrade.
 
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+
 </details>
 
 ---
@@ -2123,6 +2321,8 @@ D) A node with the upgrade lock
 **Answer:** A
 
 **Explanation:** In a multi-master kubeadm cluster, the first control plane node is upgraded with `kubeadm upgrade apply`, and subsequent control plane nodes use `kubeadm upgrade node`. Any control plane node can be upgraded first, but typically you start with the one you have access to.
+
+**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
 
 </details>
 
@@ -2147,6 +2347,8 @@ D) experimental, standard, deprecated
 
 **Explanation:** Kubernetes API versions follow three stages: alpha (e.g., v1alpha1 - disabled by default, may be buggy), beta (e.g., v1beta1 - enabled by default, well-tested), and stable (e.g., v1 - production-ready, won't be removed). Each stage has different guarantees.
 
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+
 </details>
 
 ---
@@ -2167,6 +2369,8 @@ D) External custom resources only
 **Answer:** B
 
 **Explanation:** API groups organize related resources by functionality. For example, `apps` group contains Deployments and StatefulSets, `batch` contains Jobs and CronJobs. Core resources (pods, services) are in the legacy group (empty string). Groups enable independent versioning.
+
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
 </details>
 
@@ -2189,6 +2393,8 @@ D) workloads
 
 **Explanation:** Deployments, StatefulSets, DaemonSets, and ReplicaSets are in the `apps` API group. The apiVersion for a Deployment is `apps/v1`. The `extensions` group previously contained these resources but they were moved to `apps`.
 
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+
 </details>
 
 ---
@@ -2209,6 +2415,8 @@ D) Core is deprecated
 **Answer:** B
 
 **Explanation:** Core API resources (Pods, Services, ConfigMaps, etc.) use a "legacy" group with no name, so their apiVersion is just "v1" instead of "group/v1". Named groups like "apps/v1" or "batch/v1" explicitly include the group name in the apiVersion.
+
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
 </details>
 
@@ -2231,6 +2439,8 @@ D) kubectl version --all
 
 **Explanation:** `kubectl api-versions` lists all API versions (group/version combinations) available in the cluster. This is useful for determining which apiVersion to use in manifests and checking for available API groups.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2251,6 +2461,8 @@ D) An error is thrown for all operations
 **Answer:** B
 
 **Explanation:** Deprecated APIs continue to work but generate warnings. Kubernetes follows a deprecation policy: deprecated APIs are supported for at least 12 months or 3 releases (whichever is longer for beta) before removal. Users should migrate to newer API versions.
+
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
 </details>
 
@@ -2273,6 +2485,8 @@ D) kubectl validate --deprecated
 
 **Explanation:** External tools like `pluto` scan manifests and cluster resources for deprecated API usage. kubectl itself shows deprecation warnings when resources are accessed but doesn't have a dedicated deprecation scanning command.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2293,6 +2507,8 @@ D) To log API requests
 **Answer:** B
 
 **Explanation:** Admission controllers are plugins that intercept API requests after authentication and authorization but before persistence. They can modify (mutating) or reject (validating) requests. Examples include PodSecurityPolicy, LimitRanger, and ResourceQuota.
+
+**Source:** [Admission Controllers Reference | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
 
 </details>
 
@@ -2315,6 +2531,8 @@ D) Internal and External
 
 **Explanation:** Mutating admission webhooks can modify incoming objects (e.g., adding default values or sidecars). Validating webhooks can only accept or reject requests. Mutating webhooks run before validating webhooks. Both allow extending admission control without modifying the API server.
 
+**Source:** [Admission Controllers Reference | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
+
 </details>
 
 ---
@@ -2335,6 +2553,8 @@ D) Random order
 **Answer:** B
 
 **Explanation:** Mutating admission controllers/webhooks run first and may modify the object. Then validating controllers/webhooks run and can only accept or reject the (potentially modified) request. This order ensures validating webhooks see the final version of the object.
+
+**Source:** [Admission Controllers Reference | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
 
 </details>
 
@@ -2358,6 +2578,8 @@ D) kubectl show logs pod-name
 **Answer:** B
 
 **Explanation:** `kubectl logs <pod-name>` shows container logs. For multi-container pods, use `-c <container-name>` to specify which container. Add `-f` to follow/stream logs and `--previous` to see logs from a previous container instance.
+
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -2401,6 +2623,8 @@ D) kube-logger
 
 **Explanation:** Kubernetes doesn't provide a built-in cluster-level logging solution. Container logs are stored on nodes by the container runtime. Cluster-level logging requires external tools like the EFK stack (Elasticsearch, Fluentd, Kibana), Loki, or cloud provider solutions.
 
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+
 </details>
 
 ---
@@ -2421,6 +2645,8 @@ D) Grafana
 **Answer:** B
 
 **Explanation:** metrics-server is the lightweight, in-cluster component that provides resource metrics (CPU/memory) for kubectl top and Horizontal Pod Autoscaler. Prometheus is a more comprehensive monitoring solution but isn't used directly by kubectl top.
+
+**Source:** [Resource metrics pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
 
 </details>
 
@@ -2443,6 +2669,8 @@ D) Container logs are persistent, node logs are not
 
 **Explanation:** Container logging captures stdout/stderr from application containers. Node-level logging refers to logs from system components like kubelet, container runtime, and kube-proxy. Both are important for troubleshooting but managed differently.
 
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+
 </details>
 
 ---
@@ -2463,6 +2691,8 @@ D) Logs are moved to a backup location
 **Answer:** B
 
 **Explanation:** Container logs stored on the node are deleted when the Pod is deleted. This is why cluster-level logging (collecting logs to an external system) is important for log retention, debugging, and compliance requirements.
+
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -2485,6 +2715,8 @@ D) kubectl logs --count=100
 
 **Explanation:** `kubectl logs --tail=100` returns only the last 100 lines of logs. This is useful for large logs where you only need recent entries. You can combine it with `-f` to stream new logs after showing the last N lines.
 
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+
 </details>
 
 ---
@@ -2505,6 +2737,8 @@ D) A separate Pod dedicated to logging
 **Answer:** B
 
 **Explanation:** The sidecar pattern uses an additional container in the same Pod to handle log processing/shipping. The sidecar can read log files written by the main container (via shared volume) and forward them to a logging backend. This keeps the main application simple.
+
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -2529,6 +2763,8 @@ D) A network policy
 
 **Explanation:** Kubernetes automatically creates a ServiceAccount named "default" in every namespace. Pods that don't specify a ServiceAccount automatically use this default ServiceAccount for authentication with the API server.
 
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
+
 </details>
 
 ---
@@ -2549,6 +2785,8 @@ D) In the Pod's annotations
 **Answer:** B
 
 **Explanation:** Set `spec.serviceAccountName` in the Pod specification to use a custom ServiceAccount. Example: `spec: serviceAccountName: my-sa`. The ServiceAccount must exist in the same namespace as the Pod.
+
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
 </details>
 
@@ -2571,6 +2809,8 @@ D) A client certificate only
 
 **Explanation:** By default, Kubernetes mounts a projected ServiceAccount token into pods at `/var/run/secrets/kubernetes.io/serviceaccount/`. This includes the token, CA certificate, and namespace. The token is used to authenticate with the API server.
 
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
+
 </details>
 
 ---
@@ -2591,6 +2831,8 @@ D) Remove RBAC permissions
 **Answer:** B
 
 **Explanation:** Set `automountServiceAccountToken: false` in either the ServiceAccount spec (applies to all pods using it) or the Pod spec (applies to that pod only). This prevents the token from being mounted, useful for pods that don't need API access.
+
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
 </details>
 
@@ -2613,6 +2855,8 @@ D) Tokens expire after 1 hour
 
 **Explanation:** Kubernetes 1.24 removed automatic Secret generation for ServiceAccounts. Instead, the TokenRequest API provides time-limited, audience-bound tokens via projected volumes. This improves security by avoiding long-lived tokens stored in Secrets.
 
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
+
 </details>
 
 ---
@@ -2633,6 +2877,8 @@ D) kubectl serviceaccount create my-sa
 **Answer:** B
 
 **Explanation:** `kubectl create serviceaccount my-sa` or `kubectl create sa my-sa` creates a new ServiceAccount. You can also specify the namespace with `-n`. ServiceAccounts can also be created declaratively using YAML manifests.
+
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
 </details>
 
@@ -2657,6 +2903,8 @@ D) An error because syntax is wrong
 
 **Explanation:** JSONPath allows extracting specific fields from kubectl output. `{.items[*].metadata.name}` gets the name field from metadata for all items (pods). This is useful for scripting and extracting specific data without parsing full JSON.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2677,6 +2925,8 @@ D) kubectl get pods | sort
 **Answer:** B
 
 **Explanation:** `--sort-by=.field.path` sorts output by the specified field. Common uses include sorting by creation timestamp (`--sort-by=.metadata.creationTimestamp`) or resource usage. The field path uses JSONPath syntax.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2699,6 +2949,8 @@ D) Exports to CSV format
 
 **Explanation:** Custom columns output shows only the specified columns with custom headers. This is useful for creating specific views of resources without the full default output. Multiple columns are comma-separated with NAME:JSONPath format.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2719,6 +2971,8 @@ D) kubectl connect pod-name
 **Answer:** B
 
 **Explanation:** `kubectl exec -it pod-name -- /bin/bash` opens an interactive shell in a container. `-i` keeps stdin open, `-t` allocates a TTY. For multi-container pods, use `-c container-name`. The `--` separates kubectl args from the command.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2741,6 +2995,8 @@ D) To proxy external traffic to services
 
 **Explanation:** `kubectl proxy` creates a local HTTP proxy to the Kubernetes API server, handling authentication automatically. This allows accessing the API via localhost without providing credentials. Useful for development, debugging, or accessing the Kubernetes dashboard.
 
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+
 </details>
 
 ---
@@ -2761,6 +3017,8 @@ D) kubectl transfer local-file pod:/path
 **Answer:** B
 
 **Explanation:** `kubectl cp` copies files to/from containers. Syntax: `kubectl cp local-file pod:/remote/path` or `kubectl cp pod:/remote/path local-file`. For specific containers use `-c container-name`. Requires tar in the container.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2783,6 +3041,8 @@ D) Exposes the pod externally on port 8080
 
 **Explanation:** `kubectl port-forward` creates a tunnel from your local machine to a pod. `8080:80` means local port 8080 forwards to pod port 80. Access the pod via localhost:8080. Useful for debugging without exposing services externally.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2803,6 +3063,8 @@ D) kubectl watch pods --ready
 **Answer:** B
 
 **Explanation:** `kubectl wait --for=condition=Ready pod/nginx` blocks until the specified condition is met. Supports conditions like Ready, Complete (for Jobs), and also `--for=delete` to wait for deletion. Useful in scripts and CI/CD pipelines.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2827,6 +3089,8 @@ D) To control pod scheduling priority
 
 **Explanation:** PodDisruptionBudget (PDB) limits voluntary disruptions (like drains, upgrades) by specifying minimum available or maximum unavailable pods. This ensures high availability during maintenance. Involuntary disruptions (node failures) aren't blocked by PDBs.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2847,6 +3111,8 @@ D) 2 pods will be restarted
 **Answer:** B
 
 **Explanation:** `minAvailable: 2` means at least 2 pods matching the selector must remain available during voluntary disruptions. If disrupting a pod would bring the count below 2, the disruption is blocked. Can be a number or percentage.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2869,6 +3135,8 @@ D) To set storage I/O priority
 
 **Explanation:** PriorityClass defines the priority of Pods for scheduling. Higher priority pods can preempt (evict) lower priority pods when resources are scarce. System-critical pods use high priorities. Pods reference PriorityClass via `priorityClassName`.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2889,6 +3157,8 @@ D) It scales down other deployments
 **Answer:** B
 
 **Explanation:** When a high-priority Pod can't be scheduled due to resource constraints, the scheduler may preempt (evict) lower-priority Pods to make room. Preemption respects PodDisruptionBudgets and graceful termination periods where possible.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2911,6 +3181,8 @@ D) 1000
 
 **Explanation:** Pods without a PriorityClass have a default priority of 0. You can set a different cluster-wide default using `globalDefault: true` in a PriorityClass. System-critical pods typically use priorities around 2 billion.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2931,6 +3203,8 @@ D) To categorize runtime errors
 **Answer:** B
 
 **Explanation:** RuntimeClass allows selecting different container runtime configurations (handlers) for Pods. This is useful when you have multiple runtimes (like containerd and gVisor/Kata) and want to run specific workloads with specific runtimes for isolation or compatibility.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2953,6 +3227,8 @@ D) To compress resources before deletion
 
 **Explanation:** Finalizers are keys on resources that tell Kubernetes to wait before fully deleting the resource. Controllers watch for resources with their finalizer, perform cleanup, then remove the finalizer. Only when all finalizers are removed is the resource actually deleted.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -2973,6 +3249,8 @@ D) To log resource changes
 **Answer:** B
 
 **Explanation:** Owner references create parent-child relationships between resources. When a parent (owner) is deleted, dependent resources with owner references are automatically garbage collected. For example, ReplicaSets own Pods, and Deployments own ReplicaSets.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -2995,6 +3273,8 @@ D) Cascade
 
 **Explanation:** Foreground cascading deletion deletes dependents first, then the owner. Background deletion (default) deletes the owner immediately while dependents are cleaned up in the background. Orphan deletion removes the owner but leaves dependents (removing owner references).
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3015,6 +3295,8 @@ D) --cascade=orphan
 **Answer:** D
 
 **Explanation:** `--cascade=orphan` (formerly `--cascade=false`) deletes the owner but leaves dependents running by removing their owner references. This "orphans" the dependent resources. `--cascade=background` (default) or `--cascade=foreground` are the other options.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3039,6 +3321,8 @@ D) License management
 
 **Explanation:** Lease objects are used for distributed coordination, particularly node heartbeats and leader election for controllers. They provide a lightweight way to implement leader election without complex distributed systems. The lease holder is the leader until the lease expires.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3059,6 +3343,8 @@ D) To schedule pods
 **Answer:** B
 
 **Explanation:** Each node has a Lease object in the kube-node-lease namespace. Kubelets update their lease regularly (default every 10 seconds) as a heartbeat. This is more scalable than updating the full Node status object, reducing load on etcd.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3104,6 +3390,8 @@ D) 1 week
 
 **Explanation:** Events are retained for 1 hour by default (controlled by `--event-ttl` on the API server). Events are meant for debugging recent issues, not long-term storage. For persistent event storage, use external logging solutions.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3148,6 +3436,8 @@ D) cluster-switch
 
 **Explanation:** `kubectx` is a popular third-party tool that simplifies switching between contexts. It provides easier commands than `kubectl config use-context`. Similarly, `kubens` helps switch namespaces quickly. These tools are convenience wrappers around kubectl.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3169,6 +3459,8 @@ D) kubectl @other-context get pods
 
 **Explanation:** The `--context` flag allows running commands against a specific context without changing the current context. Example: `kubectl --context=production get pods`. This is useful for quick checks or scripts that operate across multiple clusters.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3189,6 +3481,8 @@ D) Validates context configuration
 **Answer:** B
 
 **Explanation:** `kubectl config set-context` creates or modifies a context entry in kubeconfig. You can set the cluster, user, and namespace for a context. Example: `kubectl config set-context dev --cluster=dev-cluster --user=dev-user --namespace=development`.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3213,6 +3507,8 @@ D) Authentication settings
 
 **Explanation:** Security Context defines privilege and access control settings for Pods and containers. It includes settings like runAsUser, runAsGroup, fsGroup, capabilities, readOnlyRootFilesystem, and allowPrivilegeEscalation. It's set in pod.spec.securityContext or container.securityContext.
 
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
 </details>
 
 ---
@@ -3234,6 +3530,8 @@ D) Container cannot use privileged mode
 
 **Explanation:** `runAsNonRoot: true` ensures the container runs with a non-root user (UID != 0). If the container image tries to run as root, the container fails to start. This is a security best practice to limit potential damage from container breakouts.
 
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
 </details>
 
 ---
@@ -3254,6 +3552,8 @@ D) Both prevent privilege escalation
 **Answer:** B
 
 **Explanation:** `readOnlyRootFilesystem: true` makes the container's root filesystem read-only, preventing writes. `allowPrivilegeEscalation: false` prevents processes from gaining more privileges than their parent (blocks setuid binaries). Both are security best practices but control different aspects.
+
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
 </details>
 
@@ -3297,6 +3597,8 @@ D) CAP_PRIVILEGED
 
 **Explanation:** The `NET_BIND_SERVICE` capability allows binding to privileged ports (below 1024). Without running as root or this capability, containers cannot listen on ports like 80 or 443. Adding only this capability is better than running privileged.
 
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
 </details>
 
 ---
@@ -3320,6 +3622,8 @@ D) No limit
 
 **Explanation:** ConfigMaps and Secrets are limited to 1MB in size. This is because they're stored in etcd, which has object size limits. For larger data, consider using volumes or external storage solutions.
 
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
 </details>
 
 ---
@@ -3341,6 +3645,8 @@ D) kubectl new configmap my-config --source=config.txt
 
 **Explanation:** `kubectl create configmap my-config --from-file=config.txt` creates a ConfigMap with the file name as key and contents as value. Use `--from-file=key=file` to specify a custom key name. Multiple `--from-file` flags can be used.
 
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
 </details>
 
 ---
@@ -3361,6 +3667,8 @@ D) No difference
 **Answer:** B
 
 **Explanation:** `--from-file` reads content from files (key is filename, value is content). `--from-literal` takes inline key=value pairs directly in the command (e.g., `--from-literal=key1=value1`). Both can be combined in one command.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -3404,6 +3712,8 @@ D) SHA-256 hashed
 
 **Explanation:** Secret data is base64 encoded, NOT encrypted by default. This encoding is for handling binary data, not security. For encryption at rest, you must enable encryption configuration for etcd. Base64 is easily decoded and provides no security.
 
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
 </details>
 
 ---
@@ -3424,6 +3734,8 @@ D) Use a special secret type
 **Answer:** B
 
 **Explanation:** Encryption at rest requires configuring an EncryptionConfiguration file and passing it to kube-apiserver via `--encryption-provider-config`. This encrypts secrets before storing in etcd. Providers include aescbc, aesgcm, and KMS.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
@@ -3447,6 +3759,8 @@ D) kubectl api-resources --global
 **Answer:** B
 
 **Explanation:** `kubectl api-resources --namespaced=false` lists cluster-scoped resources that aren't bound to namespaces. Examples include Nodes, PersistentVolumes, ClusterRoles, and Namespaces themselves. Use `--namespaced=true` for namespace-scoped resources.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3490,6 +3804,8 @@ D) They were designed before namespaces
 
 **Explanation:** CRDs are cluster-scoped because they define new resource types that should be consistently available across the entire cluster. Once defined, custom resources of that type can be created in any namespace (if the CRD specifies namespaced scope).
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3513,6 +3829,8 @@ D) A label selector alias
 
 **Explanation:** Field selectors filter resources by specific field values (not labels). Unlike labels, fields are resource properties. Example: `kubectl get pods --field-selector=status.phase=Running`. Supported fields vary by resource type; metadata.name and metadata.namespace are commonly supported.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3534,6 +3852,8 @@ D) kubectl get pods --exclude-node=node1
 
 **Explanation:** `--field-selector spec.nodeName!=node1` filters pods not scheduled on node1. Field selectors support = and != operators. The `spec.nodeName` field contains the node where the pod is scheduled. Note: unscheduled pods have empty nodeName.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3554,6 +3874,8 @@ D) Only in YAML, not command line
 **Answer:** B
 
 **Explanation:** Field selectors (`--field-selector`) and label selectors (`-l` or `--selector`) can be used together. Both conditions must match. Example: `kubectl get pods -l app=nginx --field-selector status.phase=Running` gets running nginx pods.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3578,6 +3900,8 @@ D) Check cluster connectivity
 
 **Explanation:** `kubectl auth reconcile -f rbac.yaml` creates or updates RBAC resources from a file, reconciling differences intelligently. It's useful for managing RBAC as code, supporting ClusterRoles, Roles, ClusterRoleBindings, and RoleBindings.
 
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
 </details>
 
 ---
@@ -3599,6 +3923,8 @@ D) kubectl --sudo=john get pods
 
 **Explanation:** `kubectl --as=john` impersonates the user "john" for that command. This is useful for testing RBAC permissions. You can also use `--as-group=developers` to impersonate group membership. Requires impersonation permissions.
 
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+
 </details>
 
 ---
@@ -3619,6 +3945,8 @@ D) sudo permission
 **Answer:** B
 
 **Explanation:** To impersonate users, you need the `impersonate` verb on the `users` resource in the RBAC rules. Similarly, impersonating groups requires `impersonate` on `groups`, and impersonating service accounts requires it on `serviceaccounts`.
+
+**Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/)
 
 </details>
 
@@ -3664,6 +3992,8 @@ D) apt-get
 
 **Explanation:** Krew is the plugin manager for kubectl. It provides a centralized repository of plugins and handles installation, updates, and removal. Install plugins with `kubectl krew install <plugin>`. Krew itself is installed as a kubectl plugin.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3684,6 +4014,8 @@ D) kubectl krew list
 **Answer:** A
 
 **Explanation:** `kubectl plugin list` shows all discovered plugins (executables matching kubectl-* in PATH). It also shows warnings about plugins with naming conflicts or issues. If using krew, `kubectl krew list` shows krew-managed plugins specifically.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3708,6 +4040,8 @@ D) Temporary network connections
 
 **Explanation:** Ephemeral containers are temporary containers added to existing pods for debugging purposes. They're useful for troubleshooting distroless or minimal images that lack debugging tools. Added via `kubectl debug` command without restarting the pod.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3728,6 +4062,8 @@ D) kubectl add container pod --debug
 **Answer:** B
 
 **Explanation:** `kubectl debug <pod> -it --image=busybox` adds an ephemeral container running busybox to the pod. You can use `--target=<container>` to share process namespace with a specific container. The debug container can access the pod's network and volumes.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3794,6 +4130,8 @@ D) To enable compression
 
 **Explanation:** When watching resources, you can specify a resourceVersion to start watching from that point forward. This enables resuming watches after disconnection without missing events. Using resourceVersion=0 uses the latest cached version.
 
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+
 </details>
 
 ---
@@ -3814,6 +4152,8 @@ D) 403 Forbidden
 **Answer:** B
 
 **Explanation:** When you try to update a resource but someone else modified it first (resourceVersion changed), you get a 409 Conflict error. This implements optimistic concurrency control. The client must fetch the latest version and retry the update.
+
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
 </details>
 
@@ -3838,6 +4178,8 @@ D) Server-side rendering of manifests
 
 **Explanation:** Server-Side Apply (SSA) is a declarative resource management mechanism that tracks which fields are managed by which controllers/users. It enables better multi-manager scenarios and avoids the issues of client-side apply. Enabled with `kubectl apply --server-side`.
 
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+
 </details>
 
 ---
@@ -3859,6 +4201,8 @@ D) A schema validator
 
 **Explanation:** Field managers identify who "owns" specific fields in an object. When using SSA, each applier gets a field manager name (default: kubectl). This enables tracking which fields were set by whom, preventing conflicts when multiple managers update the same resource.
 
+**Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+
 </details>
 
 ---
@@ -3879,6 +4223,8 @@ D) kubectl apply --mode=server
 **Answer:** B
 
 **Explanation:** `kubectl apply --server-side` enables Server-Side Apply. You can also specify a field manager with `--field-manager=my-manager`. SSA provides better conflict detection and field ownership tracking compared to client-side apply.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3903,6 +4249,8 @@ D) Historical data
 
 **Explanation:** `kubectl describe` provides detailed information including events, conditions, status, and related resources. It's formatted for human reading and troubleshooting. `kubectl get` shows tabular summary data, while describe shows comprehensive details including recent events.
 
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
 </details>
 
 ---
@@ -3923,6 +4271,8 @@ D) kubectl status pod pod-name
 **Answer:** B
 
 **Explanation:** `kubectl describe pod` shows the Events section which typically explains why a pod is Pending (e.g., insufficient resources, node selectors not matching, PVC not bound). The Conditions section also provides status information.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
@@ -3945,6 +4295,8 @@ D) kubectl resources pod
 
 **Explanation:** `kubectl top pod <pod-name> --containers` shows CPU and memory usage broken down by container. Without `--containers`, it shows aggregate pod usage. Requires metrics-server to be installed and running.
 
+**Source:** [Resource metrics pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
+
 </details>
 
 ---
@@ -3965,6 +4317,8 @@ D) kubectl get pods -l status!=Running
 **Answer:** B
 
 **Explanation:** Field selectors can filter by status.phase. Using `status.phase!=Running` shows pods in Pending, Succeeded, Failed, or Unknown states. This is useful for quickly identifying problematic pods across namespaces.
+
+**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
 </details>
 
