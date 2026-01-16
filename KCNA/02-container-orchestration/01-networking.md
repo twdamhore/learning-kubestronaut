@@ -2312,6 +2312,13 @@ B) To optimize search path resolution for Pod queries
 C) To set up routing paths
 D) To configure file paths
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 122
@@ -2323,6 +2330,13 @@ A) Same as regular Pods
 B) Each Pod gets a predictable DNS entry: pod-name.service-name.namespace.svc.cluster.local
 C) StatefulSet Pods don't have DNS
 D) Only the first Pod gets a DNS entry
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2336,6 +2350,13 @@ B) To enable or configure A record generation for Pods
 C) To restart Pods
 D) To scale Pods
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 124
@@ -2348,6 +2369,13 @@ B) Using nslookup or dig from within the Pod
 C) kubectl describe dns
 D) Checking the API server logs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 125
@@ -2359,6 +2387,13 @@ A) Uses cluster DNS
 B) Uses node DNS
 C) The Pod will have no DNS configuration and may not resolve names
 D) An error prevents Pod creation
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
 
 ---
 
@@ -2374,6 +2409,13 @@ B) To implement Service networking rules on each node
 C) To manage container networking
 D) To schedule Pods
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 127
@@ -2385,6 +2427,13 @@ A) userspace
 B) iptables
 C) ipvs
 D) nftables
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2398,6 +2447,13 @@ B) kube-proxy forwards it to a backend Pod
 C) Network rules redirect traffic to an endpoint Pod
 D) The API server routes the request
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 129
@@ -2409,6 +2465,13 @@ A) By reading iptables rules
 B) By watching the Kubernetes API
 C) By polling the CNI plugin
 D) By reading local configuration files
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2422,6 +2485,13 @@ B) A legacy mode where kube-proxy acts as an actual proxy in userspace
 C) A mode for user applications
 D) The default mode
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 131
@@ -2433,6 +2503,13 @@ A) Simpler configuration
 B) Better performance at scale with O(1) complexity for lookups
 C) More secure
 D) Better Windows support
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2446,6 +2523,13 @@ B) Round-robin, least connections, destination hashing, source hashing, and more
 C) Only least connections
 D) Random only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 133
@@ -2457,6 +2541,13 @@ A) In a Secret
 B) In a ConfigMap in kube-system namespace
 C) In /etc/kube-proxy/
 D) In etcd directly
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2470,6 +2561,13 @@ B) It updates the network rules to reflect the new IP
 C) It restarts affected Pods
 D) It requires manual intervention
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 135
@@ -2481,6 +2579,13 @@ A) To replace Services
 B) To provide more scalable and efficient endpoint tracking
 C) To slice network traffic
 D) To manage storage endpoints
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2494,6 +2599,13 @@ B) FORWARD
 C) KUBE-SVC-* chains
 D) OUTPUT
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 137
@@ -2505,6 +2617,13 @@ A) To enable proxy authentication
 B) To select the kube-proxy mode (iptables, ipvs, etc.)
 C) To configure proxy protocols
 D) To set proxy timeout
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2518,6 +2637,13 @@ B) Using the recent match module to track client IPs
 C) Session affinity is not supported in iptables mode
 D) Using connection tracking
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 139
@@ -2529,6 +2655,13 @@ A) They are immediately terminated
 B) Existing connections continue; new connections use updated rules
 C) All traffic stops briefly
 D) Connections are migrated
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2542,6 +2675,13 @@ B) To track established connections for stateful packet inspection
 C) To store DNS records
 D) To track Pod connections
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 141
@@ -2553,6 +2693,13 @@ A) kubectl get iptables
 B) Running iptables-save or ipvsadm on the node
 C) kubectl describe kube-proxy
 D) Checking the API server
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2566,6 +2713,13 @@ B) To configure rules related to Pod CIDR for certain features
 C) To set the node CIDR
 D) To define external CIDRs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 143
@@ -2577,6 +2731,13 @@ A) To configure health check endpoints for kube-proxy itself
 B) To check Pod health
 C) To configure Service health checks
 D) To bind to specific node addresses
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -2590,6 +2751,13 @@ B) By binding VIPs to a dummy interface and using IPVS rules
 C) By modifying routing tables
 D) Using userspace proxying
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 145
@@ -2601,6 +2769,13 @@ A) A deprecated mode
 B) A newer mode using nftables instead of iptables for better performance
 C) A mode for network filtering
 D) A mode specific to Windows
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2616,6 +2791,13 @@ B) To define the IP range for Pod addresses
 C) To configure external IPs
 D) To set node IP ranges
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 147
@@ -2627,6 +2809,13 @@ A) No, Network Policies are required
 B) Yes, Kubernetes has a flat network model
 C) Only within the same namespace
 D) Only within the same node
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2640,6 +2829,13 @@ B) All Pods can reach all other Pods without NAT
 C) Pods must use Services
 D) Pods must be in the same namespace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 149
@@ -2651,6 +2847,13 @@ A) A graphical network interface
 B) An encapsulation technique that creates a virtual network over the physical network
 C) A security layer
 D) A DNS configuration
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2664,6 +2867,13 @@ B) VXLAN encapsulates at Layer 2 (UDP), IPIP encapsulates at Layer 3
 C) IPIP is more secure
 D) There is no difference
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 151
@@ -2675,6 +2885,13 @@ A) To isolate the Pod network
 B) To share the node's network namespace with the Pod
 C) To enable faster networking
 D) To use the host's DNS
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2688,6 +2905,13 @@ B) The Pod can see all network traffic on the node and bind to node ports
 C) It disables network policies
 D) It prevents Pod communication
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 153
@@ -2699,6 +2923,13 @@ A) To expose the container on a specific port on the host
 B) To configure the host's firewall
 C) To set the container port
 D) To enable host networking
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -2712,6 +2943,13 @@ B) The CNI may short-circuit traffic locally
 C) Through the API server
 D) Through kube-proxy's userspace mode
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 155
@@ -2723,6 +2961,13 @@ A) To configure external DNS
 B) To make the Service available on specific node IPs
 C) To configure load balancer IPs
 D) To set up external authentication
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2736,6 +2981,13 @@ B) Traffic to those IPs (on the Service port) is routed to the Service
 C) The Service becomes accessible from the internet
 D) DNS records are updated
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 157
@@ -2747,6 +2999,13 @@ A) Endpoint slices
 B) Topology-aware hints
 C) Network policies
 D) Service mesh
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -2760,6 +3019,13 @@ B) To configure DNS
 C) To set up load balancing hints
 D) To define node topology
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 159
@@ -2772,6 +3038,13 @@ B) To define internal security policies
 C) To configure internal load balancing
 D) To set internal DNS
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 160
@@ -2783,6 +3056,13 @@ A) External traffic is blocked
 B) Internal traffic is only routed to Pods on the same node
 C) All traffic becomes internal
 D) Load balancing is disabled
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
