@@ -619,20 +619,20 @@ With `imagePullPolicy: Never`, the kubelet never attempts to pull the image from
 </details>
 
 ### Question 35
-How can you configure a default imagePullPolicy for all containers in a namespace?
+How can you configure a default imagePullPolicy for all containers in a namespace using built-in Kubernetes features?
 
 A) Using a namespace annotation
 B) Using an AlwaysPullImages admission controller
 C) Using a ConfigMap
-D) It cannot be configured at the namespace level
+D) It cannot be configured at the namespace level with built-in features
 
 <details><summary>Answer</summary>
 
-**B) Using an AlwaysPullImages admission controller**
+**D) It cannot be configured at the namespace level with built-in features**
 
-The AlwaysPullImages admission controller can be enabled to force all Pods to use `imagePullPolicy: Always`. While this is cluster-wide, it ensures images are always verified against the registry. There's no built-in namespace-level default, but policy engines like Kyverno or Gatekeeper can enforce specific policies per namespace.
+Kubernetes does not provide a built-in mechanism to set a default imagePullPolicy at the namespace level. The AlwaysPullImages admission controller forces `imagePullPolicy: Always` but operates cluster-wide, not per-namespace. For namespace-level control, you would need external policy engines like Kyverno, Gatekeeper, or ValidatingAdmissionPolicy with custom rules.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source:** [Admission Controllers Reference | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
 
 </details>
 
@@ -1820,15 +1820,15 @@ Init containers execute one at a time in the exact order they're listed in the P
 What happens if an init container fails?
 
 A) The Pod continues with remaining init containers
-B) The Pod is restarted (init containers run again) based on restartPolicy
-C) Only the failed init container is restarted
+B) The entire Pod restarts from the beginning
+C) Only the failed init container is restarted until it succeeds
 D) The Pod is deleted immediately
 
 <details><summary>Answer</summary>
 
-**B) The Pod is restarted (init containers run again) based on restartPolicy**
+**C) Only the failed init container is restarted until it succeeds**
 
-When an init container fails, Kubernetes restarts the Pod according to its restartPolicy. All init containers run again from the beginning (they must be idempotent). If the Pod has `restartPolicy: Never`, the Pod is marked as Failed. This ensures the Pod enters a consistent state before main containers start.
+When an init container fails, the kubelet repeatedly restarts only that specific init container until it succeeds. The Pod does not restart from the beginning and already-completed init containers are not re-run. However, if `restartPolicy: Never` is set, the Pod is marked as Failed without restart attempts. Init containers must be idempotent since they may be restarted.
 
 **Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
@@ -2182,17 +2182,17 @@ Mi (mebibyte) uses binary units: 1Mi = 1024 * 1024 = 1,048,576 bytes. M (megabyt
 What is a QoS class in Kubernetes?
 
 A) A network quality setting
-B) A classification that affects scheduling and eviction priority
+B) A classification that determines Pod eviction priority under resource pressure
 C) A storage performance tier
 D) A service level agreement
 
 <details><summary>Answer</summary>
 
-**B) A classification that affects scheduling and eviction priority**
+**B) A classification that determines Pod eviction priority under resource pressure**
 
-QoS (Quality of Service) classes are automatically assigned to Pods based on their resource requests and limits. There are three classes: Guaranteed, Burstable, and BestEffort. QoS class determines eviction priority when nodes are under resource pressure - BestEffort Pods are evicted first.
+QoS (Quality of Service) classes are automatically assigned to Pods based on their resource requests and limits. The three classes are: Guaranteed, Burstable, and BestEffort. QoS class determines eviction priority when nodes are under resource pressure—BestEffort Pods are evicted first, then Burstable, and Guaranteed last. Note: QoS class does not affect scheduling; scheduling decisions use resource requests instead.
 
-**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+**Source:** [Configure Quality of Service for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/)
 
 </details>
 
@@ -3470,17 +3470,17 @@ D) The probe timeout
 What happens when a Pod is terminated?
 
 A) Containers are killed immediately
-B) SIGTERM is sent, PreStop hooks run, then SIGKILL after grace period
+B) PreStop hooks run, then SIGTERM is sent, then SIGKILL after grace period
 C) Only SIGKILL is sent
 D) Containers are paused
 
 <details><summary>Answer</summary>
 
-**B) SIGTERM is sent, PreStop hooks run, then SIGKILL after grace period**
+**B) PreStop hooks run, then SIGTERM is sent, then SIGKILL after grace period**
 
-Pod termination sequence: 1) PreStop hooks run (concurrently with SIGTERM in older versions, before SIGTERM in newer), 2) SIGTERM is sent to container processes, 3) Grace period counts down, 4) SIGKILL is sent to any remaining processes. This allows applications to shut down gracefully.
+Pod termination sequence: 1) PreStop hooks run first and must complete before SIGTERM is sent, 2) SIGTERM is sent to container processes, 3) Grace period counts down (covering both hook execution and shutdown time), 4) SIGKILL is sent to any remaining processes. The `terminationGracePeriodSeconds` covers the total time for both PreStop and container shutdown.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
 
 </details>
 
