@@ -782,6 +782,13 @@ B) Update kube-apiserver's --service-node-port-range flag
 C) Edit the kube-proxy ConfigMap
 D) Change the CNI configuration
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 42
@@ -794,6 +801,13 @@ B) KUBE-SERVICES
 C) KUBE-NODEPORTS
 D) PREROUTING
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 43
@@ -805,6 +819,13 @@ A) NodePort is slower
 B) NodePort exposes all nodes and requires external load balancing
 C) NodePort doesn't support TCP
 D) NodePort Services cost more
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -820,6 +841,13 @@ B) Cloud load balancer (e.g., AWS ELB, GCP Load Balancer)
 C) DNS record
 D) Storage volume
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 45
@@ -831,6 +859,13 @@ A) A software load balancer is automatically created
 B) The Service remains in Pending state
 C) It falls back to NodePort automatically
 D) An error is thrown
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -844,6 +879,13 @@ B) ClusterIP and NodePort only
 C) ClusterIP, NodePort, and external LoadBalancer
 D) External LoadBalancer only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 47
@@ -855,6 +897,13 @@ A) By deploying cloud provider APIs
 B) By announcing Service IPs via ARP/BGP protocols
 C) By creating virtual machines
 D) By proxying through the master node
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -868,6 +917,13 @@ B) cloud.google.com/load-balancer-type: "Internal" or similar cloud-specific ann
 C) kubernetes.io/internal-lb: "true"
 D) loadbalancer.kubernetes.io/internal
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 49
@@ -879,6 +935,13 @@ A) To get the assigned load balancer IP
 B) To request a specific IP address for the load balancer
 C) To configure the backend IP
 D) To set the ClusterIP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -892,6 +955,13 @@ B) To restrict which client IPs can access the load balancer
 C) To define the load balancer's IP pool
 D) To configure source NAT ranges
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 51
@@ -903,6 +973,13 @@ A) It doesn't; kube-proxy handles everything
 B) It watches for LoadBalancer Services and provisions cloud resources
 C) It only handles node registration
 D) It manages Pod scheduling
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -916,6 +993,13 @@ B) To control whether NodePorts are allocated for LoadBalancer Services
 C) To specify the number of load balancer instances
 D) To configure port mapping
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 53
@@ -928,6 +1012,13 @@ B) service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
 C) service.beta.kubernetes.io/aws-load-balancer-target-group-attributes with preserve_client_ip
 D) No annotation needed; NLB preserves client IP by default in instance mode
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** D
+
+</details>
+
 ---
 
 ### Question 54
@@ -939,6 +1030,13 @@ A) Layer 4 is faster, Layer 7 is more secure
 B) Layer 4 operates at TCP/UDP level, Layer 7 operates at HTTP level
 C) Layer 4 is internal, Layer 7 is external
 D) Layer 4 is cloud-only, Layer 7 is on-premises
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -954,6 +1052,13 @@ B) To create a CNAME alias to an external DNS name
 C) To assign external IPs to Pods
 D) To configure external authentication
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 56
@@ -965,6 +1070,13 @@ A) Setting type: Headless
 B) Setting clusterIP: None
 C) Removing all selectors
 D) Setting replicas: 0
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -978,6 +1090,13 @@ B) The IP addresses of all backing Pods
 C) Nothing; DNS is disabled
 D) The node IPs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 58
@@ -989,6 +1108,13 @@ A) Load balancing HTTP traffic
 B) StatefulSet Pod discovery and direct Pod access
 C) External service exposure
 D) SSL termination
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1002,6 +1128,13 @@ B) AAAA record
 C) CNAME record
 D) SRV record
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 60
@@ -1013,6 +1146,13 @@ A) Yes, it's required
 B) Yes, but it's optional
 C) No, ExternalName Services cannot have selectors
 D) Only if targeting internal services
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
 
 ---
 
@@ -1026,6 +1166,13 @@ B) The Service becomes a ClusterIP Service
 C) An error occurs
 D) Only the first Pod is selected
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 62
@@ -1037,6 +1184,13 @@ A) Create an Endpoints resource with the same name
 B) Add IPs to the Service annotations
 C) Use a ConfigMap
 D) Define them in a separate YAML file
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -1050,6 +1204,13 @@ B) pod-name.service.namespace.svc.cluster.local
 C) pod-ip-dashed.namespace.pod.cluster.local
 D) hostname.subdomain.namespace.svc.cluster.local
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** D
+
+</details>
+
 ---
 
 ### Question 64
@@ -1062,6 +1223,13 @@ B) headlessService
 C) serviceRef
 D) linkedService
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 65
@@ -1073,6 +1241,13 @@ A) Yes, by using the full DNS name
 B) No, it can only point to external names
 C) Only within the same namespace
 D) Only with specific annotations
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -1088,6 +1263,13 @@ B) To manage external HTTP/HTTPS access to Services
 C) To configure network policies
 D) To manage Pod networking
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 67
@@ -1099,6 +1281,13 @@ A) kube-proxy
 B) An Ingress controller
 C) CoreDNS
 D) A CNI plugin
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1112,6 +1301,13 @@ B) nginx-ingress-controller
 C) flannel
 D) coredns
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 69
@@ -1123,6 +1319,13 @@ A) TCP routing only
 B) UDP routing only
 C) HTTP/HTTPS routing based on host and path
 D) ICMP routing
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
 
 ---
 
@@ -1136,6 +1339,13 @@ B) Using the service name and port
 C) Using the Pod IP
 D) Using annotations only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 71
@@ -1147,6 +1357,13 @@ A) To name the Ingress resource
 B) To specify which Ingress controller should handle this Ingress
 C) To define the class of traffic
 D) To set priority
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1160,6 +1377,13 @@ B) Using annotations only
 C) TLS is always automatic
 D) Using a ConfigMap
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 73
@@ -1171,6 +1395,13 @@ A) Opaque
 B) kubernetes.io/tls
 C) kubernetes.io/ssh-auth
 D) kubernetes.io/dockerconfigjson
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1184,6 +1415,13 @@ B) Routing based on file system paths
 C) Routing based on node paths
 D) Routing based on network paths
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 75
@@ -1195,6 +1433,13 @@ A) Prefix is faster than Exact
 B) Prefix matches the path and all subpaths, Exact matches only the specific path
 C) Prefix is for HTTP, Exact is for HTTPS
 D) There is no difference
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1208,6 +1453,13 @@ B) The first rule created wins
 C) The most specific rule wins
 D) An error occurs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 77
@@ -1219,6 +1471,13 @@ A) Using the rateLimiting field in Ingress spec
 B) Using annotations like nginx.ingress.kubernetes.io/limit-rps
 C) Rate limiting is not supported
 D) Using a separate ConfigMap
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1232,6 +1491,13 @@ B) To handle requests that don't match any rules
 C) To provide health checks
 D) To store default configurations
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 79
@@ -1244,6 +1510,13 @@ B) By watching Ingress resources via the Kubernetes API
 C) By reading from etcd directly
 D) By receiving push notifications from kubelet
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 80
@@ -1255,6 +1528,13 @@ A) To rewrite the response body
 B) To rewrite the URL path before forwarding to the backend
 C) To rewrite the Host header
 D) To rewrite the client IP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
