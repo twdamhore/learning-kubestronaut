@@ -2430,6 +2430,14 @@ B) To define a seccomp profile that filters system calls
 C) To configure AppArmor
 D) To set resource limits
 
+<details><summary>Answer</summary>
+
+**B) To define a seccomp profile that filters system calls**
+
+The `seccompProfile` field configures seccomp (secure computing mode) to restrict which system calls a container can make. Options include RuntimeDefault (use the container runtime's default profile), Localhost (use a custom profile), or Unconfined (no restrictions). Seccomp adds defense-in-depth against container escapes.
+
+</details>
+
 ### Question 152
 What is the RuntimeDefault seccomp profile?
 
@@ -2437,6 +2445,14 @@ A) A custom profile
 B) The container runtime's default seccomp profile that blocks dangerous syscalls
 C) No restrictions
 D) A Kubernetes-specific profile
+
+<details><summary>Answer</summary>
+
+**B) The container runtime's default seccomp profile that blocks dangerous syscalls**
+
+RuntimeDefault uses the container runtime's built-in seccomp profile, which blocks dangerous system calls like reboot, kernel module loading, and clock modifications while allowing common operations. It's a good baseline security measure that works with most applications without modification.
+
+</details>
 
 ### Question 153
 What is AppArmor in the context of container security?
@@ -2446,6 +2462,14 @@ B) A Linux security module that restricts program capabilities with profiles
 C) A Kubernetes admission controller
 D) A network policy
 
+<details><summary>Answer</summary>
+
+**B) A Linux security module that restricts program capabilities with profiles**
+
+AppArmor is a Linux security module that restricts what files, networks, and capabilities programs can access. It uses profiles that define allowed operations. In Kubernetes, AppArmor profiles can be applied to containers to limit file access, network activity, and other operations beyond what seccomp provides.
+
+</details>
+
 ### Question 154
 How do you apply an AppArmor profile to a container?
 
@@ -2453,6 +2477,14 @@ A) Using a securityContext field
 B) Using an annotation on the Pod
 C) Using a ConfigMap
 D) Using a custom resource
+
+<details><summary>Answer</summary>
+
+**B) Using an annotation on the Pod**
+
+AppArmor profiles are applied via Pod annotations in the format `container.apparmor.security.beta.kubernetes.io/<container_name>: <profile>`. The profile must be loaded on the node. Common values are `runtime/default`, `localhost/<profile-name>`, or `unconfined`. Note: Kubernetes 1.30+ also supports the appArmorProfile field in securityContext.
+
+</details>
 
 ### Question 155
 What is SELinux in the context of container security?
@@ -2462,6 +2494,14 @@ B) A mandatory access control system that enforces security policies
 C) A Kubernetes feature
 D) A container runtime
 
+<details><summary>Answer</summary>
+
+**B) A mandatory access control system that enforces security policies**
+
+SELinux (Security-Enhanced Linux) is a mandatory access control system that enforces security policies beyond traditional Linux permissions. It labels processes and files with security contexts and controls interactions based on policies. In Kubernetes, SELinux options can be set to control container access to files and processes.
+
+</details>
+
 ### Question 156
 How can you set SELinux options for a container?
 
@@ -2469,6 +2509,14 @@ A) Using an annotation
 B) Using securityContext.seLinuxOptions
 C) Using a ConfigMap
 D) Using environment variables
+
+<details><summary>Answer</summary>
+
+**B) Using securityContext.seLinuxOptions**
+
+SELinux options are configured via `securityContext.seLinuxOptions`, which accepts fields like `user`, `role`, `type`, and `level`. These set the SELinux context for the container's processes. This is particularly important on SELinux-enabled systems (like RHEL/CentOS) for proper volume access and security policy enforcement.
+
+</details>
 
 ### Question 157
 What is a Pod Security Standard?
@@ -2478,6 +2526,14 @@ B) A set of policies defining security best practices at different levels
 C) A container format specification
 D) A network security protocol
 
+<details><summary>Answer</summary>
+
+**B) A set of policies defining security best practices at different levels**
+
+Pod Security Standards (PSS) define three security policy levels for Pods: Privileged, Baseline, and Restricted. They specify which security settings are required or forbidden. Pod Security Admission enforces these standards at the namespace level, replacing the deprecated PodSecurityPolicy.
+
+</details>
+
 ### Question 158
 What are the three Pod Security Standard levels?
 
@@ -2485,6 +2541,14 @@ A) Low, Medium, High
 B) Privileged, Baseline, Restricted
 C) Basic, Standard, Advanced
 D) Open, Controlled, Locked
+
+<details><summary>Answer</summary>
+
+**B) Privileged, Baseline, Restricted**
+
+The three levels are: Privileged (no restrictions, allows all), Baseline (prevents known privilege escalations, suitable for most workloads), and Restricted (heavily restricted, follows Pod hardening best practices). Each level builds on the previous with more security controls.
+
+</details>
 
 ### Question 159
 What does the Privileged Pod Security Standard allow?
@@ -2494,6 +2558,14 @@ B) Unrestricted policy, allowing known privilege escalations
 C) No network access
 D) Read-only filesystems only
 
+<details><summary>Answer</summary>
+
+**B) Unrestricted policy, allowing known privilege escalations**
+
+The Privileged level is an unrestricted policy that allows everything, including privileged containers, host namespaces, and all capabilities. It's intended for system-level and infrastructure workloads managed by trusted users. It provides no security guarantees and should only be used when necessary.
+
+</details>
+
 ### Question 160
 What does the Baseline Pod Security Standard restrict?
 
@@ -2501,6 +2573,14 @@ A) All capabilities
 B) Known privilege escalations while allowing common configurations
 C) All root users
 D) All volume mounts
+
+<details><summary>Answer</summary>
+
+**B) Known privilege escalations while allowing common configurations**
+
+Baseline restricts known privilege escalations like privileged containers, hostPID/hostIPC/hostNetwork, and dangerous volume types, while allowing common configurations like running as root (with restrictions). It's suitable for most workloads and balances security with ease of adoption.
+
+</details>
 
 ## Container Networking
 
@@ -2512,6 +2592,14 @@ B) All containers share the same network namespace
 C) Only init containers share the namespace
 D) Network namespaces are optional
 
+<details><summary>Answer</summary>
+
+**B) All containers share the same network namespace**
+
+All containers in a Pod share the same network namespace, meaning they share the same IP address and port space. They can communicate via localhost. This is fundamental to the Pod model and enables tightly-coupled containers to communicate efficiently without network overhead.
+
+</details>
+
 ### Question 162
 How do containers in the same Pod communicate with each other?
 
@@ -2519,6 +2607,14 @@ A) Through Kubernetes Services
 B) Through localhost, as they share the same network namespace
 C) Through environment variables
 D) Through shared volumes
+
+<details><summary>Answer</summary>
+
+**B) Through localhost, as they share the same network namespace**
+
+Containers in the same Pod can communicate via localhost (127.0.0.1) because they share the network namespace. One container can connect to another's port using localhost:<port>. This enables patterns like sidecars where a proxy container handles traffic for the main application container.
+
+</details>
 
 ### Question 163
 What is the pause container?
@@ -2528,6 +2624,14 @@ B) An infrastructure container that holds the network namespace for the Pod
 C) A debugging container
 D) A resource-saving container
 
+<details><summary>Answer</summary>
+
+**B) An infrastructure container that holds the network namespace for the Pod**
+
+The pause container (also called sandbox or infra container) is a minimal container that holds the network namespace for the Pod. It starts first and stays running, acting as the parent for the Pod's network namespace. Other containers join this namespace, ensuring the namespace persists even if app containers restart.
+
+</details>
+
 ### Question 164
 What role does the pause container play in Pod networking?
 
@@ -2535,6 +2639,14 @@ A) It routes traffic between Pods
 B) It holds the network namespace that other containers in the Pod join
 C) It provides DNS services
 D) It manages firewall rules
+
+<details><summary>Answer</summary>
+
+**B) It holds the network namespace that other containers in the Pod join**
+
+The pause container's main role is to create and hold the network namespace. When application containers start, they join this existing namespace rather than creating their own. This design ensures the network namespace survives container restarts and provides a stable network identity for the Pod.
+
+</details>
 
 ### Question 165
 How do containers expose ports in Kubernetes?
@@ -2544,6 +2656,14 @@ B) Through the containerPort field in the container spec
 C) Through firewall rules
 D) Through the Service object only
 
+<details><summary>Answer</summary>
+
+**B) Through the containerPort field in the container spec**
+
+The `containerPort` field in the container spec documents which ports the container listens on. While containers can listen on any port (containerPort is primarily informational), declaring ports helps with documentation and allows Services to target specific ports. It doesn't actually open or close ports.
+
+</details>
+
 ### Question 166
 What is the containerPort field used for?
 
@@ -2551,6 +2671,14 @@ A) To open ports on the host
 B) To document and expose the port the container listens on
 C) To configure firewall rules
 D) To set up port forwarding
+
+<details><summary>Answer</summary>
+
+**B) To document and expose the port the container listens on**
+
+`containerPort` is primarily informational, documenting which port the container application uses. It's required for port naming (used in Service targetPort by name) and for certain tools to discover ports. The container can still listen on any port regardless of this declaration.
+
+</details>
 
 ### Question 167
 What is the hostPort field used for?
@@ -2560,6 +2688,14 @@ B) To map a container port directly to a port on the host node
 C) To configure Service ports
 D) To set DNS resolution
 
+<details><summary>Answer</summary>
+
+**B) To map a container port directly to a port on the host node**
+
+`hostPort` maps a container port to a port on the node's IP address. Traffic to `<nodeIP>:<hostPort>` is forwarded to the container. This bypasses the Service abstraction and is used in special cases like DaemonSets that need to receive traffic directly on each node.
+
+</details>
+
 ### Question 168
 Why should hostPort be avoided in most cases?
 
@@ -2567,6 +2703,14 @@ A) It's deprecated
 B) It limits Pod scheduling and can cause port conflicts
 C) It's slower than Services
 D) It doesn't work with CNI plugins
+
+<details><summary>Answer</summary>
+
+**B) It limits Pod scheduling and can cause port conflicts**
+
+Using hostPort limits Pod scheduling to nodes where that port is available, potentially causing scheduling failures. Only one Pod using a specific hostPort can run on each node. It creates tight coupling between Pods and nodes. Services or Ingress are preferred for most traffic routing needs.
+
+</details>
 
 ### Question 169
 What is the protocol field in containerPort?
@@ -2576,6 +2720,14 @@ B) The network protocol (TCP, UDP, or SCTP) for the port
 C) The authentication protocol
 D) The encryption protocol
 
+<details><summary>Answer</summary>
+
+**B) The network protocol (TCP, UDP, or SCTP) for the port**
+
+The `protocol` field specifies the network protocol for the port: TCP (default), UDP, or SCTP. This must match the protocol used by the application. Services also use this to route traffic correctly. Most web applications use TCP, while DNS and some streaming services use UDP.
+
+</details>
+
 ### Question 170
 How does a Service route traffic to container ports?
 
@@ -2583,6 +2735,14 @@ A) Through hostPort
 B) Through selectors matching Pod labels and targetPort mapping
 C) Through direct container connections
 D) Through shared volumes
+
+<details><summary>Answer</summary>
+
+**B) Through selectors matching Pod labels and targetPort mapping**
+
+Services use label selectors to find matching Pods, then route traffic to the `targetPort` on those Pods. The Service's `port` receives traffic, which is forwarded to `targetPort` on the container. This provides load balancing across all matching Pods without exposing individual Pod IPs.
+
+</details>
 
 ## Container Logging and Debugging
 
@@ -2594,6 +2754,14 @@ B) To stdout and stderr, captured by the container runtime
 C) To a log file in the container
 D) To the Kubernetes API server
 
+<details><summary>Answer</summary>
+
+**B) To stdout and stderr, captured by the container runtime**
+
+Containers should write logs to stdout and stderr rather than files. The container runtime captures these streams and stores them on the node (typically under /var/log/containers/). This enables `kubectl logs` to work and allows log aggregation solutions to collect logs consistently.
+
+</details>
+
 ### Question 172
 How does kubectl logs retrieve container logs?
 
@@ -2601,6 +2769,14 @@ A) By reading files from the container
 B) By requesting logs from the kubelet, which gets them from the container runtime
 C) By querying a logging database
 D) By accessing the API server logs
+
+<details><summary>Answer</summary>
+
+**B) By requesting logs from the kubelet, which gets them from the container runtime**
+
+`kubectl logs` makes a request to the API server, which proxies to the kubelet on the appropriate node. The kubelet then retrieves logs from the container runtime. This chain allows centralized log access without directly connecting to nodes.
+
+</details>
 
 ### Question 173
 What happens to container logs when a container restarts?
@@ -2610,6 +2786,14 @@ B) Previous logs can be viewed with --previous flag, current container gets new 
 C) All logs are deleted
 D) Logs are automatically backed up
 
+<details><summary>Answer</summary>
+
+**B) Previous logs can be viewed with --previous flag, current container gets new logs**
+
+When a container restarts, its log file is rotated. The current container's logs start fresh, but logs from the previous instance are preserved temporarily. Use `kubectl logs --previous` to view the terminated container's logs, helpful for debugging crash loops.
+
+</details>
+
 ### Question 174
 How can you view logs from a previous container instance?
 
@@ -2617,6 +2801,14 @@ A) Using kubectl logs --history
 B) Using kubectl logs --previous
 C) Using kubectl logs --old
 D) Using kubectl logs --backup
+
+<details><summary>Answer</summary>
+
+**B) Using kubectl logs --previous**
+
+The `--previous` (or `-p`) flag shows logs from the previous container instance. This is essential for debugging crash loops where the current container keeps restarting. It shows whatever logs the crashed container wrote before termination.
+
+</details>
 
 ### Question 175
 What is the recommended logging approach for containers?
@@ -2626,6 +2818,14 @@ B) Write logs to stdout/stderr for collection by the logging infrastructure
 C) Send logs directly to an external system
 D) Store logs in a database
 
+<details><summary>Answer</summary>
+
+**B) Write logs to stdout/stderr for collection by the logging infrastructure**
+
+The twelve-factor app methodology recommends writing logs to stdout/stderr. This allows the platform to handle log collection and aggregation. Containers shouldn't be concerned with log storage or routing - this is handled by the container runtime and logging infrastructure like Fluentd, Filebeat, or cloud logging services.
+
+</details>
+
 ### Question 176
 What is a logging sidecar container?
 
@@ -2633,6 +2833,14 @@ A) A container that processes application logs
 B) A helper container that collects and forwards logs from the main container
 C) A container for log analysis
 D) A container that stores log files
+
+<details><summary>Answer</summary>
+
+**B) A helper container that collects and forwards logs from the main container**
+
+A logging sidecar runs alongside the main container, collecting logs and forwarding them to a centralized logging system. It's useful when applications write logs to files instead of stdout, or when logs need transformation. Common sidecars include Fluentd, Filebeat, and Fluent Bit.
+
+</details>
 
 ### Question 177
 How can you debug a running container?
@@ -2642,6 +2850,14 @@ B) Use kubectl exec to run commands or kubectl debug for troubleshooting
 C) Check the Dockerfile
 D) Redeploy the Pod
 
+<details><summary>Answer</summary>
+
+**B) Use kubectl exec to run commands or kubectl debug for troubleshooting**
+
+For running containers, use `kubectl exec` to run commands inside the container, or `kubectl debug` to add ephemeral debug containers. You can also use `kubectl logs`, `kubectl describe`, and `kubectl port-forward` for different debugging scenarios.
+
+</details>
+
 ### Question 178
 What does kubectl exec do?
 
@@ -2649,6 +2865,14 @@ A) Creates a new container
 B) Executes a command inside a running container
 C) Stops a container
 D) Copies files to a container
+
+<details><summary>Answer</summary>
+
+**B) Executes a command inside a running container**
+
+`kubectl exec` runs a command in a running container, similar to `docker exec`. Add `-it` for interactive mode with a TTY. Useful for debugging, checking configurations, running diagnostic commands, or getting a shell inside the container.
+
+</details>
 
 ### Question 179
 How can you get an interactive shell in a container?
@@ -2658,6 +2882,14 @@ B) kubectl exec -it <pod> -- /bin/sh (or /bin/bash)
 C) kubectl shell
 D) kubectl connect
 
+<details><summary>Answer</summary>
+
+**B) kubectl exec -it <pod> -- /bin/sh (or /bin/bash)**
+
+To get an interactive shell, use `kubectl exec -it <pod-name> -- /bin/sh` (or `/bin/bash` if available). The `-i` flag enables stdin, `-t` allocates a TTY. The `--` separates kubectl arguments from the command to run. Use `-c container` for multi-container Pods.
+
+</details>
+
 ### Question 180
 What is kubectl debug used for?
 
@@ -2665,6 +2897,14 @@ A) Viewing logs
 B) Creating ephemeral containers or debug copies of Pods for troubleshooting
 C) Setting breakpoints
 D) Monitoring performance
+
+<details><summary>Answer</summary>
+
+**B) Creating ephemeral containers or debug copies of Pods for troubleshooting**
+
+`kubectl debug` adds ephemeral containers to running Pods, creates debug copies of Pods with modified settings, or creates debug Pods on nodes. It's useful for troubleshooting distroless images, crash loops, or node-level issues where `kubectl exec` isn't sufficient.
+
+</details>
 
 ### Question 181
 How can you debug a container that crashes immediately?
@@ -2674,6 +2914,14 @@ B) Using kubectl debug to add a debug container or creating a copy with differen
 C) By increasing resource limits
 D) By changing the restart policy
 
+<details><summary>Answer</summary>
+
+**B) Using kubectl debug to add a debug container or creating a copy with different commands**
+
+For crash-looping containers, use `kubectl debug --copy-to` to create a copy with a different command (like `sleep infinity`) to keep it running. Or use `kubectl debug` to add an ephemeral container that shares namespaces with the crashing container. Also check logs with `kubectl logs --previous`.
+
+</details>
+
 ### Question 182
 What is a debug container?
 
@@ -2681,6 +2929,14 @@ A) A container with debugging tools
 B) An ephemeral container added to a running Pod for troubleshooting
 C) A container in debug mode
 D) A test container
+
+<details><summary>Answer</summary>
+
+**B) An ephemeral container added to a running Pod for troubleshooting**
+
+A debug container is an ephemeral container added to a running Pod using `kubectl debug`. It can share process, network, or IPC namespaces with other containers, providing access to debug tools (curl, strace, tcpdump) that might not be in the production image. Ephemeral containers can't be removed once added.
+
+</details>
 
 ### Question 183
 How can you inspect container resource usage?
@@ -2690,6 +2946,14 @@ B) Using kubectl top pod (requires metrics-server)
 C) Using kubectl resources
 D) Using kubectl monitor
 
+<details><summary>Answer</summary>
+
+**B) Using kubectl top pod (requires metrics-server)**
+
+`kubectl top pod` shows current CPU and memory usage for Pods and containers. It requires the metrics-server to be installed in the cluster. Use `--containers` to see per-container metrics. This provides real-time resource consumption data for debugging and capacity planning.
+
+</details>
+
 ### Question 184
 What does kubectl top pod show?
 
@@ -2698,6 +2962,14 @@ B) Current CPU and memory usage of Pods and their containers
 C) Historical resource data
 D) Resource requests and limits
 
+<details><summary>Answer</summary>
+
+**B) Current CPU and memory usage of Pods and their containers**
+
+`kubectl top pod` displays current CPU usage (in millicores) and memory usage (in bytes) for Pods. It shows a snapshot of actual resource consumption, not the configured requests/limits. Use this to identify resource-heavy Pods, tune resource allocations, or debug performance issues.
+
+</details>
+
 ### Question 185
 How can you view container events?
 
@@ -2705,6 +2977,14 @@ A) Using kubectl events
 B) Using kubectl describe pod, which shows events in the Events section
 C) Using kubectl logs
 D) Using kubectl get containers
+
+<details><summary>Answer</summary>
+
+**B) Using kubectl describe pod, which shows events in the Events section**
+
+`kubectl describe pod` displays a comprehensive view including the Events section showing recent events related to the Pod and its containers. Events include image pulls, container starts/stops, probe failures, scheduling decisions, and resource issues. You can also use `kubectl get events` for cluster-wide events.
+
+</details>
 
 ## Advanced Container Concepts
 
@@ -2716,6 +2996,14 @@ B) A lifecycle event handler that runs code at specific container lifecycle poin
 C) A security feature
 D) A monitoring probe
 
+<details><summary>Answer</summary>
+
+**B) A lifecycle event handler that runs code at specific container lifecycle points**
+
+Container hooks are lifecycle event handlers that allow you to run code when specific events occur in a container's lifecycle. Kubernetes supports two hooks: PostStart (runs after container creation) and PreStop (runs before container termination). Hooks can be exec commands or HTTP requests.
+
+</details>
+
 ### Question 187
 What is the PostStart hook?
 
@@ -2723,6 +3011,14 @@ A) A hook that runs after the container stops
 B) A hook that runs immediately after a container is created
 C) A cleanup hook
 D) A scheduling hook
+
+<details><summary>Answer</summary>
+
+**B) A hook that runs immediately after a container is created**
+
+The PostStart hook executes immediately after a container is created. It runs asynchronously with the container's ENTRYPOINT, meaning there's no guarantee about order. Common uses include waiting for dependencies, sending notifications, or performing initialization. If it fails, the container is killed.
+
+</details>
 
 ### Question 188
 What is the PreStop hook?
@@ -2732,6 +3028,14 @@ B) A hook that runs before a container is terminated
 C) A startup hook
 D) A pause hook
 
+<details><summary>Answer</summary>
+
+**B) A hook that runs before a container is terminated**
+
+The PreStop hook executes before a container is terminated (before SIGTERM is sent). It's useful for graceful shutdown tasks like deregistering from a service registry, saving state, or completing in-flight requests. The hook must complete before the grace period expires.
+
+</details>
+
 ### Question 189
 How are container hooks executed?
 
@@ -2739,6 +3043,14 @@ A) In a separate container
 B) Inside the container using exec or HTTP handlers
 C) On the host node
 D) By the Kubernetes API server
+
+<details><summary>Answer</summary>
+
+**B) Inside the container using exec or HTTP handlers**
+
+Hooks support two handlers: exec (runs a command inside the container) and httpGet (makes an HTTP request to a container endpoint). The exec handler runs in the container's namespace and filesystem. HTTP handlers must have an endpoint the container serves.
+
+</details>
 
 ### Question 190
 What happens if a PostStart hook fails?
@@ -2748,6 +3060,14 @@ B) The container is killed
 C) The hook is retried
 D) The Pod is rescheduled
 
+<details><summary>Answer</summary>
+
+**B) The container is killed**
+
+If a PostStart hook fails (returns non-zero exit code or HTTP error), the container is killed. The failure event is visible in `kubectl describe`. The container may be restarted based on restartPolicy. Ensure hooks are reliable, or the container will enter a crash loop.
+
+</details>
+
 ### Question 191
 What is the terminationGracePeriodSeconds field?
 
@@ -2755,6 +3075,14 @@ A) The time a container can run
 B) The time Kubernetes waits for a Pod to terminate gracefully before force-killing
 C) The startup timeout
 D) The probe timeout
+
+<details><summary>Answer</summary>
+
+**B) The time Kubernetes waits for a Pod to terminate gracefully before force-killing**
+
+`terminationGracePeriodSeconds` (default 30 seconds) is the time allowed for graceful shutdown. During this period, PreStop hooks run and SIGTERM is sent. If containers don't exit within this period, SIGKILL is sent. Increase this for applications needing more time to drain connections or save state.
+
+</details>
 
 ### Question 192
 What happens when a Pod is terminated?
@@ -2764,6 +3092,14 @@ B) SIGTERM is sent, PreStop hooks run, then SIGKILL after grace period
 C) Only SIGKILL is sent
 D) Containers are paused
 
+<details><summary>Answer</summary>
+
+**B) SIGTERM is sent, PreStop hooks run, then SIGKILL after grace period**
+
+Pod termination sequence: 1) PreStop hooks run (concurrently with SIGTERM in older versions, before SIGTERM in newer), 2) SIGTERM is sent to container processes, 3) Grace period counts down, 4) SIGKILL is sent to any remaining processes. This allows applications to shut down gracefully.
+
+</details>
+
 ### Question 193
 What is the SIGTERM signal used for?
 
@@ -2771,6 +3107,14 @@ A) Immediate termination
 B) Graceful shutdown request, allowing the process to clean up
 C) Process pause
 D) Resource limit notification
+
+<details><summary>Answer</summary>
+
+**B) Graceful shutdown request, allowing the process to clean up**
+
+SIGTERM (signal 15) is a termination request that allows processes to catch it and perform cleanup before exiting. Applications should handle SIGTERM to gracefully close connections, flush buffers, and save state. Unlike SIGKILL, SIGTERM can be caught and handled by the application.
+
+</details>
 
 ### Question 194
 What happens after the grace period expires during Pod termination?
@@ -2780,6 +3124,14 @@ B) SIGKILL is sent to force-terminate remaining processes
 C) The Pod is rescheduled
 D) An error is logged but nothing happens
 
+<details><summary>Answer</summary>
+
+**B) SIGKILL is sent to force-terminate remaining processes**
+
+When the grace period expires, SIGKILL (signal 9) is sent to any processes still running. SIGKILL cannot be caught or ignored - it immediately terminates processes. This ensures containers don't run indefinitely and resources are released, even if applications don't handle SIGTERM properly.
+
+</details>
+
 ### Question 195
 What is container image caching?
 
@@ -2787,6 +3139,14 @@ A) Compressing images
 B) Storing pulled images on nodes to avoid repeated downloads
 C) Encrypting images
 D) Versioning images
+
+<details><summary>Answer</summary>
+
+**B) Storing pulled images on nodes to avoid repeated downloads**
+
+Container runtimes cache pulled images on nodes so subsequent Pod starts don't need to re-download them. This speeds up container startup and reduces network usage. The imagePullPolicy controls whether cached images are used (IfNotPresent, Never) or always pulled (Always).
+
+</details>
 
 ### Question 196
 How does image garbage collection work in Kubernetes?
@@ -2796,6 +3156,14 @@ B) Kubelet removes unused images when disk usage exceeds thresholds
 C) Images are deleted after each Pod
 D) A separate garbage collector Pod runs
 
+<details><summary>Answer</summary>
+
+**B) Kubelet removes unused images when disk usage exceeds thresholds**
+
+The kubelet periodically runs image garbage collection. When disk usage exceeds imageGCHighThresholdPercent (default 85%), unused images are deleted until disk falls below imageGCLowThresholdPercent (default 80%). Images used by running containers are never deleted. This prevents disk exhaustion.
+
+</details>
+
 ### Question 197
 What is the ImagePullBackOff error?
 
@@ -2803,6 +3171,14 @@ A) An authentication error
 B) A state indicating repeated failures to pull an image, with exponential backoff
 C) A network timeout
 D) A storage error
+
+<details><summary>Answer</summary>
+
+**B) A state indicating repeated failures to pull an image, with exponential backoff**
+
+ImagePullBackOff occurs after repeated ErrImagePull failures. Kubernetes backs off (waits longer between attempts) to avoid overwhelming registries. Check `kubectl describe pod` for details. Common causes include image not found, authentication failures, network issues, or typos in image names.
+
+</details>
 
 ### Question 198
 What causes ErrImagePull errors?
@@ -2812,6 +3188,14 @@ B) Image not found, authentication failure, or network issues
 C) CPU limits exceeded
 D) Disk full
 
+<details><summary>Answer</summary>
+
+**B) Image not found, authentication failure, or network issues**
+
+ErrImagePull occurs when Kubernetes can't pull an image. Common causes: image name typos, tag doesn't exist, private registry without imagePullSecrets, network connectivity issues, registry rate limiting, or registry downtime. Check the error message in `kubectl describe pod` for specifics.
+
+</details>
+
 ### Question 199
 What is a container runtime sandbox?
 
@@ -2820,6 +3204,14 @@ B) An isolation layer providing additional security between containers and the k
 C) A test container
 D) A resource limit
 
+<details><summary>Answer</summary>
+
+**B) An isolation layer providing additional security between containers and the kernel**
+
+A sandbox runtime provides additional isolation between containers and the host kernel, beyond standard Linux namespaces and cgroups. Examples include gVisor (user-space kernel) and Kata Containers (lightweight VMs). They reduce kernel attack surface for untrusted workloads at the cost of some performance overhead.
+
+</details>
+
 ### Question 200
 What is gVisor in the context of container runtimes?
 
@@ -2827,3 +3219,11 @@ A) A container orchestrator
 B) A user-space kernel that provides additional isolation for containers
 C) A container registry
 D) A monitoring tool
+
+<details><summary>Answer</summary>
+
+**B) A user-space kernel that provides additional isolation for containers**
+
+gVisor is an application kernel written in Go that implements a substantial portion of the Linux system call interface. It runs in user space and intercepts container system calls, providing strong isolation without the overhead of a full VM. gVisor is used via the runsc OCI runtime and is suitable for running untrusted code.
+
+</details>
