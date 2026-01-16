@@ -18,6 +18,13 @@ B) Container Network Interface
 C) Cluster Network Integration
 D) Cloud Native Interface
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 2
@@ -29,6 +36,13 @@ A) Managing container images
 B) Providing network connectivity to Pods
 C) Scheduling Pods to nodes
 D) Managing persistent storage
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -42,6 +56,13 @@ B) Calico
 C) Bridge
 D) Host-local
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 4
@@ -53,6 +74,13 @@ A) The API server directly configures the network
 B) The kubelet calls the CNI plugin to set up networking
 C) The scheduler assigns the IP address
 D) etcd stores the network configuration
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -66,6 +94,13 @@ B) /etc/cni/net.d/
 C) /var/lib/cni/config/
 D) /opt/cni/conf/
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 6
@@ -77,6 +112,13 @@ A) Calico with IPIP mode
 B) Flannel with vxlan backend
 C) Weave with fastdp
 D) Cilium with native routing
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -90,6 +132,13 @@ B) To manage IP address allocation for Pods
 C) To configure DNS settings
 D) To set up load balancing
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 8
@@ -101,6 +150,13 @@ A) Flannel
 B) Calico
 C) Cilium
 D) Weave
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
 
 ---
 
@@ -114,6 +170,13 @@ B) Native routing without overlay encapsulation
 C) Better support for Windows containers
 D) Automatic SSL/TLS encryption
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 10
@@ -125,6 +188,13 @@ A) The kube-scheduler
 B) IPAM (IP Address Management) with cluster-wide coordination
 C) The API server's validation webhook
 D) etcd's unique key constraints
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -138,6 +208,13 @@ B) IP-in-IP with protocol number 4
 C) GRE tunneling with protocol 47
 D) Geneve with UDP port 6081
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 12
@@ -149,6 +226,13 @@ A) podCIDR
 B) subnet
 C) ipRange
 D) networkRange
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -162,6 +246,13 @@ B) ADD sets up network for a container, DEL tears it down
 C) ADD allocates CPU, DEL deallocates it
 D) ADD starts the container, DEL stops it
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 14
@@ -174,6 +265,13 @@ B) Each plugin handles different aspects of networking
 C) Failover in case one plugin crashes
 D) Parallel execution for better performance
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 15
@@ -185,6 +283,13 @@ A) YAML
 B) JSON
 C) TOML
 D) XML
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -200,6 +305,13 @@ B) LoadBalancer
 C) ClusterIP
 D) ExternalName
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 17
@@ -211,6 +323,13 @@ A) Expose the application to the internet
 B) Provide internal cluster communication
 C) Load balance traffic across nodes
 D) Map to an external DNS name
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -224,6 +343,13 @@ B) By node name
 C) By label selector
 D) By IP address
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 19
@@ -235,6 +361,13 @@ A) targetPort
 B) nodePort
 C) port
 D) containerPort
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
 
 ---
 
@@ -248,6 +381,13 @@ B) The Service CIDR range defined in cluster configuration
 C) Any private IP range
 D) The node's subnet range
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 21
@@ -259,6 +399,13 @@ A) The Service fails to create
 B) It defaults to the same value as `port`
 C) It defaults to port 80
 D) It uses the first exposed container port
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -272,6 +419,13 @@ B) They are gracefully drained during the termination grace period
 C) They are migrated to another Pod
 D) They remain connected until client timeout
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 23
@@ -283,6 +437,13 @@ A) kubectl get pods
 B) kubectl describe service <name>
 C) kubectl get endpoints <name>
 D) kubectl logs service/<name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
 
 ---
 
@@ -296,6 +457,13 @@ B) To route requests from the same client to the same Pod
 C) To prioritize certain Pods over others
 D) To enable HTTP/2 multiplexing
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 25
@@ -307,6 +475,13 @@ A) Cookie
 B) ClientIP
 C) Header
 D) Session
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -320,6 +495,13 @@ B) 3 hours (10800 seconds)
 C) 24 hours
 D) No timeout
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 27
@@ -331,6 +513,13 @@ A) Publishes the Service to external DNS
 B) Includes Pod IPs in endpoints even if readiness probes fail
 C) Makes the Service available before the cluster is ready
 D) Allows traffic to unscheduled Pods
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -344,6 +533,13 @@ B) An error occurs during Service creation
 C) Services can only select Pods in the same namespace
 D) The Service uses round-robin across namespaces
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 29
@@ -356,6 +552,13 @@ B) By programming iptables NAT rules
 C) By modifying the routing table
 D) By intercepting packets in userspace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 30
@@ -367,6 +570,13 @@ A) To enable IPv4 only
 B) To configure dual-stack (IPv4/IPv6) behavior
 C) To set the IP family for node communication
 D) To restrict IP ranges for clients
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -382,6 +592,13 @@ B) 1024-65535
 C) 30000-32767
 D) 8000-9000
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 32
@@ -393,6 +610,13 @@ A) Only the ClusterIP
 B) Only the node's external IP
 C) All node IPs on the specified port
 D) Only the master node IP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
 
 ---
 
@@ -406,6 +630,13 @@ B) A ClusterIP for internal access
 C) A LoadBalancer
 D) An external DNS record
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 34
@@ -417,6 +648,13 @@ A) It's always automatically assigned
 B) Using the `nodePort` field in the Service spec
 C) Using an annotation
 D) Through a ConfigMap
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -430,6 +668,13 @@ B) Both Services share the port
 C) The Service creation fails
 D) A random port is assigned instead
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 36
@@ -441,6 +686,13 @@ A) External -> NodePort -> ClusterIP -> Pod
 B) External -> Pod directly
 C) External -> LoadBalancer -> NodePort -> Pod
 D) External -> Ingress -> NodePort -> Pod
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -454,6 +706,13 @@ B) To control whether traffic is routed only to local Pods or cluster-wide
 C) To enable SSL termination
 D) To configure firewall rules
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 38
@@ -465,6 +724,13 @@ A) All traffic goes to the local node only
 B) Traffic is only routed to Pods on the receiving node, preserving client IP
 C) Traffic is encrypted locally
 D) The Service becomes unavailable externally
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -478,6 +744,13 @@ B) The node's health check fails and no traffic is sent to it
 C) The request hangs until a Pod is scheduled
 D) A 503 error is immediately returned
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 40
@@ -489,6 +762,13 @@ A) Better client IP preservation
 B) More even load distribution across all Pods
 C) Lower latency
 D) Reduced network hops
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
