@@ -2170,7 +2170,7 @@ D) etcd last
 ### Question 94
 [MEDIUM-HARD]
 
-How many minor versions can kubelet lag behind the API server?
+How many minor versions can kubelet lag behind the API server (Kubernetes 1.28+)?
 
 A) 1 minor version
 B) 2 minor versions
@@ -2180,11 +2180,11 @@ D) No version lag allowed
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Kubernetes version skew policy allows kubelet to be up to 2 minor versions older than kube-apiserver. For example, if apiserver is 1.28, kubelet can be 1.28, 1.27, or 1.26. This allows gradual node upgrades.
+**Explanation:** Since Kubernetes 1.28, the version skew policy allows kubelet to be up to 3 minor versions older than kube-apiserver (previously it was 2 minor versions for kubelet < 1.25). For example, if apiserver is 1.35, kubelet can be 1.35, 1.34, 1.33, or 1.32. This enables multi-version upgrades in a single cycle.
 
-**Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+**Source:** [Version Skew Policy | Kubernetes](https://kubernetes.io/releases/version-skew-policy/)
 
 </details>
 
@@ -2308,19 +2308,19 @@ D) kubeadm cluster upgrade-plan
 ### Question 100
 [HARD]
 
-When upgrading a multi-master cluster, which control plane node should be upgraded first?
+When upgrading a multi-master cluster with kubeadm, what command is used on the first control plane node?
 
-A) Any node randomly
-B) The node with the oldest etcd member
-C) The node running the leader
-D) A node with the upgrade lock
+A) kubeadm upgrade apply
+B) kubeadm upgrade node
+C) kubeadm upgrade plan
+D) kubeadm upgrade init
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** A
 
-**Explanation:** In a multi-master kubeadm cluster, the first control plane node is upgraded with `kubeadm upgrade apply`, and subsequent control plane nodes use `kubeadm upgrade node`. Any control plane node can be upgraded first, but typically you start with the one you have access to.
+**Explanation:** In a multi-master kubeadm cluster, the first control plane node is upgraded with `kubeadm upgrade apply`, which performs the full upgrade including updating cluster configuration. Subsequent control plane nodes use `kubeadm upgrade node`, which only upgrades the local kubelet configuration. All control plane nodes must be upgraded before worker nodes.
 
 **Source:** [Upgrading kubeadm clusters | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
 
@@ -2471,11 +2471,11 @@ D) An error is thrown for all operations
 ### Question 107
 [MEDIUM-HARD]
 
-What tool helps identify deprecated API usage in manifests?
+What helps identify deprecated API usage in manifests?
 
 A) kubectl deprecate check
 B) kubectl api-resources --deprecated
-C) kubectl deprecate or external tools like pluto
+C) External tools like pluto or kubent
 D) kubectl validate --deprecated
 
 <details>
@@ -2483,9 +2483,9 @@ D) kubectl validate --deprecated
 
 **Answer:** C
 
-**Explanation:** External tools like `pluto` scan manifests and cluster resources for deprecated API usage. kubectl itself shows deprecation warnings when resources are accessed but doesn't have a dedicated deprecation scanning command.
+**Explanation:** External tools like `pluto` and `kubent` scan manifests and cluster resources for deprecated API usage. kubectl itself shows deprecation warnings when deprecated resources are accessed but doesn't have a dedicated deprecation scanning command. These tools are essential for preparing cluster upgrades.
 
-**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+**Source:** [Deprecated API Migration Guide | Kubernetes](https://kubernetes.io/docs/reference/using-api/deprecation-guide/)
 
 </details>
 
