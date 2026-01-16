@@ -2952,15 +2952,17 @@ D) To enable host networking
 
 How does traffic flow when accessing a ClusterIP Service from a Pod on the same node as a backend Pod?
 
-A) Always through the network
-B) The CNI may short-circuit traffic locally
+A) Always routed through an external network hop
+B) kube-proxy DNATs to a backend; if the endpoint is local, traffic stays on-node
 C) Through the API server
-D) Through kube-proxy's userspace mode
+D) The CNI bypasses kube-proxy for local traffic
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** ClusterIP traffic is always handled by kube-proxy (iptables/IPVS rules), which DNATs the Service IP to a backend Pod IP. If the selected endpoint happens to be on the same node, the traffic stays local after the NAT—but it's kube-proxy making the routing decision, not the CNI.
 
 </details>
 
@@ -2972,7 +2974,7 @@ D) Through kube-proxy's userspace mode
 What is the purpose of `externalIPs` in a Service specification?
 
 A) To configure external DNS
-B) To make the Service available on specific node IPs
+B) To expose the Service on specific external IPs routed to the cluster
 C) To configure load balancer IPs
 D) To set up external authentication
 
@@ -2980,6 +2982,8 @@ D) To set up external authentication
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The `externalIPs` field allows you to specify IPs that are externally routed to cluster nodes. These don't have to be actual node interface IPs—they can be any IPs your network routes to the cluster. kube-proxy installs rules to accept traffic destined for these IPs and DNAT it to the Service's backend Pods.
 
 </details>
 
