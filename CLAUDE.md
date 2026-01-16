@@ -13,7 +13,7 @@ Create a comprehensive MCQ study repository for all 5 Kubestronaut certification
 | 1. Kubernetes Fundamentals (44%) | Kubernetes Core Concepts | ✅ Done (200 MCQs) |
 | | Administration | ✅ Done (200 MCQs) |
 | | Scheduling | ✅ Done (200 MCQs) |
-| | Containerization | ⏳ Pending |
+| | Containerization | ✅ Done (200 MCQs) |
 | 2. Container Orchestration (28%) | Networking | ⏳ Pending |
 | | Security | ⏳ Pending |
 | | Troubleshooting | ⏳ Pending |
@@ -43,7 +43,7 @@ KCNA/
 │   ├── 01-kubernetes-core-concepts.md ✅
 │   ├── 02-administration.md ✅
 │   ├── 03-scheduling.md ✅
-│   └── 04-containerization.md
+│   └── 04-containerization.md ✅
 ├── 02-container-orchestration/
 │   ├── 01-networking.md
 │   ├── 02-security.md

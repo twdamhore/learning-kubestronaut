@@ -24,6 +24,8 @@ D) Storing cluster state
 
 **Explanation:** The kube-scheduler's primary role is to assign newly created Pods to nodes. It watches for Pods without a node assignment and selects optimal nodes based on resource requirements, constraints, and policies.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -43,6 +45,8 @@ D) etcd directly
 **Answer:** C
 
 **Explanation:** The kube-scheduler communicates with the kube-apiserver to watch for unscheduled Pods and to update Pod assignments. It never communicates directly with etcd or kubelet—all communication goes through the API server.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -64,6 +68,8 @@ D) The scheduler creates a new node
 
 **Explanation:** If no node satisfies a Pod's scheduling requirements (resources, affinity, tolerations, etc.), the Pod remains in Pending state. The scheduler will continue to retry scheduling as cluster state changes.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -83,6 +89,8 @@ D) Preemption phase
 **Answer:** C
 
 **Explanation:** The filtering phase (also called predicates) eliminates nodes that don't meet the Pod's requirements. Only nodes that pass all filter plugins proceed to the scoring phase.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -104,6 +112,8 @@ D) Validating Pod specifications
 
 **Explanation:** The scoring phase ranks the nodes that passed filtering. Each scoring plugin assigns scores based on criteria like resource availability, affinity preferences, and spread. The node with the highest total score is selected.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -123,6 +133,8 @@ D) The Pod remains pending
 **Answer:** C
 
 **Explanation:** When multiple nodes have the same highest score, the scheduler selects one randomly (or round-robin in some implementations). This ensures fair distribution when nodes are equally suitable.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -144,6 +156,8 @@ D) It depends on the scheduler configuration
 
 **Explanation:** Filtering always comes before scoring. The scheduler first eliminates unsuitable nodes (filtering), then ranks the remaining nodes (scoring). This is more efficient than scoring all nodes.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -163,6 +177,8 @@ D) kubernetes-scheduler
 **Answer:** B
 
 **Explanation:** The default scheduler name is "default-scheduler". While the binary is called kube-scheduler, pods use "default-scheduler" as the schedulerName value unless otherwise specified.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -184,6 +200,8 @@ D) Only DaemonSet Pods can specify this
 
 **Explanation:** Pods can specify a scheduler using the `spec.schedulerName` field. This enables running multiple schedulers for different workload types or custom scheduling logic.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -203,6 +221,8 @@ D) spec.nodeName
 **Answer:** B
 
 **Explanation:** The `spec.schedulerName` field specifies which scheduler should handle the Pod. If not set, it defaults to "default-scheduler". nodeName bypasses the scheduler entirely.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -226,6 +246,8 @@ D) taints
 
 **Explanation:** Setting `spec.nodeName` directly is the simplest way to schedule a Pod to a specific node. It bypasses the scheduler entirely and places the Pod on the named node.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -246,6 +268,8 @@ D) The Pod fails immediately
 
 **Explanation:** If the specified nodeName doesn't exist, the Pod remains Pending. The kubelet on that node would need to exist to run the Pod, and since the node doesn't exist, the Pod cannot be started.
 
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 </details>
 
 ---
@@ -265,6 +289,8 @@ D) Only if the node exists
 **Answer:** B
 
 **Explanation:** Yes, nodeName completely bypasses the scheduler. When nodeName is set, the scheduler ignores the Pod. The Pod is directly assigned to that node without any scheduling logic.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -286,6 +312,8 @@ D) It can only be used once per node
 
 **Explanation:** nodeName bypasses all scheduling constraints (taints, affinity, resource checks). If the node doesn't exist, has insufficient resources, or is unhealthy, the Pod may fail or remain pending indefinitely.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -305,6 +333,8 @@ D) Yes, but requires restart
 **Answer:** B
 
 **Explanation:** nodeName is immutable after Pod creation. Once set (either explicitly or by the scheduler), it cannot be changed. To move a Pod, you must delete and recreate it.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -328,6 +358,8 @@ D) A resource quota
 
 **Explanation:** nodeSelector is a simple mechanism to constrain Pods to nodes with specific labels. It's the simplest form of node selection constraint in Kubernetes.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -347,6 +379,8 @@ D) spec.containers.nodeSelector
 **Answer:** B
 
 **Explanation:** nodeSelector is specified under `spec.nodeSelector` in a Pod definition. It's a map of key-value pairs that must match node labels.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -368,6 +402,8 @@ D) Wildcard matching
 
 **Explanation:** nodeSelector uses exact equality matching. The node must have labels with exactly the same keys and values specified in the nodeSelector.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -387,6 +423,8 @@ D) Labels are created automatically
 **Answer:** B
 
 **Explanation:** If no nodes match the nodeSelector labels, the Pod remains in Pending state. The scheduler cannot find a suitable node and will continue retrying.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -408,6 +446,8 @@ D) Only with node affinity
 
 **Explanation:** Multiple labels can be specified in nodeSelector, and ALL must match (AND logic). The node must have every label with the exact values specified.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -427,6 +467,8 @@ D) They cannot be used on the same Pod
 **Answer:** B
 
 **Explanation:** nodeSelector is a simpler, more limited form of node affinity. Node affinity provides more expressive rules with operators like In, NotIn, Exists. Both can be used together—both constraints must be satisfied.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -448,6 +490,8 @@ D) kubectl taint nodes
 
 **Explanation:** Use `kubectl label nodes <node-name> <key>=<value>` to add labels to nodes. These labels can then be used in nodeSelector to constrain Pod placement.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -467,6 +511,8 @@ D) Only the value is case-sensitive
 **Answer:** B
 
 **Explanation:** Yes, both label keys and values are case-sensitive in Kubernetes. "Environment=Production" and "environment=production" are different labels.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -488,6 +534,8 @@ D) Only with expressions
 
 **Explanation:** nodeSelector only supports equality matching. For inequality or other operators (NotIn, Exists, DoesNotExist), you must use node affinity with matchExpressions.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -507,6 +555,8 @@ D) No built-in labels exist
 **Answer:** B
 
 **Explanation:** Kubernetes automatically adds labels like kubernetes.io/hostname, kubernetes.io/os, kubernetes.io/arch, topology.kubernetes.io/zone, topology.kubernetes.io/region, and node.kubernetes.io/instance-type.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -530,6 +580,8 @@ D) A network policy
 
 **Explanation:** Node affinity is an expressive way to constrain which nodes a Pod can be scheduled on based on node labels. It's more flexible than nodeSelector, supporting operators like In, NotIn, Exists.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -549,6 +601,8 @@ D) mandatory and optional
 **Answer:** B
 
 **Explanation:** The two types are requiredDuringSchedulingIgnoredDuringExecution (required/hard) and preferredDuringSchedulingIgnoredDuringExecution (preferred/soft).
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -570,6 +624,8 @@ D) Never required
 
 **Explanation:** The rule must be satisfied for the Pod to be scheduled. "IgnoredDuringExecution" means if node labels change after scheduling, the Pod won't be evicted.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -589,6 +645,8 @@ D) Only for preferred nodes
 **Answer:** B
 
 **Explanation:** The scheduler will try to satisfy these rules but will schedule the Pod even if no matching node is found. It's a soft preference, not a hard requirement.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -610,6 +668,8 @@ D) Only new Pods follow the rules
 
 **Explanation:** "IgnoredDuringExecution" means affinity rules are only checked at scheduling time. If a node's labels change after the Pod is running, the Pod won't be evicted. A future "RequiredDuringExecution" type would evict pods.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -629,6 +689,8 @@ D) Only Exists
 **Answer:** B
 
 **Explanation:** Node affinity supports six operators: In, NotIn, Exists, DoesNotExist, Gt (greater than), and Lt (less than). Gt and Lt are for numeric comparisons.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -650,6 +712,8 @@ D) Checks string contains
 
 **Explanation:** The In operator checks if the node's label value for a given key is one of the specified values. Example: key: zone, operator: In, values: [us-east-1a, us-east-1b].
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -669,6 +733,8 @@ D) Negates the entire rule
 **Answer:** B
 
 **Explanation:** NotIn checks that the node's label value is NOT one of the specified values. It's useful for excluding specific nodes or zones.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -690,6 +756,8 @@ D) Creates the label if missing
 
 **Explanation:** Exists checks only that the label key exists on the node—the value doesn't matter. You don't specify values with Exists.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -709,6 +777,8 @@ D) Creates missing nodes
 **Answer:** B
 
 **Explanation:** DoesNotExist matches nodes that do NOT have the specified label key. Useful for excluding nodes with certain labels.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -730,6 +800,8 @@ D) Size comparison
 
 **Explanation:** Gt (greater than) and Lt (less than) perform numeric comparisons on label values. The label value must be parseable as an integer. Useful for version-based or capacity-based scheduling.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -748,7 +820,9 @@ D) Weights are automatic
 
 **Answer:** B
 
-**Explanation:** Each preferred term has a weight field (1-100). Higher weights mean stronger preference. The scheduler multiplies the weight by the score to rank nodes.
+**Explanation:** Each preferred term has a weight field (1-100). Higher weights mean stronger preference. When a node matches the preference, the scheduler adds the weight to the node's total score. Nodes with higher total scores are preferred for scheduling.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -770,6 +844,8 @@ D) Any positive integer
 
 **Explanation:** Weights must be in the range 1-100. Weight 0 is not valid. The total score is the sum of (weight × match) across all preferred terms.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -790,6 +866,8 @@ D) Only one term is evaluated
 
 **Explanation:** Multiple terms in nodeSelectorTerms are combined with OR logic—a node must match ANY of the terms. This is different from matchExpressions within a term.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -809,6 +887,8 @@ D) First match wins
 **Answer:** B
 
 **Explanation:** Multiple matchExpressions within the same nodeSelectorTerm are combined with AND logic—a node must satisfy ALL expressions in the term.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -832,6 +912,8 @@ D) Pod networking
 
 **Explanation:** Pod affinity allows you to constrain which nodes a Pod can be scheduled on based on labels of Pods already running on nodes. It enables co-locating related Pods.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -851,6 +933,8 @@ D) A container name
 **Answer:** B
 
 **Explanation:** topologyKey is a node label key that defines topology domains. Pods are co-located when they're on nodes with the same value for this label. Common values: kubernetes.io/hostname, topology.kubernetes.io/zone.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -872,6 +956,8 @@ D) app.version
 
 **Explanation:** kubernetes.io/hostname is common for same-node affinity. topology.kubernetes.io/zone is used for zone-level affinity. These are node labels, not pod labels.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -891,6 +977,8 @@ D) Execute immediately
 **Answer:** B
 
 **Explanation:** Required pod affinity means the Pod MUST be scheduled on a node in the same topology domain as pods matching the labelSelector. If no such node exists, the Pod stays Pending.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -912,6 +1000,8 @@ D) Only with admin rights
 
 **Explanation:** Pod affinity can reference pods in other namespaces using the `namespaces` field (list of namespaces) or `namespaceSelector` (label selector for namespaces). By default, it only considers the same namespace.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -931,6 +1021,8 @@ D) Selecting namespaces
 **Answer:** B
 
 **Explanation:** The labelSelector in pod affinity specifies which pods to consider for the affinity rule. The scheduler looks for pods matching these labels and places the new pod accordingly.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -952,6 +1044,8 @@ D) Only one pod per cluster
 
 **Explanation:** With topologyKey: kubernetes.io/hostname, pods with affinity must be on the exact same node as matching pods (since each node has a unique hostname).
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -971,6 +1065,8 @@ D) Only affects networking
 **Answer:** B
 
 **Explanation:** Pod affinity requires checking all pods in relevant namespaces against the selector, which can be expensive in large clusters. This is why it's recommended to use with caution at scale.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -992,6 +1088,8 @@ D) Only in StatefulSets
 
 **Explanation:** Pod affinity and node affinity can be used together. Both constraints are evaluated, and the Pod must satisfy all of them to be scheduled.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -1011,6 +1109,8 @@ D) Deletes namespaces
 **Answer:** B
 
 **Explanation:** namespaceSelector uses label selectors to determine which namespaces' pods should be considered for affinity. This is more dynamic than listing specific namespaces.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -1034,6 +1134,8 @@ D) Deleting pods
 
 **Explanation:** Pod anti-affinity constrains pods to NOT be scheduled on nodes with pods matching certain labels. It's used to spread pods across nodes for high availability.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -1053,6 +1155,8 @@ D) To reduce costs
 **Answer:** B
 
 **Explanation:** Pod anti-affinity is typically used to spread replicas across failure domains (nodes, zones) to ensure high availability. If one node fails, not all replicas are lost.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -1074,6 +1178,8 @@ D) metadata.antiAffinity
 
 **Explanation:** Pod anti-affinity is specified under `spec.affinity.podAntiAffinity`. It has the same structure as podAffinity with required and preferred sections.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -1093,6 +1199,8 @@ D) Required is deprecated
 **Answer:** B
 
 **Explanation:** Required anti-affinity must be satisfied or the Pod won't schedule. Preferred anti-affinity is best-effort—the scheduler tries to satisfy it but will schedule anyway if it can't.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -1114,6 +1222,8 @@ D) Only In
 
 **Explanation:** Pod anti-affinity uses the same labelSelector structure and operators (In, NotIn, Exists, DoesNotExist) as pod affinity.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -1133,6 +1243,8 @@ D) Random node selected
 **Answer:** B
 
 **Explanation:** If required anti-affinity conflicts with other constraints (like resource requirements or node affinity), and no node satisfies all constraints, the Pod remains Pending.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -1154,6 +1266,8 @@ D) Prevents rollouts
 
 **Explanation:** Required anti-affinity can slow rollouts because new pods need nodes without existing pods. With limited nodes, you may need to scale down old pods before new ones can schedule.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -1173,6 +1287,8 @@ D) cluster.zone
 **Answer:** B
 
 **Explanation:** topology.kubernetes.io/zone is the standard label for availability zones. Using this as topologyKey spreads pods across different zones.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -1194,6 +1310,8 @@ D) Only with special annotation
 
 **Explanation:** Anti-affinity commonly references pods from the same Deployment using the deployment's pod labels. This spreads replicas across nodes.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+
 </details>
 
 ---
@@ -1213,6 +1331,8 @@ D) Cannot use with DaemonSets
 **Answer:** B
 
 **Explanation:** Limitations include: performance overhead in large clusters, topologyKey is required, can make scheduling impossible with limited nodes, and adds complexity to Pod specs.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
 
 </details>
 
@@ -1236,6 +1356,8 @@ D) A network policy
 
 **Explanation:** A taint is a property on a node that repels pods. Pods must have a matching toleration to be scheduled on a tainted node.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1255,6 +1377,8 @@ D) A network rule
 **Answer:** B
 
 **Explanation:** A toleration is specified on Pods and allows (but doesn't require) the Pod to be scheduled on nodes with matching taints.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1276,6 +1400,8 @@ D) Block, Warn, Pass
 
 **Explanation:** The three effects are: NoSchedule (don't schedule), PreferNoSchedule (try to avoid), and NoExecute (don't schedule AND evict existing pods).
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1295,6 +1421,8 @@ D) Only affects system pods
 **Answer:** B
 
 **Explanation:** NoSchedule prevents pods without a matching toleration from being scheduled on the node. Existing pods are not affected.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1316,6 +1444,8 @@ D) Only for preferred pods
 
 **Explanation:** PreferNoSchedule is a soft version of NoSchedule. The scheduler tries to avoid placing pods without tolerations but will do so if no other options exist.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1335,6 +1465,8 @@ D) Disables pod execution
 **Answer:** B
 
 **Explanation:** NoExecute affects both scheduling and running pods. Pods without matching tolerations are evicted from the node, and new pods won't be scheduled.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1356,6 +1488,8 @@ D) kubectl apply taint
 
 **Explanation:** Use `kubectl taint nodes <node-name> <key>=<value>:<effect>` to add a taint. Example: `kubectl taint nodes node1 dedicated=gpu:NoSchedule`
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1375,6 +1509,8 @@ D) kubectl delete taint
 **Answer:** A
 
 **Explanation:** Add a minus sign at the end to remove: `kubectl taint nodes node1 dedicated=gpu:NoSchedule-` or `kubectl taint nodes node1 dedicated:NoSchedule-`
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1396,6 +1532,8 @@ D) In ConfigMap
 
 **Explanation:** Tolerations are specified in the Pod's spec under the `tolerations` field. They're pod properties, not node properties.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1415,6 +1553,8 @@ D) All comparison operators
 **Answer:** B
 
 **Explanation:** Tolerations support two operators: Equal (matches specific key-value) and Exists (matches any taint with that key regardless of value).
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1436,6 +1576,8 @@ D) Compares pod names
 
 **Explanation:** The Equal operator matches a taint only if both the key and value match exactly. The effect must also match.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1455,6 +1597,8 @@ D) Validates node existence
 **Answer:** B
 
 **Explanation:** The Exists operator matches any taint with the specified key, regardless of value. You don't specify a value when using Exists.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1476,6 +1620,8 @@ D) Set toleration to "all"
 
 **Explanation:** An empty key with Exists operator tolerates all taints: `tolerations: [{operator: "Exists"}]`. This is useful for pods that should run anywhere.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1495,6 +1641,8 @@ D) Taint duration
 **Answer:** B
 
 **Explanation:** tolerationSeconds specifies how long a pod can remain on a node after a NoExecute taint is applied. After this time, the pod is evicted. Without it, the pod stays indefinitely.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1516,6 +1664,8 @@ D) Only on master nodes
 
 **Explanation:** Kubernetes automatically adds taints for node conditions: not-ready, unreachable, memory-pressure, disk-pressure, pid-pressure, network-unavailable, and unschedulable.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1535,6 +1685,8 @@ D) Deprecated taint
 **Answer:** B
 
 **Explanation:** This taint is automatically added when a node's Ready condition is False. It has NoExecute effect, so pods without toleration are evicted after tolerationSeconds.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1556,6 +1708,8 @@ D) Network policy
 
 **Explanation:** This NoExecute taint is added when the node controller cannot reach the node (network issues). It's different from not-ready which indicates the node itself is unhealthy.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1575,6 +1729,8 @@ D) They are mutually exclusive
 **Answer:** B
 
 **Explanation:** Taints/tolerations repel pods from nodes (opt-out model). Node affinity attracts pods to nodes (opt-in model). Both are complementary—use taints to repel, affinity to attract.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1596,6 +1752,8 @@ D) Only with special flag
 
 **Explanation:** A Pod can have multiple tolerations in its spec. Each toleration can match different taints. The Pod must tolerate ALL taints on a node to be scheduled there.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -1615,6 +1773,8 @@ D) Only new pods are affected
 **Answer:** B
 
 **Explanation:** When a NoExecute taint is added, pods without matching toleration are evicted. Pods with toleration and tolerationSeconds are evicted after that duration.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -1638,6 +1798,8 @@ D) Resources are ignored
 
 **Explanation:** The scheduler uses resource requests (not limits) to determine if a node has sufficient capacity. A Pod is only scheduled if the node's allocatable resources minus existing requests >= the Pod's requests.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ---
@@ -1657,6 +1819,8 @@ D) Disk and network
 **Answer:** B
 
 **Explanation:** CPU and memory are the primary resources for scheduling. Extended resources (like GPUs) can also be scheduled. Disk and network aren't typically used for scheduling decisions.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1678,6 +1842,8 @@ D) Node is scaled up
 
 **Explanation:** If no node has sufficient allocatable resources to satisfy a Pod's requests, the Pod remains in Pending state until resources become available (pods finish, new nodes added).
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ---
@@ -1697,6 +1863,8 @@ D) Neither
 **Answer:** B
 
 **Explanation:** The scheduler only considers requests for placement decisions. Limits are enforced by the kubelet at runtime. A Pod with high limits but low requests might be scheduled on a node that can't actually support the limits.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1718,6 +1886,8 @@ D) Network bandwidth
 
 **Explanation:** Allocatable = Capacity - kube-reserved - system-reserved - eviction-threshold. It's the resources actually available for pod scheduling after accounting for system needs.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ---
@@ -1737,6 +1907,8 @@ D) Allocatable is for storage only
 **Answer:** B
 
 **Explanation:** Capacity is total node resources. Allocatable is what's available for pods after subtracting resources reserved for Kubernetes components and the operating system.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1758,6 +1930,8 @@ D) Only disk
 
 **Explanation:** kube-reserved is for Kubernetes daemons (kubelet, container runtime). system-reserved is for OS daemons. Both can reserve CPU, memory, and ephemeral storage.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ---
@@ -1778,6 +1952,8 @@ D) Only system pods
 
 **Explanation:** A Pod cannot be scheduled if its requests exceed available resources on all nodes. It remains Pending. Priority and preemption might evict lower-priority pods to make room.
 
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ---
@@ -1786,17 +1962,19 @@ D) Only system pods
 [HARD]
 What is resource overcommitment?
 
-A) Using more resources than requested
-B) Scheduling pods whose total requests exceed node capacity
+A) When actual resource usage exceeds requested amounts
+B) When the sum of resource limits exceeds node capacity
 C) Requesting infinite resources
 D) Resource sharing
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** A
+**Answer:** B
 
-**Explanation:** Overcommitment happens when pods use more resources than requested (up to their limits). The scheduler prevents total requests from exceeding capacity, but actual usage can exceed requests.
+**Explanation:** Overcommitment occurs when the total resource limits of all pods on a node exceed the node's capacity. Kubernetes allows this because pods rarely use their full limits simultaneously. The scheduler uses requests (not limits) for placement, so limits can sum to more than 100% of capacity.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1817,6 +1995,8 @@ D) Round-robin
 **Answer:** B
 
 **Explanation:** LeastRequestedPriority gives higher scores to nodes with more free resources (capacity minus requested). This spreads load across nodes rather than packing them.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -1840,6 +2020,8 @@ D) Start order
 
 **Explanation:** Pod priority is an integer value that indicates the importance of a Pod. Higher priority pods are scheduled first and can preempt lower priority pods.
 
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
 </details>
 
 ---
@@ -1859,6 +2041,8 @@ D) labels.priority
 **Answer:** B
 
 **Explanation:** Set priority using `spec.priorityClassName` which references a PriorityClass. The actual priority value comes from the PriorityClass definition.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -1880,6 +2064,8 @@ D) A namespace
 
 **Explanation:** PriorityClass is a cluster-scoped resource that defines a priority value, optional preemption policy, and optional description. Pods reference it by name.
 
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
 </details>
 
 ---
@@ -1899,6 +2085,8 @@ D) Only positive numbers
 **Answer:** B
 
 **Explanation:** Priority values can be any 32-bit integer. Higher values mean higher priority. System priorities (like system-cluster-critical) use values around 2 billion.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -1920,6 +2108,8 @@ D) Priority inversion
 
 **Explanation:** Preemption is when the scheduler evicts (preempts) lower-priority pods from a node to make room for a higher-priority pod that cannot otherwise be scheduled.
 
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
 </details>
 
 ---
@@ -1939,6 +2129,8 @@ D) Only manually triggered
 **Answer:** B
 
 **Explanation:** Preemption occurs when a pending Pod has higher priority than running pods, can't be scheduled normally, and evicting some lower-priority pods would allow it to schedule.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -1960,6 +2152,8 @@ D) Only temporarily
 
 **Explanation:** Setting `preemptionPolicy: Never` in a PriorityClass prevents pods of that class from preempting others. They still have scheduling priority but won't evict other pods.
 
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
 </details>
 
 ---
@@ -1979,6 +2173,8 @@ D) Scheduling policy
 **Answer:** B
 
 **Explanation:** preemptionPolicy can be PreemptLowerPriority (default, allows preemption) or Never (disables preemption for this class). Never is useful for batch jobs that shouldn't interrupt others.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -2000,6 +2196,8 @@ D) Highest
 
 **Explanation:** Pods without a priorityClassName get priority 0 by default (unless a global default PriorityClass is defined). This is the lowest normal priority.
 
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
 </details>
 
 ---
@@ -2019,6 +2217,8 @@ D) Default class
 **Answer:** B
 
 **Explanation:** system-cluster-critical is a built-in PriorityClass (priority ~2 billion) for cluster-critical components like coredns. It can run in any namespace.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -2040,6 +2240,8 @@ D) Deprecated
 
 **Explanation:** system-node-critical has the highest priority (~2 billion + 1000) for node-critical components like kube-proxy. It's even higher than system-cluster-critical.
 
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
 </details>
 
 ---
@@ -2059,6 +2261,8 @@ D) Largest pods first
 **Answer:** B
 
 **Explanation:** The scheduler preempts the minimum number of lowest-priority pods needed to schedule the pending pod. It tries to minimize disruption while respecting PodDisruptionBudgets.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -2080,6 +2284,8 @@ D) Default namespace
 
 **Explanation:** Setting `globalDefault: true` makes this PriorityClass the default for pods that don't specify a priorityClassName. Only one PriorityClass should be the global default.
 
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
 </details>
 
 ---
@@ -2088,17 +2294,19 @@ D) Default namespace
 [HARD]
 Can preemption evict pods protected by PodDisruptionBudget?
 
-A) Yes, always
-B) No, PDB is respected
-C) Only for critical pods
-D) PDB is ignored during preemption
+A) Yes, always ignores PDB
+B) No, PDB is always strictly enforced
+C) PDB is supported but not guaranteed during preemption
+D) Only system pods can violate PDB
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Preemption respects PodDisruptionBudgets. The scheduler won't preempt pods if it would violate a PDB. However, if the only option is to violate PDB, preemption might still occur for system-critical pods.
+**Explanation:** During preemption, PodDisruptionBudget is supported but not guaranteed. The scheduler attempts to respect PDBs when selecting victims, but if no preemption candidates exist without violating PDB, preemption may still proceed. This is a best-effort consideration, not a hard constraint.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -2119,6 +2327,8 @@ D) They move to another node automatically
 **Answer:** B
 
 **Explanation:** Preempted pods receive SIGTERM for graceful termination. If managed by a controller (Deployment, ReplicaSet), replacements are scheduled elsewhere. The pods don't automatically move.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -2142,6 +2352,8 @@ D) Resource limits
 
 **Explanation:** Topology spread constraints control how pods are distributed across topology domains (zones, nodes, regions) to improve availability and resource utilization.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2161,6 +2373,8 @@ D) CPU imbalance
 **Answer:** B
 
 **Explanation:** maxSkew is the maximum allowed difference between the number of matching pods in any two topology domains. A skew of 1 means perfect balance.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2182,6 +2396,8 @@ D) Hard, Soft
 
 **Explanation:** whenUnsatisfiable can be DoNotSchedule (don't schedule if constraint can't be met) or ScheduleAnyway (schedule but try to minimize skew).
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2201,6 +2417,8 @@ D) Ignores constraint
 **Answer:** B
 
 **Explanation:** DoNotSchedule is a hard constraint. If scheduling the pod would violate maxSkew, the pod remains Pending until a valid placement exists.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2222,6 +2440,8 @@ D) Random scheduling
 
 **Explanation:** ScheduleAnyway is a soft constraint. The scheduler prioritizes nodes that minimize skew but will schedule even if maxSkew is exceeded.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2241,6 +2461,8 @@ D) Container name
 **Answer:** B
 
 **Explanation:** topologyKey is the node label key that defines topology domains. Nodes with the same value for this label are in the same domain. Common keys: kubernetes.io/hostname, topology.kubernetes.io/zone.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2262,6 +2484,8 @@ D) Spread is deprecated
 
 **Explanation:** Anti-affinity only ensures pods are on different domains. Topology spread ensures EVEN distribution across domains, which is more sophisticated and useful for balanced workloads.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2282,6 +2506,8 @@ D) Only in namespaces
 
 **Explanation:** Multiple topology spread constraints can be specified. ALL constraints must be satisfied for scheduling. This allows spreading across both zones AND nodes.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2291,7 +2517,7 @@ D) Only in namespaces
 What is minDomains in topology spread constraints?
 
 A) Minimum nodes
-B) Minimum number of domains that must have matching pods
+B) Minimum number of eligible domains for scheduling calculation
 C) Minimum skew
 D) Minimum pods
 
@@ -2300,7 +2526,9 @@ D) Minimum pods
 
 **Answer:** B
 
-**Explanation:** minDomains specifies the minimum number of eligible domains. If fewer domains exist, the scheduler uses the actual count. This prevents over-concentration when domains are added later.
+**Explanation:** minDomains specifies the minimum number of eligible domains to consider. When the number of eligible domains is less than minDomains, the global minimum is treated as 0 for skew calculation. This ensures pods spread across at least minDomains domains as they become available.
+
+**Source:** [Pod Topology Spread Constraints | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
 
 </details>
 
@@ -2321,6 +2549,8 @@ D) Total divided by domains
 **Answer:** B
 
 **Explanation:** Skew = (max pods in any domain) - (min pods in any domain). The scheduler checks if adding the pod to a domain would exceed maxSkew.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2344,6 +2574,8 @@ D) Only on master nodes
 
 **Explanation:** DaemonSets ensure one pod runs on each node (or nodes matching nodeSelector/affinity). The DaemonSet controller creates pods for each eligible node.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2364,6 +2596,8 @@ D) Kubelet schedules directly
 
 **Explanation:** Since Kubernetes 1.12, DaemonSets use the default scheduler by default. Previously, the DaemonSet controller handled scheduling directly.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -2382,7 +2616,9 @@ D) Only NoSchedule is respected
 
 **Answer:** B
 
-**Explanation:** DaemonSets respect taints but automatically add tolerations for certain taints (not-ready, unreachable, disk-pressure, memory-pressure, unschedulable) to ensure system pods run.
+**Explanation:** DaemonSets respect taints but the DaemonSet controller automatically adds NoExecute tolerations for node.kubernetes.io/not-ready and node.kubernetes.io/unreachable. This ensures DaemonSet pods aren't evicted from unhealthy nodes, which is important for monitoring and logging workloads.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -2404,6 +2640,8 @@ D) Only NoSchedule tolerations
 
 **Explanation:** DaemonSet pods automatically get tolerations for not-ready and unreachable taints (with NoExecute effect) so they continue running on problematic nodes for monitoring/logging.
 
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
 </details>
 
 ---
@@ -2423,6 +2661,8 @@ D) Only for system DaemonSets
 **Answer:** B
 
 **Explanation:** DaemonSets support nodeSelector to limit pods to specific nodes. Only nodes matching the selector get a DaemonSet pod.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2444,6 +2684,8 @@ D) Only preferred affinity
 
 **Explanation:** DaemonSets fully support node affinity. You can use both required and preferred affinity rules to control which nodes run DaemonSet pods.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
+
 </details>
 
 ---
@@ -2463,6 +2705,8 @@ D) Node must be labeled first
 **Answer:** B
 
 **Explanation:** The DaemonSet controller watches for new nodes. When a node joins and matches the selector/affinity, a new pod is automatically created for that node.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2484,6 +2728,8 @@ D) Disable the DaemonSet
 
 **Explanation:** Use nodeSelector/affinity to limit which nodes are eligible, or add taints to nodes you want to exclude (and don't add matching tolerations to the DaemonSet).
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2504,6 +2750,8 @@ D) Canary only
 
 **Explanation:** DaemonSet updateStrategy can be RollingUpdate (gradually replaces pods) or OnDelete (only replaces when pod is manually deleted). RollingUpdate has maxUnavailable and maxSurge settings.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2523,6 +2771,8 @@ D) Wait indefinitely
 **Answer:** B
 
 **Explanation:** DaemonSets automatically tolerate the node.kubernetes.io/unschedulable taint, so they can schedule on cordoned nodes. This ensures system pods run everywhere.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -2546,6 +2796,8 @@ D) A frozen pod
 
 **Explanation:** Static pods are managed directly by the kubelet on a specific node, without going through the API server. They're defined by files in a directory the kubelet watches.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -2565,6 +2817,8 @@ D) etcd
 **Answer:** B
 
 **Explanation:** The kubelet directly manages static pods. It reads manifests from a configured directory and creates/maintains pods without API server involvement.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -2586,6 +2840,8 @@ D) In the API server
 
 **Explanation:** Static pod manifests are YAML/JSON files in a directory on the node, typically /etc/kubernetes/manifests. The kubelet watches this directory.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -2605,6 +2861,8 @@ D) Through etcd
 **Answer:** B
 
 **Explanation:** The kubelet is configured with --pod-manifest-path (staticPodPath) to watch a directory. It automatically detects new/modified/deleted manifest files.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -2626,6 +2884,8 @@ D) Only for viewing
 
 **Explanation:** Static pods can't be managed through the API, but kubelet creates "mirror pods" in the API for visibility. These are read-only representations with status info.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -2645,6 +2905,8 @@ D) A shadow container
 **Answer:** B
 
 **Explanation:** Mirror pods are created by kubelet in the API server to represent static pods. They allow you to see static pod status through normal API tools but can't be modified.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -2666,6 +2928,8 @@ D) Only as admin
 
 **Explanation:** Deleting a mirror pod through the API is ineffective—kubelet will recreate it. To remove a static pod, delete the manifest file from the node.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -2685,6 +2949,8 @@ D) Only kube-proxy
 **Answer:** B
 
 **Explanation:** In kubeadm clusters, control plane components (apiserver, controller-manager, scheduler, etcd) run as static pods. This bootstraps the cluster before the API is available.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -2706,6 +2972,8 @@ D) API patch
 
 **Explanation:** Static pods can only be modified by editing the manifest file directly on the node. kubectl commands affect the mirror pod, not the actual static pod.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -2725,6 +2993,8 @@ D) Nothing until reboot
 **Answer:** B
 
 **Explanation:** When a static pod manifest is deleted, the kubelet detects this and terminates the pod. The mirror pod is also removed from the API.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -2748,6 +3018,8 @@ D) Label the pod
 
 **Explanation:** Setting spec.nodeName directly bypasses the scheduler and places the pod on the specified node. This is manual/direct scheduling.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2767,6 +3039,8 @@ D) spec.target
 **Answer:** B
 
 **Explanation:** spec.nodeName specifies the exact node for the pod. When set, the scheduler is bypassed completely.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2788,6 +3062,8 @@ D) Node is created automatically
 
 **Explanation:** If nodeName references a nonexistent node, the pod is created but remains Pending. There's no node for the kubelet to run it on.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2807,6 +3083,8 @@ D) Depends on configuration
 **Answer:** B
 
 **Explanation:** Admission controllers still validate the pod even with nodeName set. What's bypassed is the scheduler—not admission control, authentication, or authorization.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2828,6 +3106,8 @@ D) Service binding
 
 **Explanation:** The Binding API allows programmatically assigning a Pod to a Node. This is how schedulers (including custom ones) assign pods. It creates a Binding object.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -2847,6 +3127,8 @@ D) Cannot be done
 **Answer:** B
 
 **Explanation:** A custom scheduler watches for pods with its schedulerName, makes scheduling decisions, and creates Binding objects to assign pods to nodes.
+
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
 
 </details>
 
@@ -2868,6 +3150,8 @@ D) Pod is deleted
 
 **Explanation:** Once a pod spec has nodeName, it's assigned to that node immediately (if the node exists). The pod transitions from Pending to scheduled.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2887,6 +3171,8 @@ D) Only with admin rights
 **Answer:** B
 
 **Explanation:** nodeName is immutable. Once the pod is bound to a node (either by scheduler or manually), it cannot be moved. Delete and recreate to change placement.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
@@ -2908,6 +3194,8 @@ D) Auto-scaling
 
 **Explanation:** Manual scheduling (nodeName) is useful for testing, debugging scheduler issues, or running pods on specific hardware. It's not recommended for normal workloads.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -2927,6 +3215,8 @@ D) Only NoExecute
 **Answer:** B
 
 **Explanation:** nodeName bypasses the scheduler entirely, including taint checks. However, NoExecute taints still evict running pods without tolerations.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -2950,6 +3240,8 @@ D) Only in multi-cluster
 
 **Explanation:** Kubernetes supports multiple schedulers running simultaneously. Pods specify which scheduler to use via schedulerName.
 
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
+
 </details>
 
 ---
@@ -2969,6 +3261,8 @@ D) annotation
 **Answer:** B
 
 **Explanation:** Set spec.schedulerName to the name of the scheduler. If not specified, "default-scheduler" is used.
+
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
 
 </details>
 
@@ -2990,6 +3284,8 @@ D) Label selector
 
 **Explanation:** schedulerName identifies which scheduler should place this pod. Multiple schedulers watch for pods with their name and only handle those pods.
 
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
+
 </details>
 
 ---
@@ -3009,6 +3305,8 @@ D) Error at creation
 **Answer:** B
 
 **Explanation:** If no scheduler with the specified name is running, the pod remains Pending forever. No scheduler will claim it. The default scheduler only handles pods with its name.
+
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
 
 </details>
 
@@ -3030,6 +3328,8 @@ D) Must modify kubelet
 
 **Explanation:** Deploy a custom scheduler as a Deployment (or Pod) with RBAC permissions to read pods, nodes, and create bindings. Give it a unique name.
 
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
+
 </details>
 
 ---
@@ -3049,6 +3349,8 @@ D) Only with locks
 **Answer:** B
 
 **Explanation:** Each pod has exactly one schedulerName. Only that scheduler will attempt to schedule it. There's no competition or conflict.
+
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
 
 </details>
 
@@ -3070,6 +3372,8 @@ D) Only pod access
 
 **Explanation:** Custom schedulers need: get/list/watch pods, create bindings (in pods/binding subresource), get/list/watch nodes, and possibly other resources depending on scheduling logic.
 
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
+
 </details>
 
 ---
@@ -3089,6 +3393,8 @@ D) Automatic only
 **Answer:** B
 
 **Explanation:** For HA, multiple scheduler replicas use leader election via --leader-elect. Only the leader schedules pods. They use Lease objects for coordination.
+
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
 
 </details>
 
@@ -3110,6 +3416,8 @@ D) Plugin type
 
 **Explanation:** Scheduler extenders are webhooks called during scheduling to add custom filter and score logic without modifying the scheduler code. They're configured via KubeSchedulerConfiguration.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3129,6 +3437,8 @@ D) Plugins are deprecated
 **Answer:** B
 
 **Explanation:** Plugins are Go code compiled into the scheduler (fast, full access). Extenders are external HTTP services (slower, more flexible deployment). Plugins are preferred for performance.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3152,6 +3462,8 @@ D) Security profile
 
 **Explanation:** Scheduler profiles are named configurations with specific plugin settings. A single scheduler can run multiple profiles, selected via pod's schedulerName.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3171,6 +3483,8 @@ D) Only in clusters
 **Answer:** B
 
 **Explanation:** One scheduler instance can serve multiple profiles. Each profile has a unique name used as schedulerName. Different profiles can have different plugin configurations.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3192,6 +3506,8 @@ D) ConfigMap only
 
 **Explanation:** Profiles are configured in KubeSchedulerConfiguration file under the profiles field. Each profile specifies schedulerName and plugin configurations.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3211,6 +3527,8 @@ D) Storage points
 **Answer:** B
 
 **Explanation:** Extension points are phases in scheduling where plugins run: PreFilter, Filter, PostFilter, PreScore, Score, Reserve, Permit, PreBind, Bind, PostBind.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3232,6 +3550,8 @@ D) Caching
 
 **Explanation:** PreFilter runs before Filter to do pod-level preprocessing. It can reject pods early (e.g., if a required feature isn't available anywhere) without checking every node.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3251,6 +3571,8 @@ D) Event filtering
 **Answer:** B
 
 **Explanation:** Filter plugins check each node to determine if it can run the pod. Nodes failing any filter are eliminated. Only passing nodes proceed to scoring.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3272,6 +3594,8 @@ D) Notification
 
 **Explanation:** PostFilter runs when no nodes pass filtering. It's primarily used for preemption—finding lower-priority pods to evict so the pending pod can schedule.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3291,6 +3615,8 @@ D) Priority scoring
 **Answer:** B
 
 **Explanation:** Score plugins assign scores (0-100) to feasible nodes based on preferences (resource balance, affinity, spread). Nodes are ranked by total weighted score.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3312,6 +3638,8 @@ D) IP reservation
 
 **Explanation:** Reserve is called after node selection but before binding. Plugins can reserve resources (like volumes or IPs) that would prevent scheduling conflicts.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3331,6 +3659,8 @@ D) Service binding
 **Answer:** B
 
 **Explanation:** Bind plugins create the binding between pod and node. The default Bind plugin calls the API server to set the pod's nodeName. Custom plugins can handle special binding logic.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3354,6 +3684,8 @@ D) Network plugins
 
 **Explanation:** Scheduler plugins are modular Go components that implement scheduling logic. Each plugin can operate at one or more extension points (Filter, Score, etc.).
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3373,6 +3705,8 @@ D) Limits resources
 **Answer:** B
 
 **Explanation:** NodeResourcesFit filters nodes that don't have sufficient resources (CPU, memory) to satisfy the pod's requests. It also scores based on resource fit strategies.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3394,6 +3728,8 @@ D) Node selection
 
 **Explanation:** The NodeAffinity plugin implements node affinity/anti-affinity rules. It filters nodes not matching required rules and scores based on preferred rules.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3413,6 +3749,8 @@ D) Zone management
 **Answer:** B
 
 **Explanation:** PodTopologySpread implements topology spread constraints. It filters nodes that would violate maxSkew and scores to minimize skew across topology domains.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3434,6 +3772,8 @@ D) Pod grouping
 
 **Explanation:** InterPodAffinity implements pod affinity/anti-affinity rules. It checks pod labels on nodes to determine if placement satisfies affinity constraints.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3453,6 +3793,8 @@ D) Validates tolerations
 **Answer:** B
 
 **Explanation:** TaintToleration filters nodes with taints not tolerated by the pod. It ensures pods only schedule on nodes whose taints they can tolerate.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3474,6 +3816,8 @@ D) Cannot change
 
 **Explanation:** In KubeSchedulerConfiguration, each profile has enabled/disabled plugin lists per extension point. You can enable custom plugins or disable defaults.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3493,6 +3837,8 @@ D) All plugins
 **Answer:** B
 
 **Explanation:** Default plugins include NodeResourcesFit, NodeAffinity, TaintToleration, NodePorts, PodTopologySpread, InterPodAffinity, VolumeBinding, and several others.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3514,6 +3860,8 @@ D) Only approved vendors
 
 **Explanation:** Custom plugins implement Go interfaces for extension points (FilterPlugin, ScorePlugin, etc.) and are compiled into the scheduler. This requires building a custom scheduler binary.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3533,6 +3881,8 @@ D) Testing framework
 **Answer:** B
 
 **Explanation:** The scheduler framework is the plugin-based architecture introduced in Kubernetes 1.15+. It replaced the old predicate/priority functions with a more modular, extensible design.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3556,6 +3906,8 @@ D) kubectl exec
 
 **Explanation:** kubectl describe pod shows conditions, events, and scheduling status. Look for "Events" section with FailedScheduling reasons explaining why the pod can't be placed.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -3575,6 +3927,8 @@ D) Created events
 **Answer:** B
 
 **Explanation:** FailedScheduling events indicate the scheduler couldn't place the pod. The event message describes reasons: insufficient resources, unmet affinity, taints, etc.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -3596,6 +3950,8 @@ D) Invalid CPU value
 
 **Explanation:** "Insufficient cpu" means no node has enough allocatable CPU (capacity minus existing requests) to satisfy this pod's CPU request.
 
+**Source:** [Managing Resources for Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ---
@@ -3615,6 +3971,8 @@ D) Pod has too many tolerations
 **Answer:** B
 
 **Explanation:** The node has a taint that the pod doesn't tolerate. Add a matching toleration to the pod spec or remove the taint from the node.
+
+**Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 </details>
 
@@ -3636,6 +3994,8 @@ D) Selector syntax error
 
 **Explanation:** No node has all the labels specified in the pod's nodeSelector. Check node labels with kubectl get nodes --show-labels.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -3655,6 +4015,8 @@ D) Delete affinity
 **Answer:** B
 
 **Explanation:** Debug by: 1) kubectl describe pod to see events, 2) kubectl get nodes --show-labels to see node labels, 3) Compare labels against affinity expressions.
+
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
 </details>
 
@@ -3676,6 +4038,8 @@ D) kubectl logs node
 
 **Explanation:** kubectl describe node shows Capacity, Allocatable, and current resource usage (Allocated resources). Compare against pod requests to understand availability.
 
+**Source:** [Managing Resources for Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
 </details>
 
 ---
@@ -3695,6 +4059,8 @@ D) Three nodes are pending
 **Answer:** B
 
 **Explanation:** This means 0 out of 3 nodes passed all filter checks. The message usually lists why each node failed (taints, resources, affinity, etc.).
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -3716,6 +4082,8 @@ D) kubectl simulate
 
 **Explanation:** There's no built-in simulation. Options: increase scheduler verbosity (-v=10) to see decisions, use tools like kubectl-scheduler_simulator, or manually check constraints.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -3735,6 +4103,8 @@ D) UI dashboard
 **Answer:** B
 
 **Explanation:** Increase verbosity with -v flag (e.g., -v=10) to see detailed scheduling decisions, scoring, and filtering. Logs show why nodes were selected or rejected.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -3758,6 +4128,8 @@ D) Random scheduling
 
 **Explanation:** Gang scheduling schedules a group of pods together (all-or-nothing). If the group can't be placed entirely, none are scheduled. Used for tightly coupled workloads like MPI jobs.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -3777,6 +4149,8 @@ D) Archiving
 **Answer:** B
 
 **Explanation:** Bin packing maximizes utilization by filling nodes before using new ones. This reduces costs (fewer nodes needed) but may reduce resilience.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -3798,6 +4172,8 @@ D) Data spreading
 
 **Explanation:** Spreading distributes pods across nodes for resilience. The opposite of bin packing. It improves availability but may use more nodes.
 
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
 </details>
 
 ---
@@ -3817,6 +4193,8 @@ D) Only for VMs
 **Answer:** B
 
 **Explanation:** Pod overhead (specified in RuntimeClass) is added to container requests when scheduling. This accounts for sandbox/VM overhead in virtualization runtimes like Kata.
+
+**Source:** [Managing Resources for Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 </details>
 
@@ -3838,6 +4216,8 @@ D) Message queue
 
 **Explanation:** The scheduling queue holds pods awaiting scheduling. Pods enter when created without nodeName and leave when scheduled or failed.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -3857,6 +4237,8 @@ D) FIFO only
 **Answer:** B
 
 **Explanation:** Three queues: Active (ready to schedule), Backoff (recently failed, waiting to retry), Unschedulable (waiting for cluster changes that might help).
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
@@ -3878,6 +4260,8 @@ D) Never moves back
 
 **Explanation:** Pods move from unschedulable to active when relevant cluster changes occur: nodes added/updated, pods deleted (freeing resources), PVs available, etc.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -3897,6 +4281,8 @@ D) Backup node
 **Answer:** B
 
 **Explanation:** When preemption is triggered, the nominated node is where the pod will schedule once lower-priority pods are evicted and resources are freed.
+
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
@@ -3918,6 +4304,8 @@ D) Only for local volumes
 
 **Explanation:** The VolumeBinding plugin considers volume topology constraints. For zone-specific volumes (like EBS), pods are scheduled in the same zone as the volume.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3937,6 +4325,8 @@ D) Manual binding
 **Answer:** B
 
 **Explanation:** WaitForFirstConsumer storage class delays PVC binding until a pod using it is scheduled. This allows the scheduler to consider pod constraints when choosing volume topology.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3958,6 +4348,8 @@ D) Network limit
 
 **Explanation:** NodeVolumeLimits checks cloud provider volume attachment limits (e.g., AWS limits EBS volumes per instance type). It prevents scheduling if the limit would be exceeded.
 
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+
 </details>
 
 ---
@@ -3977,6 +4369,8 @@ D) No scheduling needed
 **Answer:** B
 
 **Explanation:** For ephemeral volumes (CSI ephemeral, generic ephemeral), the scheduler can consider storage capacity tracking to avoid scheduling on nodes without sufficient storage.
+
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -3998,6 +4392,8 @@ D) Pausing scheduling
 
 **Explanation:** Descheduling evicts pods from nodes to rebalance workloads. Over time, cluster state can become imbalanced—descheduling corrects this by triggering rescheduling.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -4018,6 +4414,8 @@ D) Deprecated tool
 
 **Explanation:** The Descheduler is a separate project (sigs.k8s.io/descheduler) that runs policies to evict pods. It's not built into Kubernetes and must be deployed separately.
 
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
 </details>
 
 ---
@@ -4037,6 +4435,8 @@ D) Rate limiting
 **Answer:** B
 
 **Explanation:** Scheduling gates (spec.schedulingGates) block a pod from being considered for scheduling until all gates are removed. External controllers can add/remove gates to control scheduling timing.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
 </details>
 
