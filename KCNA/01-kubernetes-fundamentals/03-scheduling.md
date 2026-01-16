@@ -820,7 +820,7 @@ D) Weights are automatic
 
 **Answer:** B
 
-**Explanation:** Each preferred term has a weight field (1-100). Higher weights mean stronger preference. The scheduler multiplies the weight by the score to rank nodes.
+**Explanation:** Each preferred term has a weight field (1-100). Higher weights mean stronger preference. When a node matches the preference, the scheduler adds the weight to the node's total score. Nodes with higher total scores are preferred for scheduling.
 
 **Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
