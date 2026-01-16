@@ -10,6 +10,14 @@ B) A lightweight, standalone executable package that includes everything needed 
 C) A virtual machine with a complete operating system
 D) A network storage device for application data
 
+<details><summary>Answer</summary>
+
+**B) A lightweight, standalone executable package that includes everything needed to run software**
+
+Containers are lightweight, portable units that package an application along with its dependencies, libraries, and configuration files. Unlike VMs, containers share the host OS kernel, making them more efficient and faster to start. They provide process isolation while being much more resource-efficient than traditional virtual machines.
+
+</details>
+
 ### Question 2
 Which technology provides the foundation for container isolation in Linux?
 
@@ -17,6 +25,14 @@ A) Virtual machines and hypervisors
 B) Namespaces and cgroups
 C) Firewalls and network segmentation
 D) File system encryption
+
+<details><summary>Answer</summary>
+
+**B) Namespaces and cgroups**
+
+Linux namespaces provide isolation of system resources (PID, network, mount, user, etc.) while cgroups (control groups) limit and account for resource usage (CPU, memory, I/O). Together, these kernel features form the foundation of container technology, enabling process isolation without the overhead of full virtualization.
+
+</details>
 
 ### Question 3
 What is the primary difference between a container and a virtual machine?
@@ -26,6 +42,14 @@ B) Containers share the host OS kernel while VMs have their own OS
 C) Virtual machines are faster to start
 D) Containers require a hypervisor
 
+<details><summary>Answer</summary>
+
+**B) Containers share the host OS kernel while VMs have their own OS**
+
+The key difference is that containers share the host operating system's kernel, making them lightweight and fast to start. Virtual machines include a complete guest OS with its own kernel, requiring a hypervisor and more resources. Containers typically start in seconds while VMs take minutes.
+
+</details>
+
 ### Question 4
 Which Linux kernel feature allows containers to have isolated views of system resources like PIDs and network interfaces?
 
@@ -33,6 +57,14 @@ A) cgroups
 B) Namespaces
 C) SELinux
 D) AppArmor
+
+<details><summary>Answer</summary>
+
+**B) Namespaces**
+
+Linux namespaces provide isolated views of system resources. There are several namespace types: PID (process IDs), NET (network interfaces), MNT (mount points), UTS (hostname), IPC (inter-process communication), and USER (user IDs). Each container can have its own isolated view of these resources. Cgroups, by contrast, limit resource usage rather than provide isolation.
+
+</details>
 
 ### Question 5
 What is a container image?
@@ -42,6 +74,14 @@ B) A read-only template used to create containers
 C) A backup of container data
 D) A network configuration file
 
+<details><summary>Answer</summary>
+
+**B) A read-only template used to create containers**
+
+A container image is an immutable, read-only template containing the application code, runtime, libraries, and dependencies needed to run a container. When you run an image, it becomes a container (running instance). Images are built in layers and stored in registries for distribution.
+
+</details>
+
 ### Question 6
 How are container image layers structured?
 
@@ -49,6 +89,14 @@ A) As a single monolithic file
 B) As a stack of read-only layers with a writable layer on top
 C) As separate executable files
 D) As encrypted partitions
+
+<details><summary>Answer</summary>
+
+**B) As a stack of read-only layers with a writable layer on top**
+
+Container images use a union file system with stacked layers. Each layer represents a set of filesystem changes (added, modified, or deleted files). The layers are read-only, and when a container runs, a thin writable layer is added on top for runtime changes. This layered approach enables efficient storage and sharing of common base layers.
+
+</details>
 
 ### Question 7
 What happens when multiple containers share the same base image layers?
@@ -58,6 +106,14 @@ B) The layers are shared, saving disk space
 C) Containers cannot share image layers
 D) Only the first container uses the layers
 
+<details><summary>Answer</summary>
+
+**B) The layers are shared, saving disk space**
+
+When multiple containers use the same base image, the shared layers are stored only once on disk. Each container gets its own thin writable layer on top, but the underlying read-only layers are shared. This copy-on-write mechanism significantly reduces disk usage and speeds up container creation.
+
+</details>
+
 ### Question 8
 What is the purpose of a container runtime?
 
@@ -65,6 +121,14 @@ A) To compile container applications
 B) To manage the lifecycle of containers including creation, running, and deletion
 C) To design container images
 D) To monitor network traffic
+
+<details><summary>Answer</summary>
+
+**B) To manage the lifecycle of containers including creation, running, and deletion**
+
+A container runtime is software responsible for running containers. It handles pulling images, creating container instances, managing their lifecycle (start, stop, restart, delete), and interacting with the kernel for isolation and resource management. Examples include containerd, CRI-O, and runc.
+
+</details>
 
 ### Question 9
 Which component in Kubernetes is responsible for pulling container images and running containers?
@@ -74,6 +138,14 @@ B) kube-scheduler
 C) kubelet
 D) kube-controller-manager
 
+<details><summary>Answer</summary>
+
+**C) kubelet**
+
+The kubelet is the primary node agent that runs on each worker node. It communicates with the container runtime (via CRI) to pull images and manage container lifecycle. The kubelet receives Pod specifications from the API server and ensures the containers are running as specified.
+
+</details>
+
 ### Question 10
 What is the Container Runtime Interface (CRI) in Kubernetes?
 
@@ -81,6 +153,14 @@ A) A graphical interface for managing containers
 B) A plugin interface that allows kubelet to use different container runtimes
 C) A container image format
 D) A network protocol for container communication
+
+<details><summary>Answer</summary>
+
+**B) A plugin interface that allows kubelet to use different container runtimes**
+
+CRI is a plugin interface that enables the kubelet to work with any container runtime that implements the interface. It uses gRPC for communication and defines operations like pulling images, creating/starting/stopping containers. This abstraction allows Kubernetes to support multiple runtimes (containerd, CRI-O) without code changes.
+
+</details>
 
 ## Container Runtimes
 
@@ -92,6 +172,14 @@ B) CRI-O
 C) Docker Engine (dockershim)
 D) containerd with CRI plugin
 
+<details><summary>Answer</summary>
+
+**C) Docker Engine (dockershim)**
+
+Docker Engine itself does not implement CRI natively. Kubernetes used dockershim as an adapter to communicate with Docker, but this was deprecated and removed in Kubernetes 1.24. containerd and CRI-O are native CRI implementations. Docker uses containerd under the hood, which is CRI-compliant.
+
+</details>
+
 ### Question 12
 What is containerd?
 
@@ -99,6 +187,14 @@ A) A container orchestration platform
 B) An industry-standard container runtime focused on simplicity and portability
 C) A container image registry
 D) A Kubernetes distribution
+
+<details><summary>Answer</summary>
+
+**B) An industry-standard container runtime focused on simplicity and portability**
+
+containerd is a CNCF graduated project that serves as an industry-standard container runtime. It manages the complete container lifecycle including image transfer, container execution, and storage. Originally part of Docker, it was extracted as a standalone runtime and is now used by Docker, Kubernetes, and other platforms.
+
+</details>
 
 ### Question 13
 How does CRI-O differ from containerd?
@@ -108,6 +204,14 @@ B) CRI-O does not support OCI images
 C) containerd cannot run in Kubernetes
 D) CRI-O requires Docker to function
 
+<details><summary>Answer</summary>
+
+**A) CRI-O is designed specifically for Kubernetes, while containerd is more general-purpose**
+
+CRI-O was built from the ground up specifically for Kubernetes, implementing only what's needed for the CRI. containerd is a more general-purpose runtime that can be used in various contexts beyond Kubernetes. Both support OCI images and work well with Kubernetes.
+
+</details>
+
 ### Question 14
 What is the relationship between Docker and containerd?
 
@@ -115,6 +219,14 @@ A) Docker and containerd are completely separate projects
 B) containerd was extracted from Docker and is now used as Docker's core runtime
 C) Docker is a plugin for containerd
 D) containerd replaced Docker entirely
+
+<details><summary>Answer</summary>
+
+**B) containerd was extracted from Docker and is now used as Docker's core runtime**
+
+containerd was originally developed as part of Docker and was later extracted as a standalone project donated to the CNCF. Docker Engine still uses containerd as its core container runtime. When you run `docker run`, Docker uses containerd to actually run the container, which in turn uses runc.
+
+</details>
 
 ### Question 15
 Which container runtime is specifically designed and optimized for Kubernetes?
@@ -124,6 +236,14 @@ B) rkt
 C) CRI-O
 D) LXC
 
+<details><summary>Answer</summary>
+
+**C) CRI-O**
+
+CRI-O (Container Runtime Interface - OCI) was specifically designed for Kubernetes. It implements only the features required by the Kubernetes CRI, making it lightweight and focused. It supports OCI-compliant images and runtimes, and is optimized for Kubernetes workloads.
+
+</details>
+
 ### Question 16
 What is runc?
 
@@ -131,6 +251,14 @@ A) A container orchestration tool
 B) A low-level container runtime that implements the OCI runtime specification
 C) A container registry
 D) A container networking plugin
+
+<details><summary>Answer</summary>
+
+**B) A low-level container runtime that implements the OCI runtime specification**
+
+runc is a lightweight, low-level container runtime that spawns and runs containers according to the OCI Runtime Specification. It's the reference implementation of the OCI runtime spec and is used by higher-level runtimes like containerd and CRI-O to actually create and run containers.
+
+</details>
 
 ### Question 17
 What role does the OCI (Open Container Initiative) play in containerization?
@@ -140,6 +268,14 @@ B) It defines industry standards for container formats and runtimes
 C) It manages Kubernetes clusters
 D) It provides container security scanning
 
+<details><summary>Answer</summary>
+
+**B) It defines industry standards for container formats and runtimes**
+
+The OCI is a Linux Foundation project that creates open industry standards for container formats and runtimes. It maintains specifications including the Runtime Specification (how to run containers), Image Specification (container image format), and Distribution Specification (how to distribute images). These standards ensure interoperability across different tools and platforms.
+
+</details>
+
 ### Question 18
 Which OCI specification defines how to run a container?
 
@@ -147,6 +283,14 @@ A) Image Specification
 B) Runtime Specification
 C) Distribution Specification
 D) Network Specification
+
+<details><summary>Answer</summary>
+
+**B) Runtime Specification**
+
+The OCI Runtime Specification defines how to run a "filesystem bundle" that is unpacked from an image. It specifies the configuration, execution environment, and lifecycle of a container. runc is the reference implementation of this specification.
+
+</details>
 
 ### Question 19
 What is the purpose of the OCI Image specification?
@@ -156,6 +300,14 @@ B) To define the format and structure of container images
 C) To specify container security requirements
 D) To outline container orchestration patterns
 
+<details><summary>Answer</summary>
+
+**B) To define the format and structure of container images**
+
+The OCI Image Specification defines how container images are structured, including the image manifest, filesystem layers, and configuration. This standard ensures that images built with one tool can run on any OCI-compliant runtime, enabling portability across different platforms.
+
+</details>
+
 ### Question 20
 How does Kubernetes communicate with container runtimes?
 
@@ -163,6 +315,14 @@ A) Through direct API calls to Docker
 B) Through the Container Runtime Interface (CRI) using gRPC
 C) Through REST APIs
 D) Through shared file systems
+
+<details><summary>Answer</summary>
+
+**B) Through the Container Runtime Interface (CRI) using gRPC**
+
+Kubernetes uses CRI to communicate with container runtimes. The kubelet makes gRPC calls to the runtime through the CRI interface, which defines operations for managing images and containers. This abstraction allows Kubernetes to work with any CRI-compliant runtime without modification.
+
+</details>
 
 ## Container Images and Registries
 
@@ -174,6 +334,14 @@ B) A storage and distribution system for container images
 C) A container orchestration tool
 D) A container security scanner
 
+<details><summary>Answer</summary>
+
+**B) A storage and distribution system for container images**
+
+A container registry is a repository for storing, managing, and distributing container images. Registries can be public (like Docker Hub) or private (like Harbor, AWS ECR, GCR). They allow teams to share images and provide versioning through tags and digests.
+
+</details>
+
 ### Question 22
 Which of the following is the default container registry for Docker images?
 
@@ -181,6 +349,14 @@ A) Google Container Registry
 B) Amazon ECR
 C) Docker Hub
 D) Quay.io
+
+<details><summary>Answer</summary>
+
+**C) Docker Hub**
+
+Docker Hub is the default public registry for Docker images. When you pull an image without specifying a registry (e.g., `nginx`), Docker automatically looks for it on Docker Hub. It hosts millions of public images and also offers private repositories.
+
+</details>
 
 ### Question 23
 What is the purpose of image tags?
@@ -190,6 +366,14 @@ B) To identify specific versions of an image
 C) To compress image layers
 D) To specify runtime configurations
 
+<details><summary>Answer</summary>
+
+**B) To identify specific versions of an image**
+
+Image tags are human-readable labels that point to specific image versions. Common tagging conventions include version numbers (v1.0.0), semantic versions (1.2.3), git commit SHAs, or descriptive names. Tags make it easier to reference and deploy specific versions of an image.
+
+</details>
+
 ### Question 24
 What does the 'latest' tag signify for a container image?
 
@@ -197,6 +381,14 @@ A) The most recently pushed image to the repository
 B) The most stable version of the image
 C) The image with the highest version number
 D) Simply a tag name with no special meaning guaranteed
+
+<details><summary>Answer</summary>
+
+**D) Simply a tag name with no special meaning guaranteed**
+
+The 'latest' tag has no special meaning in registries - it's just a conventional tag name. It doesn't automatically point to the newest image; it only updates when someone explicitly tags an image as 'latest'. Many assume it means the most recent version, but this is not guaranteed, which is why using specific version tags is recommended.
+
+</details>
 
 ### Question 25
 What is an image digest?
@@ -206,6 +398,14 @@ B) A content-addressable identifier (SHA256 hash) that uniquely identifies an im
 C) A summary of image contents
 D) An encrypted image tag
 
+<details><summary>Answer</summary>
+
+**B) A content-addressable identifier (SHA256 hash) that uniquely identifies an image**
+
+An image digest is a SHA256 hash of the image manifest, providing an immutable identifier for an exact image version. Unlike tags which can be moved to point to different images, digests are computed from the image content and never change. Format: `image@sha256:abc123...`
+
+</details>
+
 ### Question 26
 Why are image digests preferred over tags for production deployments?
 
@@ -213,6 +413,14 @@ A) Digests are shorter and easier to remember
 B) Digests are immutable and guarantee the exact same image content
 C) Digests allow for automatic updates
 D) Digests are required by Kubernetes
+
+<details><summary>Answer</summary>
+
+**B) Digests are immutable and guarantee the exact same image content**
+
+Digests are preferred in production because they're immutable - the same digest always refers to the exact same image content. Tags can be changed to point to different images, which could cause unexpected behavior or security issues. Using digests ensures reproducibility and prevents supply chain attacks.
+
+</details>
 
 ### Question 27
 What is a private container registry?
@@ -222,6 +430,14 @@ B) A registry that requires authentication to access images
 C) A registry that runs on-premises only
 D) A registry that stores only proprietary images
 
+<details><summary>Answer</summary>
+
+**B) A registry that requires authentication to access images**
+
+A private container registry requires authentication to pull or push images. This protects proprietary code and ensures only authorized users can access images. Private registries can be cloud-hosted (ECR, GCR, ACR) or self-hosted (Harbor, Nexus). Authentication is typically via username/password or tokens.
+
+</details>
+
 ### Question 28
 How does Kubernetes authenticate to private container registries?
 
@@ -229,6 +445,14 @@ A) Using SSH keys stored in Pods
 B) Using imagePullSecrets referenced in Pod specifications
 C) Through automatic cloud provider integration only
 D) Private registries are not supported
+
+<details><summary>Answer</summary>
+
+**B) Using imagePullSecrets referenced in Pod specifications**
+
+Kubernetes authenticates to private registries using imagePullSecrets, which reference Kubernetes Secrets containing registry credentials. These secrets are attached to Pods or ServiceAccounts. Cloud providers may also offer automatic authentication through workload identity or instance metadata.
+
+</details>
 
 ### Question 29
 What is an ImagePullSecret?
@@ -238,6 +462,14 @@ B) A Kubernetes Secret containing registry credentials
 C) An encrypted image layer
 D) A token embedded in the container
 
+<details><summary>Answer</summary>
+
+**B) A Kubernetes Secret containing registry credentials**
+
+An ImagePullSecret is a Kubernetes Secret of type `kubernetes.io/dockerconfigjson` that contains registry authentication credentials. It stores the registry URL, username, password, and email in a format compatible with Docker's config.json. Pods reference this secret to pull images from private registries.
+
+</details>
+
 ### Question 30
 Which field in a Pod spec references credentials for pulling private images?
 
@@ -245,6 +477,14 @@ A) registryCredentials
 B) imageSecrets
 C) imagePullSecrets
 D) pullCredentials
+
+<details><summary>Answer</summary>
+
+**C) imagePullSecrets**
+
+The `imagePullSecrets` field in a Pod spec is an array of references to Secrets containing registry credentials. It can also be configured on a ServiceAccount to automatically apply to all Pods using that ServiceAccount.
+
+</details>
 
 ### Question 31
 What is the purpose of the imagePullPolicy field in a container spec?
@@ -254,6 +494,14 @@ B) To control when the kubelet should pull the container image
 C) To set image compression options
 D) To define image security policies
 
+<details><summary>Answer</summary>
+
+**B) To control when the kubelet should pull the container image**
+
+The imagePullPolicy determines when the kubelet pulls the container image. Options are: `Always` (pull every time), `IfNotPresent` (pull only if not cached locally), and `Never` (use only locally cached images). This affects startup time and ensures you're running the expected image version.
+
+</details>
+
 ### Question 32
 When is an image pulled if imagePullPolicy is set to 'IfNotPresent'?
 
@@ -261,6 +509,14 @@ A) Always, on every Pod start
 B) Only if the image is not already present on the node
 C) Never, images must be pre-loaded
 D) Only during cluster initialization
+
+<details><summary>Answer</summary>
+
+**B) Only if the image is not already present on the node**
+
+With `IfNotPresent`, the kubelet checks if the image exists locally before pulling. If cached, the local image is used; if not, it's pulled from the registry. This is the default policy for images with specific tags (not `latest`) and improves startup time.
+
+</details>
 
 ### Question 33
 What imagePullPolicy is automatically applied when using the 'latest' tag?
@@ -270,6 +526,14 @@ B) IfNotPresent
 C) Always
 D) OnFailure
 
+<details><summary>Answer</summary>
+
+**C) Always**
+
+When using the `latest` tag (or no tag at all), Kubernetes defaults to `imagePullPolicy: Always`. This ensures you get the most recent version of the image, since 'latest' can change over time. For other specific tags, the default is `IfNotPresent`.
+
+</details>
+
 ### Question 34
 What happens when imagePullPolicy is set to 'Never'?
 
@@ -278,6 +542,14 @@ B) The kubelet never pulls the image and uses only locally available images
 C) The Pod fails if the image is not cached
 D) Both B and C are correct
 
+<details><summary>Answer</summary>
+
+**D) Both B and C are correct**
+
+With `imagePullPolicy: Never`, the kubelet never attempts to pull the image from a registry. It only uses images that already exist locally on the node. If the image isn't present, the container fails with an ErrImageNeverPull error. This is useful for air-gapped environments or when using pre-loaded images.
+
+</details>
+
 ### Question 35
 How can you configure a default imagePullPolicy for all containers in a namespace?
 
@@ -285,6 +557,14 @@ A) Using a namespace annotation
 B) Using an AlwaysPullImages admission controller
 C) Using a ConfigMap
 D) It cannot be configured at the namespace level
+
+<details><summary>Answer</summary>
+
+**B) Using an AlwaysPullImages admission controller**
+
+The AlwaysPullImages admission controller can be enabled to force all Pods to use `imagePullPolicy: Always`. While this is cluster-wide, it ensures images are always verified against the registry. There's no built-in namespace-level default, but policy engines like Kyverno or Gatekeeper can enforce specific policies per namespace.
+
+</details>
 
 ## Building Container Images
 
@@ -296,6 +576,14 @@ B) A text file containing instructions for building a container image
 C) A container log file
 D) A registry configuration file
 
+<details><summary>Answer</summary>
+
+**B) A text file containing instructions for building a container image**
+
+A Dockerfile is a text file containing a series of instructions for building a container image. Each instruction (FROM, RUN, COPY, etc.) creates a layer in the image. Docker reads the Dockerfile and executes the instructions sequentially to produce the final image.
+
+</details>
+
 ### Question 37
 Which Dockerfile instruction sets the base image for subsequent instructions?
 
@@ -303,6 +591,14 @@ A) BASE
 B) IMAGE
 C) FROM
 D) SOURCE
+
+<details><summary>Answer</summary>
+
+**C) FROM**
+
+The FROM instruction specifies the base image for the build. It must be the first instruction in a Dockerfile (except for ARG). You can use FROM with an image name and tag (e.g., `FROM alpine:3.18`) or with `FROM scratch` to build from an empty image.
+
+</details>
 
 ### Question 38
 What is the purpose of the RUN instruction in a Dockerfile?
@@ -312,6 +608,14 @@ B) To execute commands during the image build process
 C) To define the container's entry point
 D) To copy files into the image
 
+<details><summary>Answer</summary>
+
+**B) To execute commands during the image build process**
+
+The RUN instruction executes commands in a new layer on top of the current image and commits the results. It's commonly used to install packages, download files, or configure the environment. Each RUN instruction creates a new layer in the image.
+
+</details>
+
 ### Question 39
 How does the COPY instruction differ from ADD in a Dockerfile?
 
@@ -319,6 +623,14 @@ A) COPY is deprecated in favor of ADD
 B) COPY only copies local files, while ADD can also extract archives and fetch URLs
 C) ADD only works with text files
 D) They are identical in functionality
+
+<details><summary>Answer</summary>
+
+**B) COPY only copies local files, while ADD can also extract archives and fetch URLs**
+
+COPY is a straightforward file copy from the build context to the image. ADD has additional features: it can automatically extract tar archives and fetch files from URLs. Best practice is to use COPY unless you specifically need ADD's extra features, as COPY is more transparent.
+
+</details>
 
 ### Question 40
 What is the purpose of the ENTRYPOINT instruction?
@@ -328,6 +640,14 @@ B) To configure the container to run as an executable
 C) To expose network ports
 D) To define environment variables
 
+<details><summary>Answer</summary>
+
+**B) To configure the container to run as an executable**
+
+ENTRYPOINT configures the container to run as an executable, defining the main command that runs when the container starts. Unlike CMD, ENTRYPOINT arguments are not easily overridden at runtime (you need `--entrypoint` flag). It's typically used to set the main application or script to run.
+
+</details>
+
 ### Question 41
 How does CMD differ from ENTRYPOINT in a Dockerfile?
 
@@ -335,6 +655,14 @@ A) CMD cannot be overridden at runtime
 B) CMD provides default arguments that can be overridden, while ENTRYPOINT defines the main executable
 C) ENTRYPOINT is deprecated
 D) They serve identical purposes
+
+<details><summary>Answer</summary>
+
+**B) CMD provides default arguments that can be overridden, while ENTRYPOINT defines the main executable**
+
+CMD specifies default arguments for the container that can be easily overridden by providing arguments at runtime. ENTRYPOINT defines the main executable and is harder to override. When both are used together, CMD provides default arguments to the ENTRYPOINT command.
+
+</details>
 
 ### Question 42
 What happens when both ENTRYPOINT and CMD are specified?
@@ -344,6 +672,14 @@ B) ENTRYPOINT is ignored
 C) CMD provides default arguments to ENTRYPOINT
 D) The build fails
 
+<details><summary>Answer</summary>
+
+**C) CMD provides default arguments to ENTRYPOINT**
+
+When both ENTRYPOINT and CMD are specified, the CMD values are appended to the ENTRYPOINT as default arguments. For example, `ENTRYPOINT ["python"]` with `CMD ["app.py"]` results in running `python app.py`. Runtime arguments replace CMD but not ENTRYPOINT.
+
+</details>
+
 ### Question 43
 What is the purpose of the WORKDIR instruction?
 
@@ -351,6 +687,14 @@ A) To mount a volume
 B) To set the working directory for subsequent instructions
 C) To define the container's home directory
 D) To specify the build context
+
+<details><summary>Answer</summary>
+
+**B) To set the working directory for subsequent instructions**
+
+WORKDIR sets the working directory for subsequent RUN, CMD, ENTRYPOINT, COPY, and ADD instructions. If the directory doesn't exist, it's created automatically. Using WORKDIR is preferred over `RUN cd /path` because it affects all subsequent instructions and makes the Dockerfile more readable.
+
+</details>
 
 ### Question 44
 How does the ENV instruction work in a Dockerfile?
@@ -360,6 +704,14 @@ B) It only sets variables during build time
 C) It encrypts sensitive data
 D) It imports environment from the host
 
+<details><summary>Answer</summary>
+
+**A) It sets environment variables that persist in the built image**
+
+ENV sets environment variables that are available both during the build process and when the container runs. These variables persist in the final image and can be overridden at runtime using `-e` or `--env`. Common uses include setting application configuration, paths, and versions.
+
+</details>
+
 ### Question 45
 What is a multi-stage build in Docker?
 
@@ -367,6 +719,14 @@ A) Building multiple images in parallel
 B) A build using multiple FROM statements to create intermediate images and copy artifacts
 C) Building images across multiple registries
 D) A distributed build system
+
+<details><summary>Answer</summary>
+
+**B) A build using multiple FROM statements to create intermediate images and copy artifacts**
+
+Multi-stage builds use multiple FROM statements in a single Dockerfile. Each FROM starts a new build stage. You can selectively copy artifacts from one stage to another using `COPY --from=stage`. This allows you to build in one stage (with build tools) and copy only the final artifacts to a clean runtime stage.
+
+</details>
 
 ### Question 46
 What is the primary benefit of multi-stage builds?
@@ -376,6 +736,14 @@ B) Smaller final images by excluding build tools and dependencies
 C) Better security through encryption
 D) Automatic versioning
 
+<details><summary>Answer</summary>
+
+**B) Smaller final images by excluding build tools and dependencies**
+
+Multi-stage builds produce smaller final images by separating the build environment from the runtime environment. Build tools, compilers, and intermediate files stay in the build stage and are not included in the final image. Only the compiled artifacts are copied to a minimal runtime image.
+
+</details>
+
 ### Question 47
 What is the purpose of the ARG instruction in a Dockerfile?
 
@@ -383,6 +751,14 @@ A) To define arguments passed to CMD
 B) To define build-time variables that can be passed using --build-arg
 C) To specify command-line arguments
 D) To set runtime environment variables
+
+<details><summary>Answer</summary>
+
+**B) To define build-time variables that can be passed using --build-arg**
+
+ARG defines variables that users can pass at build-time using `docker build --build-arg NAME=value`. ARG values are only available during the build, not at runtime. They're useful for parameterizing builds with versions, configurations, or credentials (though secrets should be handled carefully).
+
+</details>
 
 ### Question 48
 How does ARG differ from ENV in a Dockerfile?
@@ -392,6 +768,14 @@ B) ARG is available only during build, ENV persists in the running container
 C) They are interchangeable
 D) ARG is for secrets, ENV is for configuration
 
+<details><summary>Answer</summary>
+
+**B) ARG is available only during build, ENV persists in the running container**
+
+ARG values are only available during the image build process and are not saved in the final image. ENV values persist in the built image and are available both during build and at container runtime. If you need a build-time value at runtime, you can use `ENV VAR=${ARG_VAR}` to transfer it.
+
+</details>
+
 ### Question 49
 What is the purpose of the EXPOSE instruction?
 
@@ -400,6 +784,14 @@ B) To document which ports the container listens on
 C) To configure firewall rules
 D) To enable network connectivity
 
+<details><summary>Answer</summary>
+
+**B) To document which ports the container listens on**
+
+EXPOSE is primarily documentation - it indicates which ports the container listens on but doesn't actually publish them. To make ports accessible, you must use `-p` flag at runtime or publish them via Kubernetes Services. EXPOSE helps users understand which ports the application uses.
+
+</details>
+
 ### Question 50
 What is a .dockerignore file used for?
 
@@ -407,6 +799,14 @@ A) To list images that should not be pulled
 B) To exclude files and directories from the build context
 C) To ignore certain Dockerfile instructions
 D) To prevent container execution
+
+<details><summary>Answer</summary>
+
+**B) To exclude files and directories from the build context**
+
+A .dockerignore file specifies patterns for files and directories that should be excluded from the build context sent to the Docker daemon. This speeds up builds, reduces image size, and prevents sensitive files (like .git, node_modules, or secrets) from accidentally being included in images.
+
+</details>
 
 ## Container Image Best Practices
 
