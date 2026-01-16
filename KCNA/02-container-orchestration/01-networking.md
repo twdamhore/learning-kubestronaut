@@ -1548,6 +1548,13 @@ B) Using nginx.ingress.kubernetes.io/affinity annotation
 C) Sticky sessions are not supported
 D) Using a Cookie header in the request
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 82
@@ -1559,6 +1566,13 @@ A) To define the Ingress API version
 B) To define parameters and controller references for Ingress controllers
 C) To classify traffic types
 D) To group Ingress resources
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1572,6 +1586,13 @@ B) Using the ingressclass.kubernetes.io/is-default-class annotation
 C) Setting it in kube-controller-manager
 D) It's automatic for the first IngressClass created
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 84
@@ -1584,6 +1605,13 @@ B) Gateway API provides more expressive routing and role-oriented design
 C) Ingress supports more protocols
 D) There is no difference
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 85
@@ -1595,6 +1623,13 @@ A) Using TLS secrets only
 B) Using annotations like nginx.ingress.kubernetes.io/auth-tls-secret
 C) mTLS is not supported
 D) Using a sidecar container
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1610,6 +1645,13 @@ B) To control traffic flow to and from Pods
 C) To configure DNS
 D) To manage Service endpoints
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 87
@@ -1621,6 +1663,13 @@ A) kube-proxy
 B) The CNI plugin (if it supports Network Policies)
 C) kube-controller-manager
 D) The API server
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1634,6 +1683,13 @@ B) All traffic is allowed
 C) Only ingress is allowed
 D) Only egress is allowed
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 89
@@ -1645,6 +1701,13 @@ A) All traffic to that Pod is allowed
 B) Only traffic matching the policy rules is allowed (default deny for selected direction)
 C) The Pod is isolated from all traffic
 D) Nothing changes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1658,6 +1721,13 @@ B) Calico, Cilium, Weave
 C) Bridge CNI only
 D) All CNI plugins
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 91
@@ -1669,6 +1739,13 @@ A) Select no Pods
 B) Select all Pods in the namespace
 C) Select Pods with empty labels
 D) Invalid syntax
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1682,6 +1759,13 @@ B) Using from with podSelector
 C) Using allowedPods
 D) Using ingressPods
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 93
@@ -1693,6 +1777,13 @@ A) No, only IP-based filtering
 B) Yes, using the ports field
 C) Only for egress
 D) Only for TCP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1706,6 +1797,13 @@ B) Namespace-scoped
 C) Node-scoped
 D) Pod-scoped
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 95
@@ -1717,6 +1815,13 @@ A) Using namespaceSelector with matching labels
 B) Using allowNamespace field
 C) Using fromNamespace field
 D) Network Policies can't filter by namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -1730,6 +1835,13 @@ B) Deny all ingress traffic
 C) No effect on ingress
 D) Invalid syntax
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 97
@@ -1741,6 +1853,13 @@ A) Using cidrSelector
 B) Using ipBlock with cidr field
 C) Using ipRange
 D) Using sourceIP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1754,6 +1873,13 @@ B) To exclude specific IPs from the allowed CIDR range
 C) To handle exception errors
 D) To specify fallback IPs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 99
@@ -1765,6 +1891,13 @@ A) It's not possible
 B) Create a policy with egress rules allowing only port 53
 C) Use a default deny policy with no exceptions
 D) Configure kube-proxy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1778,6 +1911,13 @@ B) Only the last policy applies
 C) The union of all policies applies (additive)
 D) An error occurs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 101
@@ -1789,6 +1929,13 @@ A) Put them in the same from entry
 B) Create two separate from entries
 C) Use the AND operator
 D) Use a composite selector
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -1802,6 +1949,13 @@ B) Same entry = AND logic, separate entries = OR logic
 C) Same entry = OR logic, separate entries = AND logic
 D) Separate entries are not allowed
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 103
@@ -1813,6 +1967,13 @@ A) No, local traffic is always allowed
 B) Yes, if the CNI plugin supports it
 C) Only with specific annotations
 D) Only in host network mode
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1826,6 +1987,13 @@ B) Set policyTypes to include both Ingress and Egress
 C) It's automatic
 D) Use the bidirectional field
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 105
@@ -1837,6 +2005,13 @@ A) Only Ingress type is assumed
 B) Both Ingress and Egress are assumed
 C) The policy is invalid
 D) Default deny for all
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
 
 ---
 
@@ -1852,6 +2027,13 @@ B) dnsmasq
 C) CoreDNS
 D) Unbound
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+</details>
+
 ---
 
 ### Question 107
@@ -1863,6 +2045,13 @@ A) service.namespace.cluster.local
 B) service.namespace.svc.cluster.local
 C) namespace.service.svc.cluster.local
 D) service.svc.namespace.cluster.local
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1876,6 +2065,13 @@ B) A record (or AAAA for IPv6)
 C) SRV
 D) TXT
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 109
@@ -1887,6 +2083,13 @@ A) /etc/hosts
 B) /etc/resolv.conf
 C) Environment variables
 D) /etc/dns.conf
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1900,6 +2103,13 @@ B) cluster.local
 C) svc.local
 D) k8s.local
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 111
@@ -1911,6 +2121,13 @@ A) The query fails
 B) The search domains append the namespace and cluster domain
 C) It returns all Service IPs
 D) It returns the node IP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1924,6 +2141,13 @@ B) _port._protocol.service.namespace.svc.cluster.local (SRV record)
 C) service.port.namespace.svc.cluster.local
 D) Named ports don't have DNS records
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 113
@@ -1935,6 +2159,13 @@ A) ClusterFirst
 B) Default
 C) None
 D) NodeLocal
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1948,6 +2179,13 @@ B) To customize DNS settings alongside the policy
 C) To disable DNS
 D) To set the DNS server IP
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 115
@@ -1959,6 +2197,13 @@ A) By reading /etc/hosts
 B) By watching the Kubernetes API for Service and Endpoint changes
 C) By querying external DNS
 D) From ConfigMap updates only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1972,6 +2217,13 @@ B) To determine when to use absolute vs relative DNS queries
 C) To configure DNS caching
 D) To set query timeout
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
+
 ---
 
 ### Question 117
@@ -1983,6 +2235,13 @@ A) Increase ndots value
 B) Decrease ndots value or use FQDNs
 C) Disable DNS caching
 D) Use IP addresses only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
@@ -1996,6 +2255,13 @@ B) A replacement for CoreDNS
 C) A caching plugin for kube-proxy
 D) A node-level DNS configuration
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 119
@@ -2008,6 +2274,13 @@ B) By editing /etc/resolv.conf on nodes
 C) Through the API server
 D) Using Network Policies
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+</details>
+
 ---
 
 ### Question 120
@@ -2019,6 +2292,13 @@ A) DNS continues working from cache
 B) Pods cannot resolve Service names
 C) External DNS is used instead
 D) The cluster automatically restarts CoreDNS
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+</details>
 
 ---
 
