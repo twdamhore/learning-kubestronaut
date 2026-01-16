@@ -23,6 +23,8 @@ D) Cloud Native Interface
 
 **Answer:** B
 
+**Explanation:** CNI stands for Container Network Interface, a specification and set of libraries for configuring network interfaces in Linux containers, enabling Kubernetes to use various networking solutions through a standardized plugin architecture.
+
 </details>
 
 ---
@@ -41,6 +43,8 @@ D) Managing persistent storage
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The primary responsibility of a CNI plugin is to provide network connectivity to Pods by allocating IP addresses and setting up network interfaces, routes, and any necessary network namespaces.
 
 </details>
 
@@ -61,6 +65,8 @@ D) Host-local
 
 **Answer:** B
 
+**Explanation:** Calico is widely used in cloud environments because it supports network policies natively without requiring additional components, and can operate in both overlay and non-overlay modes with BGP routing capabilities.
+
 </details>
 
 ---
@@ -79,6 +85,8 @@ D) etcd stores the network configuration
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** When a Pod is created, the kubelet on that node invokes the CNI plugin to set up the Pod's network namespace, assign an IP address, and configure routing so the Pod can communicate with other Pods and services.
 
 </details>
 
@@ -99,6 +107,8 @@ D) /opt/cni/conf/
 
 **Answer:** B
 
+**Explanation:** CNI plugin configuration files are stored in /etc/cni/net.d/ on each node, where the kubelet reads them to determine which CNI plugin to use and how to configure it.
+
 </details>
 
 ---
@@ -117,6 +127,8 @@ D) Cilium with native routing
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Flannel's default backend is VXLAN, which encapsulates Layer 2 Ethernet frames within UDP packets to create an overlay network, allowing Pod traffic to traverse the underlying physical network.
 
 </details>
 
@@ -137,6 +149,8 @@ D) To set up load balancing
 
 **Answer:** B
 
+**Explanation:** IPAM (IP Address Management) in a CNI configuration defines how IP addresses are allocated to Pods, specifying the subnet range, gateway, and allocation method (such as host-local or DHCP).
+
 </details>
 
 ---
@@ -156,6 +170,8 @@ D) Weave
 
 **Answer:** C
 
+**Explanation:** Cilium leverages eBPF (extended Berkeley Packet Filter) to implement networking, security, and observability directly in the Linux kernel, providing high-performance packet processing without relying on iptables.
+
 </details>
 
 ---
@@ -174,6 +190,8 @@ D) Automatic SSL/TLS encryption
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** BGP (Border Gateway Protocol) support allows CNI plugins like Calico to advertise Pod network routes directly to the physical network infrastructure, enabling native routing without overlay encapsulation overhead.
 
 </details>
 
@@ -215,6 +233,8 @@ D) Geneve with UDP port 6081
 
 **Answer:** B
 
+**Explanation:** Calico's IPIP mode uses IP-in-IP encapsulation (IP protocol 4), which wraps the original IP packet inside another IP header, providing a lightweight overlay with less overhead than VXLAN.
+
 </details>
 
 ---
@@ -233,6 +253,8 @@ D) networkRange
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** In CNI plugin configurations, the "subnet" field within the IPAM section specifies the network range from which Pod IP addresses will be allocated.
 
 </details>
 
@@ -253,6 +275,8 @@ D) ADD starts the container, DEL stops it
 
 **Answer:** B
 
+**Explanation:** CNI ADD creates the network namespace, assigns an IP, and sets up routing for a container, while CNI DEL reverses these operations by releasing the IP and removing the network configuration when the container stops.
+
 </details>
 
 ---
@@ -272,6 +296,8 @@ D) Parallel execution for better performance
 
 **Answer:** B
 
+**Explanation:** Chained CNI plugins are executed sequentially, with each plugin handling a specific networking task such as creating the interface (bridge), assigning an IP (IPAM), or applying bandwidth limits, allowing modular and composable network configurations.
+
 </details>
 
 ---
@@ -290,6 +316,8 @@ D) XML
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** CNI plugin configurations are written in JSON format, stored in /etc/cni/net.d/ with a .conf or .conflist extension, and parsed by the kubelet when invoking CNI operations.
 
 </details>
 
@@ -312,6 +340,8 @@ D) ExternalName
 
 **Answer:** C
 
+**Explanation:** ClusterIP is the default Service type in Kubernetes, providing an internal virtual IP that is only reachable from within the cluster for pod-to-pod communication.
+
 </details>
 
 ---
@@ -330,6 +360,8 @@ D) Map to an external DNS name
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** A ClusterIP Service provides a stable internal IP address for communication between Pods within the cluster, enabling service discovery and load balancing without exposing the service externally.
 
 </details>
 
@@ -350,6 +382,8 @@ D) By IP address
 
 **Answer:** C
 
+**Explanation:** Services use label selectors to identify which Pods should receive traffic, matching Pods based on their labels rather than names or IPs, allowing dynamic endpoint discovery as Pods are created or destroyed.
+
 </details>
 
 ---
@@ -368,6 +402,8 @@ D) containerPort
 <summary>Show Answer</summary>
 
 **Answer:** C
+
+**Explanation:** The "port" field specifies the port on which the Service is exposed and receives traffic, while "targetPort" specifies the port on the backend Pods where traffic is forwarded.
 
 </details>
 
@@ -388,6 +424,8 @@ D) The node's subnet range
 
 **Answer:** B
 
+**Explanation:** ClusterIP addresses are allocated from the Service CIDR range, which is configured via the --service-cluster-ip-range flag on the kube-apiserver and is separate from the Pod CIDR.
+
 </details>
 
 ---
@@ -406,6 +444,8 @@ D) It uses the first exposed container port
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** When targetPort is not specified, Kubernetes defaults it to the same value as the Service port, assuming the backend Pods listen on the same port number as the Service exposes.
 
 </details>
 
@@ -447,6 +487,8 @@ D) kubectl logs service/<name>
 
 **Answer:** C
 
+**Explanation:** The "kubectl get endpoints" command directly shows the IP addresses and ports of all Pods that are currently selected by a Service, making it the most direct way to verify endpoint associations.
+
 </details>
 
 ---
@@ -465,6 +507,8 @@ D) To enable HTTP/2 multiplexing
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Session affinity (also called sticky sessions) ensures that all requests from a particular client are routed to the same backend Pod, which is useful for applications that store session state locally.
 
 </details>
 
@@ -485,6 +529,8 @@ D) Session
 
 **Answer:** B
 
+**Explanation:** Kubernetes supports "ClientIP" as the session affinity type, which uses the client's source IP address to consistently route requests to the same Pod. Cookie-based affinity is not natively supported at the Service level.
+
 </details>
 
 ---
@@ -503,6 +549,8 @@ D) No timeout
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The default session affinity timeout is 10800 seconds (3 hours), after which the affinity mapping expires and subsequent requests may be routed to a different Pod. This can be customized via sessionAffinityConfig.clientIP.timeoutSeconds.
 
 </details>
 
@@ -523,6 +571,8 @@ D) Allows traffic to unscheduled Pods
 
 **Answer:** B
 
+**Explanation:** Setting publishNotReadyAddresses to true causes the Service to include Pod IPs in DNS responses and endpoints even when Pods are not ready, which is useful for headless Services in StatefulSets where Pods need to discover each other during startup.
+
 </details>
 
 ---
@@ -541,6 +591,8 @@ D) The Service uses round-robin across namespaces
 <summary>Show Answer</summary>
 
 **Answer:** C
+
+**Explanation:** Services are namespace-scoped resources and can only select Pods within their own namespace. To route traffic across namespaces, you would need to use ExternalName Services or create Services in each namespace.
 
 </details>
 
@@ -561,6 +613,8 @@ D) By intercepting packets in userspace
 
 **Answer:** B
 
+**Explanation:** In iptables mode, kube-proxy creates DNAT (Destination NAT) rules in the KUBE-SERVICES and KUBE-SVC-* chains that redirect traffic destined for ClusterIP addresses to the actual Pod endpoints.
+
 </details>
 
 ---
@@ -579,6 +633,8 @@ D) To restrict IP ranges for clients
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The ipFamilyPolicy field controls dual-stack behavior with values like SingleStack, PreferDualStack, or RequireDualStack, determining whether the Service gets IPv4 only, IPv6 only, or both address families.
 
 </details>
 
@@ -601,6 +657,8 @@ D) 8000-9000
 
 **Answer:** C
 
+**Explanation:** The default NodePort range is 30000-32767, which can be changed using the --service-node-port-range flag on the kube-apiserver. This range is chosen to avoid conflicts with well-known ports.
+
 </details>
 
 ---
@@ -619,6 +677,8 @@ D) Only the master node IP
 <summary>Show Answer</summary>
 
 **Answer:** C
+
+**Explanation:** A NodePort Service is accessible on the same port across all nodes in the cluster, regardless of which nodes are running the backend Pods. Traffic can enter through any node and be routed to the appropriate Pod.
 
 </details>
 
@@ -639,6 +699,8 @@ D) An external DNS record
 
 **Answer:** B
 
+**Explanation:** When you create a NodePort Service, Kubernetes automatically creates a ClusterIP for the Service as well, providing both internal cluster access (via ClusterIP) and external access (via NodePort).
+
 </details>
 
 ---
@@ -657,6 +719,8 @@ D) Through a ConfigMap
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** You can specify a specific NodePort number using the nodePort field within the ports section of the Service spec. If not specified, Kubernetes automatically assigns an available port from the NodePort range.
 
 </details>
 
@@ -677,6 +741,8 @@ D) A random port is assigned instead
 
 **Answer:** C
 
+**Explanation:** NodePorts are unique across the cluster. If you specify a NodePort that is already allocated to another Service, the API server rejects the Service creation with a conflict error.
+
 </details>
 
 ---
@@ -695,6 +761,8 @@ D) External -> Ingress -> NodePort -> Pod
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** External traffic hits the NodePort on any cluster node, which then gets DNATed to the Service's ClusterIP, and finally to one of the backend Pod endpoints through kube-proxy's iptables or IPVS rules.
 
 </details>
 
@@ -715,6 +783,8 @@ D) To configure firewall rules
 
 **Answer:** B
 
+**Explanation:** The externalTrafficPolicy field determines whether external traffic is load balanced across all Pods cluster-wide (Cluster) or only to Pods on the node receiving the traffic (Local), affecting both load distribution and client IP preservation.
+
 </details>
 
 ---
@@ -733,6 +803,8 @@ D) The Service becomes unavailable externally
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** With externalTrafficPolicy: Local, kube-proxy only routes traffic to Pods running on the same node that received the traffic. This preserves the original client IP (no SNAT) but may result in uneven load distribution.
 
 </details>
 
@@ -774,6 +846,8 @@ D) Reduced network hops
 
 **Answer:** B
 
+**Explanation:** With externalTrafficPolicy: Cluster, traffic can be forwarded to any Pod in the cluster regardless of which node receives it, resulting in more even distribution but at the cost of an extra network hop and SNAT that obscures the client IP.
+
 </details>
 
 ---
@@ -792,6 +866,8 @@ D) Change the CNI configuration
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The NodePort range is controlled by the --service-node-port-range flag on the kube-apiserver, which validates and allocates NodePorts. Changing this requires modifying the API server configuration.
 
 </details>
 
@@ -812,6 +888,8 @@ D) PREROUTING
 
 **Answer:** C
 
+**Explanation:** kube-proxy creates a KUBE-NODEPORTS chain that handles DNAT rules specifically for NodePort Services, which is jumped to from the KUBE-SERVICES chain for traffic that doesn't match ClusterIP addresses.
+
 </details>
 
 ---
@@ -830,6 +908,8 @@ D) NodePort Services cost more
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** NodePort Services expose ports on all cluster nodes, requiring you to manage external load balancing yourself. LoadBalancer Services automatically provision a cloud load balancer that handles health checking and routing to healthy nodes.
 
 </details>
 
@@ -852,6 +932,8 @@ D) Storage volume
 
 **Answer:** B
 
+**Explanation:** When creating a LoadBalancer Service, the cloud-controller-manager provisions a cloud-specific load balancer (like AWS ELB/NLB, GCP Load Balancer, or Azure Load Balancer) that routes external traffic to the cluster nodes.
+
 </details>
 
 ---
@@ -870,6 +952,8 @@ D) An error is thrown
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Without a cloud provider or load balancer controller (like MetalLB), the Service will remain in Pending state indefinitely because there is no component to provision the external load balancer and assign an external IP.
 
 </details>
 
@@ -890,6 +974,8 @@ D) External LoadBalancer only
 
 **Answer:** C
 
+**Explanation:** A LoadBalancer Service is a superset that includes all three components: a ClusterIP for internal access, a NodePort for node-level exposure, and an external load balancer that forwards traffic to the NodePort on cluster nodes.
+
 </details>
 
 ---
@@ -908,6 +994,8 @@ D) By proxying through the master node
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** MetalLB provides LoadBalancer functionality in bare-metal clusters by assigning external IPs from a configured pool and announcing them using either Layer 2 (ARP/NDP) or BGP protocols to make them reachable from the external network.
 
 </details>
 
@@ -928,6 +1016,8 @@ D) loadbalancer.kubernetes.io/internal
 
 **Answer:** B
 
+**Explanation:** Internal load balancer annotations are cloud-specific. For example, GCP uses cloud.google.com/load-balancer-type: "Internal", AWS uses service.beta.kubernetes.io/aws-load-balancer-internal: "true", and Azure uses service.beta.kubernetes.io/azure-load-balancer-internal: "true".
+
 </details>
 
 ---
@@ -946,6 +1036,8 @@ D) To set the ClusterIP
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The loadBalancerIP field allows you to request a specific IP address for the external load balancer, which is useful when you need a stable, pre-determined external IP. Support depends on the cloud provider.
 
 </details>
 
@@ -966,6 +1058,8 @@ D) To configure source NAT ranges
 
 **Answer:** B
 
+**Explanation:** The loadBalancerSourceRanges field specifies CIDR ranges that are allowed to access the load balancer, implementing IP-based access control at the load balancer level to restrict which clients can reach the Service.
+
 </details>
 
 ---
@@ -985,6 +1079,8 @@ D) It manages Pod scheduling
 
 **Answer:** B
 
+**Explanation:** The cloud-controller-manager watches for Services of type LoadBalancer and interacts with the cloud provider's API to provision external load balancers, configure health checks, and assign external IPs.
+
 </details>
 
 ---
@@ -1003,6 +1099,8 @@ D) To configure port mapping
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Setting allocateLoadBalancerNodePorts to false prevents automatic NodePort allocation for LoadBalancer Services, useful when the load balancer can route traffic directly to Pods without needing NodePorts.
 
 </details>
 
@@ -1044,6 +1142,8 @@ D) Layer 4 is cloud-only, Layer 7 is on-premises
 
 **Answer:** B
 
+**Explanation:** Layer 4 load balancers (like NLB) route based on IP and port information, while Layer 7 load balancers (like ALB or Ingress) can inspect HTTP headers, paths, and content for more sophisticated routing decisions.
+
 </details>
 
 ---
@@ -1065,6 +1165,8 @@ D) To configure external authentication
 
 **Answer:** B
 
+**Explanation:** An ExternalName Service maps a Service name to an external DNS name by returning a CNAME record, allowing Pods to access external services using a consistent internal Service name.
+
 </details>
 
 ---
@@ -1083,6 +1185,8 @@ D) Setting replicas: 0
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** A headless Service is created by setting clusterIP: None, which tells Kubernetes not to allocate a virtual IP, and instead DNS queries return the individual Pod IPs directly.
 
 </details>
 
@@ -1103,6 +1207,8 @@ D) The node IPs
 
 **Answer:** B
 
+**Explanation:** DNS queries for a headless Service return A records for all Pod IPs in the endpoint list, allowing clients to perform their own load balancing or connect to specific Pods.
+
 </details>
 
 ---
@@ -1121,6 +1227,8 @@ D) SSL termination
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Headless Services are commonly used with StatefulSets to provide stable DNS names for each Pod, enabling peer discovery and direct Pod-to-Pod communication for distributed databases and clustered applications.
 
 </details>
 
@@ -1141,6 +1249,8 @@ D) SRV record
 
 **Answer:** C
 
+**Explanation:** ExternalName Services create a CNAME DNS record that aliases the Service name to the specified external hostname, redirecting DNS queries to the external target.
+
 </details>
 
 ---
@@ -1159,6 +1269,8 @@ D) Only if targeting internal services
 <summary>Show Answer</summary>
 
 **Answer:** C
+
+**Explanation:** ExternalName Services map to external DNS names rather than Pod endpoints, so they cannot have selectors since there are no Pods to select.
 
 </details>
 
@@ -1179,6 +1291,8 @@ D) Only the first Pod is selected
 
 **Answer:** A
 
+**Explanation:** When a headless Service has a selector, Kubernetes automatically creates Endpoints containing the IPs of all Pods matching the selector, and DNS returns these Pod IPs directly.
+
 </details>
 
 ---
@@ -1197,6 +1311,8 @@ D) Define them in a separate YAML file
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** For Services without selectors, you must manually create an Endpoints resource with the same name as the Service, specifying the IP addresses and ports that the Service should route traffic to.
 
 </details>
 
@@ -1238,6 +1354,8 @@ D) linkedService
 
 **Answer:** A
 
+**Explanation:** The serviceName field in a StatefulSet spec specifies the name of the headless Service that governs the network identity of the Pods, enabling stable DNS names like pod-0.service-name.namespace.svc.cluster.local.
+
 </details>
 
 ---
@@ -1256,6 +1374,8 @@ D) Only with specific annotations
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** An ExternalName Service can point to any DNS name including internal Kubernetes Service names (e.g., my-service.other-namespace.svc.cluster.local), enabling cross-namespace service aliasing.
 
 </details>
 
@@ -1278,6 +1398,8 @@ D) To manage Pod networking
 
 **Answer:** B
 
+**Explanation:** Ingress provides HTTP/HTTPS routing from outside the cluster to Services inside, offering features like host-based routing, path-based routing, and TLS termination.
+
 </details>
 
 ---
@@ -1296,6 +1418,8 @@ D) A CNI plugin
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Ingress resources are just configuration objects; an Ingress controller (like nginx-ingress or Traefik) must be deployed to watch these resources and implement the actual routing rules.
 
 </details>
 
@@ -1316,6 +1440,8 @@ D) coredns
 
 **Answer:** B
 
+**Explanation:** The nginx-ingress-controller is one of the most widely used Ingress controllers, using NGINX as the reverse proxy to route external HTTP/HTTPS traffic to backend Services.
+
 </details>
 
 ---
@@ -1334,6 +1460,8 @@ D) ICMP routing
 <summary>Show Answer</summary>
 
 **Answer:** C
+
+**Explanation:** The standard Kubernetes Ingress API is designed for HTTP/HTTPS Layer 7 routing, supporting host headers and URL paths to direct traffic to different backend Services.
 
 </details>
 
@@ -1354,6 +1482,8 @@ D) Using annotations only
 
 **Answer:** B
 
+**Explanation:** In an Ingress rule, the backend is specified using the Service name and port number (or port name), and the Ingress controller routes matching traffic to that Service.
+
 </details>
 
 ---
@@ -1372,6 +1502,8 @@ D) To set priority
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The ingressClassName field references an IngressClass resource that identifies which Ingress controller should process the Ingress, enabling multiple controllers to coexist in a cluster.
 
 </details>
 
@@ -1392,6 +1524,8 @@ D) Using a ConfigMap
 
 **Answer:** A
 
+**Explanation:** TLS termination is configured in the Ingress spec's tls section by specifying the hosts and referencing a Secret containing the TLS certificate and private key.
+
 </details>
 
 ---
@@ -1410,6 +1544,8 @@ D) kubernetes.io/dockerconfigjson
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Ingress TLS configuration requires a Secret of type kubernetes.io/tls, which must contain tls.crt (certificate) and tls.key (private key) fields.
 
 </details>
 
@@ -1430,6 +1566,8 @@ D) Routing based on network paths
 
 **Answer:** A
 
+**Explanation:** Path-based routing allows an Ingress to route requests to different backend Services based on the URL path, such as /api going to one Service and /web to another.
+
 </details>
 
 ---
@@ -1448,6 +1586,8 @@ D) There is no difference
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Prefix matching routes requests where the URL path starts with the specified prefix (e.g., /api matches /api/users), while Exact requires an exact path match with no trailing content.
 
 </details>
 
@@ -1489,6 +1629,8 @@ D) Using a separate ConfigMap
 
 **Answer:** B
 
+**Explanation:** The nginx-ingress-controller supports rate limiting through annotations like nginx.ingress.kubernetes.io/limit-rps (requests per second) and nginx.ingress.kubernetes.io/limit-connections to control traffic.
+
 </details>
 
 ---
@@ -1507,6 +1649,8 @@ D) To store default configurations
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The default backend is a fallback Service that receives requests when no Ingress rules match, typically returning a 404 page or redirecting users.
 
 </details>
 
@@ -1527,6 +1671,8 @@ D) By receiving push notifications from kubelet
 
 **Answer:** B
 
+**Explanation:** The nginx Ingress controller uses the Kubernetes watch API to monitor Ingress resources in real-time, automatically updating its NGINX configuration when Ingress resources are created, modified, or deleted.
+
 </details>
 
 ---
@@ -1545,6 +1691,8 @@ D) To rewrite the client IP
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The rewrite-target annotation modifies the URL path before forwarding the request to the backend, commonly used to strip path prefixes so the backend receives requests at its expected paths.
 
 </details>
 
@@ -1565,6 +1713,8 @@ D) Using a Cookie header in the request
 
 **Answer:** B
 
+**Explanation:** The nginx-ingress-controller supports sticky sessions via the nginx.ingress.kubernetes.io/affinity annotation set to "cookie", which uses cookies to maintain session affinity to specific backend Pods.
+
 </details>
 
 ---
@@ -1583,6 +1733,8 @@ D) To group Ingress resources
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** IngressClass resources define the controller that should implement Ingress resources and can include additional parameters, allowing different Ingress controllers to be specified for different Ingress resources.
 
 </details>
 
@@ -1603,6 +1755,8 @@ D) It's automatic for the first IngressClass created
 
 **Answer:** B
 
+**Explanation:** Setting the ingressclass.kubernetes.io/is-default-class annotation to "true" on an IngressClass makes it the default, so Ingress resources without an ingressClassName will use this controller.
+
 </details>
 
 ---
@@ -1622,6 +1776,8 @@ D) There is no difference
 
 **Answer:** B
 
+**Explanation:** Gateway API is a more expressive, extensible, and role-oriented successor to Ingress, supporting advanced routing, multiple protocols (HTTP, TCP, gRPC), and clearer separation between infrastructure and application concerns.
+
 </details>
 
 ---
@@ -1640,6 +1796,8 @@ D) Using a sidecar container
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** nginx-ingress supports mTLS through annotations like nginx.ingress.kubernetes.io/auth-tls-secret (CA certificate for client verification) and nginx.ingress.kubernetes.io/auth-tls-verify-client to enforce client certificate authentication.
 
 </details>
 
@@ -1662,6 +1820,8 @@ D) To manage Service endpoints
 
 **Answer:** B
 
+**Explanation:** Network Policies are Kubernetes resources that define rules to control which Pods can communicate with each other and with external endpoints, acting as a Pod-level firewall.
+
 </details>
 
 ---
@@ -1680,6 +1840,8 @@ D) The API server
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Network Policies are enforced by the CNI plugin (like Calico, Cilium, or Weave), which programs the underlying network rules. CNI plugins that don't support Network Policies (like basic Flannel) will ignore them.
 
 </details>
 
@@ -1700,6 +1862,8 @@ D) Only egress is allowed
 
 **Answer:** B
 
+**Explanation:** By default, Kubernetes Pods are non-isolated and accept traffic from any source. Network Policies are additive, and isolation only occurs when at least one policy selects a Pod.
+
 </details>
 
 ---
@@ -1718,6 +1882,8 @@ D) Nothing changes
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Once a Network Policy selects a Pod for a traffic direction (ingress/egress), that Pod becomes isolated in that direction, and only traffic explicitly allowed by some policy's rules is permitted.
 
 </details>
 
@@ -1738,6 +1904,8 @@ D) All CNI plugins
 
 **Answer:** B
 
+**Explanation:** Network Policy support requires CNI plugins that can implement the policy rules. Calico, Cilium, and Weave natively support Network Policies, while basic Flannel does not without additional components.
+
 </details>
 
 ---
@@ -1756,6 +1924,8 @@ D) Invalid syntax
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** An empty podSelector ({}) matches all Pods in the Network Policy's namespace, commonly used for creating default deny policies that affect all Pods.
 
 </details>
 
@@ -1776,6 +1946,8 @@ D) Using ingressPods
 
 **Answer:** B
 
+**Explanation:** In a Network Policy ingress rule, the "from" field contains a list of sources, and podSelector within a from entry specifies which Pods are allowed to send traffic to the selected Pods.
+
 </details>
 
 ---
@@ -1794,6 +1966,8 @@ D) Only for TCP
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Network Policies support port-based filtering through the ports field in ingress and egress rules, allowing you to specify allowed protocols (TCP, UDP, SCTP) and port numbers.
 
 </details>
 
@@ -1814,6 +1988,8 @@ D) Pod-scoped
 
 **Answer:** B
 
+**Explanation:** Network Policies are namespace-scoped resources that only select Pods within their own namespace. To apply policies across namespaces, you must create policies in each namespace or use cluster-scoped alternatives from CNI plugins.
+
 </details>
 
 ---
@@ -1832,6 +2008,8 @@ D) Network Policies can't filter by namespace
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** The namespaceSelector in a from entry allows traffic from Pods in namespaces matching the label selector. Namespaces must have labels applied for this selector to match them.
 
 </details>
 
@@ -1852,6 +2030,8 @@ D) Invalid syntax
 
 **Answer:** B
 
+**Explanation:** An empty ingress array (ingress: []) means no ingress rules are defined, so no traffic matches, effectively denying all ingress traffic to the selected Pods. To allow all traffic, you would use ingress: [{}].
+
 </details>
 
 ---
@@ -1870,6 +2050,8 @@ D) Using sourceIP
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The ipBlock field in a from or to entry allows specifying CIDR ranges (e.g., 10.0.0.0/8) for allowing traffic from or to specific IP address blocks, useful for external traffic sources.
 
 </details>
 
@@ -1890,6 +2072,8 @@ D) To specify fallback IPs
 
 **Answer:** B
 
+**Explanation:** The except field in an ipBlock allows you to exclude specific CIDR ranges from the allowed block, for example allowing 10.0.0.0/8 except for 10.0.0.0/24.
+
 </details>
 
 ---
@@ -1908,6 +2092,8 @@ D) Configure kube-proxy
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** To deny all egress except DNS, create a Network Policy with policyTypes: [Egress] and an egress rule allowing only UDP/TCP port 53 to the cluster DNS service or kube-dns namespace.
 
 </details>
 
@@ -1928,6 +2114,8 @@ D) An error occurs
 
 **Answer:** C
 
+**Explanation:** Network Policies are additive - when multiple policies select the same Pod, the allowed traffic is the union of all their rules. Traffic is allowed if any policy permits it, and policies never conflict.
+
 </details>
 
 ---
@@ -1946,6 +2134,8 @@ D) Use a composite selector
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** When podSelector and namespaceSelector are placed in the same `from` entry, they act as an AND condition, meaning traffic is only allowed from Pods that match both the Pod labels AND are in namespaces matching the namespace labels.
 
 </details>
 
@@ -1966,6 +2156,8 @@ D) Separate entries are not allowed
 
 **Answer:** B
 
+**Explanation:** When selectors are in the same `from` entry, they are combined with AND logic (both must match). When in separate entries, they use OR logic (traffic is allowed if either condition matches), providing flexible policy composition.
+
 </details>
 
 ---
@@ -1984,6 +2176,8 @@ D) Only in host network mode
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Network Policies can block traffic between Pods on the same node if the CNI plugin enforces policies at the Pod network namespace level, which most policy-supporting CNI plugins like Calico and Cilium do.
 
 </details>
 
@@ -2004,6 +2198,8 @@ D) Use the bidirectional field
 
 **Answer:** B
 
+**Explanation:** To apply a Network Policy to both ingress and egress traffic, you must explicitly include both "Ingress" and "Egress" in the policyTypes array, enabling the policy to control traffic in both directions.
+
 </details>
 
 ---
@@ -2022,6 +2218,8 @@ D) Default deny for all
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** If policyTypes is not specified but ingress rules are defined, Kubernetes automatically assumes policyTypes: [Ingress], applying the policy only to incoming traffic while leaving egress unrestricted.
 
 </details>
 
@@ -2044,6 +2242,8 @@ D) Unbound
 
 **Answer:** C
 
+**Explanation:** CoreDNS is the default DNS server in Kubernetes clusters since version 1.13, replacing kube-dns. It provides service discovery by watching the Kubernetes API and responding to DNS queries for Services and Pods.
+
 </details>
 
 ---
@@ -2062,6 +2262,8 @@ D) service.svc.namespace.cluster.local
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The FQDN format for a Kubernetes Service is `<service-name>.<namespace>.svc.cluster.local`, where "svc" indicates it's a Service record and "cluster.local" is the default cluster domain suffix.
 
 </details>
 
@@ -2082,6 +2284,8 @@ D) TXT
 
 **Answer:** B
 
+**Explanation:** A regular ClusterIP Service gets an A record (for IPv4) or AAAA record (for IPv6) that resolves to the Service's ClusterIP address, enabling DNS-based service discovery.
+
 </details>
 
 ---
@@ -2100,6 +2304,8 @@ D) /etc/dns.conf
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The kubelet configures /etc/resolv.conf in each Pod with the cluster DNS server IP (typically the kube-dns Service ClusterIP) and search domains, enabling automatic DNS resolution for Services.
 
 </details>
 
@@ -2120,6 +2326,8 @@ D) k8s.local
 
 **Answer:** B
 
+**Explanation:** The default domain suffix "cluster.local" is the standard cluster domain used in Kubernetes DNS, forming the base for all Service and Pod DNS names within the cluster.
+
 </details>
 
 ---
@@ -2138,6 +2346,8 @@ D) It returns the node IP
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** When a Pod queries a short Service name, the search domains configured in /etc/resolv.conf (like `<namespace>.svc.cluster.local`) are automatically appended, allowing simple names like "my-service" to resolve within the same namespace.
 
 </details>
 
@@ -2158,6 +2368,8 @@ D) Named ports don't have DNS records
 
 **Answer:** B
 
+**Explanation:** Named ports on Services get SRV records in the format `_<port-name>._<protocol>.<service>.<namespace>.svc.cluster.local`, allowing clients to discover both the port number and the target hostname.
+
 </details>
 
 ---
@@ -2176,6 +2388,8 @@ D) NodeLocal
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The "Default" dnsPolicy inherits the DNS settings from the node where the Pod is running, using the node's /etc/resolv.conf configuration instead of the cluster DNS.
 
 </details>
 
@@ -2196,6 +2410,8 @@ D) To set the DNS server IP
 
 **Answer:** B
 
+**Explanation:** The dnsConfig field allows customizing DNS settings like nameservers, search domains, and options, which are merged with settings from the selected dnsPolicy to provide fine-grained DNS configuration.
+
 </details>
 
 ---
@@ -2214,6 +2430,8 @@ D) From ConfigMap updates only
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** CoreDNS uses the Kubernetes plugin to watch the API server for Service and Endpoint changes, automatically updating its DNS records in real-time as cluster resources are created, modified, or deleted.
 
 </details>
 
@@ -2234,6 +2452,8 @@ D) To set query timeout
 
 **Answer:** B
 
+**Explanation:** The ndots option (default 5 in Kubernetes) specifies how many dots must be in a name before it's considered absolute. Names with fewer dots trigger search domain lookups first, which can cause extra DNS queries.
+
 </details>
 
 ---
@@ -2252,6 +2472,8 @@ D) Use IP addresses only
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Reducing ndots (e.g., to 2) or using fully qualified domain names with a trailing dot prevents unnecessary search domain lookups for external domains, reducing DNS query overhead and latency.
 
 </details>
 
@@ -2272,6 +2494,8 @@ D) A node-level DNS configuration
 
 **Answer:** A
 
+**Explanation:** NodeLocal DNSCache runs a DNS caching agent on each node as a DaemonSet, reducing latency and load on CoreDNS by serving cached responses locally and avoiding conntrack issues with UDP DNS traffic.
+
 </details>
 
 ---
@@ -2290,6 +2514,8 @@ D) Using Network Policies
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** The CoreDNS Corefile can be edited via its ConfigMap to add forward plugin directives, specifying which domains should be forwarded to which external DNS servers for resolution.
 
 </details>
 
@@ -2310,6 +2536,8 @@ D) The cluster automatically restarts CoreDNS
 
 **Answer:** B
 
+**Explanation:** Without CoreDNS running, Pods cannot resolve Service names to IP addresses, causing service discovery failures. Pods can still communicate using direct IP addresses, but name resolution will fail.
+
 </details>
 
 ---
@@ -2328,6 +2556,8 @@ D) To configure file paths
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The autopath plugin in CoreDNS optimizes DNS resolution by automatically determining the correct search path for Pod queries, reducing the number of DNS lookups needed to resolve cluster-internal names.
 
 </details>
 
@@ -2348,6 +2578,8 @@ D) Only the first Pod gets a DNS entry
 
 **Answer:** B
 
+**Explanation:** StatefulSet Pods with a headless Service get predictable DNS entries in the format `<pod-name>.<service-name>.<namespace>.svc.cluster.local`, providing stable network identities that persist across Pod rescheduling.
+
 </details>
 
 ---
@@ -2366,6 +2598,8 @@ D) To scale Pods
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The `pods` directive in the CoreDNS Kubernetes plugin controls whether and how A records are created for individual Pods, with options like "verified" to only create records for existing Pods or "insecure" for all Pod IP patterns.
 
 </details>
 
@@ -2386,6 +2620,8 @@ D) Checking the API server logs
 
 **Answer:** B
 
+**Explanation:** Running nslookup, dig, or host commands from within a Pod directly queries the DNS server configured in the Pod's /etc/resolv.conf, allowing you to verify Service name resolution and troubleshoot DNS issues.
+
 </details>
 
 ---
@@ -2404,6 +2640,8 @@ D) An error prevents Pod creation
 <summary>Show Answer</summary>
 
 **Answer:** C
+
+**Explanation:** Setting dnsPolicy: None without providing dnsConfig results in an empty /etc/resolv.conf, leaving the Pod unable to resolve any DNS names since no nameservers or search domains are configured.
 
 </details>
 
@@ -2426,6 +2664,8 @@ D) To schedule Pods
 
 **Answer:** B
 
+**Explanation:** kube-proxy's primary function is to implement Service networking by programming iptables, IPVS, or nftables rules on each node that redirect traffic destined for Service ClusterIPs to the appropriate backend Pod endpoints.
+
 </details>
 
 ---
@@ -2444,6 +2684,8 @@ D) nftables
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The iptables mode is the default in most Kubernetes installations, programming iptables NAT rules for Service routing. While IPVS mode offers better performance at scale, iptables remains the widely-used default.
 
 </details>
 
@@ -2464,6 +2706,8 @@ D) The API server routes the request
 
 **Answer:** C
 
+**Explanation:** When a Pod accesses a Service ClusterIP, the kernel's netfilter (iptables) or IPVS rules installed by kube-proxy intercept the packet and redirect it to one of the backend Pod endpoint IPs using DNAT.
+
 </details>
 
 ---
@@ -2482,6 +2726,8 @@ D) By reading local configuration files
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** kube-proxy uses the Kubernetes watch API to receive real-time updates about Service and Endpoint/EndpointSlice changes, automatically updating the network rules whenever the cluster state changes.
 
 </details>
 
@@ -2502,6 +2748,8 @@ D) The default mode
 
 **Answer:** B
 
+**Explanation:** Userspace mode is the original, legacy kube-proxy implementation where kube-proxy itself acts as a TCP/UDP proxy, forwarding traffic through userspace. It's significantly slower than kernel-based modes and rarely used today.
+
 </details>
 
 ---
@@ -2520,6 +2768,8 @@ D) Better Windows support
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** IPVS mode uses hash tables for O(1) lookup complexity compared to iptables' O(n) linear chain traversal, making it significantly more efficient for clusters with thousands of Services or endpoints.
 
 </details>
 
@@ -2540,6 +2790,8 @@ D) Random only
 
 **Answer:** B
 
+**Explanation:** IPVS supports multiple load balancing algorithms including round-robin (rr), least connections (lc), destination hashing (dh), source hashing (sh), shortest expected delay (sed), and never queue (nq).
+
 </details>
 
 ---
@@ -2558,6 +2810,8 @@ D) In etcd directly
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** kube-proxy configuration is typically stored in a ConfigMap named "kube-proxy" in the kube-system namespace, which is mounted into kube-proxy Pods and contains settings like mode, cluster CIDR, and various tuning parameters.
 
 </details>
 
@@ -2599,6 +2853,8 @@ D) To manage storage endpoints
 
 **Answer:** B
 
+**Explanation:** EndpointSlices provide more scalable endpoint tracking by splitting endpoints into smaller groups (default 100 endpoints per slice), reducing API server and kube-proxy load when Services have many backend Pods.
+
 </details>
 
 ---
@@ -2617,6 +2873,8 @@ D) OUTPUT
 <summary>Show Answer</summary>
 
 **Answer:** C
+
+**Explanation:** In iptables mode, kube-proxy creates KUBE-SVC-* chains for each Service, which contain DNAT rules that redirect traffic from the Service ClusterIP to one of the backend Pod endpoints using probability-based load balancing.
 
 </details>
 
@@ -2637,6 +2895,8 @@ D) To set proxy timeout
 
 **Answer:** B
 
+**Explanation:** The --proxy-mode flag specifies which kube-proxy implementation to use: "iptables" (default), "ipvs" for better performance at scale, or "nftables" as a newer alternative to iptables.
+
 </details>
 
 ---
@@ -2655,6 +2915,8 @@ D) Using connection tracking
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** In iptables mode, kube-proxy uses the iptables "recent" match module to track client source IPs for session affinity, maintaining a mapping that directs subsequent requests from the same client to the same backend Pod.
 
 </details>
 
@@ -2675,6 +2937,8 @@ D) Connections are migrated
 
 **Answer:** B
 
+**Explanation:** When kube-proxy updates iptables rules, existing established connections tracked by conntrack continue to flow to their original destination, while only new connections use the updated rules, providing graceful transitions.
+
 </details>
 
 ---
@@ -2693,6 +2957,8 @@ D) To track Pod connections
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The conntrack (connection tracking) table maintains state for established connections, enabling stateful packet inspection and ensuring that reply packets are correctly routed back through NAT rules.
 
 </details>
 
@@ -2713,6 +2979,8 @@ D) Checking the API server
 
 **Answer:** B
 
+**Explanation:** Running `iptables-save` (for iptables mode) or `ipvsadm -ln` (for IPVS mode) on a cluster node shows all the rules kube-proxy has created, including KUBE-SERVICES, KUBE-SVC-*, and KUBE-SEP-* chains.
+
 </details>
 
 ---
@@ -2731,6 +2999,8 @@ D) To define external CIDRs
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The --cluster-cidr flag tells kube-proxy the Pod CIDR range, which is used for features like masquerading outbound traffic and distinguishing cluster-internal from external traffic sources.
 
 </details>
 
@@ -2751,6 +3021,8 @@ D) To bind to specific node addresses
 
 **Answer:** A
 
+**Explanation:** The healthzBindAddress configures the address and port where kube-proxy exposes its health check endpoint (/healthz), which can be used by monitoring systems to verify kube-proxy is running correctly.
+
 </details>
 
 ---
@@ -2770,6 +3042,8 @@ D) Using userspace proxying
 
 **Answer:** B
 
+**Explanation:** In IPVS mode, kube-proxy binds Service VIPs to a dummy interface (kube-ipvs0), then creates IPVS virtual server entries that load balance traffic to real server (Pod endpoint) entries.
+
 </details>
 
 ---
@@ -2788,6 +3062,8 @@ D) A mode specific to Windows
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** nftables mode is a newer kube-proxy implementation that uses the nftables framework (successor to iptables), offering better performance, atomic rule updates, and a cleaner rule structure than the legacy iptables mode.
 
 </details>
 
@@ -2810,6 +3086,8 @@ D) To set node IP ranges
 
 **Answer:** B
 
+**Explanation:** Pod CIDR defines the IP address range from which Pod IP addresses are allocated, typically configured via --pod-network-cidr during cluster initialization and divided into per-node subnets.
+
 </details>
 
 ---
@@ -2828,6 +3106,8 @@ D) Only within the same node
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Kubernetes has a flat network model where all Pods can communicate with each other by default without Network Policies. Every Pod gets a unique cluster-wide IP address and can reach any other Pod directly.
 
 </details>
 
@@ -2848,6 +3128,8 @@ D) Pods must be in the same namespace
 
 **Answer:** B
 
+**Explanation:** The Kubernetes network model requires that all Pods can communicate with each other without NAT, meaning each Pod sees the same source IP that other Pods see, enabling transparent network communication across the cluster.
+
 </details>
 
 ---
@@ -2866,6 +3148,8 @@ D) A DNS configuration
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** A network overlay creates a virtual network layer on top of the physical infrastructure by encapsulating Pod traffic, allowing Pod IPs to be routed across nodes that may not have direct Layer 2 or Layer 3 connectivity.
 
 </details>
 
@@ -2886,6 +3170,8 @@ D) There is no difference
 
 **Answer:** B
 
+**Explanation:** VXLAN encapsulates Layer 2 Ethernet frames within UDP packets (port 4789), creating a full Layer 2 overlay, while IPIP simply wraps IP packets in another IP header (protocol 4), resulting in lower overhead but only providing Layer 3 connectivity.
+
 </details>
 
 ---
@@ -2904,6 +3190,8 @@ D) To use the host's DNS
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** When `hostNetwork: true` is set, the Pod uses the node's network namespace instead of its own isolated namespace, allowing the Pod to access network interfaces, ports, and traffic as if it were a regular process on the host.
 
 </details>
 
@@ -2924,6 +3212,8 @@ D) It prevents Pod communication
 
 **Answer:** B
 
+**Explanation:** Using `hostNetwork: true` gives the Pod direct access to the node's network stack, allowing it to see all network traffic, bind to any port, and potentially intercept or manipulate network communications, which poses significant security risks.
+
 </details>
 
 ---
@@ -2942,6 +3232,8 @@ D) To enable host networking
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** The `hostPort` field exposes a container's port directly on the node's IP address, creating a direct mapping from the node's port to the container's port, similar to Docker's port publishing but limited to the specific node where the Pod runs.
 
 </details>
 
@@ -3004,6 +3296,8 @@ D) DNS records are updated
 
 **Answer:** B
 
+**Explanation:** When `externalIPs` is configured, kube-proxy creates rules to intercept traffic destined for those IP addresses on the Service port and route it to the Service's backend Pods, without creating a load balancer or modifying DNS.
+
 </details>
 
 ---
@@ -3022,6 +3316,8 @@ D) Service mesh
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The deprecated Service topology feature was replaced by topology-aware hints (also known as topology-aware routing), which provides a more flexible and scalable approach to routing traffic to endpoints based on their topology zone.
 
 </details>
 
@@ -3042,6 +3338,8 @@ D) To define node topology
 
 **Answer:** A
 
+**Explanation:** Topology-aware hints enable kube-proxy to prefer routing traffic to endpoints in the same zone or region, reducing cross-zone network latency and costs while maintaining high availability.
+
 </details>
 
 ---
@@ -3061,6 +3359,8 @@ D) To set internal DNS
 
 **Answer:** A
 
+**Explanation:** The `internalTrafficPolicy` field controls whether internal cluster traffic (from Pods) is routed to all endpoints cluster-wide (Cluster) or only to endpoints on the same node (Local), similar to `externalTrafficPolicy` but for internal traffic.
+
 </details>
 
 ---
@@ -3079,6 +3379,8 @@ D) Load balancing is disabled
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** With `internalTrafficPolicy: Local`, kube-proxy only includes endpoints running on the same node, reducing network hops and latency but potentially causing connection failures if no local endpoints are available.
 
 </details>
 
@@ -3101,6 +3403,8 @@ D) A load balancer
 
 **Answer:** B
 
+**Explanation:** A service mesh is a dedicated infrastructure layer that manages service-to-service communication, providing features like traffic management, observability, and security (mTLS) without requiring changes to application code.
+
 </details>
 
 ---
@@ -3119,6 +3423,8 @@ D) CoreDNS
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Istio is one of the most popular service mesh implementations for Kubernetes, providing advanced traffic management, security, and observability features, while Calico and Flannel are CNI plugins and CoreDNS is a DNS server.
 
 </details>
 
@@ -3139,6 +3445,8 @@ D) A storage container
 
 **Answer:** B
 
+**Explanation:** The sidecar pattern deploys a proxy container (like Envoy) alongside each application container in a Pod, intercepting all inbound and outbound traffic to provide service mesh functionality transparently to the application.
+
 </details>
 
 ---
@@ -3157,6 +3465,8 @@ D) Micro TLS protocol
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Mutual TLS (mTLS) requires both the client and server to present certificates and verify each other's identity, providing encrypted communication and strong authentication between services in the mesh.
 
 </details>
 
@@ -3177,6 +3487,8 @@ D) The monitoring system
 
 **Answer:** B
 
+**Explanation:** The data plane consists of all the sidecar proxies deployed alongside application containers, which handle the actual network traffic including routing, load balancing, and applying policies at runtime.
+
 </details>
 
 ---
@@ -3195,6 +3507,8 @@ D) The Kubernetes control plane
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The control plane manages and configures the data plane proxies, handling tasks like certificate issuance, policy distribution, and service discovery configuration, allowing centralized management of the mesh.
 
 </details>
 
@@ -3215,6 +3529,8 @@ D) Filtering malicious traffic
 
 **Answer:** B
 
+**Explanation:** Traffic management in a service mesh allows fine-grained control over how requests are routed between services, including features like traffic splitting, canary deployments, retries, timeouts, and fault injection.
+
 </details>
 
 ---
@@ -3233,6 +3549,8 @@ D) A debugging tool
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Circuit breaking monitors the health of service connections and stops sending requests to a failing service after a threshold of failures, preventing cascading failures and allowing the failing service time to recover.
 
 </details>
 
@@ -3253,6 +3571,8 @@ D) Creating traffic backups
 
 **Answer:** B
 
+**Explanation:** Traffic mirroring duplicates live traffic and sends copies to a secondary service for testing or analysis without affecting the primary traffic flow, enabling safe testing of new service versions with real production traffic.
+
 </details>
 
 ---
@@ -3271,6 +3591,8 @@ D) Only tracing
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Service meshes provide comprehensive observability through distributed tracing (tracking requests across services), metrics (latency, error rates, traffic volume), and logging, giving visibility into service-to-service communication without application code changes.
 
 </details>
 
@@ -3291,6 +3613,8 @@ D) By modifying container images
 
 **Answer:** B
 
+**Explanation:** Istio uses mutating admission webhooks to automatically inject Envoy sidecar proxy containers into Pods at creation time when the namespace or Pod has the appropriate injection label enabled.
+
 </details>
 
 ---
@@ -3309,6 +3633,8 @@ D) A DNS server
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Envoy is a high-performance, open-source edge and service proxy designed for cloud-native applications, serving as the data plane in service meshes like Istio, Consul Connect, and AWS App Mesh.
 
 </details>
 
@@ -3329,6 +3655,8 @@ D) A storage abstraction
 
 **Answer:** B
 
+**Explanation:** VirtualService is an Istio CRD that defines traffic routing rules, allowing you to configure how requests are routed to services based on headers, URI paths, or percentages for canary deployments and A/B testing.
+
 </details>
 
 ---
@@ -3347,6 +3675,8 @@ D) A DNS rule
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** DestinationRule is an Istio CRD that configures policies applied after routing decisions, including load balancing algorithms, connection pool settings, circuit breaker thresholds, and TLS settings for traffic to a destination.
 
 </details>
 
@@ -3367,6 +3697,8 @@ D) By DNS-based routing
 
 **Answer:** B
 
+**Explanation:** Service meshes enable canary deployments by routing a configurable percentage of traffic to new service versions while the majority goes to the stable version, allowing gradual rollout and quick rollback if issues are detected.
+
 </details>
 
 ---
@@ -3385,6 +3717,8 @@ D) eBPF is user-space only
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** eBPF-based service meshes operate directly in the Linux kernel with lower latency and overhead, while iptables-based meshes use the older netfilter framework which requires more context switches and has higher performance costs.
 
 </details>
 
@@ -3405,6 +3739,8 @@ D) Uses userspace networking
 
 **Answer:** B
 
+**Explanation:** Cilium Service Mesh uses eBPF programs running in the Linux kernel to implement service mesh features, reducing or eliminating the need for sidecar proxies and their associated resource overhead and latency.
+
 </details>
 
 ---
@@ -3423,6 +3759,8 @@ D) To configure RBAC
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** PeerAuthentication is an Istio CRD that defines mutual TLS (mTLS) requirements for workloads, specifying whether mTLS is disabled, permissive (accepts both plaintext and mTLS), or strict (requires mTLS only).
 
 </details>
 
@@ -3443,6 +3781,8 @@ D) They require application changes
 
 **Answer:** B
 
+**Explanation:** Service meshes implement retries and timeouts at the proxy layer, making these policies consistent across all services without requiring each application to implement its own retry logic, and enabling centralized configuration and updates.
+
 </details>
 
 ---
@@ -3461,6 +3801,8 @@ D) A deprecated API
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** The Gateway API is a Kubernetes SIG-Network project providing a standard, expressive API for advanced traffic management that service mesh implementations can adopt, offering a unified interface across different service mesh solutions.
 
 </details>
 
@@ -3483,6 +3825,8 @@ D) ping only
 
 **Answer:** B
 
+**Explanation:** Using curl or wget from within a Pod allows you to test HTTP connectivity to a Service by its DNS name or ClusterIP, verifying that the Service is reachable and responding correctly.
+
 </details>
 
 ---
@@ -3501,6 +3845,8 @@ D) kubectl get nodes
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** Running `kubectl get endpoints <service-name>` displays the IP addresses and ports of all Pods currently selected by the Service, making it easy to verify whether the Service has any backend targets.
 
 </details>
 
@@ -3521,6 +3867,8 @@ D) DNS is not configured
 
 **Answer:** B
 
+**Explanation:** A Service will have no endpoints if no Pods match the Service's label selector, if matching Pods exist but their readiness probes are failing, or if matching Pods are in a terminating state.
+
 </details>
 
 ---
@@ -3539,6 +3887,8 @@ D) The Kubernetes dashboard
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** DNS debugging tools like nslookup, dig, or host can be run from within a Pod (using kubectl exec) to test whether DNS resolution for Service names is working correctly through CoreDNS.
 
 </details>
 
@@ -3559,6 +3909,8 @@ D) kubectl logs apiserver
 
 **Answer:** A
 
+**Explanation:** kube-proxy runs as a DaemonSet in the kube-system namespace, so checking its Pod status with `kubectl get pods -n kube-system | grep kube-proxy` verifies that it is running on all nodes.
+
 </details>
 
 ---
@@ -3577,6 +3929,8 @@ D) Node is overloaded
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** DNS resolution failures typically occur when CoreDNS Pods are not running, have crashed, are misconfigured, or cannot reach the Kubernetes API to get Service/Endpoints information.
 
 </details>
 
@@ -3597,6 +3951,8 @@ D) Checking the API server logs
 
 **Answer:** B
 
+**Explanation:** The most effective way to test network policies is to attempt actual connections from Pods that should be allowed and from Pods that should be denied, verifying the policy behaves as expected in practice.
+
 </details>
 
 ---
@@ -3615,6 +3971,8 @@ D) To collect metrics
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Ephemeral debug containers allow you to attach a temporary container with debugging tools to a running Pod without restarting it, useful for troubleshooting when the original container lacks debugging utilities.
 
 </details>
 
@@ -3635,6 +3993,8 @@ D) Using kubectl logs
 
 **Answer:** B
 
+**Explanation:** Network traffic can be captured using tcpdump either directly in the Pod container (if available) or by attaching an ephemeral debug container with tcpdump to inspect packets at the network interface level.
+
 </details>
 
 ---
@@ -3653,6 +4013,8 @@ D) API server load
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Intermittent connectivity issues can be caused by network policies being updated, Pods being rescheduled (changing endpoints), CNI plugin issues, node network problems, or resource exhaustion affecting network performance.
 
 </details>
 
@@ -3673,6 +4035,8 @@ D) Using kubectl debug
 
 **Answer:** B
 
+**Explanation:** Diagnosing iptables issues requires running `iptables -L -n -v` on the node to examine the KUBE-SERVICES, KUBE-SVC-*, and KUBE-SEP-* chains that kube-proxy creates for Service routing.
+
 </details>
 
 ---
@@ -3691,6 +4055,8 @@ D) kube-proxy
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Tools like Cilium's Hubble provide real-time network flow visualization, while web-based NetworkPolicy editors can help visualize and validate policy configurations before applying them to the cluster.
 
 </details>
 
@@ -3711,6 +4077,8 @@ D) Reviewing kubelet logs
 
 **Answer:** B
 
+**Explanation:** Packet loss between Pods can be detected using ping (ICMP) to measure loss percentage, iperf for bandwidth testing with packet statistics, or tcpdump/Wireshark to analyze captured traffic for missing packets.
+
 </details>
 
 ---
@@ -3729,6 +4097,8 @@ D) Large ConfigMaps
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** High Service latency can result from network congestion between nodes, multiple proxy hops in service mesh configurations, slow backend Pods, DNS resolution delays, or resource constraints on nodes affecting packet processing.
 
 </details>
 
@@ -3749,6 +4119,8 @@ D) Using the Kubernetes API
 
 **Answer:** B
 
+**Explanation:** Tracing network paths requires combining tools: traceroute shows the Layer 3 path, packet captures reveal actual traffic flow, and examining iptables/IPVS rules shows how kube-proxy routes traffic to backend Pods.
+
 </details>
 
 ---
@@ -3767,6 +4139,8 @@ D) To forward ports between Pods
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** `kubectl port-forward` creates a temporary tunnel from a local port to a Pod or Service port, allowing direct access for debugging without exposing the application through a Service or Ingress.
 
 </details>
 
@@ -3787,6 +4161,8 @@ D) Restart the CNI
 
 **Answer:** B
 
+**Explanation:** Debugging network policies involves verifying Pod labels match policy selectors, checking namespace labels for namespace selectors, testing with explicit allow rules, and temporarily removing policies to confirm they are the source of blocking.
+
 </details>
 
 ---
@@ -3805,6 +4181,8 @@ D) Node status
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** `kubectl describe service` shows the Service configuration (type, ports, selector), the endpoints (backend Pod IPs), and any events related to the Service, providing a comprehensive view for troubleshooting connectivity issues.
 
 </details>
 
@@ -3825,6 +4203,8 @@ D) Check the API server
 
 **Answer:** B
 
+**Explanation:** Verifying CNI functionality involves checking CNI Pod logs for errors, confirming that new Pods receive IP addresses from the expected range, and testing basic Pod-to-Pod connectivity across nodes.
+
 </details>
 
 ---
@@ -3843,6 +4223,8 @@ D) Scale down to one node
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** Systematic troubleshooting involves checking each layer sequentially: verifying DNS resolution, confirming Service endpoints exist, testing network policy rules, checking CNI plugin health, and examining kube-proxy rules, to isolate the root cause.
 
 </details>
 
