@@ -415,14 +415,16 @@ D) It uses the first exposed container port
 What happens to existing connections when a Pod backing a Service is terminated?
 
 A) They are immediately dropped
-B) They are gracefully drained during the termination grace period
+B) They are guaranteed to be gracefully drained
 C) They are migrated to another Pod
-D) They remain connected until client timeout
+D) They continue until the Pod stops or the client closes the connection
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** D
+
+**Explanation:** Kubernetes stops routing new connections when endpoints are removed, but existing connections are not automatically drained. They continue until the Pod exits, the client closes the connection, or client timeout occurs. Graceful draining requires application-level handling using preStop hooks or readiness probe manipulation.
 
 </details>
 
@@ -737,10 +739,10 @@ D) The Service becomes unavailable externally
 ### Question 39
 [HARD]
 
-When `externalTrafficPolicy: Local` is set, what happens if no Pods exist on a node?
+When `externalTrafficPolicy: Local` is set, what happens if no local Pods exist on a node receiving traffic?
 
 A) Traffic is forwarded to another node
-B) The node's health check fails and no traffic is sent to it
+B) For LoadBalancer Services, the node fails health checks; for direct NodePort access, traffic is dropped
 C) The request hangs until a Pod is scheduled
 D) A 503 error is immediately returned
 
@@ -748,6 +750,8 @@ D) A 503 error is immediately returned
 <summary>Show Answer</summary>
 
 **Answer:** B
+
+**Explanation:** With `externalTrafficPolicy: Local`, traffic is only routed to Pods on the same node. For LoadBalancer Services, the cloud provider's health check removes the node from the load balancer target pool. However, for direct NodePort access (bypassing the LB), traffic to a node with no local Pods is simply dropped since there's no health check mechanism.
 
 </details>
 
@@ -1005,17 +1009,19 @@ D) To configure port mapping
 ### Question 53
 [HARD]
 
-When using AWS NLB (Network Load Balancer), what annotation preserves the client IP?
+When using AWS NLB (Network Load Balancer) in instance target mode, how is client IP preservation handled?
 
-A) service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-B) service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
-C) service.beta.kubernetes.io/aws-load-balancer-target-group-attributes with preserve_client_ip
-D) No annotation needed; NLB preserves client IP by default in instance mode
+A) It requires service.beta.kubernetes.io/aws-load-balancer-type: "nlb" annotation
+B) It requires service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*" annotation
+C) It requires explicit target group attributes configuration
+D) Client IP is preserved by default; no additional annotation is needed
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** D
+
+**Explanation:** AWS NLB in instance target mode preserves the client source IP by default without requiring any special annotations. The NLB operates at Layer 4 and maintains the original client IP in the packet headers. Note that in IP target mode, client IP preservation behavior differs and may require additional configuration.
 
 </details>
 
@@ -1448,15 +1454,17 @@ D) There is no difference
 
 What happens when multiple Ingress rules match the same host and path?
 
-A) All rules are applied
-B) The first rule created wins
-C) The most specific rule wins
-D) An error occurs
+A) All rules are applied simultaneously
+B) Behavior is controller-specific; the Ingress spec does not define precedence
+C) The Kubernetes API rejects duplicate rules
+D) An error occurs and no traffic is routed
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
+
+**Explanation:** The Ingress specification does not define how controllers should handle overlapping rules. Different Ingress controllers implement their own precedence logic—many use longest path match, some use creation timestamp, others use alphabetical ordering. Always consult your specific Ingress controller's documentation for conflict resolution behavior.
 
 </details>
 
@@ -2554,17 +2562,19 @@ D) In etcd directly
 ### Question 134
 [MEDIUM-HARD]
 
-How does kube-proxy handle Service IP changes?
+What happens to a Service's ClusterIP during its lifetime?
 
-A) It doesn't; Services have static IPs
-B) It updates the network rules to reflect the new IP
-C) It restarts affected Pods
-D) It requires manual intervention
+A) It remains stable; ClusterIP is immutable once assigned
+B) It changes dynamically based on cluster load
+C) It rotates periodically for security
+D) It changes when Pods are rescheduled
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** A
+
+**Explanation:** A Service's ClusterIP is immutable once assigned and remains stable for the Service's entire lifetime. The only way to change it is to delete and recreate the Service. kube-proxy watches for Service changes and updates network rules accordingly, but the ClusterIP itself never changes without Service recreation.
 
 </details>
 
