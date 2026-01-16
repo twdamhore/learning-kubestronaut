@@ -14,7 +14,7 @@ Create a comprehensive MCQ study repository for all 5 Kubestronaut certification
 | | Administration | ✅ Done (200 MCQs) |
 | | Scheduling | ✅ Done (200 MCQs) |
 | | Containerization | ✅ Done (200 MCQs) |
-| 2. Container Orchestration (28%) | Networking | ⏳ Pending |
+| 2. Container Orchestration (28%) | Networking | ✅ Done (200 MCQs) |
 | | Security | ⏳ Pending |
 | | Troubleshooting | ⏳ Pending |
 | | Storage | ⏳ Pending |
@@ -45,7 +45,7 @@ KCNA/
 │   ├── 03-scheduling.md ✅
 │   └── 04-containerization.md ✅
 ├── 02-container-orchestration/
-│   ├── 01-networking.md
+│   ├── 01-networking.md ✅
 │   ├── 02-security.md
 │   ├── 03-troubleshooting.md
 │   └── 04-storage.md
