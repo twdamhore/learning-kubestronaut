@@ -2664,21 +2664,21 @@ D) Both B and C work, depending on requirements
 ### Question 116
 [MEDIUM-HARD]
 
-What annotation enables the AWS NLB for a LoadBalancer Service? (AWS-specific)
+What happens when you create a LoadBalancer Service in a cluster without cloud provider integration?
 
-A) `service.beta.kubernetes.io/aws-load-balancer-type: nlb`
-B) `kubernetes.io/load-balancer-type: nlb`
-C) `aws.io/nlb-enabled: true`
-D) NLB is the default, no annotation needed
+A) The Service is rejected by the API server
+B) The Service stays in Pending state for EXTERNAL-IP
+C) It automatically falls back to NodePort only
+D) An error is logged and the Service is deleted
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** A
+**Answer:** B
 
-**Explanation:** This is an AWS-specific annotation (not part of core Kubernetes docs). To use AWS Network Load Balancer instead of Classic Load Balancer, add `service.beta.kubernetes.io/aws-load-balancer-type: nlb`. Cloud provider annotations vary—always consult your provider's documentation.
+**Explanation:** Without a cloud provider or load balancer controller (like MetalLB), LoadBalancer Services remain in Pending state indefinitely—the EXTERNAL-IP never gets assigned. The Service still works as a NodePort/ClusterIP, but no external load balancer is provisioned.
 
-**Source:** [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/)
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer)
 
 </details>
 
@@ -3172,17 +3172,17 @@ D) The cloud provider hasn't responded yet
 
 How do you test Service connectivity from within the cluster?
 
-A) Use a test Pod to curl the Service
+A) Use a test Pod to curl or wget the Service
 B) Check Service endpoints with kubectl
 C) Use `kubectl port-forward` from your local machine
-D) Both A and B test in-cluster connectivity
+D) Run `kubectl describe service`
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** A
 
-**Explanation:** To test in-cluster connectivity, run a test Pod (`kubectl run tmp --rm -it --image=busybox -- wget <service>`) or check endpoints (`kubectl get endpoints <service>`). Note: `kubectl port-forward` creates a local tunnel via the API server—it's useful for local debugging but doesn't test actual in-cluster networking.
+**Explanation:** To test actual in-cluster connectivity, make a network request from inside the cluster using a test Pod (e.g., `kubectl run tmp --rm -it --image=busybox -- wget <service>`). Checking endpoints or describing Services only verifies configuration, not actual network connectivity. `kubectl port-forward` tunnels via the API server—useful for local debugging but doesn't test in-cluster networking.
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -4375,16 +4375,16 @@ D) To track resource utilization
 Can you nest namespaces in Kubernetes?
 
 A) Yes, using parent-child relationships
-B) No, namespaces are flat
-C) Yes, using hierarchical namespaces controller
-D) Both B and C (native no, but HNC addon enables it)
+B) No, namespaces are flat with no hierarchy
+C) Yes, by setting a parent namespace field
+D) Yes, namespaces automatically inherit from default
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
 
-**Explanation:** Native Kubernetes namespaces are flat—no hierarchy. However, the Hierarchical Namespace Controller (HNC) addon enables parent-child relationships, allowing policy inheritance and hierarchical organization. Without HNC, namespaces exist at the same level.
+**Explanation:** Kubernetes namespaces are flat—there is no native support for hierarchy or parent-child relationships. All namespaces exist at the same level. You cannot nest one namespace inside another or establish inheritance between namespaces in core Kubernetes.
 
 **Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
