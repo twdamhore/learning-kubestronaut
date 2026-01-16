@@ -818,6 +818,14 @@ B) Specific tags ensure reproducibility and prevent unexpected changes
 C) 'latest' is not supported in Kubernetes
 D) Specific tags are more secure
 
+<details><summary>Answer</summary>
+
+**B) Specific tags ensure reproducibility and prevent unexpected changes**
+
+Using specific tags (like v1.2.3) ensures you always deploy the same image version. The 'latest' tag can point to different images over time, leading to unexpected changes, broken deployments, or security issues. Specific tags make deployments reproducible and rollbacks reliable.
+
+</details>
+
 ### Question 52
 What is the recommended practice for base image selection?
 
@@ -825,6 +833,14 @@ A) Always use the largest image for completeness
 B) Use official, minimal, and regularly updated base images
 C) Build base images from scratch for every project
 D) Use the same base image for all applications
+
+<details><summary>Answer</summary>
+
+**B) Use official, minimal, and regularly updated base images**
+
+Best practice is to use official images from trusted sources that are minimal (smaller attack surface) and regularly updated with security patches. Examples include official language runtime images, Alpine-based images, or distroless images. This reduces vulnerabilities and image size.
+
+</details>
 
 ### Question 53
 Why are minimal base images like Alpine or distroless recommended?
@@ -834,6 +850,14 @@ B) They reduce attack surface and image size
 C) They include more features
 D) They are required by Kubernetes
 
+<details><summary>Answer</summary>
+
+**B) They reduce attack surface and image size**
+
+Minimal base images contain only essential components, reducing the attack surface (fewer packages with potential vulnerabilities) and image size (faster pulls and less storage). Alpine is ~5MB vs ~100MB+ for full OS images. Distroless images are even smaller, containing only the application runtime.
+
+</details>
+
 ### Question 54
 What is a distroless container image?
 
@@ -841,6 +865,14 @@ A) An image without any operating system
 B) An image containing only the application and its runtime dependencies, without package managers or shells
 C) An image that works on any Linux distribution
 D) An uncompressed image format
+
+<details><summary>Answer</summary>
+
+**B) An image containing only the application and its runtime dependencies, without package managers or shells**
+
+Distroless images (from Google) contain only the application and its necessary runtime dependencies. They exclude package managers, shells, and other OS utilities. This significantly reduces attack surface - attackers can't use common tools even if they compromise the container.
+
+</details>
 
 ### Question 55
 How can you reduce the number of layers in a container image?
@@ -850,6 +882,14 @@ B) Combine multiple RUN commands using && in a single RUN instruction
 C) Add more COPY instructions
 D) Use larger base images
 
+<details><summary>Answer</summary>
+
+**B) Combine multiple RUN commands using && in a single RUN instruction**
+
+Each Dockerfile instruction creates a layer. Combining commands with `&&` in a single RUN instruction reduces layers and image size. For example: `RUN apt-get update && apt-get install -y pkg && rm -rf /var/lib/apt/lists/*` is better than separate RUN commands.
+
+</details>
+
 ### Question 56
 Why should you avoid running containers as root?
 
@@ -857,6 +897,14 @@ A) Root containers are slower
 B) It minimizes the potential damage from container breakout or compromise
 C) Root is not supported in Kubernetes
 D) Root containers use more memory
+
+<details><summary>Answer</summary>
+
+**B) It minimizes the potential damage from container breakout or compromise**
+
+Running as root inside a container means if an attacker compromises the container, they have root privileges. If there's a container escape vulnerability, they could get root on the host. Running as non-root follows the principle of least privilege and limits potential damage.
+
+</details>
 
 ### Question 57
 What Dockerfile instruction creates a non-root user?
@@ -866,6 +914,14 @@ B) RUN useradd or RUN adduser
 C) CREATEUSER
 D) NEWUSER
 
+<details><summary>Answer</summary>
+
+**B) RUN useradd or RUN adduser**
+
+To create a non-root user, use the RUN instruction with standard Linux commands: `RUN useradd -r -u 1001 appuser` (for most distros) or `RUN adduser -D appuser` (for Alpine). Then use `USER appuser` to switch to that user for subsequent instructions.
+
+</details>
+
 ### Question 58
 What is the purpose of the USER instruction in a Dockerfile?
 
@@ -873,6 +929,14 @@ A) To authenticate with a registry
 B) To set the user (and optionally group) for running subsequent instructions and the container
 C) To create user directories
 D) To set file permissions
+
+<details><summary>Answer</summary>
+
+**B) To set the user (and optionally group) for running subsequent instructions and the container**
+
+The USER instruction sets the user (and optionally group) for subsequent RUN, CMD, and ENTRYPOINT instructions, and for the running container. Format: `USER username` or `USER uid:gid`. The user must already exist in the image.
+
+</details>
 
 ### Question 59
 Why should sensitive data like secrets never be included in container images?
@@ -882,6 +946,14 @@ B) Images can be inspected, and secrets would be exposed in layer history
 C) Secrets are not supported in containers
 D) It increases image size
 
+<details><summary>Answer</summary>
+
+**B) Images can be inspected, and secrets would be exposed in layer history**
+
+Container images store all layers, and even if you delete a secret in a later layer, it remains in the previous layer's history. Anyone with access to the image can inspect layers and extract secrets. Use Kubernetes Secrets, environment variables at runtime, or secret management tools instead.
+
+</details>
+
 ### Question 60
 What is the recommended approach for handling secrets in containers?
 
@@ -889,6 +961,14 @@ A) Embed them in environment variables in the Dockerfile
 B) Use Kubernetes Secrets or external secret management systems
 C) Store them in a ConfigMap
 D) Include them in the image with encryption
+
+<details><summary>Answer</summary>
+
+**B) Use Kubernetes Secrets or external secret management systems**
+
+Secrets should be injected at runtime, not built into images. Use Kubernetes Secrets (mounted as volumes or environment variables), or external systems like HashiCorp Vault, AWS Secrets Manager, or Azure Key Vault. This keeps secrets separate from images and allows rotation without rebuilding.
+
+</details>
 
 ### Question 61
 How can you verify the security of container images?
@@ -898,6 +978,14 @@ B) Scan images for vulnerabilities using security scanning tools
 C) Verify the image is from Docker Hub
 D) Check the number of layers
 
+<details><summary>Answer</summary>
+
+**B) Scan images for vulnerabilities using security scanning tools**
+
+Use vulnerability scanners like Trivy, Grype, Clair, or Snyk to analyze images for known CVEs in packages and dependencies. Integrate scanning into CI/CD pipelines to catch vulnerabilities before deployment. Registry-integrated scanning (like Harbor or cloud registries) provides continuous monitoring.
+
+</details>
+
 ### Question 62
 What is container image scanning?
 
@@ -905,6 +993,14 @@ A) Converting images to different formats
 B) Analyzing images for known vulnerabilities, misconfigurations, and compliance issues
 C) Compressing image layers
 D) Validating image signatures
+
+<details><summary>Answer</summary>
+
+**B) Analyzing images for known vulnerabilities, misconfigurations, and compliance issues**
+
+Image scanning examines container images to identify known vulnerabilities (CVEs) in OS packages and application dependencies, detect misconfigurations, check for secrets, and verify compliance with security policies. It's a critical part of container security and shift-left security practices.
+
+</details>
 
 ### Question 63
 What is image signing and verification?
@@ -914,6 +1010,14 @@ B) Cryptographically signing images to verify their authenticity and integrity
 C) Encrypting image contents
 D) Compressing images for security
 
+<details><summary>Answer</summary>
+
+**B) Cryptographically signing images to verify their authenticity and integrity**
+
+Image signing uses cryptographic signatures to verify that an image comes from a trusted source and hasn't been tampered with. Tools like cosign (Sigstore) create signatures that can be verified before deployment, preventing supply chain attacks and ensuring image integrity.
+
+</details>
+
 ### Question 64
 What tool does Kubernetes use for image signature verification?
 
@@ -922,6 +1026,14 @@ B) Notary
 C) Sigstore/cosign with policy controllers like Kyverno or OPA Gatekeeper
 D) GPG
 
+<details><summary>Answer</summary>
+
+**C) Sigstore/cosign with policy controllers like Kyverno or OPA Gatekeeper**
+
+Kubernetes doesn't have built-in signature verification. Instead, policy controllers like Kyverno, OPA Gatekeeper, or Connaisseur enforce signature verification using cosign (from Sigstore project). These admission controllers verify signatures before allowing Pods to run with specific images.
+
+</details>
+
 ### Question 65
 What is the purpose of a Software Bill of Materials (SBOM) for container images?
 
@@ -929,6 +1041,14 @@ A) To list all running containers
 B) To provide a comprehensive inventory of all components, libraries, and dependencies in an image
 C) To track container costs
 D) To monitor container performance
+
+<details><summary>Answer</summary>
+
+**B) To provide a comprehensive inventory of all components, libraries, and dependencies in an image**
+
+An SBOM is a detailed list of all software components in a container image, including libraries, packages, and their versions. It enables vulnerability tracking, license compliance, and supply chain security. Tools like Syft and SPDX generate SBOMs that can be attached to images.
+
+</details>
 
 ## Container Lifecycle
 
@@ -940,6 +1060,14 @@ B) Waiting, Running, Terminated
 C) Created, Active, Deleted
 D) Init, Execute, Complete
 
+<details><summary>Answer</summary>
+
+**B) Waiting, Running, Terminated**
+
+Kubernetes containers have three possible states: Waiting (not yet running, e.g., pulling image), Running (executing with PID), and Terminated (finished execution, either successfully or with failure). These states are visible in `kubectl describe pod` output.
+
+</details>
+
 ### Question 67
 What does the 'Waiting' container state indicate?
 
@@ -947,6 +1075,14 @@ A) The container is running but idle
 B) The container is not yet running, possibly pulling images or waiting for dependencies
 C) The container is paused
 D) The container is being debugged
+
+<details><summary>Answer</summary>
+
+**B) The container is not yet running, possibly pulling images or waiting for dependencies**
+
+The Waiting state means the container hasn't started yet. Common reasons include: ContainerCreating (setting up), ErrImagePull/ImagePullBackOff (image issues), or waiting for init containers to complete. The reason field provides details about why it's waiting.
+
+</details>
 
 ### Question 68
 What causes a container to be in the 'Running' state?
@@ -956,6 +1092,14 @@ B) The container has been created and its main process is executing
 C) The container is scheduled to a node
 D) The container has completed its task
 
+<details><summary>Answer</summary>
+
+**B) The container has been created and its main process is executing**
+
+A container is Running when it has been successfully created and its main process (defined by ENTRYPOINT/CMD or command/args) is executing. The state includes the startedAt timestamp showing when execution began.
+
+</details>
+
 ### Question 69
 What does the 'Terminated' container state indicate?
 
@@ -963,6 +1107,14 @@ A) The container is temporarily paused
 B) The container ran to completion or failed
 C) The container is being restarted
 D) The container is waiting for resources
+
+<details><summary>Answer</summary>
+
+**B) The container ran to completion or failed**
+
+Terminated means the container finished execution. The state includes exit code (0 for success, non-zero for failure), reason (Completed, Error, OOMKilled, etc.), and timestamps for when it started and finished. The container may be restarted based on restartPolicy.
+
+</details>
 
 ### Question 70
 What is the container restart policy in Kubernetes?
@@ -972,6 +1124,14 @@ B) A policy that determines when and if Kubernetes should restart a failed conta
 C) A schedule for container maintenance
 D) A backup policy for container data
 
+<details><summary>Answer</summary>
+
+**B) A policy that determines when and if Kubernetes should restart a failed container**
+
+The restartPolicy field in Pod spec controls restart behavior. It applies to all containers in the Pod and determines whether and when containers should be restarted after termination. Options are Always, OnFailure, and Never.
+
+</details>
+
 ### Question 71
 What happens when restartPolicy is set to 'Always'?
 
@@ -979,6 +1139,14 @@ A) Containers are never restarted
 B) Containers are restarted regardless of exit status
 C) Containers are only restarted on failure
 D) Containers are restarted once per day
+
+<details><summary>Answer</summary>
+
+**B) Containers are restarted regardless of exit status**
+
+With `restartPolicy: Always` (the default for Pods), containers are restarted whether they exit successfully (code 0) or fail. This is appropriate for long-running services that should always be running. Used by Deployments, StatefulSets, and DaemonSets.
+
+</details>
 
 ### Question 72
 When would you use restartPolicy 'OnFailure'?
