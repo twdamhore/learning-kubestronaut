@@ -1624,6 +1624,14 @@ B) The Pod is restarted (init containers run again) based on restartPolicy
 C) Only the failed init container is restarted
 D) The Pod is deleted immediately
 
+<details><summary>Answer</summary>
+
+**B) The Pod is restarted (init containers run again) based on restartPolicy**
+
+When an init container fails, Kubernetes restarts the Pod according to its restartPolicy. All init containers run again from the beginning (they must be idempotent). If the Pod has `restartPolicy: Never`, the Pod is marked as Failed. This ensures the Pod enters a consistent state before main containers start.
+
+</details>
+
 ### Question 102
 What is the ambassador container pattern?
 
@@ -1631,6 +1639,14 @@ A) A pattern where a container handles security
 B) A pattern where a sidecar proxies network connections to external services
 C) A pattern for cross-cluster communication
 D) A pattern for container orchestration
+
+<details><summary>Answer</summary>
+
+**B) A pattern where a sidecar proxies network connections to external services**
+
+The ambassador pattern uses a sidecar container to proxy connections from the main container to external services. The main app connects to localhost, and the ambassador handles complexity like service discovery, connection pooling, or protocol translation. This simplifies the main application and centralizes connection logic.
+
+</details>
 
 ### Question 103
 What is the adapter container pattern?
@@ -1640,6 +1656,14 @@ B) A pattern where a sidecar transforms or adapts output from the main container
 C) A pattern for hardware abstraction
 D) A pattern for network configuration
 
+<details><summary>Answer</summary>
+
+**B) A pattern where a sidecar transforms or adapts output from the main container**
+
+The adapter pattern uses a sidecar to transform output from the main container into a standardized format. Common examples include log format conversion (transforming app-specific logs to JSON for centralized logging) or metrics adaptation (converting proprietary metrics to Prometheus format). This enables heterogeneous systems to present uniform interfaces.
+
+</details>
+
 ### Question 104
 How do containers within the same Pod communicate?
 
@@ -1647,6 +1671,14 @@ A) Through Kubernetes Services
 B) Through localhost, as they share the network namespace
 C) Through external message queues
 D) Through shared ConfigMaps
+
+<details><summary>Answer</summary>
+
+**B) Through localhost, as they share the network namespace**
+
+Containers in the same Pod share the network namespace, meaning they share the same IP address and can communicate via localhost. One container can bind to port 8080 and another can connect to localhost:8080. This enables tightly-coupled containers to communicate efficiently without network overhead.
+
+</details>
 
 ### Question 105
 What resources can containers in the same Pod share?
@@ -1656,6 +1688,14 @@ B) Network namespace, IPC namespace, and volumes
 C) All namespaces including PID by default
 D) Nothing, containers are fully isolated
 
+<details><summary>Answer</summary>
+
+**B) Network namespace, IPC namespace, and volumes**
+
+Containers in a Pod share the network namespace (same IP, localhost communication), IPC namespace (can use shared memory and semaphores), and can mount the same volumes. PID namespace is not shared by default (each container has its own process view), though this can be enabled with `shareProcessNamespace: true`.
+
+</details>
+
 ### Question 106
 What is a sidecar container in Kubernetes 1.28+?
 
@@ -1663,6 +1703,14 @@ A) A deprecated container type
 B) A container with restartPolicy: Always in an init container definition
 C) A container that runs in a separate Pod
 D) A container managed by a DaemonSet
+
+<details><summary>Answer</summary>
+
+**B) A container with restartPolicy: Always in an init container definition**
+
+Kubernetes 1.28+ introduced native sidecar containers as a feature. A native sidecar is defined in the `initContainers` array with `restartPolicy: Always`. Unlike regular init containers, sidecars start in order but don't need to complete - they run throughout the Pod's lifetime alongside main containers.
+
+</details>
 
 ### Question 107
 How is a native sidecar container defined in Kubernetes?
@@ -1672,6 +1720,14 @@ B) As an init container with restartPolicy: Always
 C) Using a Sidecar custom resource
 D) Through a sidecar annotation
 
+<details><summary>Answer</summary>
+
+**B) As an init container with restartPolicy: Always**
+
+Native sidecars are defined in the `initContainers` section with `restartPolicy: Always`. This tells Kubernetes the container should run continuously rather than running to completion. The sidecar starts before main containers and remains running throughout the Pod's lifecycle, but doesn't block main container startup.
+
+</details>
+
 ### Question 108
 What is the lifecycle behavior of native sidecar containers?
 
@@ -1679,6 +1735,14 @@ A) They run only during initialization
 B) They start before and run throughout the lifetime of regular containers
 C) They run after main containers complete
 D) They run on a schedule
+
+<details><summary>Answer</summary>
+
+**B) They start before and run throughout the lifetime of regular containers**
+
+Native sidecar containers start before main containers (in init container order) and continue running alongside main containers. They're not terminated when they become "ready" like regular init containers. When the Pod terminates, sidecars are shut down after main containers. This solves the problem of ensuring sidecars are available during and after main container execution.
+
+</details>
 
 ### Question 109
 What is an ephemeral container?
@@ -1688,6 +1752,14 @@ B) A temporary container added to a running Pod for debugging
 C) A container that runs for a short time
 D) A container without persistent storage
 
+<details><summary>Answer</summary>
+
+**B) A temporary container added to a running Pod for debugging**
+
+Ephemeral containers are special containers added to running Pods for debugging purposes. They're useful when `kubectl exec` is insufficient - for example, when the container lacks debugging tools or has crashed. Added via `kubectl debug`, ephemeral containers can include debugging utilities not present in production images.
+
+</details>
+
 ### Question 110
 When would you use an ephemeral container?
 
@@ -1695,6 +1767,14 @@ A) For production workloads
 B) For troubleshooting running Pods that lack debugging utilities
 C) For running batch jobs
 D) For init processes
+
+<details><summary>Answer</summary>
+
+**B) For troubleshooting running Pods that lack debugging utilities**
+
+Use ephemeral containers when you need to debug a Pod that uses distroless or minimal images without shells or debugging tools. Common scenarios: debugging a crashed container, inspecting network issues with tcpdump, or using strace to trace system calls. They share namespaces with other containers in the Pod.
+
+</details>
 
 ## Container Resources
 
@@ -1706,6 +1786,14 @@ B) The minimum resources guaranteed to a container for scheduling purposes
 C) The current resource usage
 D) The default resource allocation
 
+<details><summary>Answer</summary>
+
+**B) The minimum resources guaranteed to a container for scheduling purposes**
+
+Resource requests specify the minimum resources guaranteed to a container. The scheduler uses requests to decide which node has enough capacity to run the Pod. Requests affect QoS class assignment and are used in eviction decisions. A container can use more than its request (up to its limit) if resources are available.
+
+</details>
+
 ### Question 112
 What are container resource limits in Kubernetes?
 
@@ -1713,6 +1801,14 @@ A) The minimum resources required
 B) The maximum resources a container is allowed to use
 C) Soft limits that can be exceeded
 D) Cluster-wide resource quotas
+
+<details><summary>Answer</summary>
+
+**B) The maximum resources a container is allowed to use**
+
+Resource limits specify the maximum resources a container can consume. The container runtime enforces these limits - CPU limits through throttling and memory limits through OOM killing. Setting appropriate limits prevents resource-hungry containers from affecting other workloads on the same node.
+
+</details>
 
 ### Question 113
 How does Kubernetes use resource requests for scheduling?
@@ -1722,6 +1818,14 @@ B) The scheduler ensures the node has enough allocatable resources to meet reque
 C) Requests are used only for billing
 D) Requests determine Pod priority
 
+<details><summary>Answer</summary>
+
+**B) The scheduler ensures the node has enough allocatable resources to meet requests**
+
+The kube-scheduler uses resource requests to find a suitable node for the Pod. It calculates each node's available capacity (allocatable minus sum of existing Pod requests) and only schedules to nodes with sufficient resources. This ensures Pods can get their requested resources and prevents overcommitment at the scheduling level.
+
+</details>
+
 ### Question 114
 What happens when a container exceeds its memory limit?
 
@@ -1729,6 +1833,14 @@ A) The container is throttled
 B) The container is terminated (OOMKilled)
 C) Memory is borrowed from other containers
 D) The limit is automatically increased
+
+<details><summary>Answer</summary>
+
+**B) The container is terminated (OOMKilled)**
+
+When a container tries to use more memory than its limit, the Linux OOM (Out Of Memory) killer terminates the process. The container's exit reason shows "OOMKilled". Unlike CPU, memory cannot be throttled - it's either granted or not. The Pod may restart based on its restartPolicy.
+
+</details>
 
 ### Question 115
 What happens when a container exceeds its CPU limit?
@@ -1738,6 +1850,14 @@ B) The container is CPU-throttled
 C) CPU is borrowed from other containers
 D) The Pod is evicted
 
+<details><summary>Answer</summary>
+
+**B) The container is CPU-throttled**
+
+When a container attempts to use more CPU than its limit, it gets throttled - the kernel simply doesn't allocate more CPU time. The container continues running but performs slower. This is different from memory, where exceeding limits causes termination. CPU is a "compressible" resource that can be throttled.
+
+</details>
+
 ### Question 116
 What is the difference between CPU and memory limit enforcement?
 
@@ -1745,6 +1865,14 @@ A) Both are enforced the same way
 B) CPU is throttled (compressible), memory excess causes termination (incompressible)
 C) Memory is throttled, CPU causes termination
 D) Neither is enforced strictly
+
+<details><summary>Answer</summary>
+
+**B) CPU is throttled (compressible), memory excess causes termination (incompressible)**
+
+CPU and memory are treated differently because of their nature. CPU is compressible - if limited, the process just runs slower. Memory is incompressible - you either have it or you don't. When a container needs more memory than its limit, the only option is to kill it (OOMKill) as there's no way to "slow down" memory usage.
+
+</details>
 
 ### Question 117
 What are the units for CPU resources in Kubernetes?
@@ -1754,6 +1882,14 @@ B) Cores or millicores (m)
 C) GHz
 D) Threads
 
+<details><summary>Answer</summary>
+
+**B) Cores or millicores (m)**
+
+CPU resources in Kubernetes are specified in cores or millicores. One core equals 1000 millicores (m). For example, `500m` means half a CPU core, `2` means 2 full cores. This unit is consistent across cloud providers regardless of the underlying CPU type.
+
+</details>
+
 ### Question 118
 What does '500m' mean for CPU resources?
 
@@ -1761,6 +1897,14 @@ A) 500 megabytes
 B) 500 millicores, equivalent to 0.5 CPU cores
 C) 500 minutes of CPU time
 D) 500 milliwatts
+
+<details><summary>Answer</summary>
+
+**B) 500 millicores, equivalent to 0.5 CPU cores**
+
+The suffix 'm' stands for millicores (milli-CPU). 500m means 500/1000 = 0.5 CPU cores. This is equivalent to writing `0.5` in the spec. Common values include 100m (10% of a core), 250m (quarter core), and 1000m (one full core).
+
+</details>
 
 ### Question 119
 What are the units for memory resources in Kubernetes?
@@ -1770,6 +1914,14 @@ B) Bytes, Ki, Mi, Gi (powers of 2) or K, M, G (powers of 10)
 C) Pages
 D) Sectors
 
+<details><summary>Answer</summary>
+
+**B) Bytes, Ki, Mi, Gi (powers of 2) or K, M, G (powers of 10)**
+
+Memory can be specified in bytes or with suffixes. Binary suffixes (Ki, Mi, Gi, Ti) use powers of 1024 (kibibytes, mebibytes, etc.). Decimal suffixes (K, M, G, T) use powers of 1000. For example, 128Mi = 128 * 1024 * 1024 bytes, while 128M = 128 * 1000 * 1000 bytes.
+
+</details>
+
 ### Question 120
 What is the difference between Mi and M for memory units?
 
@@ -1777,6 +1929,14 @@ A) They are identical
 B) Mi is mebibytes (1024^2), M is megabytes (1000^2)
 C) M is larger than Mi
 D) Mi is deprecated
+
+<details><summary>Answer</summary>
+
+**B) Mi is mebibytes (1024^2), M is megabytes (1000^2)**
+
+Mi (mebibyte) uses binary units: 1Mi = 1024 * 1024 = 1,048,576 bytes. M (megabyte) uses decimal units: 1M = 1000 * 1000 = 1,000,000 bytes. 1Mi is about 4.9% larger than 1M. Using Mi is recommended for consistency with how operating systems report memory.
+
+</details>
 
 ### Question 121
 What is a QoS class in Kubernetes?
@@ -1786,6 +1946,14 @@ B) A classification that affects scheduling and eviction priority
 C) A storage performance tier
 D) A service level agreement
 
+<details><summary>Answer</summary>
+
+**B) A classification that affects scheduling and eviction priority**
+
+QoS (Quality of Service) classes are automatically assigned to Pods based on their resource requests and limits. There are three classes: Guaranteed, Burstable, and BestEffort. QoS class determines eviction priority when nodes are under resource pressure - BestEffort Pods are evicted first.
+
+</details>
+
 ### Question 122
 When is a Pod assigned the 'Guaranteed' QoS class?
 
@@ -1793,6 +1961,14 @@ A) When any container has resource requests
 B) When every container has equal requests and limits set for both CPU and memory
 C) When the Pod has high priority
 D) When using premium storage
+
+<details><summary>Answer</summary>
+
+**B) When every container has equal requests and limits set for both CPU and memory**
+
+A Pod gets Guaranteed QoS when every container specifies both memory and CPU requests AND limits, and requests equal limits. Example: `requests: {memory: "256Mi", cpu: "500m"}` and `limits: {memory: "256Mi", cpu: "500m"}`. Guaranteed Pods are the last to be evicted under resource pressure.
+
+</details>
 
 ### Question 123
 When is a Pod assigned the 'Burstable' QoS class?
@@ -1802,6 +1978,14 @@ B) When at least one container has a request or limit, but doesn't meet Guarante
 C) When CPU limits exceed requests
 D) When using ephemeral storage
 
+<details><summary>Answer</summary>
+
+**B) When at least one container has a request or limit, but doesn't meet Guaranteed criteria**
+
+Burstable QoS is assigned when at least one container has CPU or memory requests/limits set, but the Pod doesn't qualify for Guaranteed. This includes Pods where requests don't equal limits, or where only some containers have resource specifications. Burstable Pods can burst beyond their requests up to their limits.
+
+</details>
+
 ### Question 124
 When is a Pod assigned the 'BestEffort' QoS class?
 
@@ -1810,6 +1994,14 @@ B) When no containers have resource requests or limits specified
 C) When using guaranteed storage
 D) When the Pod has the highest priority
 
+<details><summary>Answer</summary>
+
+**B) When no containers have resource requests or limits specified**
+
+BestEffort QoS is assigned when no container in the Pod has any memory or CPU requests or limits. These Pods have the lowest priority during resource contention and are evicted first when the node is under memory pressure. They're suitable for non-critical workloads that can tolerate interruption.
+
+</details>
+
 ### Question 125
 How does QoS class affect eviction priority?
 
@@ -1817,6 +2009,14 @@ A) QoS has no effect on eviction
 B) BestEffort Pods are evicted first, then Burstable, then Guaranteed
 C) Guaranteed Pods are evicted first
 D) Eviction is random regardless of QoS
+
+<details><summary>Answer</summary>
+
+**B) BestEffort Pods are evicted first, then Burstable, then Guaranteed**
+
+When a node faces resource pressure, the kubelet evicts Pods based on QoS class. BestEffort Pods are evicted first as they have no guarantees. Burstable Pods are evicted next, based on their resource usage relative to requests. Guaranteed Pods are evicted last and only if system services need resources.
+
+</details>
 
 ## Container Configuration
 
@@ -1828,6 +2028,14 @@ B) Through env field, ConfigMaps, Secrets, or downward API
 C) Only through command-line arguments
 D) Environment variables cannot be passed
 
+<details><summary>Answer</summary>
+
+**B) Through env field, ConfigMaps, Secrets, or downward API**
+
+Environment variables can be set directly in the `env` field, loaded from ConfigMaps or Secrets using `valueFrom` or `envFrom`, or populated from Pod/container metadata using the downward API. This flexibility allows separating configuration from container images.
+
+</details>
+
 ### Question 127
 What is a ConfigMap in Kubernetes?
 
@@ -1835,6 +2043,14 @@ A) A network configuration resource
 B) An API object for storing non-confidential configuration data as key-value pairs
 C) A storage volume type
 D) A deployment strategy
+
+<details><summary>Answer</summary>
+
+**B) An API object for storing non-confidential configuration data as key-value pairs**
+
+ConfigMaps store non-sensitive configuration data as key-value pairs. They decouple configuration from container images, allowing the same image to be used with different configurations. ConfigMaps can store individual values, entire configuration files, or JSON/YAML documents.
+
+</details>
 
 ### Question 128
 How can ConfigMap data be exposed to containers?
@@ -1844,6 +2060,14 @@ B) As environment variables or mounted as files in a volume
 C) Only as environment variables
 D) Through command-line arguments only
 
+<details><summary>Answer</summary>
+
+**B) As environment variables or mounted as files in a volume**
+
+ConfigMap data can be consumed as environment variables (using `envFrom` or `valueFrom`) or mounted as files in a volume. When mounted as a volume, each key becomes a file in the mount path. Volume-mounted ConfigMaps can be updated dynamically without restarting the Pod.
+
+</details>
+
 ### Question 129
 What is a Secret in Kubernetes?
 
@@ -1851,6 +2075,14 @@ A) An encrypted ConfigMap
 B) An object for storing sensitive data like passwords, tokens, and keys
 C) A hidden volume
 D) An authentication mechanism
+
+<details><summary>Answer</summary>
+
+**B) An object for storing sensitive data like passwords, tokens, and keys**
+
+Secrets are Kubernetes objects designed for storing sensitive information like passwords, OAuth tokens, TLS certificates, and SSH keys. Unlike ConfigMaps, Secrets are base64-encoded and can be encrypted at rest. Access to Secrets can be restricted via RBAC for better security.
+
+</details>
 
 ### Question 130
 How are Secrets different from ConfigMaps?
@@ -1860,6 +2092,14 @@ B) Secrets are base64-encoded and intended for sensitive data, with optional enc
 C) Secrets can only store strings
 D) Secrets have size limits, ConfigMaps don't
 
+<details><summary>Answer</summary>
+
+**B) Secrets are base64-encoded and intended for sensitive data, with optional encryption at rest**
+
+Secrets are base64-encoded (not encrypted by default) and designed for sensitive data. Key differences: Secrets can be encrypted at rest (when configured), are stored in tmpfs when mounted, and have different RBAC policies. Note that base64 is encoding, not encryption - encryption at rest must be explicitly configured.
+
+</details>
+
 ### Question 131
 How can Secret data be exposed to containers?
 
@@ -1867,6 +2107,14 @@ A) Only as environment variables
 B) As environment variables or mounted as files in a volume
 C) Only as files
 D) Secrets cannot be exposed to containers
+
+<details><summary>Answer</summary>
+
+**B) As environment variables or mounted as files in a volume**
+
+Like ConfigMaps, Secrets can be exposed as environment variables or volume mounts. When mounted as a volume, Secrets are stored in tmpfs (memory-based filesystem) so they're not written to disk on the node. Volume mounts are generally preferred over environment variables as they're more secure.
+
+</details>
 
 ### Question 132
 What is the envFrom field used for?
@@ -1876,6 +2124,14 @@ B) To load all key-value pairs from a ConfigMap or Secret as environment variabl
 C) To read environment from a file
 D) To copy environment between containers
 
+<details><summary>Answer</summary>
+
+**B) To load all key-value pairs from a ConfigMap or Secret as environment variables**
+
+`envFrom` allows you to inject all key-value pairs from a ConfigMap or Secret as environment variables in one declaration. Each key becomes an environment variable name, and its value becomes the variable value. You can optionally add a prefix to avoid naming conflicts.
+
+</details>
+
 ### Question 133
 How can you reference a specific key from a ConfigMap as an environment variable?
 
@@ -1883,6 +2139,14 @@ A) Using configMapRef
 B) Using configMapKeyRef in the valueFrom field
 C) Using configMapValue
 D) Using configKey
+
+<details><summary>Answer</summary>
+
+**B) Using configMapKeyRef in the valueFrom field**
+
+To reference a specific key from a ConfigMap, use `valueFrom.configMapKeyRef` in the env entry. You specify the ConfigMap name and the key to extract. Example: `valueFrom: {configMapKeyRef: {name: "my-config", key: "database-url"}}`. For Secrets, use `secretKeyRef` instead.
+
+</details>
 
 ### Question 134
 What is a volume mount in a container?
@@ -1892,6 +2156,14 @@ B) A path in the container's filesystem where a volume is attached
 C) A storage device
 D) A backup location
 
+<details><summary>Answer</summary>
+
+**B) A path in the container's filesystem where a volume is attached**
+
+A volume mount specifies where a Pod's volume is attached within a container's filesystem. You define the volume at the Pod level and mount it at a specific path in each container using `volumeMounts`. This allows containers to access shared storage, configuration files, or secrets at defined paths.
+
+</details>
+
 ### Question 135
 How do you mount a ConfigMap as a volume?
 
@@ -1899,6 +2171,14 @@ A) Using a hostPath volume
 B) Using a configMap volume type and mounting it at a container path
 C) Using a configMount field
 D) Using an emptyDir volume
+
+<details><summary>Answer</summary>
+
+**B) Using a configMap volume type and mounting it at a container path**
+
+To mount a ConfigMap as a volume: 1) Define a volume with `configMap` type in the Pod spec, 2) Mount the volume at a path using `volumeMounts`. Each key in the ConfigMap becomes a file in the mounted directory. You can optionally select specific keys with `items`.
+
+</details>
 
 ### Question 136
 What is the command field in a container spec?
@@ -1908,6 +2188,14 @@ B) The entrypoint that overrides the image's ENTRYPOINT
 C) Arguments to the entrypoint
 D) A post-start command
 
+<details><summary>Answer</summary>
+
+**B) The entrypoint that overrides the image's ENTRYPOINT**
+
+The `command` field in a container spec overrides the Docker image's ENTRYPOINT. It's an array of strings representing the executable and its initial arguments. If specified, the image's default ENTRYPOINT is completely replaced. If not specified, the image's ENTRYPOINT is used.
+
+</details>
+
 ### Question 137
 What is the args field in a container spec?
 
@@ -1915,6 +2203,14 @@ A) The entrypoint command
 B) Arguments passed to the command (entrypoint), overriding CMD
 C) Environment variables
 D) Volume mount options
+
+<details><summary>Answer</summary>
+
+**B) Arguments passed to the command (entrypoint), overriding CMD**
+
+The `args` field provides arguments to the container's command (entrypoint). It overrides the Docker image's CMD. If `args` is specified without `command`, the image's ENTRYPOINT is used with the new args. The args array is passed directly to the entrypoint executable.
+
+</details>
 
 ### Question 138
 How do command and args override Dockerfile ENTRYPOINT and CMD?
@@ -1924,6 +2220,14 @@ B) command overrides ENTRYPOINT, args overrides CMD
 C) command overrides CMD, args overrides ENTRYPOINT
 D) Both override CMD only
 
+<details><summary>Answer</summary>
+
+**B) command overrides ENTRYPOINT, args overrides CMD**
+
+Kubernetes `command` maps to Docker's ENTRYPOINT, and `args` maps to Docker's CMD. If you set command, it replaces ENTRYPOINT. If you set args, it replaces CMD. If neither is set, the image defaults are used. This allows flexible control over container startup behavior.
+
+</details>
+
 ### Question 139
 What is a container's working directory?
 
@@ -1932,6 +2236,14 @@ B) The current directory when the container's process starts
 C) The directory where the image is stored
 D) The mount point for volumes
 
+<details><summary>Answer</summary>
+
+**B) The current directory when the container's process starts**
+
+The working directory is the current directory (pwd) when the container's process starts. It's set by the image's WORKDIR instruction or can be overridden with the `workingDir` field in Kubernetes. Commands and relative paths in the container are resolved from this directory.
+
+</details>
+
 ### Question 140
 How can you override a container's working directory in Kubernetes?
 
@@ -1939,6 +2251,14 @@ A) Using the directory field
 B) Using the workingDir field in the container spec
 C) Using an environment variable
 D) Using a volume mount
+
+<details><summary>Answer</summary>
+
+**B) Using the workingDir field in the container spec**
+
+The `workingDir` field in the container spec overrides the image's default working directory. Specify an absolute path where the container's process should start. This is useful when you need to run commands from a different directory than the image default, such as an application directory within a shared volume.
+
+</details>
 
 ## Container Security
 
@@ -1950,6 +2270,14 @@ B) Settings that define privilege and access control for Pods and containers
 C) A network policy
 D) An authentication token
 
+<details><summary>Answer</summary>
+
+**B) Settings that define privilege and access control for Pods and containers**
+
+SecurityContext defines security settings for Pods and containers, including user/group IDs, Linux capabilities, filesystem permissions, and privilege escalation. It can be set at Pod level (applies to all containers) or container level (overrides Pod settings for that container).
+
+</details>
+
 ### Question 142
 What does the runAsUser field specify?
 
@@ -1957,6 +2285,14 @@ A) The container's hostname
 B) The UID to run the container's entrypoint process as
 C) The user that created the Pod
 D) The service account name
+
+<details><summary>Answer</summary>
+
+**B) The UID to run the container's entrypoint process as**
+
+`runAsUser` specifies the user ID (UID) for running the container's process. This overrides the USER directive in the image. For security, containers should run as non-root users (UID > 0). Combined with `runAsNonRoot: true`, this ensures the container doesn't run as root.
+
+</details>
 
 ### Question 143
 What does the runAsNonRoot field enforce?
@@ -1966,6 +2302,14 @@ B) That the container must run as a non-root user (UID != 0)
 C) Using a non-root filesystem
 D) Disabling privileged mode
 
+<details><summary>Answer</summary>
+
+**B) That the container must run as a non-root user (UID != 0)**
+
+When `runAsNonRoot: true`, Kubernetes validates that the container doesn't run as UID 0 (root). If the image is configured to run as root and no `runAsUser` is specified, the container fails to start. This prevents accidental root execution and is a security best practice.
+
+</details>
+
 ### Question 144
 What is the readOnlyRootFilesystem setting?
 
@@ -1973,6 +2317,14 @@ A) A backup option
 B) A setting that mounts the container's root filesystem as read-only
 C) A storage encryption option
 D) A log rotation setting
+
+<details><summary>Answer</summary>
+
+**B) A setting that mounts the container's root filesystem as read-only**
+
+`readOnlyRootFilesystem: true` mounts the container's root filesystem as read-only, preventing any writes. This limits the impact of container compromise by preventing attackers from modifying binaries or writing malicious files. Applications that need to write files must use mounted volumes for writable directories.
+
+</details>
 
 ### Question 145
 What are Linux capabilities in the context of containers?
@@ -1982,6 +2334,14 @@ B) Fine-grained privileges that can be granted or removed from processes
 C) Container resource limits
 D) Network permissions
 
+<details><summary>Answer</summary>
+
+**B) Fine-grained privileges that can be granted or removed from processes**
+
+Linux capabilities divide root privileges into distinct units that can be independently enabled or disabled. Instead of running as full root, containers can have specific capabilities like NET_BIND_SERVICE (bind to low ports) or NET_RAW (raw sockets). Dropping unnecessary capabilities reduces attack surface.
+
+</details>
+
 ### Question 146
 How can you drop Linux capabilities from a container?
 
@@ -1989,6 +2349,14 @@ A) Using runAsNonRoot
 B) Using securityContext.capabilities.drop
 C) Using privileged: false
 D) Using readOnlyRootFilesystem
+
+<details><summary>Answer</summary>
+
+**B) Using securityContext.capabilities.drop**
+
+Use `securityContext.capabilities.drop` with a list of capability names to remove from the container. For maximum security, drop ALL capabilities with `drop: ["ALL"]` and then add back only the specific ones needed with `add`. This follows the principle of least privilege.
+
+</details>
 
 ### Question 147
 What capability is required to bind to ports below 1024?
@@ -1998,6 +2366,14 @@ B) NET_BIND_SERVICE
 C) SYS_ADMIN
 D) NET_ADMIN
 
+<details><summary>Answer</summary>
+
+**B) NET_BIND_SERVICE**
+
+The NET_BIND_SERVICE capability allows binding to privileged ports (below 1024) without running as root. This is useful for services like web servers that need port 80 or 443. Instead of running as root, you can run as a non-root user with just this capability added.
+
+</details>
+
 ### Question 148
 What is a privileged container?
 
@@ -2005,6 +2381,14 @@ A) A container with resource limits
 B) A container with almost all root capabilities and access to host resources
 C) A container running as root
 D) A container with network access
+
+<details><summary>Answer</summary>
+
+**B) A container with almost all root capabilities and access to host resources**
+
+A privileged container (`privileged: true`) runs with all Linux capabilities and can access host devices (/dev), bypass many security restrictions, and potentially modify the host system. It's nearly equivalent to root access on the host. Privileged mode is needed for specific use cases like container runtimes but should be avoided otherwise.
+
+</details>
 
 ### Question 149
 Why should privileged containers be avoided?
@@ -2014,6 +2398,14 @@ B) They can compromise the host system if the container is compromised
 C) They use more memory
 D) They are deprecated
 
+<details><summary>Answer</summary>
+
+**B) They can compromise the host system if the container is compromised**
+
+Privileged containers break container isolation - if compromised, an attacker gains near-root access to the host. They can mount host filesystems, load kernel modules, access all devices, and escape to other containers. Use specific capabilities or host paths instead of privileged mode when possible.
+
+</details>
+
 ### Question 150
 What is allowPrivilegeEscalation?
 
@@ -2021,6 +2413,14 @@ A) A Pod priority setting
 B) A setting that controls whether a process can gain more privileges than its parent
 C) A resource limit
 D) A network policy
+
+<details><summary>Answer</summary>
+
+**B) A setting that controls whether a process can gain more privileges than its parent**
+
+`allowPrivilegeEscalation` controls whether a process can gain more privileges than its parent process. Setting it to `false` prevents setuid binaries and other privilege escalation methods. This is a security best practice and is required when running as non-root with the Restricted Pod Security Standard.
+
+</details>
 
 ### Question 151
 What is the purpose of the seccompProfile field?
