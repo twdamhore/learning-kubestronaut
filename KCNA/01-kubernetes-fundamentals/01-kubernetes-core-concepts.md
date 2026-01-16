@@ -776,9 +776,9 @@ D) Running init tasks
 
 Which of the following is true about Pod DNS?
 
-A) Each Pod gets a DNS name based on its IP address
+A) Pod DNS records are optional and require DNS add-on configuration
 B) Pods can only resolve Service DNS names
-C) Pod DNS is disabled by default
+C) All Pods automatically get DNS records by default
 D) Pods cannot have DNS names, only Services can
 
 <details>
@@ -786,7 +786,7 @@ D) Pods cannot have DNS names, only Services can
 
 **Answer:** A
 
-**Explanation:** In Kubernetes, Pods can get DNS records in the form `pod-ip-address.namespace.pod.cluster.local`. For example, a Pod with IP 10.244.1.5 in namespace default would have DNS name `10-244-1-5.default.pod.cluster.local` (with dots replaced by dashes).
+**Explanation:** Pod A/AAAA records are not created by default. They require enabling the `pods` option in CoreDNS configuration. When enabled, Pods get DNS records in the form `pod-ip-address.namespace.pod.cluster.local` (with dots replaced by dashes). Services always get DNS records; Pod records are optional.
 
 **Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
@@ -2664,7 +2664,7 @@ D) Both B and C work, depending on requirements
 ### Question 116
 [MEDIUM-HARD]
 
-What annotation enables the AWS NLB for a LoadBalancer Service?
+What annotation enables the AWS NLB for a LoadBalancer Service? (AWS-specific)
 
 A) `service.beta.kubernetes.io/aws-load-balancer-type: nlb`
 B) `kubernetes.io/load-balancer-type: nlb`
@@ -2676,9 +2676,9 @@ D) NLB is the default, no annotation needed
 
 **Answer:** A
 
-**Explanation:** To use AWS Network Load Balancer instead of the default Classic Load Balancer, add the annotation `service.beta.kubernetes.io/aws-load-balancer-type: nlb` or `service.beta.kubernetes.io/aws-load-balancer-type: external` with `service.beta.kubernetes.io/aws-load-balancer-nlb-target-type`.
+**Explanation:** This is an AWS-specific annotation (not part of core Kubernetes docs). To use AWS Network Load Balancer instead of Classic Load Balancer, add `service.beta.kubernetes.io/aws-load-balancer-type: nlb`. Cloud provider annotations vary—always consult your provider's documentation.
 
-**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)
+**Source:** [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/)
 
 </details>
 
@@ -2759,7 +2759,7 @@ D) Both A and B work
 What is the purpose of `publishNotReadyAddresses: true` in a Service?
 
 A) To publish the Service before it's ready
-B) To include Pods that fail readiness probes in DNS
+B) To include unready Pod IPs in Endpoints (and thus headless Service DNS)
 C) To expose unready nodes
 D) To disable readiness checks
 
@@ -2768,7 +2768,7 @@ D) To disable readiness checks
 
 **Answer:** B
 
-**Explanation:** With `publishNotReadyAddresses: true`, Pod IPs are added to DNS even if their readiness probe fails. This is useful for headless Services with StatefulSets where Pods need to discover each other during initialization before they're fully ready.
+**Explanation:** With `publishNotReadyAddresses: true`, unready Pod IPs are included in Endpoints/EndpointSlices even if readiness probes fail. For headless Services, this means DNS records include unready Pods. This is useful for StatefulSets where Pods need to discover each other during initialization before they're fully ready.
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -3147,19 +3147,19 @@ D) Both A and B
 ### Question 137
 [HARD]
 
-A NodePort Service shows EXTERNAL-IP as `<pending>`. Why?
+A NodePort Service shows EXTERNAL-IP as `<none>`. Why?
 
-A) NodePort Services never get external IPs
+A) NodePort Services don't allocate external IPs; access is via any node IP on the nodePort
 B) It's waiting for IP allocation
-C) NodePort Services show node IPs as external, not a dedicated external IP
-D) There's a configuration error
+C) There's a configuration error
+D) The cloud provider hasn't responded yet
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** A
 
-**Explanation:** NodePort Services don't get dedicated external IPs—they're accessible via any node's IP on the allocated NodePort. `kubectl get svc` shows `<none>` or node IPs for NodePort, not `<pending>`. `<pending>` typically appears for LoadBalancer Services waiting for cloud provisioning.
+**Explanation:** NodePort Services don't provision external IPs. `kubectl get svc` shows `<none>` for EXTERNAL-IP on NodePort Services. Access is via any node's IP address on the allocated nodePort (default range 30000-32767). Only LoadBalancer Services get external IPs (and show `<pending>` while waiting for cloud provisioning).
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)
 
@@ -3173,16 +3173,16 @@ D) There's a configuration error
 How do you test Service connectivity from within the cluster?
 
 A) Use a test Pod to curl the Service
-B) `kubectl port-forward` the Service
-C) Check Service endpoints
-D) All of the above
+B) Check Service endpoints with kubectl
+C) Use `kubectl port-forward` from your local machine
+D) Both A and B test in-cluster connectivity
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** D
 
-**Explanation:** All methods work: run a test Pod (`kubectl run tmp --rm -it --image=busybox -- wget <service>`), port-forward (`kubectl port-forward svc/<name> 8080:80`), or check endpoints (`kubectl get endpoints <service>`). Each validates different aspects.
+**Explanation:** To test in-cluster connectivity, run a test Pod (`kubectl run tmp --rm -it --image=busybox -- wget <service>`) or check endpoints (`kubectl get endpoints <service>`). Note: `kubectl port-forward` creates a local tunnel via the API server—it's useful for local debugging but doesn't test actual in-cluster networking.
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -3219,18 +3219,18 @@ D) All of the above
 You want traffic to only go to Pods that have been running for at least 30 seconds. How do you achieve this?
 
 A) Set `minReadySeconds: 30` on the Service
-B) Set `minReadySeconds: 30` on the Deployment and use a readiness probe
-C) Use a custom readiness probe with initial delay
+B) Set `minReadySeconds: 30` on the Deployment
+C) Use a readiness probe with `initialDelaySeconds: 30`
 D) Both B and C work
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** C
 
-**Explanation:** Services don't have `minReadySeconds`. Use Deployment's `minReadySeconds` (Pod must be ready for 30s before counted as available) combined with a readiness probe. Or configure a readiness probe with `initialDelaySeconds: 30` to delay when the Pod is first considered ready.
+**Explanation:** Services route traffic based solely on readiness probe status—not `minReadySeconds`. The `minReadySeconds` field on Deployments controls when a Pod is counted as "available" for rollout purposes, not Service traffic. To delay Service traffic, use a readiness probe with `initialDelaySeconds: 30` so the Pod isn't marked ready until the delay passes.
 
-**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+**Source:** [Deployment | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 
 </details>
 
@@ -3706,14 +3706,14 @@ How can you prevent a ConfigMap from being accidentally deleted?
 A) Set `deletionProtection: true`
 B) Use finalizers or RBAC restrictions
 C) Mark it as immutable
-D) Both B and C can help
+D) Kubernetes has no built-in deletion protection
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
 
-**Explanation:** Kubernetes doesn't have built-in deletion protection. RBAC can restrict who can delete. Making it `immutable` doesn't prevent deletion but shows intent that it shouldn't change. Some teams use finalizers or admission webhooks for protection.
+**Explanation:** Kubernetes doesn't have built-in deletion protection (no `deletionProtection` field). RBAC can restrict who can delete ConfigMaps. Finalizers or admission webhooks can also block deletion. Note: `immutable: true` prevents updates to the ConfigMap but does NOT prevent deletion—the ConfigMap can still be deleted.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -3727,16 +3727,16 @@ D) Both B and C can help
 A Pod uses `envFrom` to load a ConfigMap. The ConfigMap has a key with an invalid environment variable name (e.g., `my-key`). What happens?
 
 A) The Pod fails to start
-B) The key is silently skipped
+B) The key is skipped with a warning event
 C) The key is renamed automatically
-D) An error is logged but Pod starts
+D) The Pod starts but crashes at runtime
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Keys that can't be used as environment variable names (containing characters other than letters, digits, underscore, or starting with a digit) are silently skipped. No error is raised. Use `env` with `valueFrom` to explicitly map such keys with valid names.
+**Explanation:** Keys that can't be used as environment variable names (containing hyphens, starting with digits, etc.) are skipped, and a warning event is generated. The Pod starts successfully with the valid keys. Use `env` with `valueFrom` to explicitly map invalid keys to valid environment variable names.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -3747,19 +3747,19 @@ D) An error is logged but Pod starts
 ### Question 163
 [MEDIUM-HARD]
 
-What command updates a ConfigMap in place?
+Which commands can update a ConfigMap in place?
 
 A) `kubectl update configmap`
 B) `kubectl edit configmap <name>`
 C) `kubectl set configmap`
-D) `kubectl apply -f <updated-manifest>`
+D) Both B and `kubectl apply -f <updated-manifest>`
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** D
 
-**Explanation:** `kubectl edit configmap <name>` opens the ConfigMap in an editor for modification. You can also use `kubectl apply -f` with an updated manifest or `kubectl patch`. There's no `kubectl update` or `kubectl set configmap` command.
+**Explanation:** Multiple methods work: `kubectl edit configmap <name>` opens an editor for interactive changes. `kubectl apply -f` with an updated manifest updates declaratively. `kubectl patch` can also modify specific fields. There's no `kubectl update` or `kubectl set configmap` command.
 
 **Source:** [kubectl | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
 
@@ -3843,15 +3843,15 @@ Can you create a ConfigMap with binary data?
 
 A) No, ConfigMaps are text only
 B) Yes, using the `binaryData` field
-C) Yes, by base64 encoding in the `data` field
-D) Both B and C
+C) Yes, by storing raw binary in the `data` field
+D) Binary data is not supported in ConfigMaps
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
 
-**Explanation:** ConfigMaps support binary data via the `binaryData` field (base64-encoded) or by base64-encoding in `data`. However, `binaryData` is explicit about the content being binary. When creating from files with binary content, kubectl uses `binaryData` automatically.
+**Explanation:** ConfigMaps support binary data via the `binaryData` field, which stores base64-encoded content. The `data` field is strictly for UTF-8 text strings. When creating ConfigMaps from binary files, kubectl automatically uses `binaryData`. You cannot store raw binary in `data`—it must be valid UTF-8.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -3911,8 +3911,8 @@ D) Both A and B
 What happens when you delete a ConfigMap that's in use by a running Pod?
 
 A) The Pod is terminated
-B) The Pod continues running but loses the ConfigMap data
-C) Mounted files remain until Pod restarts; env vars are unaffected
+B) The Pod continues running but loses the ConfigMap data immediately
+C) Env vars remain; volume-mounted files are eventually removed after kubelet sync
 D) The delete is blocked
 
 <details>
@@ -3920,7 +3920,7 @@ D) The delete is blocked
 
 **Answer:** C
 
-**Explanation:** Deleting a ConfigMap doesn't affect running Pods immediately. Environment variables were copied at start and remain. Volume-mounted data stays (kubelet caches it) but won't update. New Pods trying to use the deleted ConfigMap will fail to start.
+**Explanation:** Deleting a ConfigMap doesn't terminate running Pods. Environment variables were copied at Pod start and remain unchanged. Volume-mounted ConfigMap data is eventually updated (emptied) when the kubelet syncs—this isn't immediate but happens after a sync delay. New Pods trying to use the deleted ConfigMap will fail to start.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -4025,11 +4025,11 @@ D) It becomes cluster-scoped
 ### Question 175
 [HARD]
 
-Can a Service in one namespace communicate with a Pod in another namespace?
+Can a Pod in one namespace access a Service in another namespace?
 
-A) No, namespaces provide network isolation
+A) No, namespaces provide network isolation by default
 B) Yes, using the full DNS name `<service>.<namespace>.svc.cluster.local`
-C) Only with a NetworkPolicy
+C) Only with a NetworkPolicy allowing it
 D) Only through an Ingress
 
 <details>
@@ -4037,7 +4037,7 @@ D) Only through an Ingress
 
 **Answer:** B
 
-**Explanation:** By default, Kubernetes networking is flat—all Pods can communicate across namespaces. Services can be reached from other namespaces using their full DNS name. NetworkPolicies can be applied to restrict cross-namespace traffic.
+**Explanation:** By default, Kubernetes networking is flat—Pods can access Services across namespaces using the full DNS name. Note: while cross-namespace access is possible, Services can only SELECT Pods in their own namespace. NetworkPolicies can be applied to restrict cross-namespace traffic.
 
 **Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
@@ -4280,19 +4280,19 @@ D) An error occurs
 ### Question 186
 [MEDIUM-HARD]
 
-What is the purpose of `kubernetes.io/name` label on Namespaces?
+What is the purpose of `kubernetes.io/metadata.name` label on Namespaces?
 
 A) To name the namespace
 B) To enable namespace-based NetworkPolicies
 C) To identify system namespaces
-D) It's automatically added with the namespace name
+D) It's automatically added with the namespace name as value
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** D
 
-**Explanation:** Kubernetes automatically adds `kubernetes.io/metadata.name` label to namespaces with the namespace name as value. This enables namespace-based selection in NetworkPolicies and other selectors without needing manual labels.
+**Explanation:** Kubernetes automatically adds the `kubernetes.io/metadata.name` label to all namespaces with the namespace name as the value. This enables namespace-based selection in NetworkPolicies and other selectors without needing to manually add labels.
 
 **Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
