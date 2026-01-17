@@ -2,7 +2,7 @@
 
 **Domain:** Container Orchestration (28%)
 **Competency:** Networking
-**Difficulty Distribution:** 20% Medium | 20% Medium-Hard | 60% Hard
+**Difficulty Distribution:** 28% Medium | 25% Medium-Hard | 47% Hard
 
 ---
 
@@ -34,7 +34,7 @@ D) Cloud Native Interface
 ### Question 2
 [MEDIUM]
 
-Which CNI plugin is commonly used in cloud environments and supports network policies natively?
+Which CNI plugin provides Kubernetes NetworkPolicy enforcement without requiring additional components?
 
 A) Flannel
 B) Calico
@@ -46,9 +46,9 @@ D) Host-local
 
 **Answer:** B
 
-**Explanation:** Calico is widely used in cloud environments because it supports network policies natively without requiring additional components, and can operate in both overlay and non-overlay modes with BGP routing capabilities.
+**Explanation:** Calico implements NetworkPolicy enforcement natively as part of its core functionality, without requiring additional components. Flannel does not support NetworkPolicy, while Bridge and Host-local are basic CNI plugins for network configuration and IP allocation respectively.
 
-**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+**Source:** [Network Policy | Calico Documentation](https://docs.tigera.io/calico/latest/network-policy/)
 
 </details>
 
@@ -117,7 +117,7 @@ D) Automatic SSL/TLS encryption
 
 **Explanation:** BGP (Border Gateway Protocol) support allows CNI plugins like Calico to advertise Pod network routes directly to the physical network infrastructure, enabling native routing without overlay encapsulation overhead.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Configure BGP peering | Calico Documentation](https://docs.tigera.io/calico/latest/networking/configuring/bgp)
 
 </details>
 
@@ -140,7 +140,7 @@ D) Geneve with UDP port 6081
 
 **Explanation:** Calico's IPIP mode uses IP-in-IP encapsulation (IP protocol 4), which wraps the original IP packet inside another IP header, providing a lightweight overlay with less overhead than VXLAN.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Configure overlay networking | Calico Documentation](https://docs.tigera.io/calico/latest/networking/configuring/vxlan-ipip)
 
 </details>
 
@@ -161,7 +161,7 @@ D) ADD starts the container, DEL stops it
 
 **Answer:** B
 
-**Explanation:** CNI ADD creates the network namespace, assigns an IP, and sets up routing for a container, while CNI DEL reverses these operations by releasing the IP and removing the network configuration when the container stops.
+**Explanation:** CNI ADD configures networking for a container by assigning an IP address and setting up routing, while CNI DEL removes the network configuration and releases the IP when the container stops.
 
 **Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
 
@@ -583,7 +583,7 @@ D) By proxying through the master node
 
 **Explanation:** MetalLB provides LoadBalancer functionality in bare-metal clusters by assigning external IPs from a configured pool and announcing them using either Layer 2 (ARP/NDP) or BGP protocols to make them reachable from the external network.
 
-**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+**Source:** [MetalLB Concepts](https://metallb.universe.tf/concepts/)
 
 </details>
 
@@ -638,19 +638,19 @@ D) It manages Pod scheduling
 ### Question 28
 [HARD]
 
-When using AWS NLB (Network Load Balancer) in instance target mode, what is required to preserve the client IP end-to-end?
+Why does `externalTrafficPolicy: Cluster` cause the original client IP to be lost?
 
-A) Only the NLB annotation; client IP is automatically preserved
-B) Set externalTrafficPolicy: Local on the Service to prevent kube-proxy SNAT
-C) Enable proxy protocol on both NLB and application
-D) Client IP preservation is not possible with instance target mode
+A) The load balancer masks the IP
+B) kube-proxy performs SNAT when forwarding traffic to Pods on other nodes
+C) CoreDNS removes the client IP header
+D) The CNI plugin strips source IP information
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** While AWS NLB preserves the client IP at Layer 4, kube-proxy with the default `externalTrafficPolicy: Cluster` will SNAT the traffic when forwarding to Pods on other nodes. To preserve the client IP end-to-end, you must set `externalTrafficPolicy: Local` on the Service, which prevents kube-proxy from masquerading the source IP.
+**Explanation:** With the default `externalTrafficPolicy: Cluster`, kube-proxy may forward traffic to Pods on other nodes. When doing so, it performs Source NAT (SNAT), replacing the original client IP with the node's IP. Setting `externalTrafficPolicy: Local` prevents this by only routing to local Pods, preserving the client IP.
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -709,19 +709,19 @@ D) The node IPs
 ### Question 31
 [MEDIUM-HARD]
 
-For an ExternalName Service, what type of DNS record is created?
+What happens if you specify a selector in an ExternalName Service?
 
-A) A record
-B) AAAA record
-C) CNAME record
-D) SRV record
+A) The selector is used to find Pods
+B) The selector is ignored; ExternalName Services cannot have selectors
+C) An error occurs during Service creation
+D) The Service becomes a ClusterIP type
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
 
-**Explanation:** ExternalName Services create a CNAME DNS record that aliases the Service name to the specified external hostname, redirecting DNS queries to the external target.
+**Explanation:** ExternalName Services do not use selectors because they redirect to an external DNS name rather than to Pods. If a selector is specified, it is ignored and no Endpoints object is created.
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -829,7 +829,7 @@ D) To manage Pod networking
 Which of the following is a popular Ingress controller?
 
 A) kube-proxy
-B) nginx-ingress-controller
+B) Ingress-NGINX controller
 C) flannel
 D) coredns
 
@@ -838,7 +838,7 @@ D) coredns
 
 **Answer:** B
 
-**Explanation:** The nginx-ingress-controller is one of the most widely used Ingress controllers, using NGINX as the reverse proxy to route external HTTP/HTTPS traffic to backend Services.
+**Explanation:** The Ingress-NGINX controller is one of the most widely used Ingress controllers, using NGINX as the reverse proxy to route external HTTP/HTTPS traffic to backend Services.
 
 **Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
@@ -930,7 +930,7 @@ D) An error occurs and no traffic is routed
 
 **Answer:** B
 
-**Explanation:** The Ingress specification does not define how controllers should handle overlapping rules. Different Ingress controllers implement their own precedence logic--many use longest path match, some use creation timestamp, others use alphabetical ordering. Always consult your specific Ingress controller's documentation for conflict resolution behavior.
+**Explanation:** The Ingress specification does not define how controllers should handle overlapping rules. Behavior is controller-specific, so consult your specific Ingress controller's documentation for conflict resolution behavior.
 
 **Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
@@ -964,19 +964,19 @@ D) To store default configurations
 ### Question 42
 [HARD]
 
-How can you configure sticky sessions in nginx-ingress?
+How is sticky session support typically provided for Ingress resources?
 
-A) Using sessionAffinity in the Service
-B) Using nginx.ingress.kubernetes.io/affinity annotation
-C) Sticky sessions are not supported
-D) Using a Cookie header in the request
+A) Through the core Ingress API specification
+B) Through controller-specific annotations
+C) Sticky sessions are not possible with Ingress
+D) Only through backend Service sessionAffinity
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The nginx-ingress-controller supports sticky sessions via the nginx.ingress.kubernetes.io/affinity annotation set to "cookie", which uses cookies to maintain session affinity to specific backend Pods.
+**Explanation:** The Ingress API does not define sticky session configuration. Instead, Ingress controllers implement sticky sessions through controller-specific annotations. For example, different controllers use their own annotation keys to enable cookie-based session affinity.
 
 **Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
@@ -1010,19 +1010,19 @@ D) It's automatic for the first IngressClass created
 ### Question 44
 [HARD]
 
-How can you configure client certificate authentication (mTLS) in nginx-ingress?
+What does the Ingress API's `tls` section configure?
 
-A) Using TLS secrets only
-B) Using annotations like nginx.ingress.kubernetes.io/auth-tls-secret
-C) mTLS is not supported
-D) Using a sidecar container
+A) Both server certificate and client certificate authentication
+B) Server-side TLS termination only; client auth requires controller-specific configuration
+C) Mutual TLS by default
+D) End-to-end encryption to backend Pods
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** nginx-ingress supports mTLS through annotations like nginx.ingress.kubernetes.io/auth-tls-secret (CA certificate for client verification) and nginx.ingress.kubernetes.io/auth-tls-verify-client to enforce client certificate authentication.
+**Explanation:** The Ingress `tls` section only configures server-side TLS termination by referencing a Secret containing the server certificate and key. Client certificate authentication (mTLS) is not part of the core Ingress specification and requires controller-specific annotations or configuration.
 
 **Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
@@ -1534,7 +1534,7 @@ D) To schedule Pods
 
 **Answer:** B
 
-**Explanation:** kube-proxy's primary function is to implement Service networking by programming iptables, IPVS, or nftables rules on each node that redirect traffic destined for Service ClusterIPs to the appropriate backend Pod endpoints.
+**Explanation:** kube-proxy's primary function is to implement Service networking by programming iptables or IPVS rules on each node that redirect traffic destined for Service ClusterIPs to the appropriate backend Pod endpoints.
 
 **Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
@@ -1637,11 +1637,11 @@ D) It changes when Pods are rescheduled
 ### Question 71
 [HARD]
 
-In iptables mode, which iptables chain handles DNAT for Services?
+In iptables mode, which iptables chain performs the actual DNAT to Pod endpoints?
 
 A) INPUT
-B) FORWARD
-C) KUBE-SVC-* chains
+B) KUBE-SVC-* chains
+C) KUBE-SEP-* chains
 D) OUTPUT
 
 <details>
@@ -1649,7 +1649,7 @@ D) OUTPUT
 
 **Answer:** C
 
-**Explanation:** In iptables mode, kube-proxy creates KUBE-SVC-* chains for each Service, which contain DNAT rules that redirect traffic from the Service ClusterIP to one of the backend Pod endpoints using probability-based load balancing.
+**Explanation:** In iptables mode, KUBE-SVC-* chains select an endpoint using probability-based rules and jump to the corresponding KUBE-SEP-* (Service Endpoint) chain, where the actual DNAT rule rewrites the destination IP to the Pod endpoint.
 
 **Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
@@ -1752,19 +1752,19 @@ D) To bind to specific node addresses
 ### Question 76
 [HARD]
 
-What is the nftables mode in kube-proxy?
+What is a key advantage of IPVS mode over iptables mode in kube-proxy?
 
-A) A deprecated mode
-B) A newer mode using nftables instead of iptables for better performance
-C) A mode for network filtering
-D) A mode specific to Windows
+A) IPVS uses less memory
+B) IPVS scales better with large numbers of Services due to O(1) lookup complexity
+C) IPVS supports more protocols
+D) IPVS is easier to configure
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** nftables mode is a newer kube-proxy implementation that uses the nftables framework (successor to iptables), offering better performance, atomic rule updates, and a cleaner rule structure than the legacy iptables mode.
+**Explanation:** IPVS mode offers better scalability than iptables mode because it uses hash tables for lookups with O(1) complexity, while iptables rules are processed sequentially. This makes IPVS significantly more efficient in clusters with thousands of Services.
 
 **Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
@@ -1772,7 +1772,7 @@ D) A mode specific to Windows
 
 ---
 
-## Advanced Networking Concepts
+## Advanced Service Configuration
 
 ### Question 77
 [MEDIUM]
@@ -1837,7 +1837,7 @@ D) There is no difference
 
 **Explanation:** VXLAN encapsulates Layer 2 Ethernet frames within UDP packets (port 4789), creating a full Layer 2 overlay, while IPIP simply wraps IP packets in another IP header (protocol 4), resulting in lower overhead but only providing Layer 3 connectivity.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Configure overlay networking | Calico Documentation](https://docs.tigera.io/calico/latest/networking/configuring/vxlan-ipip)
 
 </details>
 
@@ -1977,7 +1977,7 @@ D) A load balancer
 
 **Explanation:** A service mesh is a dedicated infrastructure layer that manages service-to-service communication, providing features like traffic management, observability, and security (mTLS) without requiring changes to application code.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [What is Istio? | Istio](https://istio.io/latest/docs/overview/what-is-istio/)
 
 </details>
 
@@ -2000,7 +2000,7 @@ D) A storage container
 
 **Explanation:** The sidecar pattern deploys a proxy container (like Envoy) alongside each application container in a Pod, intercepting all inbound and outbound traffic to provide service mesh functionality transparently to the application.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Installing the Sidecar | Istio](https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/)
 
 </details>
 
@@ -2023,7 +2023,7 @@ D) The monitoring system
 
 **Explanation:** The data plane consists of all the sidecar proxies deployed alongside application containers, which handle the actual network traffic including routing, load balancing, and applying policies at runtime.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [What is Istio? | Istio](https://istio.io/latest/docs/overview/what-is-istio/)
 
 </details>
 
@@ -2046,7 +2046,7 @@ D) Filtering malicious traffic
 
 **Explanation:** Traffic management in a service mesh allows fine-grained control over how requests are routed between services, including features like traffic splitting, canary deployments, retries, timeouts, and fault injection.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Traffic Management | Istio](https://istio.io/latest/docs/concepts/traffic-management/)
 
 </details>
 
@@ -2069,7 +2069,7 @@ D) Creating traffic backups
 
 **Explanation:** Traffic mirroring duplicates live traffic and sends copies to a secondary service for testing or analysis without affecting the primary traffic flow, enabling safe testing of new service versions with real production traffic.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Mirroring | Istio](https://istio.io/latest/docs/tasks/traffic-management/mirroring/)
 
 </details>
 
@@ -2092,7 +2092,7 @@ D) By modifying container images
 
 **Explanation:** Istio uses mutating admission webhooks to automatically inject Envoy sidecar proxy containers into Pods at creation time when the namespace or Pod has the appropriate injection label enabled.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Installing the Sidecar | Istio](https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/)
 
 </details>
 
@@ -2115,7 +2115,7 @@ D) A storage abstraction
 
 **Explanation:** VirtualService is an Istio CRD that defines traffic routing rules, allowing you to configure how requests are routed to services based on headers, URI paths, or percentages for canary deployments and A/B testing.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Virtual Service | Istio](https://istio.io/latest/docs/reference/config/networking/virtual-service/)
 
 </details>
 
@@ -2138,7 +2138,7 @@ D) By DNS-based routing
 
 **Explanation:** Service meshes enable canary deployments by routing a configurable percentage of traffic to new service versions while the majority goes to the stable version, allowing gradual rollout and quick rollback if issues are detected.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Traffic Management | Istio](https://istio.io/latest/docs/concepts/traffic-management/)
 
 </details>
 
@@ -2161,7 +2161,7 @@ D) Uses userspace networking
 
 **Explanation:** Cilium Service Mesh uses eBPF programs running in the Linux kernel to implement service mesh features, reducing or eliminating the need for sidecar proxies and their associated resource overhead and latency.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Service Mesh | Cilium Documentation](https://docs.cilium.io/en/stable/network/servicemesh/)
 
 </details>
 
@@ -2184,7 +2184,7 @@ D) They require application changes
 
 **Explanation:** Service meshes implement retries and timeouts at the proxy layer, making these policies consistent across all services without requiring each application to implement its own retry logic, and enabling centralized configuration and updates.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Traffic Management | Istio](https://istio.io/latest/docs/concepts/traffic-management/)
 
 </details>
 
