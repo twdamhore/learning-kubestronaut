@@ -480,6 +480,17 @@ B) The token's audience claim is verified against the expected audience
 C) The token is validated by an external identity provider
 D) Audience validation is not supported in Kubernetes
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Token audience validation verifies that the audience claim in the token matches the expected audience for the requesting service. This prevents tokens issued for one purpose from being used with a different service.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
+
 ---
 
 ### Question 22
@@ -491,6 +502,17 @@ A) They remain valid until expiration
 B) They are immediately invalidated
 C) They are transferred to another Pod
 D) They are converted to legacy tokens
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Bound ServiceAccount tokens are immediately invalidated when the Pod they are bound to is deleted. This is a security improvement over legacy tokens, which remained valid until manually deleted.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
@@ -506,6 +528,17 @@ B) Pod Security Admission
 C) PodSecurityStandards
 D) ContainerSecurityPolicy
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Pod Security Admission replaced PodSecurityPolicy starting in Kubernetes 1.25. It enforces Pod Security Standards at the namespace level using labels, providing a simpler and more maintainable security model.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+</details>
+
 ---
 
 ### Question 24
@@ -517,6 +550,17 @@ A) privileged
 B) baseline
 C) restricted
 D) hardened
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** The "restricted" level is the most restrictive Pod Security Standard, enforcing best practices for hardened Pods. It requires dropping all capabilities, running as non-root, and using read-only root filesystems among other restrictions.
+
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
+</details>
 
 ---
 
@@ -530,6 +574,17 @@ B) runAsUser
 C) securityUser
 D) containerUser
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The runAsUser field in the securityContext specifies the UID to run the container process as. This can be set at both the Pod level and the container level, with the container level taking precedence.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 26
@@ -541,6 +596,17 @@ A) To allow containers to run as root
 B) To prevent a process from gaining more privileges than its parent
 C) To enable sudo access within containers
 D) To allow mounting privileged volumes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When allowPrivilegeEscalation is set to false, it prevents a process from gaining more privileges than its parent process. This blocks exploits that rely on setuid binaries or other privilege escalation mechanisms.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -554,6 +620,17 @@ B) readOnlyRootFilesystem
 C) immutableFilesystem
 D) noWrite
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The readOnlyRootFilesystem field mounts the container's root filesystem as read-only, preventing any writes to the filesystem. This is a security best practice that limits the impact of container compromises.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 28
@@ -565,6 +642,17 @@ A) low, medium, high
 B) permissive, standard, strict
 C) privileged, baseline, restricted
 D) open, controlled, locked
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** The three Pod Security Standards levels are privileged (unrestricted), baseline (minimally restrictive, prevents known privilege escalations), and restricted (heavily restricted, follows security best practices).
+
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
+</details>
 
 ---
 
@@ -578,6 +666,17 @@ B) Apply labels like pod-security.kubernetes.io/enforce to the namespace
 C) Configure the kubelet with security settings
 D) Create a SecurityContext for the namespace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Pod Security Standards are enforced by applying labels to namespaces, such as pod-security.kubernetes.io/enforce: restricted. The Pod Security Admission controller reads these labels and enforces the specified standards.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+</details>
+
 ---
 
 ### Question 30
@@ -589,6 +688,17 @@ A) Only NET_RAW
 B) Only SYS_ADMIN
 C) ALL capabilities must be dropped
 D) No capabilities are dropped
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** The restricted Pod Security Standard requires that ALL capabilities be dropped. Containers may only add back the NET_BIND_SERVICE capability if needed. This follows the principle of least privilege.
+
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
+</details>
 
 ---
 
@@ -602,6 +712,17 @@ B) Enforce blocks violations, audit logs them, warn adds warnings to API respons
 C) They control different types of resources
 D) There is no difference; they are aliases
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The three modes serve different purposes: enforce rejects Pods that violate the policy, audit logs violations to the audit log without blocking, and warn returns warnings to the user but allows the Pod to be created.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+</details>
+
 ---
 
 ### Question 32
@@ -613,6 +734,17 @@ A) privileged
 B) allowPrivilegeEscalation
 C) runAsNonRoot
 D) capabilities
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The allowPrivilegeEscalation field controls whether a process can gain more privileges than its parent. Setting it to false prevents exploits using setuid binaries and is required by the restricted Pod Security Standard.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -626,6 +758,17 @@ B) To ensure the container does not run as UID 0
 C) To disable root access to the node
 D) To prevent privilege escalation
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The runAsNonRoot field validates that the container will not run as UID 0 (root). If the container image specifies a root user and runAsNonRoot is true, the container will fail to start.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 34
@@ -637,6 +780,17 @@ A) Use the capabilities.add field in securityContext
 B) Set privileged: true
 C) Use the extraCapabilities field
 D) Modify the container runtime configuration
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** Linux capabilities can be added to a container using the capabilities.add field in the container's securityContext. Similarly, capabilities.drop removes capabilities. This allows fine-grained control over container privileges.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -650,6 +804,17 @@ B) To configure system call filtering for containers
 C) To set memory limits
 D) To configure AppArmor profiles
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The seccompProfile field configures seccomp (secure computing mode) profiles that filter which system calls a container can make. This reduces the attack surface by limiting available kernel interfaces.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 36
@@ -662,6 +827,17 @@ B) The Pod creation is rejected by the API server
 C) The Pod runs with reduced privileges
 D) A warning is logged but the Pod is created
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a Pod violates a namespace's enforce-level Pod Security Standard, the API server rejects the Pod creation request. The Pod is not created, and an error is returned to the user.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+</details>
+
 ---
 
 ### Question 37
@@ -673,6 +849,17 @@ A) Delete the namespace labels
 B) Configure exemptions in the PodSecurity admission controller configuration
 C) Create an exemption Role
 D) Namespaces cannot be exempted
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Exemptions can be configured in the PodSecurity admission controller's configuration file. Exemptions can be based on usernames, runtimeClassNames, or namespaces, allowing certain workloads to bypass policy enforcement.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+</details>
 
 ---
 
@@ -688,6 +875,17 @@ B) Base64 encoded
 C) Plain text
 D) Hashed with SHA-256
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubernetes Secrets are base64 encoded by default, not encrypted. Base64 encoding is not a security measure—it simply allows binary data to be stored. Encryption at rest must be separately configured.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
+</details>
+
 ---
 
 ### Question 39
@@ -700,6 +898,17 @@ B) kubernetes.io/dockerconfigjson
 C) kubernetes.io/ssh-auth
 D) kubernetes.io/registry
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The kubernetes.io/dockerconfigjson Secret type stores Docker registry credentials in the same format as ~/.docker/config.json. It's used for authenticating to private container registries when pulling images.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
+</details>
+
 ---
 
 ### Question 40
@@ -711,6 +920,17 @@ A) ConfigMap and Volume
 B) Environment variables and volume mounts
 C) Labels and annotations
 D) Direct API access and sidecar
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Secrets can be exposed to Pods as environment variables using envFrom or valueFrom, or as files in a volume mount. Volume mounts are generally preferred as they can be updated without restarting the Pod.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
+</details>
 
 ---
 
