@@ -54,7 +54,7 @@ D) A network configuration file
 
 A container image is an immutable, read-only template containing the application code, runtime, libraries, and dependencies needed to run a container. When you run an image, it becomes a container (running instance). Images are built in layers and stored in registries for distribution.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source (non-Kubernetes exception):** [Dockerfile reference | Docker](https://docs.docker.com/engine/reference/builder/)
 
 </details>
 
@@ -950,7 +950,7 @@ D) A pattern for network configuration
 
 The adapter pattern uses a sidecar to transform output from the main container into a standardized format. Common examples include log format conversion (transforming app-specific logs to JSON for centralized logging) or metrics adaptation (converting proprietary metrics to Prometheus format). This enables heterogeneous systems to present uniform interfaces.
 
-**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+**Source:** [Sidecar Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
 
 </details>
 
@@ -1170,7 +1170,7 @@ D) A deployment strategy
 
 ConfigMaps store non-sensitive configuration data as key-value pairs. They decouple configuration from container images, allowing the same image to be used with different configurations. ConfigMaps can store individual values, entire configuration files, or JSON/YAML documents.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -1188,7 +1188,7 @@ D) An authentication mechanism
 
 Secrets are Kubernetes objects designed for storing sensitive information like passwords, OAuth tokens, TLS certificates, and SSH keys. Unlike ConfigMaps, Secrets are base64-encoded and can be encrypted at rest. Access to Secrets can be restricted via RBAC for better security.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
@@ -1206,7 +1206,7 @@ D) Secrets cannot be exposed to containers
 
 Like ConfigMaps, Secrets can be exposed as environment variables or volume mounts. When mounted as a volume, Secrets are stored in tmpfs (memory-based filesystem) so they're not written to disk on the node. Volume mounts are generally preferred over environment variables as they're more secure.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
@@ -1224,7 +1224,7 @@ D) Using configKey
 
 To reference a specific key from a ConfigMap, use `valueFrom.configMapKeyRef` in the env entry. You specify the ConfigMap name and the key to extract. Example: `valueFrom: {configMapKeyRef: {name: "my-config", key: "database-url"}}`. For Secrets, use `secretKeyRef` instead.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -1242,7 +1242,7 @@ D) Using an emptyDir volume
 
 To mount a ConfigMap as a volume: 1) Define a volume with `configMap` type in the Pod spec, 2) Mount the volume at a path using `volumeMounts`. Each key in the ConfigMap becomes a file in the mounted directory. You can optionally select specific keys with `items`.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -1442,7 +1442,7 @@ D) A network security protocol
 
 Pod Security Standards (PSS) define three security policy levels for Pods: Privileged, Baseline, and Restricted. They specify which security settings are required or forbidden. Pod Security Admission enforces these standards at the namespace level, replacing the deprecated PodSecurityPolicy.
 
-**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
 </details>
 
@@ -1829,4 +1829,3 @@ A sandbox runtime provides additional isolation between containers and the host 
 **Source:** [Runtime Class | Kubernetes](https://kubernetes.io/docs/concepts/containers/runtime-class/)
 
 </details>
-
