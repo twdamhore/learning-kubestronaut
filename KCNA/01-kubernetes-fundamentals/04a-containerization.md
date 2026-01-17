@@ -2,8 +2,6 @@
 
 ## Container Fundamentals
 
-## Container Fundamentals
-
 ### Question 1
 What is a container in the context of cloud-native computing?
 
@@ -54,7 +52,7 @@ D) A network configuration file
 
 A container image is an immutable, read-only template containing the application code, runtime, libraries, and dependencies needed to run a container. When you run an image, it becomes a container (running instance). Images are built in layers and stored in registries for distribution.
 
-**Source (non-Kubernetes exception):** [Dockerfile reference | Docker](https://docs.docker.com/engine/reference/builder/)
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
 </details>
 
@@ -182,7 +180,7 @@ D) To outline container orchestration patterns
 
 The OCI Image Specification defines how container images are structured, including the image manifest, filesystem layers, and configuration. This standard ensures that images built with one tool can run on any OCI-compliant runtime, enabling portability across different platforms.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -256,7 +254,7 @@ D) A registry that stores only proprietary images
 
 A private container registry requires authentication to pull or push images. This protects proprietary code and ensures only authorized users can access images. Private registries can be cloud-hosted (ECR, GCR, ACR) or self-hosted (Harbor, Nexus). Authentication is typically via username/password or tokens.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source:** [Pull an Image from a Private Registry | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
 
 </details>
 
@@ -274,7 +272,7 @@ D) A token embedded in the container
 
 An ImagePullSecret is a Kubernetes Secret of type `kubernetes.io/dockerconfigjson` that contains registry authentication credentials. It stores the registry URL, username, password, and email in a format compatible with Docker's config.json. Pods reference this secret to pull images from private registries.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source:** [Pull an Image from a Private Registry | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
 
 </details>
 
@@ -348,7 +346,7 @@ D) SOURCE
 
 The FROM instruction specifies the base image for the build. It must be the first instruction in a Dockerfile (except for ARG). You can use FROM with an image name and tag (e.g., `FROM alpine:3.18`) or with `FROM scratch` to build from an empty image.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source (non-Kubernetes exception):** [SPDX Specifications | SPDX](https://spdx.dev/specifications/)
 
 </details>
 
@@ -517,20 +515,20 @@ Each Dockerfile instruction creates a layer. Combining commands with `&&` in a s
 </details>
 
 ### Question 29
-What Dockerfile instruction creates a non-root user?
+What Dockerfile instruction specifies the user a container should run as?
 
-A) ADDUSER
-B) RUN useradd or RUN adduser
-C) CREATEUSER
-D) NEWUSER
+A) RUN useradd or RUN adduser
+B) USER
+C) WORKDIR
+D) ENTRYPOINT
 
 <details><summary>Answer</summary>
 
-**B) RUN useradd or RUN adduser**
+**B) USER**
 
-To create a non-root user, use the RUN instruction with standard Linux commands: `RUN useradd -r -u 1001 appuser` (for most distros) or `RUN adduser -D appuser` (for Alpine). Then use `USER appuser` to switch to that user for subsequent instructions.
+The `USER` instruction sets the username or UID used to run the container's main process. You can specify a numeric UID (and optional GID) or a username that exists in the image. Use `RUN useradd ...` (or `RUN adduser ...`) to create the user, then `USER appuser` to run as that account.
 
-**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source (non-Kubernetes exception):** [Dockerfile reference | Docker](https://docs.docker.com/engine/reference/builder/)
 
 </details>
 
@@ -968,25 +966,25 @@ D) Nothing, containers are fully isolated
 
 Containers in a Pod share the network namespace (same IP, localhost communication), IPC namespace (can use shared memory and semaphores), and can mount the same volumes. PID namespace is not shared by default (each container has its own process view), though this can be enabled with `shareProcessNamespace: true`.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
 ### Question 54
-How is a native sidecar container defined in Kubernetes?
+How is a sidecar container defined in Kubernetes?
 
 A) Using a special sidecar field in the Pod spec
-B) As an init container with restartPolicy: Always
+B) As an additional container in the Pod's containers array
 C) Using a Sidecar custom resource
 D) Through a sidecar annotation
 
 <details><summary>Answer</summary>
 
-**B) As an init container with restartPolicy: Always**
+**B) As an additional container in the Pod's containers array**
 
-Native sidecars are defined in the `initContainers` section with `restartPolicy: Always`. This tells Kubernetes the container should run continuously rather than running to completion. The sidecar starts before main containers and remains running throughout the Pod's lifecycle, but doesn't block main container startup.
+Sidecar containers are defined as regular containers in the Pod's `containers` array alongside the main application container. They run for the entire lifetime of the Pod and provide supporting functionality like logging, monitoring, or proxying. There is no special "sidecar" field - the sidecar pattern is implemented by adding multiple containers to a Pod.
 
-**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1460,7 +1458,7 @@ D) Read-only filesystems only
 
 The Privileged level is an unrestricted policy that allows everything, including privileged containers, host namespaces, and all capabilities. It's intended for system-level and infrastructure workloads managed by trusted users. It provides no security guarantees and should only be used when necessary.
 
-**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
 </details>
 
@@ -1572,7 +1570,7 @@ D) To the Kubernetes API server
 
 Containers should write logs to stdout and stderr rather than files. The container runtime captures these streams and stores them on the node (typically under /var/log/containers/). This enables `kubectl logs` to work and allows log aggregation solutions to collect logs consistently.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -1590,7 +1588,7 @@ D) Logs are automatically backed up
 
 When a container restarts, its log file is rotated. The current container's logs start fresh, but logs from the previous instance are preserved temporarily. Use `kubectl logs --previous` to view the terminated container's logs, helpful for debugging crash loops.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -1608,7 +1606,7 @@ D) Store logs in a database
 
 The twelve-factor app methodology recommends writing logs to stdout/stderr. This allows the platform to handle log collection and aggregation. Containers shouldn't be concerned with log storage or routing - this is handled by the container runtime and logging infrastructure like Fluentd, Filebeat, or cloud logging services.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -1626,7 +1624,7 @@ D) Redeploy the Pod
 
 For running containers, use `kubectl exec` to run commands inside the container, or `kubectl debug` to add ephemeral debug containers. You can also use `kubectl logs`, `kubectl describe`, and `kubectl port-forward` for different debugging scenarios.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
 
 </details>
 
@@ -1644,7 +1642,7 @@ D) kubectl connect
 
 To get an interactive shell, use `kubectl exec -it <pod-name> -- /bin/sh` (or `/bin/bash` if available). The `-i` flag enables stdin, `-t` allocates a TTY. The `--` separates kubectl arguments from the command to run. Use `-c container` for multi-container Pods.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
 
 </details>
 
@@ -1698,7 +1696,7 @@ D) Using kubectl get containers
 
 `kubectl describe pod` displays a comprehensive view including the Events section showing recent events related to the Pod and its containers. Events include image pulls, container starts/stops, probe failures, scheduling decisions, and resource issues. You can also use `kubectl get events` for cluster-wide events.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
 
 </details>
 
