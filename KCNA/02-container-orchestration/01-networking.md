@@ -3725,6 +3725,8 @@ D) A load balancer
 
 **Explanation:** A service mesh is a dedicated infrastructure layer that manages service-to-service communication, providing features like traffic management, observability, and security (mTLS) without requiring changes to application code.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3745,6 +3747,8 @@ D) CoreDNS
 **Answer:** B
 
 **Explanation:** Istio is one of the most popular service mesh implementations for Kubernetes, providing advanced traffic management, security, and observability features, while Calico and Flannel are CNI plugins and CoreDNS is a DNS server.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3767,6 +3771,8 @@ D) A storage container
 
 **Explanation:** The sidecar pattern deploys a proxy container (like Envoy) alongside each application container in a Pod, intercepting all inbound and outbound traffic to provide service mesh functionality transparently to the application.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3787,6 +3793,8 @@ D) Micro TLS protocol
 **Answer:** B
 
 **Explanation:** Mutual TLS (mTLS) requires both the client and server to present certificates and verify each other's identity, providing encrypted communication and strong authentication between services in the mesh.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3809,6 +3817,8 @@ D) The monitoring system
 
 **Explanation:** The data plane consists of all the sidecar proxies deployed alongside application containers, which handle the actual network traffic including routing, load balancing, and applying policies at runtime.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3829,6 +3839,8 @@ D) The Kubernetes control plane
 **Answer:** B
 
 **Explanation:** The control plane manages and configures the data plane proxies, handling tasks like certificate issuance, policy distribution, and service discovery configuration, allowing centralized management of the mesh.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3851,6 +3863,8 @@ D) Filtering malicious traffic
 
 **Explanation:** Traffic management in a service mesh allows fine-grained control over how requests are routed between services, including features like traffic splitting, canary deployments, retries, timeouts, and fault injection.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3871,6 +3885,8 @@ D) A debugging tool
 **Answer:** B
 
 **Explanation:** Circuit breaking monitors the health of service connections and stops sending requests to a failing service after a threshold of failures, preventing cascading failures and allowing the failing service time to recover.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3893,6 +3909,8 @@ D) Creating traffic backups
 
 **Explanation:** Traffic mirroring duplicates live traffic and sends copies to a secondary service for testing or analysis without affecting the primary traffic flow, enabling safe testing of new service versions with real production traffic.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3913,6 +3931,8 @@ D) Only tracing
 **Answer:** B
 
 **Explanation:** Service meshes provide comprehensive observability through distributed tracing (tracking requests across services), metrics (latency, error rates, traffic volume), and logging, giving visibility into service-to-service communication without application code changes.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3935,6 +3955,8 @@ D) By modifying container images
 
 **Explanation:** Istio uses mutating admission webhooks to automatically inject Envoy sidecar proxy containers into Pods at creation time when the namespace or Pod has the appropriate injection label enabled.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3955,6 +3977,8 @@ D) A DNS server
 **Answer:** B
 
 **Explanation:** Envoy is a high-performance, open-source edge and service proxy designed for cloud-native applications, serving as the data plane in service meshes like Istio, Consul Connect, and AWS App Mesh.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3977,6 +4001,8 @@ D) A storage abstraction
 
 **Explanation:** VirtualService is an Istio CRD that defines traffic routing rules, allowing you to configure how requests are routed to services based on headers, URI paths, or percentages for canary deployments and A/B testing.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3997,6 +4023,8 @@ D) A DNS rule
 **Answer:** B
 
 **Explanation:** DestinationRule is an Istio CRD that configures policies applied after routing decisions, including load balancing algorithms, connection pool settings, circuit breaker thresholds, and TLS settings for traffic to a destination.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -4019,6 +4047,8 @@ D) By DNS-based routing
 
 **Explanation:** Service meshes enable canary deployments by routing a configurable percentage of traffic to new service versions while the majority goes to the stable version, allowing gradual rollout and quick rollback if issues are detected.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -4039,6 +4069,8 @@ D) eBPF is user-space only
 **Answer:** B
 
 **Explanation:** eBPF-based service meshes operate directly in the Linux kernel with lower latency and overhead, while iptables-based meshes use the older netfilter framework which requires more context switches and has higher performance costs.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -4061,6 +4093,8 @@ D) Uses userspace networking
 
 **Explanation:** Cilium Service Mesh uses eBPF programs running in the Linux kernel to implement service mesh features, reducing or eliminating the need for sidecar proxies and their associated resource overhead and latency.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -4081,6 +4115,8 @@ D) To configure RBAC
 **Answer:** B
 
 **Explanation:** PeerAuthentication is an Istio CRD that defines mutual TLS (mTLS) requirements for workloads, specifying whether mTLS is disabled, permissive (accepts both plaintext and mTLS), or strict (requires mTLS only).
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -4103,6 +4139,8 @@ D) They require application changes
 
 **Explanation:** Service meshes implement retries and timeouts at the proxy layer, making these policies consistent across all services without requiring each application to implement its own retry logic, and enabling centralized configuration and updates.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -4123,6 +4161,8 @@ D) A deprecated API
 **Answer:** B
 
 **Explanation:** The Gateway API is a Kubernetes SIG-Network project providing a standard, expressive API for advanced traffic management that service mesh implementations can adopt, offering a unified interface across different service mesh solutions.
+
+**Source:** [Gateway API | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/gateway/)
 
 </details>
 
