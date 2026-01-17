@@ -664,15 +664,15 @@ D) For init containers
 How does Kubernetes handle container restart backoff?
 
 A) Immediate restarts without delay
-B) Exponential backoff starting at 10 seconds, doubling with each restart
+B) Exponential backoff with a cap
 C) Fixed 30-second delay between restarts
 D) Random delay between restarts
 
 <details><summary>Answer</summary>
 
-**B) Exponential backoff starting at 10 seconds, doubling with each restart**
+**B) Exponential backoff with a cap**
 
-Kubernetes uses exponential backoff for container restarts: 10s, 20s, 40s, 80s, etc. This prevents crash loops from overwhelming the system. The backoff resets after the container runs successfully for 10 minutes. You see "CrashLoopBackOff" status during this delay.
+Kubernetes uses exponential backoff for container restarts, increasing the delay between restart attempts up to a maximum cap. This prevents crash loops from overwhelming the system. The backoff resets after the container runs successfully for some time. You see "CrashLoopBackOff" status during this delay.
 
 **Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
@@ -735,18 +735,18 @@ Startup probes protect slow-starting containers from being killed by liveness pr
 </details>
 
 ### Question 41
-What are the three types of probe mechanisms in Kubernetes?
+What are the four types of probe mechanisms in Kubernetes?
 
-A) HTTP, TCP, UDP
-B) exec, httpGet, tcpSocket
-C) REST, gRPC, WebSocket
-D) ping, curl, telnet
+A) HTTP, TCP, UDP, ICMP
+B) exec, httpGet, tcpSocket, grpc
+C) REST, gRPC, WebSocket, TCP
+D) ping, curl, telnet, nc
 
 <details><summary>Answer</summary>
 
-**B) exec, httpGet, tcpSocket**
+**B) exec, httpGet, tcpSocket, grpc**
 
-Kubernetes supports three probe mechanisms: exec (runs a command inside the container), httpGet (sends HTTP GET request), and tcpSocket (opens TCP connection). Additionally, gRPC health checking is supported as a fourth option in newer Kubernetes versions.
+Kubernetes supports four probe mechanisms: exec (runs a command inside the container), httpGet (sends HTTP GET request), tcpSocket (opens TCP connection), and grpc (performs gRPC health check). Each mechanism has different use cases depending on your application's health checking capabilities.
 
 **Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
@@ -1150,7 +1150,7 @@ D) Environment variables cannot be passed
 
 Environment variables can be set directly in the `env` field, loaded from ConfigMaps or Secrets using `valueFrom` or `envFrom`, or populated from Pod/container metadata using the downward API. This flexibility allows separating configuration from container images.
 
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+**Sources:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/), [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/), [Downward API | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/downward-api/)
 
 </details>
 
@@ -1204,7 +1204,7 @@ D) To copy environment between containers
 
 `envFrom` allows you to inject all key-value pairs from a ConfigMap or Secret as environment variables in one declaration. Each key becomes an environment variable name, and its value becomes the variable value. You can optionally add a prefix to avoid naming conflicts.
 
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+**Sources:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/), [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
