@@ -4187,6 +4187,8 @@ D) ping only
 
 **Explanation:** Using curl or wget from within a Pod allows you to test HTTP connectivity to a Service by its DNS name or ClusterIP, verifying that the Service is reachable and responding correctly.
 
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
 </details>
 
 ---
@@ -4207,6 +4209,8 @@ D) kubectl get nodes
 **Answer:** A
 
 **Explanation:** Running `kubectl get endpoints <service-name>` displays the IP addresses and ports of all Pods currently selected by the Service, making it easy to verify whether the Service has any backend targets.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
 </details>
 
@@ -4229,6 +4233,8 @@ D) DNS is not configured
 
 **Explanation:** A Service will have no endpoints if no Pods match the Service's label selector, if matching Pods exist but their readiness probes are failing, or if matching Pods are in a terminating state.
 
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
 </details>
 
 ---
@@ -4249,6 +4255,8 @@ D) The Kubernetes dashboard
 **Answer:** B
 
 **Explanation:** DNS debugging tools like nslookup, dig, or host can be run from within a Pod (using kubectl exec) to test whether DNS resolution for Service names is working correctly through CoreDNS.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -4271,6 +4279,8 @@ D) kubectl logs apiserver
 
 **Explanation:** kube-proxy runs as a DaemonSet in the kube-system namespace, so checking its Pod status with `kubectl get pods -n kube-system | grep kube-proxy` verifies that it is running on all nodes.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -4291,6 +4301,8 @@ D) Node is overloaded
 **Answer:** B
 
 **Explanation:** DNS resolution failures typically occur when CoreDNS Pods are not running, have crashed, are misconfigured, or cannot reach the Kubernetes API to get Service/Endpoints information.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -4313,6 +4325,8 @@ D) Checking the API server logs
 
 **Explanation:** The most effective way to test network policies is to attempt actual connections from Pods that should be allowed and from Pods that should be denied, verifying the policy behaves as expected in practice.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -4333,6 +4347,8 @@ D) To collect metrics
 **Answer:** B
 
 **Explanation:** Ephemeral debug containers allow you to attach a temporary container with debugging tools to a running Pod without restarting it, useful for troubleshooting when the original container lacks debugging utilities.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
 </details>
 
@@ -4355,6 +4371,8 @@ D) Using kubectl logs
 
 **Explanation:** Network traffic can be captured using tcpdump either directly in the Pod container (if available) or by attaching an ephemeral debug container with tcpdump to inspect packets at the network interface level.
 
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
 </details>
 
 ---
@@ -4375,6 +4393,8 @@ D) API server load
 **Answer:** B
 
 **Explanation:** Intermittent connectivity issues can be caused by network policies being updated, Pods being rescheduled (changing endpoints), CNI plugin issues, node network problems, or resource exhaustion affecting network performance.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
 </details>
 
@@ -4397,6 +4417,8 @@ D) Using kubectl debug
 
 **Explanation:** Diagnosing iptables issues requires running `iptables -L -n -v` on the node to examine the KUBE-SERVICES, KUBE-SVC-*, and KUBE-SEP-* chains that kube-proxy creates for Service routing.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -4417,6 +4439,8 @@ D) kube-proxy
 **Answer:** B
 
 **Explanation:** Tools like Cilium's Hubble provide real-time network flow visualization, while web-based NetworkPolicy editors can help visualize and validate policy configurations before applying them to the cluster.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -4439,6 +4463,8 @@ D) Reviewing kubelet logs
 
 **Explanation:** Packet loss between Pods can be detected using ping (ICMP) to measure loss percentage, iperf for bandwidth testing with packet statistics, or tcpdump/Wireshark to analyze captured traffic for missing packets.
 
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
 </details>
 
 ---
@@ -4459,6 +4485,8 @@ D) Large ConfigMaps
 **Answer:** B
 
 **Explanation:** High Service latency can result from network congestion between nodes, multiple proxy hops in service mesh configurations, slow backend Pods, DNS resolution delays, or resource constraints on nodes affecting packet processing.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
 </details>
 
@@ -4481,6 +4509,8 @@ D) Using the Kubernetes API
 
 **Explanation:** Tracing network paths requires combining tools: traceroute shows the Layer 3 path, packet captures reveal actual traffic flow, and examining iptables/IPVS rules shows how kube-proxy routes traffic to backend Pods.
 
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
 </details>
 
 ---
@@ -4501,6 +4531,8 @@ D) To forward ports between Pods
 **Answer:** B
 
 **Explanation:** `kubectl port-forward` creates a temporary tunnel from a local port to a Pod or Service port, allowing direct access for debugging without exposing the application through a Service or Ingress.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
 </details>
 
@@ -4523,6 +4555,8 @@ D) Restart the CNI
 
 **Explanation:** Debugging network policies involves verifying Pod labels match policy selectors, checking namespace labels for namespace selectors, testing with explicit allow rules, and temporarily removing policies to confirm they are the source of blocking.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -4543,6 +4577,8 @@ D) Node status
 **Answer:** B
 
 **Explanation:** `kubectl describe service` shows the Service configuration (type, ports, selector), the endpoints (backend Pod IPs), and any events related to the Service, providing a comprehensive view for troubleshooting connectivity issues.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
 </details>
 
@@ -4565,6 +4601,8 @@ D) Check the API server
 
 **Explanation:** Verifying CNI functionality involves checking CNI Pod logs for errors, confirming that new Pods receive IP addresses from the expected range, and testing basic Pod-to-Pod connectivity across nodes.
 
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+
 </details>
 
 ---
@@ -4585,6 +4623,8 @@ D) Scale down to one node
 **Answer:** B
 
 **Explanation:** Systematic troubleshooting involves checking each layer sequentially: verifying DNS resolution, confirming Service endpoints exist, testing network policy rules, checking CNI plugin health, and examining kube-proxy rules, to isolate the root cause.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
 </details>
 
