@@ -3261,6 +3261,8 @@ D) Checking the API server
 
 **Explanation:** Running `iptables-save` (for iptables mode) or `ipvsadm -ln` (for IPVS mode) on a cluster node shows all the rules kube-proxy has created, including KUBE-SERVICES, KUBE-SVC-*, and KUBE-SEP-* chains.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3281,6 +3283,8 @@ D) To define external CIDRs
 **Answer:** B
 
 **Explanation:** The --cluster-cidr flag tells kube-proxy the Pod CIDR range, which is used for features like masquerading outbound traffic and distinguishing cluster-internal from external traffic sources.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
@@ -3303,6 +3307,8 @@ D) To bind to specific node addresses
 
 **Explanation:** The healthzBindAddress configures the address and port where kube-proxy exposes its health check endpoint (/healthz), which can be used by monitoring systems to verify kube-proxy is running correctly.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3324,6 +3330,8 @@ D) Using userspace proxying
 
 **Explanation:** In IPVS mode, kube-proxy binds Service VIPs to a dummy interface (kube-ipvs0), then creates IPVS virtual server entries that load balance traffic to real server (Pod endpoint) entries.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3344,6 +3352,8 @@ D) A mode specific to Windows
 **Answer:** B
 
 **Explanation:** nftables mode is a newer kube-proxy implementation that uses the nftables framework (successor to iptables), offering better performance, atomic rule updates, and a cleaner rule structure than the legacy iptables mode.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
@@ -3368,6 +3378,8 @@ D) To set node IP ranges
 
 **Explanation:** Pod CIDR defines the IP address range from which Pod IP addresses are allocated, typically configured via --pod-network-cidr during cluster initialization and divided into per-node subnets.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3388,6 +3400,8 @@ D) Only within the same node
 **Answer:** B
 
 **Explanation:** Kubernetes has a flat network model where all Pods can communicate with each other by default without Network Policies. Every Pod gets a unique cluster-wide IP address and can reach any other Pod directly.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3410,6 +3424,8 @@ D) Pods must be in the same namespace
 
 **Explanation:** The Kubernetes network model requires that all Pods can communicate with each other without NAT, meaning each Pod sees the same source IP that other Pods see, enabling transparent network communication across the cluster.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3430,6 +3446,8 @@ D) A DNS configuration
 **Answer:** B
 
 **Explanation:** A network overlay creates a virtual network layer on top of the physical infrastructure by encapsulating Pod traffic, allowing Pod IPs to be routed across nodes that may not have direct Layer 2 or Layer 3 connectivity.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3452,6 +3470,8 @@ D) There is no difference
 
 **Explanation:** VXLAN encapsulates Layer 2 Ethernet frames within UDP packets (port 4789), creating a full Layer 2 overlay, while IPIP simply wraps IP packets in another IP header (protocol 4), resulting in lower overhead but only providing Layer 3 connectivity.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3472,6 +3492,8 @@ D) To use the host's DNS
 **Answer:** B
 
 **Explanation:** When `hostNetwork: true` is set, the Pod uses the node's network namespace instead of its own isolated namespace, allowing the Pod to access network interfaces, ports, and traffic as if it were a regular process on the host.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3494,6 +3516,8 @@ D) It prevents Pod communication
 
 **Explanation:** Using `hostNetwork: true` gives the Pod direct access to the node's network stack, allowing it to see all network traffic, bind to any port, and potentially intercept or manipulate network communications, which poses significant security risks.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -3514,6 +3538,8 @@ D) To enable host networking
 **Answer:** A
 
 **Explanation:** The `hostPort` field exposes a container's port directly on the node's IP address, creating a direct mapping from the node's port to the container's port, similar to Docker's port publishing but limited to the specific node where the Pod runs.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -3536,6 +3562,8 @@ D) The CNI bypasses kube-proxy for local traffic
 
 **Explanation:** ClusterIP traffic is always handled by kube-proxy (iptables/IPVS rules), which DNATs the Service IP to a backend Pod IP. If the selected endpoint happens to be on the same node, the traffic stays local after the NAT—but it's kube-proxy making the routing decision, not the CNI.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3556,6 +3584,8 @@ D) To set up external authentication
 **Answer:** B
 
 **Explanation:** The `externalIPs` field allows you to specify IPs that are externally routed to cluster nodes. These don't have to be actual node interface IPs—they can be any IPs your network routes to the cluster. kube-proxy installs rules to accept traffic destined for these IPs and DNAT it to the Service's backend Pods.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -3578,6 +3608,8 @@ D) DNS records are updated
 
 **Explanation:** When `externalIPs` is configured, kube-proxy creates rules to intercept traffic destined for those IP addresses on the Service port and route it to the Service's backend Pods, without creating a load balancer or modifying DNS.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -3598,6 +3630,8 @@ D) Service mesh
 **Answer:** B
 
 **Explanation:** The deprecated Service topology feature was replaced by topology-aware hints (also known as topology-aware routing), which provides a more flexible and scalable approach to routing traffic to endpoints based on their topology zone.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -3620,6 +3654,8 @@ D) To define node topology
 
 **Explanation:** Topology-aware hints enable kube-proxy to prefer routing traffic to endpoints in the same zone or region, reducing cross-zone network latency and costs while maintaining high availability.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -3641,6 +3677,8 @@ D) To set internal DNS
 
 **Explanation:** The `internalTrafficPolicy` field controls whether internal cluster traffic (from Pods) is routed to all endpoints cluster-wide (Cluster) or only to endpoints on the same node (Local), similar to `externalTrafficPolicy` but for internal traffic.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -3661,6 +3699,8 @@ D) Load balancing is disabled
 **Answer:** B
 
 **Explanation:** With `internalTrafficPolicy: Local`, kube-proxy only includes endpoints running on the same node, reducing network hops and latency but potentially causing connection failures if no local endpoints are available.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
