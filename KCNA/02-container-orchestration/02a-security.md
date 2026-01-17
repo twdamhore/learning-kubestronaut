@@ -13,12 +13,22 @@
 
 What does RBAC stand for in Kubernetes?
 
+A) Resource-Based Access Control
+B) Role-Based Access Control
+C) Rule-Based Access Configuration
+D) Remote-Based Authentication Control
+
 ---
 
 ### Question 2
 [MEDIUM]
 
 Which Kubernetes resource defines a set of permissions within a specific namespace?
+
+A) ClusterRole
+B) RoleBinding
+C) Role
+D) ServiceAccount
 
 ---
 
@@ -27,12 +37,22 @@ Which Kubernetes resource defines a set of permissions within a specific namespa
 
 What is the difference between a Role and a ClusterRole in Kubernetes?
 
+A) Role is for users, ClusterRole is for service accounts
+B) Role is namespace-scoped, ClusterRole is cluster-scoped
+C) Role grants read access, ClusterRole grants write access
+D) There is no difference; they are aliases
+
 ---
 
 ### Question 4
 [MEDIUM-HARD]
 
 Which resource binds a Role to a user or ServiceAccount within a namespace?
+
+A) ClusterRoleBinding
+B) RoleBinding
+C) RoleAssignment
+D) PermissionBinding
 
 ---
 
@@ -41,12 +61,22 @@ Which resource binds a Role to a user or ServiceAccount within a namespace?
 
 What happens if you create a RoleBinding that references a ClusterRole?
 
+A) The binding fails with an error
+B) The ClusterRole permissions are granted only within the RoleBinding's namespace
+C) The ClusterRole permissions are granted cluster-wide
+D) The ClusterRole is automatically converted to a Role
+
 ---
 
 ### Question 6
 [HARD]
 
 Which RBAC verb allows a user to create new resources?
+
+A) add
+B) create
+C) new
+D) insert
 
 ---
 
@@ -55,12 +85,22 @@ Which RBAC verb allows a user to create new resources?
 
 What is the effect of the "escalate" verb in RBAC?
 
+A) Allows a user to gain root access
+B) Allows creating or updating Roles with permissions the user doesn't have
+C) Allows bypassing admission controllers
+D) Allows impersonating other users
+
 ---
 
 ### Question 8
 [HARD]
 
 How can you grant permission to access resources across all namespaces?
+
+A) Use a Role with namespace: "*"
+B) Use a ClusterRole with a ClusterRoleBinding
+C) Use multiple RoleBindings in each namespace
+D) Set the global flag on the Role
 
 ---
 
@@ -69,12 +109,22 @@ How can you grant permission to access resources across all namespaces?
 
 What is the purpose of the "bind" verb in RBAC?
 
+A) Allows creating network bindings
+B) Allows creating RoleBindings or ClusterRoleBindings that reference Roles
+C) Allows binding volumes to pods
+D) Allows binding services to endpoints
+
 ---
 
 ### Question 10
 [HARD]
 
 Which API group contains the RBAC resources in Kubernetes?
+
+A) authorization.k8s.io
+B) rbac.authorization.k8s.io
+C) access.k8s.io
+D) security.k8s.io
 
 ---
 
@@ -83,12 +133,22 @@ Which API group contains the RBAC resources in Kubernetes?
 
 What happens when multiple RoleBindings grant different permissions to the same subject?
 
+A) The most restrictive permissions apply
+B) The last applied binding takes precedence
+C) Permissions are additive (union of all grants)
+D) An error is raised due to conflict
+
 ---
 
 ### Question 12
 [HARD]
 
 How do you restrict access to a specific resource by name using RBAC?
+
+A) Use the resourceNames field in the Role rules
+B) Use the nameSelector field in the RoleBinding
+C) Use a label selector in the Role
+D) Use a separate Role for each resource
 
 ---
 
@@ -99,12 +159,22 @@ How do you restrict access to a specific resource by name using RBAC?
 
 What is automatically created in every Kubernetes namespace?
 
+A) An admin user
+B) A default ServiceAccount
+C) A default Role
+D) A cluster-admin binding
+
 ---
 
 ### Question 14
 [MEDIUM]
 
 Where is a ServiceAccount token typically mounted in a Pod?
+
+A) /etc/kubernetes/token
+B) /var/run/secrets/kubernetes.io/serviceaccount
+C) /opt/kubernetes/credentials
+D) /home/kubernetes/.token
 
 ---
 
@@ -113,12 +183,22 @@ Where is a ServiceAccount token typically mounted in a Pod?
 
 What is the purpose of the automountServiceAccountToken field?
 
+A) To automatically create tokens for new ServiceAccounts
+B) To control whether a ServiceAccount token is mounted in Pods
+C) To enable automatic token rotation
+D) To mount tokens from multiple ServiceAccounts
+
 ---
 
 ### Question 16
 [MEDIUM-HARD]
 
 How do bound ServiceAccount tokens differ from legacy tokens?
+
+A) Bound tokens are stored in Secrets, legacy tokens are not
+B) Bound tokens are time-limited and audience-bound
+C) Bound tokens can only be used once
+D) Bound tokens are encrypted, legacy tokens are not
 
 ---
 
@@ -127,12 +207,22 @@ How do bound ServiceAccount tokens differ from legacy tokens?
 
 What is the default ServiceAccount used by Pods if none is specified?
 
+A) system:serviceaccount
+B) kube-system
+C) default
+D) pod-default
+
 ---
 
 ### Question 18
 [HARD]
 
 How can you prevent a ServiceAccount token from being automatically mounted?
+
+A) Delete the ServiceAccount
+B) Set automountServiceAccountToken: false on the Pod or ServiceAccount
+C) Remove the token Secret
+D) Use a custom securityContext
 
 ---
 
@@ -141,12 +231,22 @@ How can you prevent a ServiceAccount token from being automatically mounted?
 
 What information is included in a projected ServiceAccount token?
 
+A) Only the ServiceAccount name
+B) The namespace, ServiceAccount name, Pod name, and expiration time
+C) Username and password
+D) The cluster certificate authority
+
 ---
 
 ### Question 20
 [HARD]
 
 What is the TokenRequest API used for?
+
+A) Requesting new user accounts
+B) Requesting short-lived, audience-scoped ServiceAccount tokens
+C) Requesting TLS certificates
+D) Requesting API server access
 
 ---
 
@@ -155,12 +255,22 @@ What is the TokenRequest API used for?
 
 How does token audience validation work in Kubernetes?
 
+A) The token is validated against a list of allowed users
+B) The token's audience claim is verified against the expected audience
+C) The token is validated by an external identity provider
+D) Audience validation is not supported in Kubernetes
+
 ---
 
 ### Question 22
 [HARD]
 
 What happens to bound tokens when a Pod is deleted?
+
+A) They remain valid until expiration
+B) They are immediately invalidated
+C) They are transferred to another Pod
+D) They are converted to legacy tokens
 
 ---
 
@@ -171,6 +281,11 @@ What happens to bound tokens when a Pod is deleted?
 
 What replaced PodSecurityPolicy in Kubernetes 1.25+?
 
+A) SecurityContextConstraints
+B) Pod Security Admission
+C) PodSecurityStandards
+D) ContainerSecurityPolicy
+
 ---
 
 ### Question 24
@@ -178,12 +293,22 @@ What replaced PodSecurityPolicy in Kubernetes 1.25+?
 
 Which Pod Security Standards level is the most restrictive?
 
+A) privileged
+B) baseline
+C) restricted
+D) hardened
+
 ---
 
 ### Question 25
 [MEDIUM]
 
 What field in a container spec allows running as a specific user ID?
+
+A) userID
+B) runAsUser
+C) securityUser
+D) containerUser
 
 ---
 
