@@ -42,7 +42,8 @@ KCNA/
 ├── 01-kubernetes-fundamentals/
 │   ├── 01a-kubernetes-core-concepts.md ✅ (Q1-100)
 │   ├── 01b-kubernetes-core-concepts.md ✅ (Q101-200)
-│   ├── 02-administration.md ✅
+│   ├── 02a-administration.md ✅ (Q1-100)
+│   ├── 02b-administration.md ✅ (Q101-200)
 │   ├── 03-scheduling.md ✅
 │   └── 04-containerization.md ✅
 ├── 02-container-orchestration/
