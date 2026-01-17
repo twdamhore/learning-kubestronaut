@@ -68,7 +68,7 @@ D) Only the first container uses the layers
 
 **B) The layers are shared, saving disk space**
 
-When multiple containers use the same base image, the shared layers are stored only once on disk. Each container gets its own thin writable layer on top, but the underlying read-only layers are shared. This copy-on-write mechanism significantly reduces disk usage and speeds up container creation.
+Container images are built from layers, and these layers are cached on nodes. When multiple containers use the same base image, the shared layers are stored only once on disk, reducing storage usage. Subsequent image pulls avoid re-downloading layers that already exist locally, speeding up container creation.
 
 **Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
@@ -1478,7 +1478,7 @@ D) Network namespaces are optional
 
 All containers in a Pod share the same network namespace, meaning they share the same IP address and port space. They can communicate via localhost. This is fundamental to the Pod model and enables tightly-coupled containers to communicate efficiently without network overhead.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1496,7 +1496,7 @@ D) A resource-saving container
 
 The pause container (also called sandbox or infra container) is a minimal container that holds the network namespace for the Pod. It starts first and stays running, acting as the parent for the Pod's network namespace. Other containers join this namespace, ensuring the namespace persists even if app containers restart.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1660,7 +1660,7 @@ D) By changing the restart policy
 
 For crash-looping containers, use `kubectl debug --copy-to` to create a copy with a different command (like `sleep infinity`) to keep it running. Or use `kubectl debug` to add an ephemeral container that shares namespaces with the crashing container. Also check logs with `kubectl logs --previous`.
 
-**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
 
 </details>
 
@@ -1678,7 +1678,7 @@ D) Using kubectl monitor
 
 `kubectl top pod` shows current CPU and memory usage for Pods and containers. It requires the metrics-server to be installed in the cluster. Use `--containers` to see per-container metrics. This provides real-time resource consumption data for debugging and capacity planning.
 
-**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+**Source:** [Resource Metrics Pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
 
 </details>
 
@@ -1696,7 +1696,7 @@ D) Using kubectl get containers
 
 `kubectl describe pod` displays a comprehensive view including the Events section showing recent events related to the Pod and its containers. Events include image pulls, container starts/stops, probe failures, scheduling decisions, and resource issues. You can also use `kubectl get events` for cluster-wide events.
 
-**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+**Source:** [kubectl describe | Kubernetes](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe)
 
 </details>
 
