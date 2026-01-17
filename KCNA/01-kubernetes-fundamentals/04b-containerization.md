@@ -252,7 +252,7 @@ D) Private registries are not supported
 
 **B) Using imagePullSecrets referenced in Pod specifications**
 
-Kubernetes authenticates to private registries using imagePullSecrets, which reference Kubernetes Secrets containing registry credentials. These secrets are attached to Pods or ServiceAccounts. Cloud providers may also offer automatic authentication through workload identity or instance metadata.
+Kubernetes authenticates to private registries using imagePullSecrets, which reference Kubernetes Secrets containing registry credentials. These secrets are attached to Pods or ServiceAccounts.
 
 **Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
@@ -544,9 +544,9 @@ D) Include them in the image with encryption
 
 **B) Use Kubernetes Secrets or external secret management systems**
 
-Secrets should be injected at runtime, not built into images. Use Kubernetes Secrets (mounted as volumes or environment variables), or external systems like HashiCorp Vault, AWS Secrets Manager, or Azure Key Vault. This keeps secrets separate from images and allows rotation without rebuilding.
+Secrets should be injected at runtime, not built into images. Use Kubernetes Secrets (mounted as volumes or environment variables) to provide sensitive data to containers. This keeps secrets separate from images and allows rotation without rebuilding.
 
-**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
@@ -917,20 +917,20 @@ Init containers execute one at a time in the exact order they're listed in the P
 </details>
 
 ### Question 51
-What is the ambassador container pattern?
+Why might you add a proxy container alongside your main application container in a Pod?
 
-A) A pattern where a container handles security
-B) A pattern where a sidecar proxies network connections to external services
-C) A pattern for cross-cluster communication
-D) A pattern for container orchestration
+A) To run the application twice for redundancy
+B) To handle network connections on behalf of the main container via localhost
+C) To store application data
+D) To run on a different node
 
 <details><summary>Answer</summary>
 
-**B) A pattern where a sidecar proxies network connections to external services**
+**B) To handle network connections on behalf of the main container via localhost**
 
-The ambassador pattern uses a sidecar container to proxy connections from the main container to external services. The main app connects to localhost, and the ambassador handles complexity like service discovery, connection pooling, or protocol translation. This simplifies the main application and centralizes connection logic.
+In a multi-container Pod, a helper container can proxy network connections for the main container. The main app connects to localhost, and the helper handles the external connection complexity. This works because containers in a Pod share the network namespace and can communicate via localhost.
 
-**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -948,43 +948,43 @@ D) Through shared ConfigMaps
 
 Containers in the same Pod share the network namespace, meaning they share the same IP address and can communicate via localhost. One container can bind to port 8080 and another can connect to localhost:8080. This enables tightly-coupled containers to communicate efficiently without network overhead.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
 ### Question 53
-What is a sidecar container in Kubernetes 1.28+?
+How do you run a helper container alongside the main application for the entire Pod lifetime?
 
-A) A deprecated container type
-B) A container with restartPolicy: Always in an init container definition
-C) A container that runs in a separate Pod
-D) A container managed by a DaemonSet
+A) Using a DaemonSet
+B) By adding it to the Pod's containers array
+C) Using a separate Deployment
+D) Through a Job
 
 <details><summary>Answer</summary>
 
-**B) A container with restartPolicy: Always in an init container definition**
+**B) By adding it to the Pod's containers array**
 
-Kubernetes 1.28+ introduced native sidecar containers as a feature. A native sidecar is defined in the `initContainers` array with `restartPolicy: Always`. Unlike regular init containers, sidecars start in order but don't need to complete - they run throughout the Pod's lifetime alongside main containers.
+To run a helper container alongside the main application, add it to the Pod's `containers` array. All containers in this array run concurrently for the Pod's lifetime. They share the network namespace and can share volumes, enabling patterns where helper containers support the main application.
 
-**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
 ### Question 54
-What is the lifecycle behavior of native sidecar containers?
+What is the lifecycle of containers defined in the Pod's containers array?
 
 A) They run only during initialization
-B) They start before and run throughout the lifetime of regular containers
-C) They run after main containers complete
+B) They all start together and run for the entire lifetime of the Pod
+C) They run sequentially
 D) They run on a schedule
 
 <details><summary>Answer</summary>
 
-**B) They start before and run throughout the lifetime of regular containers**
+**B) They all start together and run for the entire lifetime of the Pod**
 
-Native sidecar containers start before main containers (in init container order) and continue running alongside main containers. They're not terminated when they become "ready" like regular init containers. When the Pod terminates, sidecars are shut down after main containers. This solves the problem of ensuring sidecars are available during and after main container execution.
+Containers in the Pod's `containers` array are started together (after init containers complete) and run concurrently for the Pod's lifetime. They share the same lifecycle - when the Pod terminates, all containers receive termination signals. This enables multi-container patterns where helper containers support the main application.
 
-**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1150,7 +1150,7 @@ D) Environment variables cannot be passed
 
 Environment variables can be set directly in the `env` field, loaded from ConfigMaps or Secrets using `valueFrom` or `envFrom`, or populated from Pod/container metadata using the downward API. This flexibility allows separating configuration from container images.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -1168,7 +1168,7 @@ D) Through command-line arguments only
 
 ConfigMap data can be consumed as environment variables (using `envFrom` or `valueFrom`) or mounted as files in a volume. When mounted as a volume, each key becomes a file in the mount path. Volume-mounted ConfigMaps can be updated dynamically without restarting the Pod.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -1186,7 +1186,7 @@ D) Secrets have size limits, ConfigMaps don't
 
 Secrets are base64-encoded (not encrypted by default) and designed for sensitive data. Key differences: Secrets can be encrypted at rest (when configured), are stored in tmpfs when mounted, and have different RBAC policies. Note that base64 is encoding, not encryption - encryption at rest must be explicitly configured.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 </details>
 
@@ -1204,7 +1204,7 @@ D) To copy environment between containers
 
 `envFrom` allows you to inject all key-value pairs from a ConfigMap or Secret as environment variables in one declaration. Each key becomes an environment variable name, and its value becomes the variable value. You can optionally add a prefix to avoid naming conflicts.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
 </details>
 
@@ -1240,7 +1240,7 @@ D) A post-start command
 
 The `command` field in a container spec overrides the Docker image's ENTRYPOINT. It's an array of strings representing the executable and its initial arguments. If specified, the image's default ENTRYPOINT is completely replaced. If not specified, the image's ENTRYPOINT is used.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Define a Command and Arguments for a Container | Kubernetes](https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/)
 
 </details>
 
@@ -1258,7 +1258,7 @@ D) Both override CMD only
 
 Kubernetes `command` maps to Docker's ENTRYPOINT, and `args` maps to Docker's CMD. If you set command, it replaces ENTRYPOINT. If you set args, it replaces CMD. If neither is set, the image defaults are used. This allows flexible control over container startup behavior.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Define a Command and Arguments for a Container | Kubernetes](https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/)
 
 </details>
 
@@ -1393,16 +1393,16 @@ RuntimeDefault uses the container runtime's built-in seccomp profile, which bloc
 ### Question 77
 How do you apply an AppArmor profile to a container?
 
-A) Using a securityContext field
+A) Using securityContext.appArmorProfile
 B) Using an annotation on the Pod
 C) Using a ConfigMap
 D) Using a custom resource
 
 <details><summary>Answer</summary>
 
-**B) Using an annotation on the Pod**
+**A) Using securityContext.appArmorProfile**
 
-AppArmor profiles are applied via Pod annotations in the format `container.apparmor.security.beta.kubernetes.io/<container_name>: <profile>`. The profile must be loaded on the node. Common values are `runtime/default`, `localhost/<profile-name>`, or `unconfined`. Note: Kubernetes 1.30+ also supports the appArmorProfile field in securityContext.
+AppArmor profiles are applied via the `securityContext.appArmorProfile` field at either the Pod or container level. The `type` can be `RuntimeDefault`, `Localhost`, or `Unconfined`. For Localhost profiles, specify `localhostProfile` with the profile name. The profile must be loaded on the node before it can be used.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -1440,7 +1440,7 @@ D) Open, Controlled, Locked
 
 The three levels are: Privileged (no restrictions, allows all), Baseline (prevents known privilege escalations, suitable for most workloads), and Restricted (heavily restricted, follows Pod hardening best practices). Each level builds on the previous with more security controls.
 
-**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
 </details>
 
@@ -1458,7 +1458,7 @@ D) All volume mounts
 
 Baseline restricts known privilege escalations like privileged containers, hostPID/hostIPC/hostNetwork, and dangerous volume types, while allowing common configurations like running as root (with restrictions). It's suitable for most workloads and balances security with ease of adoption.
 
-**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
 </details>
 
@@ -1478,7 +1478,7 @@ D) Through shared volumes
 
 Containers in the same Pod can communicate via localhost (127.0.0.1) because they share the network namespace. One container can connect to another's port using localhost:<port>. This enables patterns like sidecars where a proxy container handles traffic for the main application container.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1496,7 +1496,7 @@ D) It manages firewall rules
 
 The pause container's main role is to create and hold the network namespace. When application containers start, they join this existing namespace rather than creating their own. This design ensures the network namespace survives container restarts and provides a stable network identity for the Pod.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1514,7 +1514,7 @@ D) To set up port forwarding
 
 `containerPort` is primarily informational, documenting which port the container application uses. It's required for port naming (used in Service targetPort by name) and for certain tools to discover ports. The container can still listen on any port regardless of this declaration.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1532,7 +1532,7 @@ D) It doesn't work with CNI plugins
 
 Using hostPort limits Pod scheduling to nodes where that port is available, potentially causing scheduling failures. Only one Pod using a specific hostPort can run on each node. It creates tight coupling between Pods and nodes. Services or Ingress are preferred for most traffic routing needs.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -1550,7 +1550,7 @@ D) Through shared volumes
 
 Services use label selectors to find matching Pods, then route traffic to the `targetPort` on those Pods. The Service's `port` receives traffic, which is forwarded to `targetPort` on the container. This provides load balancing across all matching Pods without exposing individual Pod IPs.
 
-**Source:** [Containers | Kubernetes](https://kubernetes.io/docs/concepts/containers/)
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1570,7 +1570,7 @@ D) By accessing the API server logs
 
 `kubectl logs` makes a request to the API server, which proxies to the kubelet on the appropriate node. The kubelet then retrieves logs from the container runtime. This chain allows centralized log access without directly connecting to nodes.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -1588,7 +1588,7 @@ D) Using kubectl logs --backup
 
 The `--previous` (or `-p`) flag shows logs from the previous container instance. This is essential for debugging crash loops where the current container keeps restarting. It shows whatever logs the crashed container wrote before termination.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [kubectl logs | Kubernetes](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/)
 
 </details>
 
@@ -1606,7 +1606,7 @@ D) A container that stores log files
 
 A logging sidecar runs alongside the main container, collecting logs and forwarding them to a centralized logging system. It's useful when applications write logs to files instead of stdout, or when logs need transformation. Common sidecars include Fluentd, Filebeat, and Fluent Bit.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -1624,7 +1624,7 @@ D) Copies files to a container
 
 `kubectl exec` runs a command in a running container, similar to `docker exec`. Add `-it` for interactive mode with a TTY. Useful for debugging, checking configurations, running diagnostic commands, or getting a shell inside the container.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [kubectl exec | Kubernetes](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_exec/)
 
 </details>
 
@@ -1678,7 +1678,7 @@ D) Resource requests and limits
 
 `kubectl top pod` displays current CPU usage (in millicores) and memory usage (in bytes) for Pods. It shows a snapshot of actual resource consumption, not the configured requests/limits. Use this to identify resource-heavy Pods, tune resource allocations, or debug performance issues.
 
-**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+**Source:** [Resource Metrics Pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
 
 </details>
 
@@ -1698,7 +1698,7 @@ D) A monitoring probe
 
 Container hooks are lifecycle event handlers that allow you to run code when specific events occur in a container's lifecycle. Kubernetes supports two hooks: PostStart (runs after container creation) and PreStop (runs before container termination). Hooks can be exec commands or HTTP requests.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
 
 </details>
 
@@ -1716,7 +1716,7 @@ D) A pause hook
 
 The PreStop hook executes before a container is terminated (before SIGTERM is sent). It's useful for graceful shutdown tasks like deregistering from a service registry, saving state, or completing in-flight requests. The hook must complete before the grace period expires.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
 
 </details>
 
@@ -1734,7 +1734,7 @@ D) The Pod is rescheduled
 
 If a PostStart hook fails (returns non-zero exit code or HTTP error), the container is killed. The failure event is visible in `kubectl describe`. The container may be restarted based on restartPolicy. Ensure hooks are reliable, or the container will enter a crash loop.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
 
 </details>
 
