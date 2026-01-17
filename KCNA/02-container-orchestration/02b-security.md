@@ -925,12 +925,22 @@ D) Configure in RBAC
 
 What is the SelfSubjectAccessReview API?
 
+A) For reviewing your own account
+B) For checking if the current user can perform a specific action
+C) For self-service account management
+D) For auditing your own actions
+
 ---
 
 ### Question 77
 [HARD]
 
 How does Node authorization restrict kubelet permissions?
+
+A) By limiting network access
+B) By only allowing kubelets to access resources related to Pods scheduled on their node
+C) By requiring node certificates
+D) By rate limiting requests
 
 ---
 
@@ -939,12 +949,22 @@ How does Node authorization restrict kubelet permissions?
 
 What are the special groups in Kubernetes authorization?
 
+A) admin, user, guest
+B) system:authenticated, system:unauthenticated, system:masters, system:serviceaccounts
+C) root, sudo, operator
+D) There are no special groups
+
 ---
 
 ### Question 79
 [HARD]
 
 How can you audit authorization decisions?
+
+A) Check kubectl output
+B) Enable audit logging with appropriate audit policy rules
+C) Query the authorization API
+D) Check etcd directly
 
 ---
 
@@ -955,12 +975,22 @@ How can you audit authorization decisions?
 
 When are admission controllers invoked in the API request lifecycle?
 
+A) Before authentication
+B) After authentication and authorization, before persistence
+C) After object persistence
+D) During authentication
+
 ---
 
 ### Question 81
 [MEDIUM]
 
 Which admission controller sets default values for resource requests?
+
+A) ResourceDefaults
+B) LimitRanger
+C) DefaultResources
+D) ResourceQuota
 
 ---
 
@@ -969,12 +999,22 @@ Which admission controller sets default values for resource requests?
 
 What is a dynamic admission controller?
 
+A) A controller that changes behavior at runtime
+B) An admission webhook that is registered dynamically via API resources
+C) A controller that adapts to load
+D) A built-in controller that can be configured
+
 ---
 
 ### Question 83
 [MEDIUM-HARD]
 
 How do you enable or disable built-in admission controllers?
+
+A) Using a configuration file only
+B) Using --enable-admission-plugins and --disable-admission-plugins flags
+C) By deploying or removing controllers
+D) Through RBAC settings
 
 ---
 
@@ -983,12 +1023,22 @@ How do you enable or disable built-in admission controllers?
 
 What is the purpose of the ResourceQuota admission controller?
 
+A) To set default resource limits
+B) To enforce resource quotas on namespaces and reject requests that exceed them
+C) To monitor resource usage
+D) To allocate resources to pods
+
 ---
 
 ### Question 85
 [HARD]
 
 What is a MutatingWebhookConfiguration?
+
+A) A webhook that changes its own configuration
+B) A resource that configures webhooks that can modify objects during admission
+C) A configuration for mutating API servers
+D) A webhook for configuration changes
 
 ---
 
@@ -997,12 +1047,22 @@ What is a MutatingWebhookConfiguration?
 
 How do you specify which resources an admission webhook should process?
 
+A) Using a label selector only
+B) Using the rules field with apiGroups, apiVersions, resources, and operations
+C) The webhook processes all resources by default
+D) Using RBAC rules
+
 ---
 
 ### Question 87
 [HARD]
 
 What is the failurePolicy field in webhook configurations?
+
+A) How to handle webhook errors
+B) Defines behavior (Fail or Ignore) when the webhook cannot be reached
+C) Policy for failed admissions
+D) Retry policy
 
 ---
 
@@ -1011,12 +1071,22 @@ What is the failurePolicy field in webhook configurations?
 
 Which admission controller enforces that images come from allowed registries?
 
+A) ImageRegistry
+B) ImagePolicyWebhook or custom ValidatingAdmissionWebhook
+C) RegistryEnforcer
+D) There is no such controller
+
 ---
 
 ### Question 89
 [HARD]
 
 How do reinvocation policies work for mutating webhooks?
+
+A) They control retry behavior
+B) If set to IfNeeded, webhooks are re-invoked if other webhooks modified the object
+C) They control webhook ordering
+D) They prevent duplicate invocations
 
 ---
 
@@ -1027,12 +1097,22 @@ How do reinvocation policies work for mutating webhooks?
 
 What is the difference between an image tag and an image digest?
 
+A) No difference
+B) Tags are mutable labels; digests are immutable SHA256 hashes
+C) Digests are shorter
+D) Tags are more secure
+
 ---
 
 ### Question 91
 [MEDIUM]
 
 Why is it recommended to run containers as non-root?
+
+A) For better performance
+B) To limit damage if the container is compromised; principle of least privilege
+C) Containers cannot run as root
+D) For easier debugging
 
 ---
 
@@ -1041,12 +1121,22 @@ Why is it recommended to run containers as non-root?
 
 What is a distroless container image?
 
+A) An image without a Linux distribution
+B) An image containing only the application and runtime dependencies, no shell or package manager
+C) A compressed image
+D) An image without configuration
+
 ---
 
 ### Question 93
 [HARD]
 
 How do you configure seccomp profiles for containers?
+
+A) Using annotations only
+B) Using securityContext.seccompProfile with type and optionally localhostProfile
+C) Through the container runtime only
+D) Seccomp cannot be configured in Kubernetes
 
 ---
 
@@ -1055,12 +1145,22 @@ How do you configure seccomp profiles for containers?
 
 What are Linux namespaces in container isolation?
 
+A) Kubernetes namespaces
+B) Kernel features that isolate process views of system resources (PID, network, mount, etc.)
+C) DNS namespaces
+D) File naming conventions
+
 ---
 
 ### Question 95
 [HARD]
 
 How does user namespace remapping improve container security?
+
+A) By creating new users
+B) By mapping container root (UID 0) to an unprivileged user on the host
+C) By encrypting user data
+D) By isolating user files
 
 ---
 
@@ -1069,12 +1169,22 @@ How does user namespace remapping improve container security?
 
 What is the Unconfined seccomp profile?
 
+A) A highly restrictive profile
+B) A profile that applies no seccomp filtering
+C) The default secure profile
+D) A profile for untrusted workloads
+
 ---
 
 ### Question 97
 [HARD]
 
 How do cgroups contribute to container security?
+
+A) By encrypting container data
+B) By limiting and isolating resource usage (CPU, memory, I/O) to prevent DoS
+C) By controlling network access
+D) By managing container images
 
 ---
 
@@ -1083,6 +1193,11 @@ How do cgroups contribute to container security?
 
 What is container image signing and verification?
 
+A) Encrypting images
+B) Cryptographically signing images and verifying signatures before deployment
+C) Compressing images
+D) Watermarking images
+
 ---
 
 ### Question 99
@@ -1090,11 +1205,21 @@ What is container image signing and verification?
 
 How do you prevent privilege escalation attacks in containers?
 
+A) Run as root
+B) Set allowPrivilegeEscalation: false, drop capabilities, use seccomp, run as non-root
+C) Use host networking
+D) Disable security contexts
+
 ---
 
 ### Question 100
 [HARD]
 
 What are the security implications of using hostPath volumes?
+
+A) No implications
+B) Containers can access and modify host filesystem, potentially escaping isolation
+C) Only performance implications
+D) hostPath is automatically sandboxed
 
 ---
