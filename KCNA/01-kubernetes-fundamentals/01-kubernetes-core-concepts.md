@@ -1880,19 +1880,19 @@ D) There's no built-in way to do this automatically
 ### Question 82
 [MEDIUM-HARD]
 
-What command restarts all Pods in a Deployment without changing the spec?
+What command restarts all Pods in a Deployment without changing the container image?
 
 A) `kubectl restart deployment <name>`
 B) `kubectl rollout restart deployment <name>`
-C) `kubectl scale deployment <name> --replicas=0 && kubectl scale deployment <name> --replicas=<n>`
-D) Both B and C work
+C) `kubectl delete pods` with selector
+D) `kubectl apply --force`
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
 
-**Explanation:** Both methods work. `kubectl rollout restart` is the modern approach—it patches the Deployment with an annotation to trigger a rolling restart. Scaling to 0 then back is an older method that causes downtime. Use rollout restart for zero-downtime restarts.
+**Explanation:** `kubectl rollout restart` triggers a rolling restart by patching the Pod template with a restart annotation. This restarts all Pods without changing the container image. Note: it does modify the Deployment spec (adds an annotation), but the application configuration remains unchanged.
 
 **Source:** [kubectl rollout | Kubernetes](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)
 
@@ -3402,21 +3402,21 @@ D) Secrets can only be created from files
 ### Question 148
 [MEDIUM-HARD]
 
-What type of Secret is automatically created for ServiceAccounts?
+How do ServiceAccounts obtain tokens in Kubernetes 1.24+?
 
-A) `kubernetes.io/basic-auth`
-B) `kubernetes.io/service-account-token`
-C) `kubernetes.io/dockerconfigjson`
-D) `Opaque`
+A) Secrets are automatically created with long-lived tokens
+B) Via TokenRequest API and projected volumes (no auto-created Secret)
+C) Manual token creation is required
+D) Tokens are stored in ConfigMaps
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The `kubernetes.io/service-account-token` type is automatically created for ServiceAccounts (in older versions). It contains a token for authenticating with the API server. In newer versions (1.24+), tokens are obtained via TokenRequest API instead.
+**Explanation:** Since Kubernetes 1.24, ServiceAccount tokens are no longer automatically created as Secrets. Instead, bound tokens are obtained via the TokenRequest API and mounted as projected volumes. These tokens are short-lived and automatically rotated. Legacy `kubernetes.io/service-account-token` Secrets can still be manually created if needed.
 
-**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+**Source:** [Service Account Token Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#service-account-token-secrets)
 
 </details>
 
@@ -4146,17 +4146,17 @@ What does the selector `app notin (test, dev)` match?
 
 A) Pods where app is either test or dev
 B) Pods where app is neither test nor dev (including Pods without the app label)
-C) Pods where app is neither test nor dev (excluding Pods without the app label)
+C) Pods where app exists and is neither test nor dev
 D) It's invalid syntax
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** `notin` matches resources where the label either doesn't exist OR exists with a value not in the specified set. So `app notin (test, dev)` matches Pods with `app=prod`, `app=staging`, or no `app` label at all.
+**Explanation:** `NotIn` requires the label key to exist—it matches resources where the key exists AND the value is not in the specified set. Pods without the `app` label are NOT matched. To include resources without the key, use `DoesNotExist` or combine selectors.
 
-**Source:** [Labels and Selectors | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+**Source:** [Labels and Selectors | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#set-based-requirement)
 
 </details>
 
@@ -4420,19 +4420,19 @@ D) Matches resources that exist in etcd
 
 How do you select resources with a label key that exists but exclude specific values?
 
-A) Use `Exists` combined with `NotIn`
+A) Use `NotIn` alone (it requires the key to exist)
 B) Use `DoesNotExist`
 C) This isn't possible
-D) Use multiple `!=` conditions
+D) Use `Exists` combined with `NotIn`
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** A
 
-**Explanation:** Combine `Exists` with `NotIn` in `matchExpressions`. Or use `matchExpressions` with `NotIn` alone—it matches resources with the key but not the specified values, and also resources without the key (if you only want resources with the key, add an `Exists` condition).
+**Explanation:** `NotIn` already requires the label key to exist—it matches resources where the key exists AND the value is not in the specified set. Adding `Exists` is redundant for this use case. To match resources WITHOUT the key, you would use `DoesNotExist` instead.
 
-**Source:** [Labels and Selectors | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+**Source:** [Labels and Selectors | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#set-based-requirement)
 
 </details>
 
