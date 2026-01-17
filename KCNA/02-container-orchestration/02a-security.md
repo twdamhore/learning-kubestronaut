@@ -152,7 +152,7 @@ D) insert
 What is the effect of the "escalate" verb in RBAC?
 
 A) Allows a user to gain root access
-B) Allows creating or updating Roles with permissions the user doesn't have
+B) Allows creating or updating Roles or ClusterRoles with permissions the user doesn't have
 C) Allows bypassing admission controllers
 D) Allows impersonating other users
 
@@ -198,7 +198,7 @@ D) Set the global flag on the Role
 What is the purpose of the "bind" verb in RBAC?
 
 A) Allows creating network bindings
-B) Allows creating RoleBindings or ClusterRoleBindings that reference Roles
+B) Allows creating RoleBindings or ClusterRoleBindings that reference Roles or ClusterRoles
 C) Allows binding volumes to pods
 D) Allows binding services to endpoints
 
@@ -430,7 +430,7 @@ D) Use a custom securityContext
 What information is included in a projected ServiceAccount token?
 
 A) Only the ServiceAccount name
-B) The namespace, ServiceAccount name, Pod name, and expiration time
+B) Namespace, ServiceAccount name/UID, Pod name/UID, audience, and expiration
 C) Username and password
 D) The cluster certificate authority
 
@@ -439,7 +439,7 @@ D) The cluster certificate authority
 
 **Answer:** B
 
-**Explanation:** Projected ServiceAccount tokens are JWTs that include claims for the namespace, ServiceAccount name, Pod name (and UID), and expiration time. They also include the configured audience, making them more secure than legacy tokens.
+**Explanation:** Projected ServiceAccount tokens are JWTs that include claims for the namespace, ServiceAccount name and UID, Pod name and UID, the configured audience, and expiration time. These bound tokens are more secure than legacy tokens because they are time-limited and audience-scoped.
 
 **Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
 
