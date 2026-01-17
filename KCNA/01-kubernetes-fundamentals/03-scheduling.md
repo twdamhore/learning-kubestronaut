@@ -1818,7 +1818,7 @@ D) Disk and network
 
 **Answer:** B
 
-**Explanation:** CPU and memory are the primary resources for scheduling. Extended resources (like GPUs) can also be scheduled. Disk and network aren't typically used for scheduling decisions.
+**Explanation:** CPU and memory are the most common resources for scheduling. If specified, ephemeral-storage and extended resources (like GPUs) are also considered by the scheduler. Network bandwidth is not a schedulable resource in core Kubernetes.
 
 **Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
@@ -3136,10 +3136,10 @@ D) Cannot be done
 
 ### Question 142
 [MEDIUM-HARD]
-What happens if you set nodeName on a pending Pod?
+What happens if you create a Pod with nodeName already set?
 
-A) It's ignored
-B) The pod is immediately scheduled to that node
+A) It's ignored and normal scheduling occurs
+B) The Pod bypasses the scheduler and is assigned directly to that node
 C) Error occurs
 D) Pod is deleted
 
@@ -3148,7 +3148,7 @@ D) Pod is deleted
 
 **Answer:** B
 
-**Explanation:** Once a pod spec has nodeName, it's assigned to that node immediately (if the node exists). The pod transitions from Pending to scheduled.
+**Explanation:** When a Pod is created with nodeName set, it bypasses the scheduler entirely and is assigned directly to that node (if it exists). Note: nodeName is immutable after creation—you cannot set it on an existing pending Pod. To assign an existing Pod, use the Binding API.
 
 **Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
@@ -4248,8 +4248,8 @@ D) FIFO only
 [HARD]
 What triggers a Pod to move back to the active queue?
 
-A) Time only
-B) Cluster state changes (new node, pod deleted, etc.)
+A) Time only (backoff expiration)
+B) Cluster state changes or backoff timer expiration
 C) Manual trigger
 D) Never moves back
 
@@ -4258,7 +4258,7 @@ D) Never moves back
 
 **Answer:** B
 
-**Explanation:** Pods move from unschedulable to active when relevant cluster changes occur: nodes added/updated, pods deleted (freeing resources), PVs available, etc.
+**Explanation:** Pods move back to the active queue in two ways: from the backoff queue when the backoff timer expires, or from the unschedulable queue when relevant cluster changes occur (nodes added/updated, pods deleted freeing resources, PVs available, etc.).
 
 **Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
