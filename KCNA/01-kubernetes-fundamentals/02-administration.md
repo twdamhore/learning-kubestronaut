@@ -740,7 +740,7 @@ D) 2379
 
 **Answer:** C
 
-**Explanation:** The kube-apiserver typically listens on port 6443 for HTTPS traffic. Port 2379 is used by etcd, and port 8080 was historically used for insecure API access but is now disabled by default in production clusters.
+**Explanation:** The kube-apiserver typically listens on port 6443 for HTTPS traffic. Port 2379 is used by etcd. Port 8080 was historically used for insecure API access but has been completely removed since Kubernetes 1.20 (the `--insecure-port` flag was deprecated and removed).
 
 **Source:** [Cluster Components | Kubernetes](https://kubernetes.io/docs/concepts/overview/components/)
 
@@ -2345,7 +2345,7 @@ D) experimental, standard, deprecated
 
 **Answer:** B
 
-**Explanation:** Kubernetes API versions follow three stages: alpha (e.g., v1alpha1 - disabled by default, may be buggy), beta (e.g., v1beta1 - enabled by default, well-tested), and stable (e.g., v1 - production-ready, won't be removed). Each stage has different guarantees.
+**Explanation:** Kubernetes API versions follow three stages: alpha (e.g., v1alpha1 - disabled by default, may be buggy), beta (e.g., v1beta1 - enabled by default, well-tested), and stable (e.g., v1 - production-ready). Stable APIs may be deprecated and eventually removed following Kubernetes deprecation policy, which requires proper notice periods and migration paths.
 
 **Source:** [Access Clusters Using the Kubernetes API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
@@ -2855,7 +2855,7 @@ D) Tokens expire after 1 hour
 
 **Answer:** B
 
-**Explanation:** Kubernetes 1.24 removed automatic Secret generation for ServiceAccounts. Instead, the TokenRequest API provides time-limited, audience-bound tokens via projected volumes. This improves security by avoiding long-lived tokens stored in Secrets.
+**Explanation:** Kubernetes 1.24 stopped automatically generating Secret-based tokens for ServiceAccounts. Instead, the TokenRequest API provides time-limited, audience-bound tokens via projected volumes. Manual creation of Secret-based tokens is still possible if needed, but the recommended approach is using the TokenRequest API for improved security.
 
 **Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
@@ -3618,9 +3618,9 @@ D) CAP_PRIVILEGED
 
 What is the maximum size of a ConfigMap or Secret?
 
-A) 256KB
-B) 1MB
-C) 10MB
+A) 256 KiB
+B) 1 MiB
+C) 10 MiB
 D) No limit
 
 <details>
@@ -3628,7 +3628,7 @@ D) No limit
 
 **Answer:** B
 
-**Explanation:** ConfigMaps and Secrets are limited to 1MB in size. This is because they're stored in etcd, which has object size limits. For larger data, consider using volumes or external storage solutions.
+**Explanation:** ConfigMaps and Secrets are limited to 1 MiB (1,048,576 bytes) in size. This is because they're stored in etcd, which has object size limits. For larger data, consider using volumes or external storage solutions.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -3697,7 +3697,7 @@ D) The container crashes
 
 **Answer:** B
 
-**Explanation:** ConfigMaps mounted as volumes are updated automatically (kubelet sync period + cache propagation delay, typically under a minute). However, ConfigMaps used as environment variables don't update—the pod must be restarted. The application must also re-read the files.
+**Explanation:** ConfigMaps mounted as volumes are updated automatically (kubelet sync period + cache propagation delay). The total delay can be up to the kubelet sync period (default 1 minute) plus the ConfigMap cache TTL (default 1 minute), so up to ~2 minutes in total. ConfigMaps used as environment variables don't update—the pod must be restarted. The application must also re-read the files.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -4419,7 +4419,7 @@ D) Never expires
 What is token audience binding?
 
 A) Restricting who can view tokens
-B) Limiting token validity to specific API servers
+B) Limiting token validity to specific intended recipients
 C) Encrypting tokens
 D) Logging token usage
 
