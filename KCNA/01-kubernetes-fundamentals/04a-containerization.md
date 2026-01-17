@@ -881,18 +881,18 @@ Readiness and liveness probes serve different purposes. Liveness checks if the p
 ## Multi-Container Pods
 
 ### Question 49
-What is a common use case for sidecar containers?
+Why would you run multiple containers in a single Pod?
 
-A) Running the primary application
-B) Log collection, proxying, or syncing data
-C) Database hosting
-D) Load balancing across clusters
+A) To run completely independent applications
+B) To run tightly-coupled containers that need to share resources and communicate efficiently
+C) To increase the number of replicas
+D) To reduce memory usage
 
 <details><summary>Answer</summary>
 
-**B) Log collection, proxying, or syncing data**
+**B) To run tightly-coupled containers that need to share resources and communicate efficiently**
 
-Common sidecar use cases include: log collection (Fluentd, Filebeat) to ship logs from the main container, service mesh proxies (Envoy) to handle traffic routing and security, syncing configuration or data from external sources, and providing TLS termination or authentication services.
+Multiple containers in a Pod share the same network namespace (localhost communication), storage volumes, and lifecycle. This is useful when containers are tightly coupled and need to work together - such as a main application container with a helper container that provides supporting functionality like processing shared data or handling auxiliary tasks.
 
 **Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
@@ -935,18 +935,18 @@ When an init container fails, the kubelet repeatedly restarts only that specific
 </details>
 
 ### Question 52
-What is the adapter container pattern?
+How can a helper container in a Pod assist the main application container?
 
-A) A pattern for database connections
-B) A pattern where a sidecar transforms or adapts output from the main container
-C) A pattern for hardware abstraction
-D) A pattern for network configuration
+A) By running on a different node
+B) By sharing volumes and processing data produced by the main container
+C) By using a separate network namespace
+D) By having its own IP address
 
 <details><summary>Answer</summary>
 
-**B) A pattern where a sidecar transforms or adapts output from the main container**
+**B) By sharing volumes and processing data produced by the main container**
 
-The adapter pattern uses a sidecar to transform output from the main container into a standardized format. Common examples include log format conversion (transforming app-specific logs to JSON for centralized logging) or metrics adaptation (converting proprietary metrics to Prometheus format). This enables heterogeneous systems to present uniform interfaces.
+Helper containers in multi-container Pods can share volumes with the main application container to process, transform, or forward data. Since containers in a Pod share storage volumes and network namespace, a helper container can read files written by the main container, communicate via localhost, and provide supporting functionality without modifying the main application.
 
 **Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
@@ -1588,7 +1588,7 @@ D) Logs are automatically backed up
 
 When a container restarts, its log file is rotated. The current container's logs start fresh, but logs from the previous instance are preserved temporarily. Use `kubectl logs --previous` to view the terminated container's logs, helpful for debugging crash loops.
 
-**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+**Source:** [kubectl logs | Kubernetes](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs)
 
 </details>
 
