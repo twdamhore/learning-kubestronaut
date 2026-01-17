@@ -317,12 +317,22 @@ D) containerUser
 
 What is the purpose of the allowPrivilegeEscalation field?
 
+A) To allow containers to run as root
+B) To prevent a process from gaining more privileges than its parent
+C) To enable sudo access within containers
+D) To allow mounting privileged volumes
+
 ---
 
 ### Question 27
 [MEDIUM-HARD]
 
 Which securityContext field prevents writing to the container filesystem?
+
+A) readOnly
+B) readOnlyRootFilesystem
+C) immutableFilesystem
+D) noWrite
 
 ---
 
@@ -331,12 +341,22 @@ Which securityContext field prevents writing to the container filesystem?
 
 What are the three Pod Security Standards levels?
 
+A) low, medium, high
+B) permissive, standard, strict
+C) privileged, baseline, restricted
+D) open, controlled, locked
+
 ---
 
 ### Question 29
 [HARD]
 
 How do you enforce Pod Security Standards at the namespace level?
+
+A) Create a PodSecurityPolicy in the namespace
+B) Apply labels like pod-security.kubernetes.io/enforce to the namespace
+C) Configure the kubelet with security settings
+D) Create a SecurityContext for the namespace
 
 ---
 
@@ -345,12 +365,22 @@ How do you enforce Pod Security Standards at the namespace level?
 
 What Linux capabilities are dropped by the "restricted" Pod Security Standard?
 
+A) Only NET_RAW
+B) Only SYS_ADMIN
+C) ALL capabilities must be dropped
+D) No capabilities are dropped
+
 ---
 
 ### Question 31
 [HARD]
 
 What is the difference between "enforce", "audit", and "warn" modes in Pod Security Admission?
+
+A) They apply different security levels
+B) Enforce blocks violations, audit logs them, warn adds warnings to API responses
+C) They control different types of resources
+D) There is no difference; they are aliases
 
 ---
 
@@ -359,12 +389,22 @@ What is the difference between "enforce", "audit", and "warn" modes in Pod Secur
 
 Which securityContext field controls whether a container can gain more privileges than its parent process?
 
+A) privileged
+B) allowPrivilegeEscalation
+C) runAsNonRoot
+D) capabilities
+
 ---
 
 ### Question 33
 [HARD]
 
 What is the purpose of the runAsNonRoot field?
+
+A) To specify the exact user ID to run as
+B) To ensure the container does not run as UID 0
+C) To disable root access to the node
+D) To prevent privilege escalation
 
 ---
 
@@ -373,12 +413,22 @@ What is the purpose of the runAsNonRoot field?
 
 How do you add a specific Linux capability to a container?
 
+A) Use the capabilities.add field in securityContext
+B) Set privileged: true
+C) Use the extraCapabilities field
+D) Modify the container runtime configuration
+
 ---
 
 ### Question 35
 [HARD]
 
 What is the seccompProfile field used for?
+
+A) To enable SELinux
+B) To configure system call filtering for containers
+C) To set memory limits
+D) To configure AppArmor profiles
 
 ---
 
@@ -387,12 +437,22 @@ What is the seccompProfile field used for?
 
 What happens if a Pod violates a namespace's "enforce" Pod Security Standard?
 
+A) The Pod is created but flagged
+B) The Pod creation is rejected by the API server
+C) The Pod runs with reduced privileges
+D) A warning is logged but the Pod is created
+
 ---
 
 ### Question 37
 [HARD]
 
 How can you exempt specific namespaces from Pod Security Admission?
+
+A) Delete the namespace labels
+B) Configure exemptions in the PodSecurity admission controller configuration
+C) Create an exemption Role
+D) Namespaces cannot be exempted
 
 ---
 
@@ -403,12 +463,22 @@ How can you exempt specific namespaces from Pod Security Admission?
 
 How are Kubernetes Secrets encoded by default?
 
+A) Encrypted with AES-256
+B) Base64 encoded
+C) Plain text
+D) Hashed with SHA-256
+
 ---
 
 ### Question 39
 [MEDIUM]
 
 Which Secret type is used for storing Docker registry credentials?
+
+A) kubernetes.io/basic-auth
+B) kubernetes.io/dockerconfigjson
+C) kubernetes.io/ssh-auth
+D) kubernetes.io/registry
 
 ---
 
@@ -417,12 +487,22 @@ Which Secret type is used for storing Docker registry credentials?
 
 What are the two ways to expose a Secret to a Pod?
 
+A) ConfigMap and Volume
+B) Environment variables and volume mounts
+C) Labels and annotations
+D) Direct API access and sidecar
+
 ---
 
 ### Question 41
 [MEDIUM-HARD]
 
 What is encryption at rest for Secrets?
+
+A) Encrypting Secrets during network transmission
+B) Encrypting Secret data stored in etcd
+C) Encrypting the Secret manifest files
+D) Encrypting container memory
 
 ---
 
@@ -431,12 +511,22 @@ What is encryption at rest for Secrets?
 
 Which Secret type is automatically created for ServiceAccounts?
 
+A) kubernetes.io/service-account-token
+B) kubernetes.io/basic-auth
+C) Opaque
+D) kubernetes.io/tls
+
 ---
 
 ### Question 43
 [HARD]
 
 How do you configure encryption at rest for Secrets in Kubernetes?
+
+A) Enable TLS on the API server
+B) Configure an EncryptionConfiguration and pass it to the API server
+C) Set the encrypted flag on each Secret
+D) Use a special Secret type
 
 ---
 
@@ -445,12 +535,22 @@ How do you configure encryption at rest for Secrets in Kubernetes?
 
 What is the difference between Opaque and kubernetes.io/tls Secret types?
 
+A) Opaque is encrypted, TLS is not
+B) Opaque is for arbitrary data, TLS requires tls.crt and tls.key fields
+C) TLS Secrets can only be used by Ingress
+D) There is no difference
+
 ---
 
 ### Question 45
 [HARD]
 
 How are Secret updates handled when mounted as volumes?
+
+A) Pods must be restarted to see updates
+B) Updates are eventually propagated to mounted volumes automatically
+C) Updates are never propagated
+D) Only environment variable Secrets are updated
 
 ---
 
@@ -459,12 +559,22 @@ How are Secret updates handled when mounted as volumes?
 
 What is the immutable field used for in Secrets?
 
+A) To encrypt the Secret
+B) To prevent the Secret from being modified after creation
+C) To make the Secret persist across cluster restarts
+D) To prevent the Secret from being deleted
+
 ---
 
 ### Question 47
 [HARD]
 
 What encryption providers are supported for encrypting Secrets at rest?
+
+A) Only AES-CBC
+B) identity, secretbox, aesgcm, aescbc, and KMS providers
+C) Only KMS
+D) RSA and AES only
 
 ---
 
@@ -473,12 +583,22 @@ What encryption providers are supported for encrypting Secrets at rest?
 
 How can you reference a specific key from a Secret in an environment variable?
 
+A) Use secretKeyRef in the env valueFrom field
+B) Use the key name directly as the variable name
+C) Reference the full Secret and extract the key
+D) Keys cannot be referenced individually
+
 ---
 
 ### Question 49
 [HARD]
 
 What RBAC permissions are needed to read Secrets in a namespace?
+
+A) cluster-admin only
+B) get and list verbs on secrets resource
+C) Any authenticated user can read Secrets
+D) read-only ClusterRole
 
 ---
 
@@ -488,6 +608,11 @@ What RBAC permissions are needed to read Secrets in a namespace?
 [MEDIUM]
 
 What is the default network behavior for Pods without any NetworkPolicy?
+
+A) All traffic is denied
+B) All traffic is allowed
+C) Only intra-namespace traffic is allowed
+D) Only DNS traffic is allowed
 
 ---
 
