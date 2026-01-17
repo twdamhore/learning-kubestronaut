@@ -556,9 +556,9 @@ D) To specify resource accounting
 
 **Answer:** B
 
-**Explanation:** The `serviceAccountName` field specifies which ServiceAccount the Pod uses for authenticating with the Kubernetes API. This determines what permissions the Pod has when making API calls and what secrets are automatically mounted.
+**Explanation:** The `serviceAccountName` field specifies which ServiceAccount identity the Pod uses for authenticating with the Kubernetes API. This determines what permissions the Pod has when making API calls. Token mounting is controlled by `automountServiceAccountToken` (tokens are now projected volumes, not auto-created Secrets).
 
-**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
 </details>
 
@@ -570,18 +570,18 @@ D) To specify resource accounting
 What is the effect of setting `shareProcessNamespace: true` in a Pod spec?
 
 A) Containers share CPU resources equally
-B) Containers can see each other's processes
-C) Containers share the same PID 1
-D) Both B and C
+B) Containers can see and signal each other's processes
+C) Each container gets its own PID namespace
+D) Container networking is disabled
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
 
-**Explanation:** With `shareProcessNamespace: true`, all containers in the Pod share a single process namespace. This means containers can see and signal each other's processes, and they share PID 1 (which becomes the pause container). This is useful for debugging or process monitoring sidecars.
+**Explanation:** With `shareProcessNamespace: true`, all containers in the Pod share a single process namespace. This means containers can see and signal each other's processes. The pause container becomes PID 1, and all container processes are visible across the shared namespace. This is useful for debugging or process monitoring sidecars.
 
-**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
+**Source:** [Share Process Namespace | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/)
 
 </details>
 
@@ -1745,7 +1745,7 @@ D) The update happens instantly
 What happens during a failed rollout when `progressDeadlineSeconds` is exceeded?
 
 A) The Deployment automatically rolls back
-B) The Deployment is marked with a Failed condition but continues trying
+B) The Deployment is marked failed; no auto-rollback; manual intervention required
 C) All Pods are terminated
 D) The Deployment is deleted
 
@@ -1754,9 +1754,9 @@ D) The Deployment is deleted
 
 **Answer:** B
 
-**Explanation:** When `progressDeadlineSeconds` is exceeded, the Deployment's condition is set to `Progressing=False` with reason `ProgressDeadlineExceeded`. The Deployment continues trying—it doesn't automatically roll back. Manual intervention is required to fix or roll back.
+**Explanation:** When `progressDeadlineSeconds` is exceeded, the Deployment's condition is set to `Progressing=False` with reason `ProgressDeadlineExceeded`. Kubernetes takes no further action—it does NOT automatically roll back. The stalled state persists until you intervene by fixing the issue, rolling back manually, or updating the spec to trigger a new rollout.
 
-**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+**Source:** [Deployments - Progress Deadline | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#progress-deadline-seconds)
 
 </details>
 
