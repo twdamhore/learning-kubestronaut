@@ -480,6 +480,17 @@ B) It projects time-bound, audience-bound tokens into Pods instead of Secret-bas
 C) It limits volume access by ServiceAccount
 D) It encrypts ServiceAccount volumes
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** BoundServiceAccountTokenVolume (now default) projects time-bound, audience-bound tokens into Pods via a projected volume instead of using Secret-mounted tokens. These tokens are bound to the Pod's lifetime, have configurable expiration, and are automatically rotated by the kubelet.
+
+**Source:** [Service Account Token Volume Projection | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection)
+
+</details>
+
 ---
 
 ### Question 22
@@ -491,6 +502,17 @@ A) Faster authentication
 B) Reduced blast radius if compromised; tokens expire quickly
 C) Better performance
 D) Simpler configuration
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Short-lived tokens reduce security risk because if compromised, they expire quickly, limiting the window of exploitation. Combined with automatic rotation, this significantly reduces the blast radius of token theft compared to long-lived Secret-based tokens that never expire.
+
+**Source:** [Service Account Token Volume Projection | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection)
+
+</details>
 
 ---
 
@@ -506,6 +528,17 @@ B) A container with almost all host capabilities and no isolation restrictions
 C) A container with network privileges
 D) A container that can access secrets
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A privileged container (privileged: true) has almost all capabilities of the host, including access to all devices, no seccomp/AppArmor restrictions, and the ability to modify the host. This is different from just running as root - privileged mode disables container isolation entirely.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 24
@@ -517,6 +550,17 @@ A) restricted
 B) baseline
 C) privileged
 D) permissive
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** The "privileged" Pod Security Standard level is unrestricted and allows any Pod configuration, enabling all workloads to run. However, it provides no security guarantees. "Baseline" prevents known privilege escalations while allowing most workloads, and "restricted" is the most secure but restrictive.
+
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
+</details>
 
 ---
 
@@ -530,6 +574,17 @@ B) The numeric UID to run the container process as
 C) The user who created the Pod
 D) The ServiceAccount user
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The runAsUser field specifies the numeric user ID (UID) that runs the container's entrypoint process. It overrides any USER instruction in the container image. For example, runAsUser: 1000 runs the container as UID 1000.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 26
@@ -541,6 +596,17 @@ A) To set the filesystem type
 B) To set the group ID that owns Pod volumes
 C) To configure file permissions
 D) To specify filesystem quotas
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The fsGroup field specifies a group ID that Kubernetes applies to all volumes in the Pod. Files created in these volumes will be owned by this group, and volume permissions are changed to be group-readable/writable. This enables sharing volumes between containers.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod)
+
+</details>
 
 ---
 
@@ -554,6 +620,17 @@ B) Use capabilities.drop: ["ALL"] in securityContext
 C) Set runAsNonRoot: true
 D) Capabilities cannot be dropped
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To drop all Linux capabilities, use capabilities.drop: ["ALL"] in the container's securityContext. You can then selectively add back specific capabilities with capabilities.add if needed. This follows the principle of least privilege by removing unnecessary capabilities.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container)
+
+</details>
+
 ---
 
 ### Question 28
@@ -565,6 +642,17 @@ A) No difference; they are the same
 B) Pod-level applies to all containers; container-level overrides for specific containers
 C) Pod-level is deprecated
 D) Container-level is more secure
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Pod-level securityContext (spec.securityContext) sets defaults for all containers in the Pod. Container-level securityContext (spec.containers[].securityContext) can override these settings for specific containers. Some fields like fsGroup only exist at Pod level.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -578,6 +666,17 @@ B) Known privilege escalations while allowing common workloads
 C) Network attacks only
 D) Container escapes only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The baseline Pod Security Standard prevents known privilege escalations (like privileged containers, hostPath mounts, hostNetwork/hostPID) while being permissive enough for most common workloads. It's a minimal policy that provides basic security without breaking typical applications.
+
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline)
+
+</details>
+
 ---
 
 ### Question 30
@@ -589,6 +688,17 @@ A) Use namespace labels only
 B) Configure the PodSecurity admission controller with a configuration file
 C) Set cluster-wide annotations
 D) Modify the API server binary
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Cluster-wide Pod Security Admission defaults can be configured by providing an AdmissionConfiguration file to the API server with the --admission-control-config-file flag. This sets default policies, exemptions, and audit settings that apply when namespaces don't have explicit labels.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/#pod-security-admission-labels-for-namespaces)
+
+</details>
 
 ---
 
@@ -602,6 +712,17 @@ B) To specify additional group IDs for the container process
 C) To create new groups
 D) To supplement user permissions
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The supplementalGroups field specifies additional group IDs that are added to the container's process. These are in addition to the primary GID and any groups from the container image. This is useful for granting access to shared volumes or other group-restricted resources.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 32
@@ -613,6 +734,17 @@ A) It sets the user to nobody
 B) It validates that the container's image does not run as UID 0
 C) It changes the user at runtime
 D) It blocks all root processes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** MustRunAsNonRoot (runAsNonRoot: true) validates at Pod admission and container startup that the container will not run as root (UID 0). If the image is configured to run as root and no runAsUser is specified, the container fails to start. It enforces rather than changes the user.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -626,6 +758,17 @@ B) To set SELinux labels (user, role, type, level) for containers
 C) To configure SELinux policies
 D) To disable SELinux
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The seLinuxOptions field sets SELinux context labels for containers, including user, role, type, and level. These labels determine what the container process can access under SELinux. The host must have SELinux enabled for these options to take effect.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 34
@@ -637,6 +780,17 @@ A) The image becomes read-only
 B) The container's root filesystem is mounted read-only
 C) Volumes become read-only
 D) Configuration files cannot be changed
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Setting readOnlyRootFilesystem: true mounts the container's root filesystem as read-only. The container cannot write to its filesystem, preventing attackers from modifying binaries or creating files. Writable volumes can still be mounted separately for data that needs to be written.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -650,6 +804,17 @@ B) Add the NET_BIND_SERVICE capability
 C) Run as root
 D) Use hostNetwork: true
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The NET_BIND_SERVICE capability allows a non-root process to bind to privileged ports (ports below 1024). This is preferable to running as root or in privileged mode, as it grants only the specific capability needed following the principle of least privilege.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container)
+
+</details>
+
 ---
 
 ### Question 36
@@ -662,6 +827,17 @@ B) Window manager settings
 C) Terminal options
 D) Display settings
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** The windowsOptions field contains security settings specific to Windows containers, including gmsaCredentialSpecName (for Active Directory group managed service accounts), runAsUserName (Windows username), and hostProcess (for privileged Windows containers).
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 37
@@ -673,6 +849,17 @@ A) By deleting policies
 B) By configuring usernames, namespaces, or runtimeClasses that bypass checks
 C) By adding annotations
 D) Exemptions are not supported
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Pod Security Admission supports exemptions configured in the admission controller's configuration file. You can exempt specific usernames, runtimeClasses, or namespaces from policy checks. This allows system components or trusted workloads to bypass restrictions without disabling enforcement entirely.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/#exemptions)
+
+</details>
 
 ---
 
@@ -688,6 +875,17 @@ B) 1MB
 C) 10MB
 D) No limit
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubernetes Secrets have a maximum size limit of 1MB. This limit exists because Secrets are stored in etcd, and large Secrets could impact API server and etcd performance. For larger data, consider using volume mounts or external storage solutions.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#restrictions)
+
+</details>
+
 ---
 
 ### Question 39
@@ -700,6 +898,17 @@ B) kubectl create secret generic --from-literal=key=value
 C) kubectl apply secret
 D) kubectl generate secret
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl create secret generic NAME --from-literal=key=value` to create a Secret from literal values. You can specify multiple --from-literal flags for multiple key-value pairs. The generic type creates an Opaque Secret suitable for arbitrary data.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#creating-a-secret)
+
+</details>
+
 ---
 
 ### Question 40
@@ -711,6 +920,17 @@ A) A field for storing string data without base64 encoding
 B) A deprecated field
 C) A field for storing encrypted strings
 D) A field for multi-line strings only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** The stringData field is a write-only convenience field that accepts non-base64-encoded strings. When you create or update a Secret, values in stringData are automatically base64-encoded and merged into the data field. It simplifies Secret creation in YAML manifests.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#creating-a-secret)
+
+</details>
 
 ---
 
