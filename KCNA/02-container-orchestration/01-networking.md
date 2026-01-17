@@ -25,6 +25,8 @@ D) Cloud Native Interface
 
 **Explanation:** CNI stands for Container Network Interface, a specification and set of libraries for configuring network interfaces in Linux containers, enabling Kubernetes to use various networking solutions through a standardized plugin architecture.
 
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+
 </details>
 
 ---
@@ -45,6 +47,8 @@ D) Managing persistent storage
 **Answer:** B
 
 **Explanation:** The primary responsibility of a CNI plugin is to provide network connectivity to Pods by allocating IP addresses and setting up network interfaces, routes, and any necessary network namespaces.
+
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
 
 </details>
 
@@ -67,6 +71,8 @@ D) Host-local
 
 **Explanation:** Calico is widely used in cloud environments because it supports network policies natively without requiring additional components, and can operate in both overlay and non-overlay modes with BGP routing capabilities.
 
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+
 </details>
 
 ---
@@ -87,6 +93,8 @@ D) etcd stores the network configuration
 **Answer:** B
 
 **Explanation:** When a Pod is created, the kubelet on that node invokes the CNI plugin to set up the Pod's network namespace, assign an IP address, and configure routing so the Pod can communicate with other Pods and services.
+
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
 
 </details>
 
@@ -109,6 +117,8 @@ D) /opt/cni/conf/
 
 **Explanation:** CNI plugin configuration files are stored in /etc/cni/net.d/ on each node, where the kubelet reads them to determine which CNI plugin to use and how to configure it.
 
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+
 </details>
 
 ---
@@ -129,6 +139,8 @@ D) Cilium with native routing
 **Answer:** B
 
 **Explanation:** Flannel's default backend is VXLAN, which encapsulates Layer 2 Ethernet frames within UDP packets to create an overlay network, allowing Pod traffic to traverse the underlying physical network.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -151,6 +163,8 @@ D) To set up load balancing
 
 **Explanation:** IPAM (IP Address Management) in a CNI configuration defines how IP addresses are allocated to Pods, specifying the subnet range, gateway, and allocation method (such as host-local or DHCP).
 
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+
 </details>
 
 ---
@@ -171,6 +185,8 @@ D) Weave
 **Answer:** C
 
 **Explanation:** Cilium leverages eBPF (extended Berkeley Packet Filter) to implement networking, security, and observability directly in the Linux kernel, providing high-performance packet processing without relying on iptables.
+
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
 
 </details>
 
@@ -193,6 +209,8 @@ D) Automatic SSL/TLS encryption
 
 **Explanation:** BGP (Border Gateway Protocol) support allows CNI plugins like Calico to advertise Pod network routes directly to the physical network infrastructure, enabling native routing without overlay encapsulation overhead.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -213,6 +231,8 @@ D) etcd's unique key constraints
 **Answer:** B
 
 **Explanation:** The kube-controller-manager allocates a unique PodCIDR range to each node from the cluster's Pod network CIDR. The CNI plugin's IPAM then assigns IPs from that node-local range. This two-tier approach (cluster-level CIDR allocation + node-local IPAM) prevents conflicts without requiring cluster-wide IP coordination for every Pod.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 </details>
 
@@ -235,6 +255,8 @@ D) Geneve with UDP port 6081
 
 **Explanation:** Calico's IPIP mode uses IP-in-IP encapsulation (IP protocol 4), which wraps the original IP packet inside another IP header, providing a lightweight overlay with less overhead than VXLAN.
 
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
 </details>
 
 ---
@@ -255,6 +277,8 @@ D) networkRange
 **Answer:** B
 
 **Explanation:** In CNI plugin configurations, the "subnet" field within the IPAM section specifies the network range from which Pod IP addresses will be allocated.
+
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
 
 </details>
 
@@ -277,6 +301,8 @@ D) ADD starts the container, DEL stops it
 
 **Explanation:** CNI ADD creates the network namespace, assigns an IP, and sets up routing for a container, while CNI DEL reverses these operations by releasing the IP and removing the network configuration when the container stops.
 
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+
 </details>
 
 ---
@@ -298,6 +324,8 @@ D) Parallel execution for better performance
 
 **Explanation:** Chained CNI plugins are executed sequentially, with each plugin handling a specific networking task such as creating the interface (bridge), assigning an IP (IPAM), or applying bandwidth limits, allowing modular and composable network configurations.
 
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
+
 </details>
 
 ---
@@ -318,6 +346,8 @@ D) XML
 **Answer:** B
 
 **Explanation:** CNI plugin configurations are written in JSON format, stored in /etc/cni/net.d/ with a .conf or .conflist extension, and parsed by the kubelet when invoking CNI operations.
+
+**Source:** [Network Plugins | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)
 
 </details>
 
@@ -342,6 +372,8 @@ D) ExternalName
 
 **Explanation:** ClusterIP is the default Service type in Kubernetes, providing an internal virtual IP that is only reachable from within the cluster for pod-to-pod communication.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -362,6 +394,8 @@ D) Map to an external DNS name
 **Answer:** B
 
 **Explanation:** A ClusterIP Service provides a stable internal IP address for communication between Pods within the cluster, enabling service discovery and load balancing without exposing the service externally.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -384,6 +418,8 @@ D) By IP address
 
 **Explanation:** Services use label selectors to identify which Pods should receive traffic, matching Pods based on their labels rather than names or IPs, allowing dynamic endpoint discovery as Pods are created or destroyed.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -405,6 +441,8 @@ D) containerPort
 
 **Explanation:** The "port" field specifies the port on which the Service is exposed and receives traffic, while "targetPort" specifies the port on the backend Pods where traffic is forwarded.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -425,6 +463,8 @@ D) The node's subnet range
 **Answer:** B
 
 **Explanation:** ClusterIP addresses are allocated from the Service CIDR range, which is configured via the --service-cluster-ip-range flag on the kube-apiserver and is separate from the Pod CIDR.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
