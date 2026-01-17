@@ -1413,6 +1413,8 @@ D) Only the first Pod is selected
 
 **Explanation:** When a headless Service has a selector, Kubernetes automatically creates Endpoints containing the IPs of all Pods matching the selector, and DNS returns these Pod IPs directly.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1433,6 +1435,8 @@ D) Define them in a separate YAML file
 **Answer:** A
 
 **Explanation:** For Services without selectors, you must manually create an Endpoints resource with the same name as the Service, specifying the IP addresses and ports that the Service should route traffic to.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1455,6 +1459,8 @@ D) service-name.pod-name.namespace.svc.cluster.local
 
 **Explanation:** For StatefulSet Pods using a headless Service, the DNS format is `<pod-name>.<service-name>.<namespace>.svc.cluster.local`. For example, a StatefulSet named "web" with serviceName "nginx" creates Pods addressable as `web-0.nginx.default.svc.cluster.local`. This predictable naming enables stable network identities for stateful workloads.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -1476,6 +1482,8 @@ D) linkedService
 
 **Explanation:** The serviceName field in a StatefulSet spec specifies the name of the headless Service that governs the network identity of the Pods, enabling stable DNS names like pod-0.service-name.namespace.svc.cluster.local.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1496,6 +1504,8 @@ D) Only with specific annotations
 **Answer:** A
 
 **Explanation:** An ExternalName Service can point to any DNS name including internal Kubernetes Service names (e.g., my-service.other-namespace.svc.cluster.local), enabling cross-namespace service aliasing.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1520,6 +1530,8 @@ D) To manage Pod networking
 
 **Explanation:** Ingress provides HTTP/HTTPS routing from outside the cluster to Services inside, offering features like host-based routing, path-based routing, and TLS termination.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1540,6 +1552,8 @@ D) A CNI plugin
 **Answer:** B
 
 **Explanation:** Ingress resources are just configuration objects; an Ingress controller (like nginx-ingress or Traefik) must be deployed to watch these resources and implement the actual routing rules.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1562,6 +1576,8 @@ D) coredns
 
 **Explanation:** The nginx-ingress-controller is one of the most widely used Ingress controllers, using NGINX as the reverse proxy to route external HTTP/HTTPS traffic to backend Services.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1582,6 +1598,8 @@ D) ICMP routing
 **Answer:** C
 
 **Explanation:** The standard Kubernetes Ingress API is designed for HTTP/HTTPS Layer 7 routing, supporting host headers and URL paths to direct traffic to different backend Services.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1604,6 +1622,8 @@ D) Using annotations only
 
 **Explanation:** In an Ingress rule, the backend is specified using the Service name and port number (or port name), and the Ingress controller routes matching traffic to that Service.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1624,6 +1644,8 @@ D) To set priority
 **Answer:** B
 
 **Explanation:** The ingressClassName field references an IngressClass resource that identifies which Ingress controller should process the Ingress, enabling multiple controllers to coexist in a cluster.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1646,6 +1668,8 @@ D) Using a ConfigMap
 
 **Explanation:** TLS termination is configured in the Ingress spec's tls section by specifying the hosts and referencing a Secret containing the TLS certificate and private key.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1666,6 +1690,8 @@ D) kubernetes.io/dockerconfigjson
 **Answer:** B
 
 **Explanation:** Ingress TLS configuration requires a Secret of type kubernetes.io/tls, which must contain tls.crt (certificate) and tls.key (private key) fields.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1688,6 +1714,8 @@ D) Routing based on network paths
 
 **Explanation:** Path-based routing allows an Ingress to route requests to different backend Services based on the URL path, such as /api going to one Service and /web to another.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1708,6 +1736,8 @@ D) There is no difference
 **Answer:** B
 
 **Explanation:** Prefix matching routes requests where the URL path starts with the specified prefix (e.g., /api matches /api/users), while Exact requires an exact path match with no trailing content.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1730,6 +1760,8 @@ D) An error occurs and no traffic is routed
 
 **Explanation:** The Ingress specification does not define how controllers should handle overlapping rules. Different Ingress controllers implement their own precedence logic—many use longest path match, some use creation timestamp, others use alphabetical ordering. Always consult your specific Ingress controller's documentation for conflict resolution behavior.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1750,6 +1782,8 @@ D) Using a separate ConfigMap
 **Answer:** B
 
 **Explanation:** The nginx-ingress-controller supports rate limiting through annotations like nginx.ingress.kubernetes.io/limit-rps (requests per second) and nginx.ingress.kubernetes.io/limit-connections to control traffic.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1772,6 +1806,8 @@ D) To store default configurations
 
 **Explanation:** The default backend is a fallback Service that receives requests when no Ingress rules match, typically returning a 404 page or redirecting users.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1793,6 +1829,8 @@ D) By receiving push notifications from kubelet
 
 **Explanation:** The nginx Ingress controller uses the Kubernetes watch API to monitor Ingress resources in real-time, automatically updating its NGINX configuration when Ingress resources are created, modified, or deleted.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1813,6 +1851,8 @@ D) To rewrite the client IP
 **Answer:** B
 
 **Explanation:** The rewrite-target annotation modifies the URL path before forwarding the request to the backend, commonly used to strip path prefixes so the backend receives requests at its expected paths.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
