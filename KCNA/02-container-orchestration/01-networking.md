@@ -2337,6 +2337,8 @@ D) Use a composite selector
 
 **Explanation:** When podSelector and namespaceSelector are placed in the same `from` entry, they act as an AND condition, meaning traffic is only allowed from Pods that match both the Pod labels AND are in namespaces matching the namespace labels.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2357,6 +2359,8 @@ D) Separate entries are not allowed
 **Answer:** B
 
 **Explanation:** When selectors are in the same `from` entry, they are combined with AND logic (both must match). When in separate entries, they use OR logic (traffic is allowed if either condition matches), providing flexible policy composition.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2379,6 +2383,8 @@ D) Only in host network mode
 
 **Explanation:** Network Policies can block traffic between Pods on the same node if the CNI plugin enforces policies at the Pod network namespace level, which most policy-supporting CNI plugins like Calico and Cilium do.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2400,6 +2406,8 @@ D) Use the bidirectional field
 
 **Explanation:** To apply a Network Policy to both ingress and egress traffic, you must explicitly include both "Ingress" and "Egress" in the policyTypes array, enabling the policy to control traffic in both directions.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2420,6 +2428,8 @@ D) Default deny for all
 **Answer:** A
 
 **Explanation:** If policyTypes is not specified but ingress rules are defined, Kubernetes automatically assumes policyTypes: [Ingress], applying the policy only to incoming traffic while leaving egress unrestricted.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2444,6 +2454,8 @@ D) Unbound
 
 **Explanation:** CoreDNS is the default DNS server in Kubernetes clusters since version 1.13, replacing kube-dns. It provides service discovery by watching the Kubernetes API and responding to DNS queries for Services and Pods.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2464,6 +2476,8 @@ D) service.svc.namespace.cluster.local
 **Answer:** B
 
 **Explanation:** The FQDN format for a Kubernetes Service is `<service-name>.<namespace>.svc.cluster.local`, where "svc" indicates it's a Service record and "cluster.local" is the default cluster domain suffix.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2486,6 +2500,8 @@ D) TXT
 
 **Explanation:** A regular ClusterIP Service gets an A record (for IPv4) or AAAA record (for IPv6) that resolves to the Service's ClusterIP address, enabling DNS-based service discovery.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2506,6 +2522,8 @@ D) /etc/dns.conf
 **Answer:** B
 
 **Explanation:** The kubelet configures /etc/resolv.conf in each Pod with the cluster DNS server IP (typically the kube-dns Service ClusterIP) and search domains, enabling automatic DNS resolution for Services.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2528,6 +2546,8 @@ D) k8s.local
 
 **Explanation:** The default domain suffix "cluster.local" is the standard cluster domain used in Kubernetes DNS, forming the base for all Service and Pod DNS names within the cluster.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2548,6 +2568,8 @@ D) It returns the node IP
 **Answer:** B
 
 **Explanation:** When a Pod queries a short Service name, the search domains configured in /etc/resolv.conf (like `<namespace>.svc.cluster.local`) are automatically appended, allowing simple names like "my-service" to resolve within the same namespace.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2570,6 +2592,8 @@ D) Named ports don't have DNS records
 
 **Explanation:** Named ports on Services get SRV records in the format `_<port-name>._<protocol>.<service>.<namespace>.svc.cluster.local`, allowing clients to discover both the port number and the target hostname.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2590,6 +2614,8 @@ D) NodeLocal
 **Answer:** B
 
 **Explanation:** The "Default" dnsPolicy inherits the DNS settings from the node where the Pod is running, using the node's /etc/resolv.conf configuration instead of the cluster DNS.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2612,6 +2638,8 @@ D) To set the DNS server IP
 
 **Explanation:** The dnsConfig field allows customizing DNS settings like nameservers, search domains, and options, which are merged with settings from the selected dnsPolicy to provide fine-grained DNS configuration.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2632,6 +2660,8 @@ D) From ConfigMap updates only
 **Answer:** B
 
 **Explanation:** CoreDNS uses the Kubernetes plugin to watch the API server for Service and Endpoint changes, automatically updating its DNS records in real-time as cluster resources are created, modified, or deleted.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2654,6 +2684,8 @@ D) To set query timeout
 
 **Explanation:** The ndots option (default 5 in Kubernetes) specifies how many dots must be in a name before it's considered absolute. Names with fewer dots trigger search domain lookups first, which can cause extra DNS queries.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2674,6 +2706,8 @@ D) Use IP addresses only
 **Answer:** B
 
 **Explanation:** Reducing ndots (e.g., to 2) or using fully qualified domain names with a trailing dot prevents unnecessary search domain lookups for external domains, reducing DNS query overhead and latency.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2696,6 +2730,8 @@ D) A node-level DNS configuration
 
 **Explanation:** NodeLocal DNSCache runs a DNS caching agent on each node as a DaemonSet, reducing latency and load on CoreDNS by serving cached responses locally and avoiding conntrack issues with UDP DNS traffic.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2717,6 +2753,8 @@ D) Using Network Policies
 
 **Explanation:** The CoreDNS Corefile can be edited via its ConfigMap to add forward plugin directives, specifying which domains should be forwarded to which external DNS servers for resolution.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2737,6 +2775,8 @@ D) The cluster automatically restarts CoreDNS
 **Answer:** B
 
 **Explanation:** Without CoreDNS running, Pods cannot resolve Service names to IP addresses, causing service discovery failures. Pods can still communicate using direct IP addresses, but name resolution will fail.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
