@@ -1333,7 +1333,7 @@ D) The policy applies cluster-wide
 How do you create an egress policy that allows DNS traffic?
 
 A) Allow all UDP traffic
-B) Allow egress to port 53 UDP (and TCP) to the DNS service or kube-dns namespace
+B) Allow egress to port 53 UDP/TCP to the DNS Service in kube-system namespace
 C) DNS traffic is always allowed
 D) Use a special DNS exception field
 
@@ -1342,9 +1342,9 @@ D) Use a special DNS exception field
 
 **Answer:** B
 
-**Explanation:** To allow DNS traffic in an egress policy, explicitly allow traffic to port 53 (both UDP and TCP for DNS over TCP) targeting the kube-dns namespace or the specific DNS service CIDR. DNS traffic is not automatically exempted from NetworkPolicies.
+**Explanation:** To allow DNS traffic in an egress policy, explicitly allow traffic to port 53 (both UDP and TCP) targeting the DNS Service (kube-dns or CoreDNS) in the kube-system namespace. DNS traffic is not automatically exempted from NetworkPolicies, so you must allow it explicitly when using egress policies.
 
-**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2178,7 +2178,7 @@ D) An admission controller
 
 **Answer:** B
 
-**Explanation:** AppArmor is a Linux Security Module that restricts programs' capabilities using per-program profiles. In Kubernetes, AppArmor profiles can be applied to containers via annotations or the securityContext field, restricting file access, network capabilities, and other operations.
+**Explanation:** AppArmor is a Linux Security Module that restricts programs' capabilities using per-program profiles. In Kubernetes, AppArmor profiles are applied to containers via securityContext.appArmorProfile, which specifies the profile type (RuntimeDefault, Localhost, or Unconfined) and restricts file access, network capabilities, and other operations.
 
 **Source:** [Restrict a Container's Access to Resources with AppArmor | Kubernetes](https://kubernetes.io/docs/tutorials/security/apparmor/)
 
