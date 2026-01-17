@@ -487,6 +487,8 @@ D) It uses the first exposed container port
 
 **Explanation:** When targetPort is not specified, Kubernetes defaults it to the same value as the Service port, assuming the backend Pods listen on the same port number as the Service exposes.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -507,6 +509,8 @@ D) They continue until the Pod stops or the client closes the connection
 **Answer:** D
 
 **Explanation:** Kubernetes stops routing new connections when endpoints are removed, but existing connections are not automatically drained. They continue until the Pod exits, the client closes the connection, or client timeout occurs. Graceful draining requires application-level handling using preStop hooks or readiness probe manipulation.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -529,6 +533,8 @@ D) kubectl logs service/<name>
 
 **Explanation:** The "kubectl get endpoints" command directly shows the IP addresses and ports of all Pods that are currently selected by a Service, making it the most direct way to verify endpoint associations.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -549,6 +555,8 @@ D) To enable HTTP/2 multiplexing
 **Answer:** B
 
 **Explanation:** Session affinity (also called sticky sessions) ensures that all requests from a particular client are routed to the same backend Pod, which is useful for applications that store session state locally.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -571,6 +579,8 @@ D) Session
 
 **Explanation:** Kubernetes supports "ClientIP" as the session affinity type, which uses the client's source IP address to consistently route requests to the same Pod. Cookie-based affinity is not natively supported at the Service level.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -591,6 +601,8 @@ D) No timeout
 **Answer:** B
 
 **Explanation:** The default session affinity timeout is 10800 seconds (3 hours), after which the affinity mapping expires and subsequent requests may be routed to a different Pod. This can be customized via sessionAffinityConfig.clientIP.timeoutSeconds.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -613,6 +625,8 @@ D) Allows traffic to unscheduled Pods
 
 **Explanation:** Setting publishNotReadyAddresses to true causes the Service to include Pod IPs in DNS responses and endpoints even when Pods are not ready, which is useful for headless Services in StatefulSets where Pods need to discover each other during startup.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -633,6 +647,8 @@ D) The Service uses round-robin across namespaces
 **Answer:** C
 
 **Explanation:** Services are namespace-scoped resources and can only select Pods within their own namespace. To route traffic across namespaces, you would need to use ExternalName Services or create Services in each namespace.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -655,6 +671,8 @@ D) By intercepting packets in userspace
 
 **Explanation:** In iptables mode, kube-proxy creates DNAT (Destination NAT) rules in the KUBE-SERVICES and KUBE-SVC-* chains that redirect traffic destined for ClusterIP addresses to the actual Pod endpoints.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -675,6 +693,8 @@ D) To restrict IP ranges for clients
 **Answer:** B
 
 **Explanation:** The ipFamilyPolicy field controls dual-stack behavior with values like SingleStack, PreferDualStack, or RequireDualStack, determining whether the Service gets IPv4 only, IPv6 only, or both address families.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -699,6 +719,8 @@ D) 8000-9000
 
 **Explanation:** The default NodePort range is 30000-32767, which can be changed using the --service-node-port-range flag on the kube-apiserver. This range is chosen to avoid conflicts with well-known ports.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -719,6 +741,8 @@ D) Only the master node IP
 **Answer:** C
 
 **Explanation:** A NodePort Service is accessible on the same port across all nodes in the cluster, regardless of which nodes are running the backend Pods. Traffic can enter through any node and be routed to the appropriate Pod.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -741,6 +765,8 @@ D) An external DNS record
 
 **Explanation:** When you create a NodePort Service, Kubernetes automatically creates a ClusterIP for the Service as well, providing both internal cluster access (via ClusterIP) and external access (via NodePort).
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -761,6 +787,8 @@ D) Through a ConfigMap
 **Answer:** B
 
 **Explanation:** You can specify a specific NodePort number using the nodePort field within the ports section of the Service spec. If not specified, Kubernetes automatically assigns an available port from the NodePort range.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -783,6 +811,8 @@ D) A random port is assigned instead
 
 **Explanation:** NodePorts are unique across the cluster. If you specify a NodePort that is already allocated to another Service, the API server rejects the Service creation with a conflict error.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -803,6 +833,8 @@ D) External -> Ingress -> NodePort -> Pod
 **Answer:** A
 
 **Explanation:** External traffic hits the NodePort on any cluster node, which then gets DNATed to the Service's ClusterIP, and finally to one of the backend Pod endpoints through kube-proxy's iptables or IPVS rules.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -825,6 +857,8 @@ D) To configure firewall rules
 
 **Explanation:** The externalTrafficPolicy field determines whether external traffic is load balanced across all Pods cluster-wide (Cluster) or only to Pods on the node receiving the traffic (Local), affecting both load distribution and client IP preservation.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -845,6 +879,8 @@ D) The Service becomes unavailable externally
 **Answer:** B
 
 **Explanation:** With externalTrafficPolicy: Local, kube-proxy only routes traffic to Pods running on the same node that received the traffic. This preserves the original client IP (no SNAT) but may result in uneven load distribution.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -867,6 +903,8 @@ D) A 503 error is immediately returned
 
 **Explanation:** With `externalTrafficPolicy: Local`, traffic is only routed to Pods on the same node. For LoadBalancer Services, the cloud provider's health check removes the node from the load balancer target pool. However, for direct NodePort access (bypassing the LB), traffic to a node with no local Pods is simply dropped since there's no health check mechanism.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -887,6 +925,8 @@ D) Reduced network hops
 **Answer:** B
 
 **Explanation:** With externalTrafficPolicy: Cluster, traffic can be forwarded to any Pod in the cluster regardless of which node receives it, resulting in more even distribution but at the cost of an extra network hop and SNAT that obscures the client IP.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
