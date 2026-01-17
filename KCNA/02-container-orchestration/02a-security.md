@@ -556,7 +556,7 @@ D) hardened
 
 **Answer:** C
 
-**Explanation:** The "restricted" level is the most restrictive Pod Security Standard, enforcing best practices for hardened Pods. It requires dropping all capabilities, running as non-root, and using read-only root filesystems among other restrictions.
+**Explanation:** The "restricted" level is the most restrictive Pod Security Standard, enforcing best practices for hardened Pods. It requires dropping all capabilities, running as non-root, disallowing privilege escalation, and using a restricted seccomp profile among other requirements.
 
 **Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
@@ -686,7 +686,7 @@ What Linux capabilities are dropped by the "restricted" Pod Security Standard?
 
 A) Only NET_RAW
 B) Only SYS_ADMIN
-C) ALL capabilities must be dropped
+C) ALL capabilities must be dropped, and no capabilities can be added
 D) No capabilities are dropped
 
 <details>
@@ -694,7 +694,7 @@ D) No capabilities are dropped
 
 **Answer:** C
 
-**Explanation:** The restricted Pod Security Standard requires that ALL capabilities be dropped. Containers may only add back the NET_BIND_SERVICE capability if needed. This follows the principle of least privilege.
+**Explanation:** The restricted Pod Security Standard requires that ALL capabilities be dropped and the capabilities.add field must be empty or unset. The baseline profile allows adding NET_BIND_SERVICE, but restricted does not permit adding any capabilities.
 
 **Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
@@ -1705,7 +1705,7 @@ D) Controls which nodes can join the cluster
 In what order are authorization modes evaluated?
 
 A) Alphabetically
-B) In the order specified in --authorization-mode, first allow wins
+B) In the order specified in --authorization-mode
 C) RBAC is always evaluated first
 D) All modes must agree
 
@@ -1714,7 +1714,7 @@ D) All modes must agree
 
 **Answer:** B
 
-**Explanation:** Authorization modes are evaluated in the order specified in the --authorization-mode flag. When a request is made, each authorizer is consulted in order. If any authorizer approves the request, it proceeds; if one denies it, evaluation continues to the next. A request is denied only if all authorizers deny it or none approve it.
+**Explanation:** Authorization modes are evaluated in the order specified in the --authorization-mode flag. Each authorizer can allow, deny, or pass (no opinion). If any authorizer explicitly denies the request, the request is rejected immediately. If any authorizer allows the request and none deny it, the request is permitted. If all authorizers have no opinion, the request is denied.
 
 **Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
 
@@ -2052,7 +2052,7 @@ D) Deletion of system namespaces only
 How can you exclude certain resources from admission webhook processing?
 
 A) Use the excludeResources field
-B) Use namespaceSelector, objectSelector, or matchPolicy in the webhook configuration
+B) Use rules, namespaceSelector, and objectSelector in the webhook configuration
 C) Webhooks process all resources
 D) Add an annotation to skip webhooks
 
@@ -2061,9 +2061,9 @@ D) Add an annotation to skip webhooks
 
 **Answer:** B
 
-**Explanation:** Webhook configurations support several selectors to control which requests are sent to the webhook: namespaceSelector filters by namespace labels, objectSelector filters by object labels, and the rules field specifies which API groups, versions, resources, and operations to match.
+**Explanation:** Webhook configurations support several mechanisms to control which requests are sent to the webhook: the rules field specifies which API groups, versions, resources, and operations to match; namespaceSelector filters by namespace labels; and objectSelector filters by object labels. matchPolicy only controls Exact vs Equivalent matching, not exclusions.
 
-**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector)
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests)
 
 </details>
 
@@ -2235,19 +2235,19 @@ D) Using separate physical servers
 ### Question 97
 [HARD]
 
-What is the purpose of the privileged flag in a container security context?
+What is the purpose of the fsGroup field in Pod securityContext?
 
-A) To run as root user
-B) To give the container almost all capabilities of the host
-C) To enable network privileges
-D) To access secrets
+A) To set file system quotas
+B) To specify a supplemental group that owns Pod volumes
+C) To configure file system encryption
+D) To limit file system access
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Setting privileged: true gives a container almost all the capabilities of the host machine, including access to all devices. It disables most isolation mechanisms and should be avoided except for specific use cases like running Docker-in-Docker or certain system tools.
+**Explanation:** The fsGroup field specifies a supplemental group ID that is applied to all containers in the Pod. Files created in volumes will be owned by this group, and the group ownership of volume contents is changed to this GID. This enables multiple containers to share volume data with proper permissions.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -2258,19 +2258,19 @@ D) To access secrets
 ### Question 98
 [HARD]
 
-What is the purpose of runAsUser in securityContext?
+What is the purpose of the runAsGroup field in securityContext?
 
-A) To specify which user can create the Pod
-B) To specify the UID that the container process will run as
-C) To limit which users can access the Pod
-D) To define the container's default username
+A) To specify which group can create the Pod
+B) To specify the primary GID that the container process will run as
+C) To limit which groups can access the Pod
+D) To define which Kubernetes group the Pod belongs to
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The runAsUser field specifies the UID (user ID) that the container's main process will run as. This overrides the USER directive in the container image. It can be set at the Pod level (applying to all containers) or at the container level. Running as a non-root UID is a security best practice.
+**Explanation:** The runAsGroup field specifies the primary group ID (GID) that the container's main process will run as. This affects file creation permissions and group membership. Like runAsUser, it can be set at the Pod level or container level. When combined with fsGroup, it provides fine-grained control over file permissions.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
