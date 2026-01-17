@@ -949,6 +949,8 @@ D) Change the CNI configuration
 
 **Explanation:** The NodePort range is controlled by the --service-node-port-range flag on the kube-apiserver, which validates and allocates NodePorts. Changing this requires modifying the API server configuration.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -970,6 +972,8 @@ D) PREROUTING
 
 **Explanation:** kube-proxy creates a KUBE-NODEPORTS chain that handles DNAT rules specifically for NodePort Services, which is jumped to from the KUBE-SERVICES chain for traffic that doesn't match ClusterIP addresses.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -990,6 +994,8 @@ D) NodePort Services cost more
 **Answer:** B
 
 **Explanation:** NodePort Services expose ports on all cluster nodes, requiring you to manage external load balancing yourself. LoadBalancer Services automatically provision a cloud load balancer that handles health checking and routing to healthy nodes.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1014,6 +1020,8 @@ D) Storage volume
 
 **Explanation:** When creating a LoadBalancer Service, the cloud-controller-manager provisions a cloud-specific load balancer (like AWS ELB/NLB, GCP Load Balancer, or Azure Load Balancer) that routes external traffic to the cluster nodes.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1034,6 +1042,8 @@ D) An error is thrown
 **Answer:** B
 
 **Explanation:** Without a cloud provider or load balancer controller (like MetalLB), the Service will remain in Pending state indefinitely because there is no component to provision the external load balancer and assign an external IP.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1056,6 +1066,8 @@ D) External LoadBalancer only
 
 **Explanation:** A LoadBalancer Service is a superset that includes all three components: a ClusterIP for internal access, a NodePort for node-level exposure, and an external load balancer that forwards traffic to the NodePort on cluster nodes.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1076,6 +1088,8 @@ D) By proxying through the master node
 **Answer:** B
 
 **Explanation:** MetalLB provides LoadBalancer functionality in bare-metal clusters by assigning external IPs from a configured pool and announcing them using either Layer 2 (ARP/NDP) or BGP protocols to make them reachable from the external network.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1098,6 +1112,8 @@ D) loadbalancer.kubernetes.io/internal
 
 **Explanation:** Internal load balancer annotations are cloud-specific. For example, GCP uses cloud.google.com/load-balancer-type: "Internal", AWS uses service.beta.kubernetes.io/aws-load-balancer-internal: "true", and Azure uses service.beta.kubernetes.io/azure-load-balancer-internal: "true".
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1118,6 +1134,8 @@ D) To set the ClusterIP
 **Answer:** B
 
 **Explanation:** The loadBalancerIP field allows you to request a specific IP address for the external load balancer, which is useful when you need a stable, pre-determined external IP. Support depends on the cloud provider.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1140,6 +1158,8 @@ D) To configure source NAT ranges
 
 **Explanation:** The loadBalancerSourceRanges field specifies CIDR ranges that are allowed to access the load balancer, implementing IP-based access control at the load balancer level to restrict which clients can reach the Service.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1160,6 +1180,8 @@ D) It manages Pod scheduling
 **Answer:** B
 
 **Explanation:** The cloud-controller-manager watches for Services of type LoadBalancer and interacts with the cloud provider's API to provision external load balancers, configure health checks, and assign external IPs.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1182,6 +1204,8 @@ D) To configure port mapping
 
 **Explanation:** Setting allocateLoadBalancerNodePorts to false prevents automatic NodePort allocation for LoadBalancer Services, useful when the load balancer can route traffic directly to Pods without needing NodePorts.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1203,6 +1227,8 @@ D) Client IP preservation is not possible with instance target mode
 
 **Explanation:** While AWS NLB preserves the client IP at Layer 4, kube-proxy with the default `externalTrafficPolicy: Cluster` will SNAT the traffic when forwarding to Pods on other nodes. To preserve the client IP end-to-end, you must set `externalTrafficPolicy: Local` on the Service, which prevents kube-proxy from masquerading the source IP.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1223,6 +1249,8 @@ D) Layer 4 is cloud-only, Layer 7 is on-premises
 **Answer:** B
 
 **Explanation:** Layer 4 load balancers (like NLB) route based on IP and port information, while Layer 7 load balancers (like ALB or Ingress) can inspect HTTP headers, paths, and content for more sophisticated routing decisions.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1247,6 +1275,8 @@ D) To configure external authentication
 
 **Explanation:** An ExternalName Service maps a Service name to an external DNS name by returning a CNAME record, allowing Pods to access external services using a consistent internal Service name.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1267,6 +1297,8 @@ D) Setting replicas: 0
 **Answer:** B
 
 **Explanation:** A headless Service is created by setting clusterIP: None, which tells Kubernetes not to allocate a virtual IP, and instead DNS queries return the individual Pod IPs directly.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1289,6 +1321,8 @@ D) The node IPs
 
 **Explanation:** DNS queries for a headless Service return A records for all Pod IPs in the endpoint list, allowing clients to perform their own load balancing or connect to specific Pods.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -1309,6 +1343,8 @@ D) SSL termination
 **Answer:** B
 
 **Explanation:** Headless Services are commonly used with StatefulSets to provide stable DNS names for each Pod, enabling peer discovery and direct Pod-to-Pod communication for distributed databases and clustered applications.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
@@ -1331,6 +1367,8 @@ D) SRV record
 
 **Explanation:** ExternalName Services create a CNAME DNS record that aliases the Service name to the specified external hostname, redirecting DNS queries to the external target.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -1351,6 +1389,8 @@ D) Only if targeting internal services
 **Answer:** C
 
 **Explanation:** ExternalName Services map to external DNS names rather than Pod endpoints, so they cannot have selectors since there are no Pods to select.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 </details>
 
