@@ -925,12 +925,22 @@ D) Authorization based on Active Directory attributes
 
 How does webhook authorization work?
 
+A) Webhooks create authorization tokens
+B) The API server sends authorization requests to an external HTTP service
+C) Webhooks bypass normal authorization
+D) Authorization decisions are cached in webhooks
+
 ---
 
 ### Question 77
 [HARD]
 
 What happens if all authorization modes deny a request?
+
+A) The request is allowed by default
+B) The request is denied with a 403 Forbidden response
+C) The request is retried
+D) The cluster admin is notified
 
 ---
 
@@ -939,12 +949,22 @@ What happens if all authorization modes deny a request?
 
 What is the purpose of the system:masters group?
 
+A) To identify master nodes
+B) To grant unrestricted superuser access that bypasses RBAC
+C) To manage the control plane
+D) To identify cluster administrators
+
 ---
 
 ### Question 79
 [HARD]
 
 How can you check if a user has permission to perform an action?
+
+A) Use kubectl describe user
+B) Use kubectl auth can-i
+C) Check the API server logs
+D) Query the RBAC API directly
 
 ---
 
@@ -955,12 +975,22 @@ How can you check if a user has permission to perform an action?
 
 What is an admission controller in Kubernetes?
 
+A) A component that manages user admission to the cluster
+B) Code that intercepts requests to the API server before object persistence
+C) A network policy controller
+D) A certificate authority
+
 ---
 
 ### Question 81
 [MEDIUM]
 
 Which admission controller enforces Pod Security Standards?
+
+A) PodSecurityPolicy
+B) PodSecurity
+C) SecurityContextDeny
+D) PodSecurityAdmission
 
 ---
 
@@ -969,12 +999,22 @@ Which admission controller enforces Pod Security Standards?
 
 What is the difference between validating and mutating admission controllers?
 
+A) Validating controllers are faster
+B) Mutating controllers can modify objects; validating controllers only accept or reject
+C) Validating controllers run first
+D) There is no difference
+
 ---
 
 ### Question 83
 [MEDIUM-HARD]
 
 In what order are mutating and validating admission webhooks called?
+
+A) Validating first, then mutating
+B) Mutating first, then validating
+C) They run in parallel
+D) The order is random
 
 ---
 
@@ -983,12 +1023,22 @@ In what order are mutating and validating admission webhooks called?
 
 Which admission controller ensures namespaces exist before creating resources?
 
+A) NamespaceAutoProvision
+B) NamespaceExists
+C) NamespaceLifecycle
+D) NamespaceValidator
+
 ---
 
 ### Question 85
 [HARD]
 
 How do you configure a custom validating admission webhook?
+
+A) Modify the API server configuration
+B) Create a ValidatingWebhookConfiguration resource
+C) Deploy a special controller
+D) Use kubectl plugins
 
 ---
 
@@ -997,12 +1047,22 @@ How do you configure a custom validating admission webhook?
 
 What is the purpose of the LimitRanger admission controller?
 
+A) To limit the number of resources in a namespace
+B) To enforce default resource requests/limits and validate against LimitRange objects
+C) To limit API request rates
+D) To enforce network bandwidth limits
+
 ---
 
 ### Question 87
 [HARD]
 
 What happens if an admission webhook is unavailable?
+
+A) The request always fails
+B) Depends on the failurePolicy setting (Fail or Ignore)
+C) The request always succeeds
+D) The API server retries indefinitely
 
 ---
 
@@ -1011,12 +1071,22 @@ What happens if an admission webhook is unavailable?
 
 Which admission controller prevents deletion of namespaces with finalizers?
 
+A) NamespaceLifecycle
+B) FinalizerProtection
+C) ResourceProtection
+D) DeletionGuard
+
 ---
 
 ### Question 89
 [HARD]
 
 How can you exclude certain resources from admission webhook processing?
+
+A) Use the excludeResources field
+B) Use namespaceSelector, objectSelector, or matchPolicy in the webhook configuration
+C) Webhooks process all resources
+D) Add an annotation to skip webhooks
 
 ---
 
@@ -1027,12 +1097,22 @@ How can you exclude certain resources from admission webhook processing?
 
 What is a container image digest?
 
+A) A compressed version of the image
+B) A SHA256 hash that uniquely identifies an image
+C) The image's metadata
+D) A signature for the image
+
 ---
 
 ### Question 91
 [MEDIUM]
 
 What is the purpose of a read-only root filesystem?
+
+A) To improve performance
+B) To prevent malicious processes from modifying the filesystem
+C) To reduce image size
+D) To enable faster container startup
 
 ---
 
@@ -1041,12 +1121,22 @@ What is the purpose of a read-only root filesystem?
 
 What is seccomp in the context of container security?
 
+A) A secure computing mode that filters system calls
+B) A secure communication protocol
+C) A secret management system
+D) A security compliance tool
+
 ---
 
 ### Question 93
 [HARD]
 
 How do you specify an image by digest instead of tag?
+
+A) image: myimage:sha256@abc123
+B) image: myimage@sha256:abc123...
+C) image: myimage#sha256:abc123
+D) digest: sha256:abc123 in the image spec
 
 ---
 
@@ -1055,12 +1145,22 @@ How do you specify an image by digest instead of tag?
 
 What is AppArmor and how is it used with Kubernetes?
 
+A) A network firewall for containers
+B) A Linux security module that restricts program capabilities via profiles
+C) A container runtime
+D) An admission controller
+
 ---
 
 ### Question 95
 [HARD]
 
 What is the RuntimeDefault seccomp profile?
+
+A) A profile that blocks all system calls
+B) The container runtime's default seccomp profile
+C) A profile with no restrictions
+D) A profile specific to Kubernetes
 
 ---
 
@@ -1069,12 +1169,22 @@ What is the RuntimeDefault seccomp profile?
 
 How do container runtimes provide isolation between containers?
 
+A) Using virtual machines
+B) Using Linux namespaces, cgroups, and security modules
+C) Using network segmentation only
+D) Using separate physical servers
+
 ---
 
 ### Question 97
 [HARD]
 
 What is the purpose of the privileged flag in a container security context?
+
+A) To run as root user
+B) To give the container almost all capabilities of the host
+C) To enable network privileges
+D) To access secrets
 
 ---
 
@@ -1083,6 +1193,11 @@ What is the purpose of the privileged flag in a container security context?
 
 How do you prevent a container from running as root?
 
+A) Set privileged: false
+B) Set runAsNonRoot: true in securityContext
+C) Use a non-root base image only
+D) Configure the container runtime
+
 ---
 
 ### Question 99
@@ -1090,11 +1205,21 @@ How do you prevent a container from running as root?
 
 What are the security implications of sharing the host PID namespace?
 
+A) No security implications
+B) Container can see and potentially signal host processes
+C) Only affects networking
+D) Improves container isolation
+
 ---
 
 ### Question 100
 [HARD]
 
 What is the purpose of the procMount field in securityContext?
+
+A) To mount the proc filesystem
+B) To control how /proc is mounted in the container (Default or Unmasked)
+C) To configure process limits
+D) To enable process monitoring
 
 ---
