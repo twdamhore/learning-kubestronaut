@@ -18,6 +18,17 @@ B) ClusterRole
 C) RoleBinding
 D) ServiceAccount
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ClusterRole is a cluster-scoped resource that defines permissions across the entire cluster, not limited to a single namespace. Unlike Roles which are namespaced, ClusterRoles can grant access to cluster-scoped resources (like nodes) and non-resource endpoints.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#role-and-clusterrole)
+
+</details>
+
 ---
 
 ### Question 2
@@ -29,6 +40,17 @@ A) To create a new ClusterRole
 B) To bind a ClusterRole to subjects cluster-wide
 C) To bind a Role across namespaces
 D) To restrict ClusterRole permissions
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A ClusterRoleBinding grants the permissions defined in a ClusterRole to one or more subjects (users, groups, or ServiceAccounts) across the entire cluster. The binding makes the permissions effective cluster-wide, regardless of namespace.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#rolebinding-and-clusterrolebinding)
+
+</details>
 
 ---
 
@@ -42,6 +64,17 @@ B) monitor
 C) watch
 D) subscribe
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** The "watch" verb allows clients to receive streaming updates when resources change. This is commonly used by controllers and operators to react to resource modifications. The watch verb is distinct from get and list, requiring explicit permission.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 4
@@ -53,6 +86,17 @@ A) Create a Role with "read" verb
 B) Create a Role with "get", "list", and "watch" verbs for pods
 C) Assign the view ClusterRole directly
 D) Use the readonly annotation
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** RBAC doesn't have a "read" verb. To grant read-only access, you create a Role with "get" (fetch single resources), "list" (fetch collections), and "watch" (receive updates) verbs for the pods resource. Then bind this Role to the subject with a RoleBinding.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -66,6 +110,17 @@ B) "get" retrieves a single resource by name; "list" retrieves all resources
 C) "get" is for reading; "list" is for writing
 D) "list" is deprecated in favor of "get"
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "get" verb allows retrieving a specific resource by its name (e.g., kubectl get pod my-pod). The "list" verb allows retrieving all resources of a type (e.g., kubectl get pods). Both are read operations but with different scopes - individual vs. collection.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 6
@@ -77,6 +132,17 @@ A) To copy another user's permissions
 B) To allow acting as another user, group, or ServiceAccount
 C) To create duplicate users
 D) To audit user actions
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "impersonate" verb allows a user to act as another user, group, or ServiceAccount. This is used for testing permissions (kubectl --as=) and by components like the API server. It's a powerful permission that should be granted carefully.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#user-impersonation)
+
+</details>
 
 ---
 
@@ -90,6 +156,17 @@ B) Use the nonResourceURLs field in ClusterRole rules
 C) Non-resource URLs cannot be referenced
 D) Use a special NetworkPolicy
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Non-resource URLs (like /healthz, /api, /metrics) can only be referenced in ClusterRoles using the nonResourceURLs field. This is because these endpoints are cluster-scoped, not namespaced. Roles cannot reference non-resource URLs.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-resources)
+
+</details>
+
 ---
 
 ### Question 8
@@ -101,6 +178,17 @@ A) ClusterRoles that combine permissions from multiple Roles
 B) ClusterRoles with aggregationRule that automatically include rules from other ClusterRoles with matching labels
 C) ClusterRoles that are compressed for performance
 D) ClusterRoles that span multiple clusters
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Aggregated ClusterRoles use an aggregationRule with label selectors. The controller automatically combines rules from all ClusterRoles matching the selector into the aggregated ClusterRole. This allows extending built-in roles like admin, edit, and view with custom permissions.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles)
+
+</details>
 
 ---
 
@@ -114,6 +202,17 @@ B) view
 C) reader
 D) read-only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "view" ClusterRole is a default aggregated role that grants read-only access to most objects in a namespace (excluding secrets and role bindings). It's designed for non-destructive access, allowing users to see resources without modifying them.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles)
+
+</details>
+
 ---
 
 ### Question 10
@@ -125,6 +224,17 @@ A) Grant access to pods and logs separately
 B) Use the resources field with "pods/log" format
 C) Subresources cannot be individually controlled
 D) Use a special subresources field
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Subresources are referenced using the format "resource/subresource" in the resources field. For example, "pods/log" grants access to Pod logs, "pods/exec" grants exec access. This allows fine-grained control over specific subresource operations.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-resources)
+
+</details>
 
 ---
 
@@ -138,6 +248,17 @@ B) To restrict access to specific named resources
 C) To rename resources
 D) To create aliases for resources
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The resourceNames field restricts the rule to specific named instances of resources. For example, you can grant access to a specific ConfigMap named "my-config" rather than all ConfigMaps. This enables fine-grained, resource-instance-level access control.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-resources)
+
+</details>
+
 ---
 
 ### Question 12
@@ -149,6 +270,17 @@ A) Wildcards are not supported
 B) Use "*" to match all resources, verbs, or API groups
 C) Use "all" keyword
 D) Wildcards only work for verbs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** RBAC supports the "*" wildcard to match all values. You can use it for apiGroups: ["*"] (all API groups), resources: ["*"] (all resources), or verbs: ["*"] (all verbs). The cluster-admin ClusterRole uses wildcards to grant full access.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -164,6 +296,17 @@ B) kube-system
 C) kube-public
 D) system
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The kube-system namespace contains ServiceAccounts for core Kubernetes system components like kube-controller-manager, kube-scheduler, and kube-proxy. Each component typically has its own ServiceAccount with appropriate RBAC permissions.
+
+**Source:** [Managing Service Accounts | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
+
+</details>
+
 ---
 
 ### Question 14
@@ -175,6 +318,17 @@ A) Use the account field in the Pod spec
 B) Use the serviceAccountName field in the Pod spec
 C) Create a RoleBinding
 D) Use an annotation
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To assign a specific ServiceAccount to a Pod, set the serviceAccountName field in the Pod spec. If not specified, the Pod uses the "default" ServiceAccount in its namespace. The ServiceAccount must exist before creating the Pod.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
@@ -188,6 +342,17 @@ B) A volume that combines multiple sources including ServiceAccount tokens
 C) A volume for storing projected data
 D) A deprecated token storage method
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A projected volume can combine multiple volume sources into a single directory, including ServiceAccount tokens, ConfigMaps, Secrets, and the downward API. For ServiceAccounts, this enables mounting time-bound, audience-bound tokens alongside other data.
+
+**Source:** [Projected Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/projected-volumes/)
+
+</details>
+
 ---
 
 ### Question 16
@@ -199,6 +364,17 @@ A) For better performance
 B) To improve security with time-limited, audience-bound tokens
 C) To simplify token management
 D) For backward compatibility
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Bound ServiceAccount tokens improve security over legacy Secret-based tokens. They are time-limited (expire after a configurable period), audience-bound (only valid for specific audiences), and bound to the Pod (invalidated when Pod is deleted). This reduces the impact of token compromise.
+
+**Source:** [Service Account Token Volume Projection | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection)
+
+</details>
 
 ---
 
@@ -212,6 +388,17 @@ B) The lifetime of the projected token
 C) Time until token refresh
 D) Maximum session duration
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The expirationSeconds field specifies how long the projected ServiceAccount token is valid. The kubelet proactively rotates the token as it approaches expiration. The default is typically 3600 seconds (1 hour), with a minimum of 600 seconds (10 minutes).
+
+**Source:** [Service Account Token Volume Projection | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection)
+
+</details>
+
 ---
 
 ### Question 18
@@ -223,6 +410,17 @@ A) Set expirationSeconds to 0
 B) Create a Secret of type kubernetes.io/service-account-token
 C) Use the --no-expire flag
 D) Non-expiring tokens are not possible
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To create a non-expiring (long-lived) ServiceAccount token, create a Secret of type kubernetes.io/service-account-token with an annotation referencing the ServiceAccount. The controller will populate the token. However, this is discouraged for security; bound tokens are preferred.
+
+**Source:** [Managing Service Accounts | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#manually-create-a-long-lived-api-token-for-a-serviceaccount)
+
+</details>
 
 ---
 
@@ -236,6 +434,17 @@ B) The Pod continues running but token authentication may fail
 C) A new ServiceAccount is automatically created
 D) Nothing; Pods don't depend on ServiceAccounts
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Deleting a ServiceAccount doesn't automatically terminate Pods using it. However, the Pod's token will become invalid for API authentication since the ServiceAccount no longer exists. The Pod continues running but any API calls using the token will fail authentication.
+
+**Source:** [Managing Service Accounts | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
+
+</details>
+
 ---
 
 ### Question 20
@@ -247,6 +456,17 @@ A) They are identical
 B) serviceAccountName is the preferred field; serviceAccount is deprecated
 C) serviceAccount is for system accounts
 D) serviceAccountName is for external accounts
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The serviceAccountName field is the preferred way to specify a Pod's ServiceAccount. The serviceAccount field is deprecated and maintained only for backward compatibility. Both refer to the same concept, but serviceAccountName should always be used in new configurations.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
