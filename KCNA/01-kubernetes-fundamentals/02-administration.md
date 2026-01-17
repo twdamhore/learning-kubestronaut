@@ -2683,7 +2683,7 @@ D) Container logs are persistent, node logs are not
 What happens to container logs when a Pod is deleted?
 
 A) Logs are archived automatically
-B) Logs are deleted with the Pod
+B) Logs become inaccessible via kubectl logs
 C) Logs remain indefinitely
 D) Logs are moved to a backup location
 
@@ -2692,7 +2692,7 @@ D) Logs are moved to a backup location
 
 **Answer:** B
 
-**Explanation:** Container logs stored on the node are deleted when the Pod is deleted. This is why cluster-level logging (collecting logs to an external system) is important for log retention, debugging, and compliance requirements.
+**Explanation:** Container logs are stored on the node's filesystem and retained based on kubelet log rotation settings. When a Pod is deleted, `kubectl logs` becomes unavailable, but log files may persist on the node until garbage collected by the container runtime or removed by log rotation. This is why cluster-level logging is important for log retention.
 
 **Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
@@ -3369,7 +3369,7 @@ D) kubectl list events
 
 **Answer:** A
 
-**Explanation:** `kubectl get events` lists events in the current namespace. Events provide information about what's happening in the cluster—pod scheduling, image pulls, container starts, errors, etc. Add `--sort-by=.lastTimestamp` to sort by time.
+**Explanation:** `kubectl get events` lists events in the current namespace. Events provide information about what's happening in the cluster—pod scheduling, image pulls, container starts, errors, etc. Add `--sort-by=.metadata.creationTimestamp` to sort by time (note: `.lastTimestamp` is deprecated in events.k8s.io/v1).
 
 **Source:** [Events | Kubernetes](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/)
 
@@ -3428,21 +3428,21 @@ D) Low, Medium, and High
 ### Question 148
 [MEDIUM-HARD]
 
-What tool is commonly used for easier context switching?
+Which kubectl command switches to a different context?
 
-A) kubectl context
-B) kubectx
-C) k8s-switch
-D) cluster-switch
+A) kubectl context switch my-context
+B) kubectl config use-context my-context
+C) kubectl set-context my-context
+D) kubectl switch my-context
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** `kubectx` is a popular third-party tool that simplifies switching between contexts. It provides easier commands than `kubectl config use-context`. Similarly, `kubens` helps switch namespaces quickly. These tools are convenience wrappers around kubectl.
+**Explanation:** `kubectl config use-context my-context` switches the current context to the specified one. To change the default namespace for the current context, use `kubectl config set-context --current --namespace=my-namespace`. These are the native kubectl commands for context and namespace management.
 
-**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+**Source:** [Configure Access to Multiple Clusters | Kubernetes](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 
 </details>
 
@@ -4098,7 +4098,7 @@ D) Yes, using kubectl debug --remove
 
 **Answer:** C
 
-**Explanation:** Ephemeral containers cannot be removed from a pod once added—they exist until the pod is deleted. However, they can be stopped (exited). This limitation exists because ephemeral containers are part of the pod spec which is immutable after creation.
+**Explanation:** Ephemeral containers cannot be removed from a pod once added—they exist until the pod is deleted. However, they can be stopped (exited). This is because the ephemeral containers list is append-only; you can add ephemeral containers to a running pod, but removal requires deleting the pod.
 
 **Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
 
@@ -4405,7 +4405,7 @@ D) Never expires
 
 **Answer:** A
 
-**Explanation:** Tokens created with `kubectl create token` default to 1 hour expiration. You can customize with `--duration=8h` or `--duration=87600h` for longer-lived tokens. Short-lived tokens are more secure as they reduce the window for token theft.
+**Explanation:** Tokens created with `kubectl create token` default to 1 hour expiration. You can request longer durations with `--duration`, but the API server may cap/shorten the requested expiration based on `--service-account-max-token-expiration`. Short-lived tokens are more secure as they reduce the window for token theft.
 
 **Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/)
 
