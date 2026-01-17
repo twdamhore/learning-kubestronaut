@@ -46,7 +46,8 @@ KCNA/
 │   ├── 02b-administration.md ✅ (Q101-200)
 │   ├── 03a-scheduling.md ✅ (Q1-100)
 │   ├── 03b-scheduling.md ✅ (Q101-200)
-│   └── 04-containerization.md ✅
+│   ├── 04a-containerization.md ✅ (Q1-100)
+│   └── 04b-containerization.md ✅ (Q101-200)
 ├── 02-container-orchestration/
 │   ├── 01a-networking.md ✅ (Q1-100)
 │   ├── 01b-networking.md ✅ (Q101-200)
