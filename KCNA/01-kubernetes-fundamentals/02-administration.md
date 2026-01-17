@@ -3158,9 +3158,9 @@ D) It scales down other deployments
 
 **Answer:** B
 
-**Explanation:** When a high-priority Pod can't be scheduled due to resource constraints, the scheduler may preempt (evict) lower-priority Pods to make room. Preemption respects PodDisruptionBudgets and graceful termination periods where possible.
+**Explanation:** When a high-priority Pod can't be scheduled due to resource constraints, the scheduler may preempt (evict) lower-priority Pods to make room. Preemption can evict pods regardless of PodDisruptionBudgets (PDBs apply to voluntary disruptions, not scheduler preemption), though it honors graceful termination periods.
 
-**Source:** [Command line tool (kubectl) | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+**Source:** [Pod Priority and Preemption | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 
 </details>
 
