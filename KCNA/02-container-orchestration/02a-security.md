@@ -18,6 +18,17 @@ B) Role-Based Access Control
 C) Rule-Based Access Configuration
 D) Remote-Based Authentication Control
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** RBAC stands for Role-Based Access Control, a method of regulating access to resources based on the roles of individual users within an organization. In Kubernetes, RBAC uses Roles and ClusterRoles to define permissions.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 2
@@ -29,6 +40,17 @@ A) ClusterRole
 B) RoleBinding
 C) Role
 D) ServiceAccount
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** A Role is a namespaced resource that contains rules representing a set of permissions within a specific namespace. Roles can only grant access to resources within the namespace where they are created.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -42,6 +64,17 @@ B) Role is namespace-scoped, ClusterRole is cluster-scoped
 C) Role grants read access, ClusterRole grants write access
 D) There is no difference; they are aliases
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Role is namespace-scoped and can only grant access to resources within a single namespace. A ClusterRole is cluster-scoped and can grant access to cluster-wide resources, non-resource endpoints, or resources across all namespaces.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 4
@@ -53,6 +86,17 @@ A) ClusterRoleBinding
 B) RoleBinding
 C) RoleAssignment
 D) PermissionBinding
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A RoleBinding grants the permissions defined in a Role to a user or set of users within a specific namespace. It holds a list of subjects (users, groups, or ServiceAccounts) and a reference to the Role being granted.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -66,6 +110,17 @@ B) The ClusterRole permissions are granted only within the RoleBinding's namespa
 C) The ClusterRole permissions are granted cluster-wide
 D) The ClusterRole is automatically converted to a Role
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A RoleBinding can reference a ClusterRole to grant the permissions defined in that ClusterRole, but the permissions are limited to the RoleBinding's namespace. This allows common ClusterRoles to be reused across namespaces with namespace-scoped access.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 6
@@ -77,6 +132,17 @@ A) add
 B) create
 C) new
 D) insert
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "create" verb in RBAC allows a user to create new resources. Standard RBAC verbs include get, list, watch, create, update, patch, delete, and deletecollection.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -90,6 +156,17 @@ B) Allows creating or updating Roles with permissions the user doesn't have
 C) Allows bypassing admission controllers
 D) Allows impersonating other users
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "escalate" verb allows a user to create or modify Roles and ClusterRoles to include permissions that the user does not already have. This is a powerful permission that can lead to privilege escalation and should be granted carefully.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 8
@@ -101,6 +178,17 @@ A) Use a Role with namespace: "*"
 B) Use a ClusterRole with a ClusterRoleBinding
 C) Use multiple RoleBindings in each namespace
 D) Set the global flag on the Role
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To grant permissions across all namespaces, you must use a ClusterRole bound with a ClusterRoleBinding. ClusterRoleBindings grant cluster-wide access to the subjects they reference, applying the ClusterRole's permissions in all namespaces.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -114,6 +202,17 @@ B) Allows creating RoleBindings or ClusterRoleBindings that reference Roles
 C) Allows binding volumes to pods
 D) Allows binding services to endpoints
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "bind" verb allows a user to create RoleBindings or ClusterRoleBindings that reference a specific Role or ClusterRole. This prevents users from creating bindings to roles they cannot themselves use, providing a layer of privilege escalation protection.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 10
@@ -125,6 +224,17 @@ A) authorization.k8s.io
 B) rbac.authorization.k8s.io
 C) access.k8s.io
 D) security.k8s.io
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** RBAC resources (Role, ClusterRole, RoleBinding, ClusterRoleBinding) are part of the rbac.authorization.k8s.io API group. This group was introduced as part of the RBAC implementation in Kubernetes.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -138,6 +248,17 @@ B) The last applied binding takes precedence
 C) Permissions are additive (union of all grants)
 D) An error is raised due to conflict
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** RBAC permissions are purely additive. When multiple RoleBindings or ClusterRoleBindings grant permissions to the same subject, the effective permissions are the union of all granted permissions. There are no "deny" rules in RBAC.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 12
@@ -149,6 +270,17 @@ A) Use the resourceNames field in the Role rules
 B) Use the nameSelector field in the RoleBinding
 C) Use a label selector in the Role
 D) Use a separate Role for each resource
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** The resourceNames field in a Role's rules allows restricting access to specific instances of a resource by their names. This enables fine-grained access control to individual resources rather than all resources of a type.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -164,6 +296,17 @@ B) A default ServiceAccount
 C) A default Role
 D) A cluster-admin binding
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubernetes automatically creates a ServiceAccount named "default" in every namespace. If a Pod does not specify a ServiceAccount, it is automatically assigned the default ServiceAccount from its namespace.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
+
 ---
 
 ### Question 14
@@ -175,6 +318,17 @@ A) /etc/kubernetes/token
 B) /var/run/secrets/kubernetes.io/serviceaccount
 C) /opt/kubernetes/credentials
 D) /home/kubernetes/.token
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ServiceAccount tokens are automatically mounted at /var/run/secrets/kubernetes.io/serviceaccount in each container. This directory contains the token, namespace, and CA certificate files needed for API authentication.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
@@ -188,6 +342,17 @@ B) To control whether a ServiceAccount token is mounted in Pods
 C) To enable automatic token rotation
 D) To mount tokens from multiple ServiceAccounts
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The automountServiceAccountToken field controls whether Pods using a ServiceAccount will automatically have the token mounted. Setting it to false on either the ServiceAccount or the Pod prevents automatic token mounting, improving security for Pods that don't need API access.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
+
 ---
 
 ### Question 16
@@ -199,6 +364,17 @@ A) Bound tokens are stored in Secrets, legacy tokens are not
 B) Bound tokens are time-limited and audience-bound
 C) Bound tokens can only be used once
 D) Bound tokens are encrypted, legacy tokens are not
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Bound ServiceAccount tokens are time-limited (they expire) and audience-bound (they specify which audiences can accept them). This improves security compared to legacy tokens stored in Secrets, which never expire and can be used by any audience.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
@@ -212,6 +388,17 @@ B) kube-system
 C) default
 D) pod-default
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** If a Pod does not specify a ServiceAccount, it is assigned the "default" ServiceAccount from the Pod's namespace. Every namespace has a "default" ServiceAccount created automatically.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
+
 ---
 
 ### Question 18
@@ -223,6 +410,17 @@ A) Delete the ServiceAccount
 B) Set automountServiceAccountToken: false on the Pod or ServiceAccount
 C) Remove the token Secret
 D) Use a custom securityContext
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Setting automountServiceAccountToken: false on either the Pod spec or the ServiceAccount prevents the token from being automatically mounted. The Pod-level setting takes precedence over the ServiceAccount setting.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
@@ -236,6 +434,17 @@ B) The namespace, ServiceAccount name, Pod name, and expiration time
 C) Username and password
 D) The cluster certificate authority
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Projected ServiceAccount tokens are JWTs that include claims for the namespace, ServiceAccount name, Pod name (and UID), and expiration time. They also include the configured audience, making them more secure than legacy tokens.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
+
 ---
 
 ### Question 20
@@ -247,6 +456,17 @@ A) Requesting new user accounts
 B) Requesting short-lived, audience-scoped ServiceAccount tokens
 C) Requesting TLS certificates
 D) Requesting API server access
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The TokenRequest API allows requesting short-lived, audience-scoped ServiceAccount tokens programmatically. These tokens have configurable expiration times and audiences, providing better security than static Secret-based tokens.
+
+**Source:** [Configure Service Accounts for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
