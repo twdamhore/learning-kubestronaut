@@ -854,7 +854,7 @@ D) gRPC is not supported in probes
 
 **C) grpc (native gRPC health checking)**
 
-Kubernetes 1.24+ supports native gRPC health checking as a probe type. You specify the port and optional service name. The probe calls the standard gRPC health checking protocol (grpc.health.v1.Health). This is more efficient than using exec with grpc_health_probe.
+Kubernetes supports native gRPC health checking as a probe type. You specify the port and optional service name. The probe calls the standard gRPC health checking protocol (grpc.health.v1.Health). This is more efficient than using exec with grpc_health_probe.
 
 **Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
@@ -971,18 +971,18 @@ Containers in a Pod share the network namespace (same IP, localhost communicatio
 </details>
 
 ### Question 54
-How is a sidecar container defined in Kubernetes?
+How do you add an additional container to run alongside the main application in a Pod?
 
 A) Using a special sidecar field in the Pod spec
-B) As an additional container in the Pod's containers array
-C) Using a Sidecar custom resource
-D) Through a sidecar annotation
+B) By adding another entry in the Pod's containers array
+C) Using a separate custom resource
+D) Through a Pod annotation
 
 <details><summary>Answer</summary>
 
-**B) As an additional container in the Pod's containers array**
+**B) By adding another entry in the Pod's containers array**
 
-Sidecar containers are defined as regular containers in the Pod's `containers` array alongside the main application container. They run for the entire lifetime of the Pod and provide supporting functionality like logging, monitoring, or proxying. There is no special "sidecar" field - the sidecar pattern is implemented by adding multiple containers to a Pod.
+Additional containers are added by including multiple entries in the Pod's `containers` array. All containers in the array run concurrently for the lifetime of the Pod and share the same network namespace and volumes. This multi-container Pod pattern allows helper containers to support the main application.
 
 **Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
