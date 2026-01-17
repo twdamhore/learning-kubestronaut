@@ -854,7 +854,7 @@ D) gRPC is not supported in probes
 
 **C) grpc (native gRPC health checking)**
 
-Kubernetes supports native gRPC health checking as a probe type. You specify the port and optional service name. The probe calls the standard gRPC health checking protocol (grpc.health.v1.Health). This is more efficient than using exec with grpc_health_probe.
+Kubernetes supports native gRPC health checking as a probe type. You specify the port and optional service name. The probe calls the standard gRPC health checking protocol (grpc.health.v1.Health).
 
 **Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
@@ -956,15 +956,15 @@ Helper containers in multi-container Pods can share volumes with the main applic
 What resources can containers in the same Pod share?
 
 A) Only network namespace
-B) Network namespace, IPC namespace, and volumes
+B) Network namespace and volumes
 C) All namespaces including PID by default
 D) Nothing, containers are fully isolated
 
 <details><summary>Answer</summary>
 
-**B) Network namespace, IPC namespace, and volumes**
+**B) Network namespace and volumes**
 
-Containers in a Pod share the network namespace (same IP, localhost communication), IPC namespace (can use shared memory and semaphores), and can mount the same volumes. PID namespace is not shared by default (each container has its own process view), though this can be enabled with `shareProcessNamespace: true`.
+Containers in a Pod share the network namespace (same IP address, can communicate via localhost) and can mount the same volumes. PID namespace is not shared by default but can be enabled with `shareProcessNamespace: true`.
 
 **Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
