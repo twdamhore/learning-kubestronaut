@@ -621,12 +621,22 @@ D) The NetworkPolicy controller
 
 Which policyTypes can be specified in a NetworkPolicy?
 
+A) Allow and Deny
+B) Ingress and Egress
+C) Input and Output
+D) Inbound and Outbound
+
 ---
 
 ### Question 52
 [MEDIUM-HARD]
 
 How do you allow traffic only from Pods with a specific label?
+
+A) Use a nodeSelector
+B) Use podSelector in the ingress from field
+C) Use a service selector
+D) Labels cannot be used in NetworkPolicies
 
 ---
 
@@ -635,12 +645,22 @@ How do you allow traffic only from Pods with a specific label?
 
 What is the effect of an empty ingress array in a NetworkPolicy?
 
+A) All ingress traffic is allowed
+B) All ingress traffic is denied
+C) The policy has no effect
+D) Only egress is controlled
+
 ---
 
 ### Question 54
 [HARD]
 
 How do you create a default deny-all egress policy?
+
+A) Set egress: deny in namespace
+B) Create a NetworkPolicy selecting all Pods with policyTypes: ["Egress"] and no egress rules
+C) Configure the CNI plugin
+D) Use an annotation
 
 ---
 
@@ -649,12 +669,22 @@ How do you create a default deny-all egress policy?
 
 What is the ipBlock selector used for in NetworkPolicies?
 
+A) To select Pods by IP
+B) To allow or deny traffic to/from specific IP CIDR ranges
+C) To block IP addresses
+D) To configure IP allocation
+
 ---
 
 ### Question 56
 [HARD]
 
 How do NetworkPolicies interact with Services?
+
+A) NetworkPolicies block Service traffic
+B) NetworkPolicies apply to Pod IPs, not Service IPs; traffic is filtered after DNAT
+C) Services bypass NetworkPolicies
+D) NetworkPolicies must reference Services directly
 
 ---
 
@@ -663,6 +693,11 @@ How do NetworkPolicies interact with Services?
 
 What is the except field used for in ipBlock selectors?
 
+A) To exclude specific CIDRs from the allowed/denied range
+B) To add exceptions to the policy
+C) To except certain ports
+D) To handle error cases
+
 ---
 
 ### Question 58
@@ -670,12 +705,22 @@ What is the except field used for in ipBlock selectors?
 
 How do you allow egress to external IPs while blocking inter-pod traffic?
 
+A) Cannot be done with NetworkPolicies
+B) Use ipBlock to allow external CIDRs while not including Pod CIDRs
+C) Use a firewall instead
+D) Allow all egress and use another policy
+
 ---
 
 ### Question 59
 [HARD]
 
 What are the limitations of Kubernetes NetworkPolicies?
+
+A) No limitations
+B) No deny rules, no cluster-wide policies, no logging, CNI-dependent enforcement
+C) Only work with TCP
+D) Cannot cross namespaces
 
 ---
 
@@ -686,12 +731,22 @@ What are the limitations of Kubernetes NetworkPolicies?
 
 What is a bearer token in Kubernetes authentication?
 
+A) A username/password combination
+B) A token sent in the Authorization header to authenticate requests
+C) A certificate
+D) A cookie
+
 ---
 
 ### Question 61
 [MEDIUM]
 
 How do ServiceAccounts authenticate to the API server?
+
+A) Using username and password
+B) Using JWT tokens mounted in Pods
+C) Using SSH keys
+D) Using IP whitelisting
 
 ---
 
@@ -700,12 +755,22 @@ How do ServiceAccounts authenticate to the API server?
 
 What is the purpose of the --client-ca-file flag on the API server?
 
+A) To set the server certificate
+B) To specify the CA bundle for validating client certificates
+C) To configure TLS
+D) To enable mTLS
+
 ---
 
 ### Question 63
 [MEDIUM-HARD]
 
 How do you configure multiple authentication methods for the API server?
+
+A) Only one method can be configured
+B) Pass multiple authentication flags; the API server tries each in order
+C) Use a configuration file only
+D) Run multiple API servers
 
 ---
 
@@ -714,12 +779,22 @@ How do you configure multiple authentication methods for the API server?
 
 What is the authenticating proxy method?
 
+A) Using a proxy server for load balancing
+B) A front proxy that authenticates users and passes identity via headers
+C) A reverse proxy for the API server
+D) A method to proxy authentication to LDAP
+
 ---
 
 ### Question 65
 [HARD]
 
 How does the API server validate X.509 client certificates?
+
+A) By checking the certificate expiration only
+B) By verifying the certificate chain against the configured CA and extracting identity from CN/O
+C) By contacting a CA server
+D) By comparing to stored certificates
 
 ---
 
@@ -728,12 +803,22 @@ How does the API server validate X.509 client certificates?
 
 What is the purpose of the --oidc-issuer-url flag?
 
+A) To set the API server URL
+B) To specify the OIDC provider URL for token validation
+C) To issue OIDC tokens
+D) To configure OAuth
+
 ---
 
 ### Question 67
 [HARD]
 
 How do static token files work for authentication?
+
+A) Tokens are generated dynamically
+B) A CSV file maps tokens to users; the API server reads it at startup
+C) Tokens are stored in etcd
+D) Each user creates their own token file
 
 ---
 
@@ -742,12 +827,22 @@ How do static token files work for authentication?
 
 What groups are automatically assigned to authenticated users?
 
+A) No automatic groups
+B) system:authenticated is added to all authenticated users
+C) admin group
+D) users group
+
 ---
 
 ### Question 69
 [HARD]
 
 What is the difference between user impersonation and sudo?
+
+A) No difference
+B) Impersonation allows acting as another user via API; sudo elevates privileges locally
+C) Sudo is for containers; impersonation is for users
+D) Impersonation is more secure
 
 ---
 
@@ -758,12 +853,22 @@ What is the difference between user impersonation and sudo?
 
 What does it mean when authorization mode is set to AlwaysAllow?
 
+A) Only admin requests are allowed
+B) All authenticated requests are authorized without checking permissions
+C) Allows all traffic
+D) Allows anonymous access
+
 ---
 
 ### Question 71
 [MEDIUM]
 
 Which component makes authorization decisions in Kubernetes?
+
+A) kubelet
+B) kube-apiserver
+C) kube-controller-manager
+D) etcd
 
 ---
 
@@ -772,12 +877,22 @@ Which component makes authorization decisions in Kubernetes?
 
 What information is used to make authorization decisions?
 
+A) Only the username
+B) User, group, verb, resource, namespace, and API group
+C) Only the resource
+D) The request body
+
 ---
 
 ### Question 73
 [MEDIUM-HARD]
 
 How does the --authorization-mode flag work with multiple modes?
+
+A) Only the first mode is used
+B) Modes are evaluated in order; first to allow or deny wins
+C) All modes must agree
+D) Modes are randomly selected
 
 ---
 
@@ -786,12 +901,22 @@ How does the --authorization-mode flag work with multiple modes?
 
 What is the SubjectAccessReview API used for?
 
+A) To review user accounts
+B) To programmatically check if a subject can perform an action
+C) To audit access logs
+D) To create new subjects
+
 ---
 
 ### Question 75
 [HARD]
 
 How do you configure webhook authorization?
+
+A) Enable it by default
+B) Use --authorization-mode=Webhook and --authorization-webhook-config-file
+C) Deploy a webhook controller
+D) Configure in RBAC
 
 ---
 
