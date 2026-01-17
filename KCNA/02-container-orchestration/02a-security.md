@@ -728,19 +728,19 @@ D) There is no difference; they are aliases
 ### Question 32
 [HARD]
 
-Which securityContext field controls whether a container can gain more privileges than its parent process?
+What is the purpose of capabilities.drop in securityContext?
 
-A) privileged
-B) allowPrivilegeEscalation
-C) runAsNonRoot
-D) capabilities
+A) To remove Linux capabilities from a container
+B) To drop network connections
+C) To disable container features
+D) To reduce memory allocation
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** A
 
-**Explanation:** The allowPrivilegeEscalation field controls whether a process can gain more privileges than its parent. Setting it to false prevents exploits using setuid binaries and is required by the restricted Pod Security Standard.
+**Explanation:** The capabilities.drop field removes specified Linux capabilities from a container. Dropping capabilities like NET_RAW, SYS_ADMIN, or ALL reduces the attack surface by limiting what system calls the container can make. The restricted Pod Security Standard requires dropping ALL capabilities.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -960,7 +960,7 @@ D) Encrypting container memory
 ### Question 42
 [MEDIUM-HARD]
 
-Which Secret type is automatically created for ServiceAccounts?
+Which Secret type is used for legacy ServiceAccount token Secrets?
 
 A) kubernetes.io/service-account-token
 B) kubernetes.io/basic-auth
@@ -972,9 +972,9 @@ D) kubernetes.io/tls
 
 **Answer:** A
 
-**Explanation:** The kubernetes.io/service-account-token Secret type is used for ServiceAccount tokens. While Kubernetes now uses projected volumes for ServiceAccount tokens by default, this Secret type still exists for legacy token storage.
+**Explanation:** The kubernetes.io/service-account-token Secret type is used for legacy ServiceAccount tokens. Since Kubernetes v1.24, token Secrets are no longer automatically created for ServiceAccounts; instead, the TokenRequest API and projected volumes are used. This Secret type remains for backward compatibility and manual token creation.
 
-**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+**Source:** [Service Accounts | Kubernetes](https://kubernetes.io/docs/concepts/security/service-accounts/#service-account-token-secrets)
 
 </details>
 
@@ -1610,7 +1610,7 @@ D) Creating tokens for webhook endpoints
 ### Question 70
 [MEDIUM]
 
-What is the default authorization mode in most Kubernetes distributions?
+Which authorization mode uses Roles and RoleBindings to grant permissions?
 
 A) ABAC
 B) RBAC
@@ -1622,7 +1622,7 @@ D) Webhook
 
 **Answer:** B
 
-**Explanation:** RBAC (Role-Based Access Control) is the default and recommended authorization mode in most Kubernetes distributions. It provides fine-grained access control using Roles, ClusterRoles, RoleBindings, and ClusterRoleBindings to define and grant permissions.
+**Explanation:** RBAC (Role-Based Access Control) uses Roles, ClusterRoles, RoleBindings, and ClusterRoleBindings to define and grant permissions. Roles define permissions within a namespace, while ClusterRoles define cluster-wide permissions. Bindings associate users or groups with roles.
 
 **Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
@@ -1656,19 +1656,19 @@ D) Webhook
 ### Question 72
 [MEDIUM-HARD]
 
-What are the four authorization modes available in Kubernetes?
+Which authorization modes are available in Kubernetes?
 
-A) RBAC, ABAC, Webhook, AlwaysAllow
-B) Node, RBAC, ABAC, Webhook
-C) RBAC, Node, AlwaysAllow, AlwaysDeny
-D) All of the above modes exist
+A) Only RBAC and ABAC
+B) RBAC, ABAC, and Webhook only
+C) Node, RBAC, ABAC, Webhook, AlwaysAllow, and AlwaysDeny
+D) RBAC and Node only
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** C
 
-**Explanation:** Kubernetes supports six authorization modes: Node (for kubelet authorization), RBAC (Role-Based Access Control), ABAC (Attribute-Based Access Control), Webhook (external authorization service), AlwaysAllow (permits all requests), and AlwaysDeny (blocks all requests). Multiple modes can be enabled simultaneously.
+**Explanation:** Kubernetes supports six authorization modes: Node (for kubelet authorization), RBAC (Role-Based Access Control), ABAC (Attribute-Based Access Control), Webhook (external authorization service), AlwaysAllow (permits all requests), and AlwaysDeny (blocks all requests). Multiple modes can be enabled simultaneously using the --authorization-mode flag.
 
 **Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
 
@@ -1797,7 +1797,7 @@ D) The cluster admin is notified
 What is the purpose of the system:masters group?
 
 A) To identify master nodes
-B) To grant unrestricted superuser access that bypasses RBAC
+B) To provide superuser access via the cluster-admin ClusterRoleBinding
 C) To manage the control plane
 D) To identify cluster administrators
 
@@ -1806,7 +1806,7 @@ D) To identify cluster administrators
 
 **Answer:** B
 
-**Explanation:** The system:masters group is bound to the cluster-admin ClusterRole, granting unrestricted access to all resources in the cluster. Members of this group have superuser privileges that cannot be revoked through RBAC because the binding is part of the system. This group should be used sparingly.
+**Explanation:** The system:masters group is bound to the cluster-admin ClusterRole by a default ClusterRoleBinding, granting full access to all resources via RBAC. This is not a bypass of RBAC but rather RBAC working as intended with a built-in binding. Members of this group have superuser privileges. This group should be used sparingly.
 
 **Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings)
 
@@ -2026,19 +2026,19 @@ D) The API server retries indefinitely
 ### Question 88
 [HARD]
 
-Which admission controller prevents deletion of namespaces with finalizers?
+What does the NamespaceLifecycle admission controller prevent?
 
-A) NamespaceLifecycle
-B) FinalizerProtection
-C) ResourceProtection
-D) DeletionGuard
+A) Deletion of namespaces with finalizers
+B) Creation of objects in non-existent or terminating namespaces
+C) Creation of namespaces with invalid names
+D) Deletion of system namespaces only
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** A
+**Answer:** B
 
-**Explanation:** The NamespaceLifecycle admission controller handles namespace lifecycle including preventing premature deletion. Namespaces with finalizers are marked for deletion but not removed until finalizers complete. This controller also prevents creation of resources in terminating namespaces.
+**Explanation:** The NamespaceLifecycle admission controller prevents creation of objects in namespaces that don't exist or are being terminated. It also prevents deletion of the default, kube-system, and kube-public namespaces. Note: Finalizers on namespace objects prevent actual deletion until they're removed, but this is a separate mechanism from NamespaceLifecycle.
 
 **Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#namespacelifecycle)
 
@@ -2258,19 +2258,19 @@ D) To access secrets
 ### Question 98
 [HARD]
 
-How do you prevent a container from running as root?
+What is the purpose of readOnlyRootFilesystem in securityContext?
 
-A) Set privileged: false
-B) Set runAsNonRoot: true in securityContext
-C) Use a non-root base image only
-D) Configure the container runtime
+A) To make the entire node filesystem read-only
+B) To mount the container's root filesystem as read-only
+C) To prevent reading sensitive files
+D) To protect the container image from modification
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Setting runAsNonRoot: true in securityContext causes the kubelet to validate that the container is not running as root (UID 0) at runtime. If the container image tries to run as root, the container will fail to start. This provides enforcement beyond just using a non-root base image.
+**Explanation:** Setting readOnlyRootFilesystem: true mounts the container's root filesystem as read-only, preventing any writes to the container filesystem. This is a security best practice that limits an attacker's ability to modify the container. Applications that need to write data should use volumes mounted at specific paths.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
