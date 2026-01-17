@@ -2799,6 +2799,8 @@ D) To configure file paths
 
 **Explanation:** The autopath plugin in CoreDNS optimizes DNS resolution by automatically determining the correct search path for Pod queries, reducing the number of DNS lookups needed to resolve cluster-internal names.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2819,6 +2821,8 @@ D) Only the first Pod gets a DNS entry
 **Answer:** B
 
 **Explanation:** StatefulSet Pods with a headless Service get predictable DNS entries in the format `<pod-name>.<service-name>.<namespace>.svc.cluster.local`, providing stable network identities that persist across Pod rescheduling.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2841,6 +2845,8 @@ D) To scale Pods
 
 **Explanation:** The `pods` directive in the CoreDNS Kubernetes plugin controls whether and how A records are created for individual Pods, with options like "verified" to only create records for existing Pods or "insecure" for all Pod IP patterns.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2862,6 +2868,8 @@ D) Checking the API server logs
 
 **Explanation:** Running nslookup, dig, or host commands from within a Pod directly queries the DNS server configured in the Pod's /etc/resolv.conf, allowing you to verify Service name resolution and troubleshoot DNS issues.
 
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
 </details>
 
 ---
@@ -2882,6 +2890,8 @@ D) An error prevents Pod creation
 **Answer:** C
 
 **Explanation:** Setting dnsPolicy: None without providing dnsConfig results in an empty /etc/resolv.conf, leaving the Pod unable to resolve any DNS names since no nameservers or search domains are configured.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
 </details>
 
@@ -2906,6 +2916,8 @@ D) To schedule Pods
 
 **Explanation:** kube-proxy's primary function is to implement Service networking by programming iptables, IPVS, or nftables rules on each node that redirect traffic destined for Service ClusterIPs to the appropriate backend Pod endpoints.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -2926,6 +2938,8 @@ D) nftables
 **Answer:** B
 
 **Explanation:** The iptables mode is the default in most Kubernetes installations, programming iptables NAT rules for Service routing. While IPVS mode offers better performance at scale, iptables remains the widely-used default.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
@@ -2948,6 +2962,8 @@ D) The API server routes the request
 
 **Explanation:** When a Pod accesses a Service ClusterIP, the kernel's netfilter (iptables) or IPVS rules installed by kube-proxy intercept the packet and redirect it to one of the backend Pod endpoint IPs using DNAT.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -2968,6 +2984,8 @@ D) By reading local configuration files
 **Answer:** B
 
 **Explanation:** kube-proxy uses the Kubernetes watch API to receive real-time updates about Service and Endpoint/EndpointSlice changes, automatically updating the network rules whenever the cluster state changes.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
@@ -2990,6 +3008,8 @@ D) The default mode
 
 **Explanation:** Userspace mode is the original, legacy kube-proxy implementation where kube-proxy itself acts as a TCP/UDP proxy, forwarding traffic through userspace. It's significantly slower than kernel-based modes and rarely used today.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3010,6 +3030,8 @@ D) Better Windows support
 **Answer:** B
 
 **Explanation:** IPVS mode uses hash tables for O(1) lookup complexity compared to iptables' O(n) linear chain traversal, making it significantly more efficient for clusters with thousands of Services or endpoints.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
@@ -3032,6 +3054,8 @@ D) Random only
 
 **Explanation:** IPVS supports multiple load balancing algorithms including round-robin (rr), least connections (lc), destination hashing (dh), source hashing (sh), shortest expected delay (sed), and never queue (nq).
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3052,6 +3076,8 @@ D) In etcd directly
 **Answer:** B
 
 **Explanation:** kube-proxy configuration is typically stored in a ConfigMap named "kube-proxy" in the kube-system namespace, which is mounted into kube-proxy Pods and contains settings like mode, cluster CIDR, and various tuning parameters.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
@@ -3074,6 +3100,8 @@ D) It changes when Pods are rescheduled
 
 **Explanation:** A Service's ClusterIP is immutable once assigned and remains stable for the Service's entire lifetime. The only way to change it is to delete and recreate the Service. kube-proxy watches for Service changes and updates network rules accordingly, but the ClusterIP itself never changes without Service recreation.
 
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
 </details>
 
 ---
@@ -3094,6 +3122,8 @@ D) To manage storage endpoints
 **Answer:** B
 
 **Explanation:** EndpointSlices provide more scalable endpoint tracking by splitting endpoints into smaller groups (default 100 endpoints per slice), reducing API server and kube-proxy load when Services have many backend Pods.
+
+**Source:** [EndpointSlices | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/)
 
 </details>
 
@@ -3116,6 +3146,8 @@ D) OUTPUT
 
 **Explanation:** In iptables mode, kube-proxy creates KUBE-SVC-* chains for each Service, which contain DNAT rules that redirect traffic from the Service ClusterIP to one of the backend Pod endpoints using probability-based load balancing.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3136,6 +3168,8 @@ D) To set proxy timeout
 **Answer:** B
 
 **Explanation:** The --proxy-mode flag specifies which kube-proxy implementation to use: "iptables" (default), "ipvs" for better performance at scale, or "nftables" as a newer alternative to iptables.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
@@ -3158,6 +3192,8 @@ D) Using connection tracking
 
 **Explanation:** In iptables mode, kube-proxy uses the iptables "recent" match module to track client source IPs for session affinity, maintaining a mapping that directs subsequent requests from the same client to the same backend Pod.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3179,6 +3215,8 @@ D) Connections are migrated
 
 **Explanation:** When kube-proxy updates iptables rules, existing established connections tracked by conntrack continue to flow to their original destination, while only new connections use the updated rules, providing graceful transitions.
 
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
+
 </details>
 
 ---
@@ -3199,6 +3237,8 @@ D) To track Pod connections
 **Answer:** B
 
 **Explanation:** The conntrack (connection tracking) table maintains state for established connections, enabling stateful packet inspection and ensuring that reply packets are correctly routed back through NAT rules.
+
+**Source:** [Virtual IPs and Service Proxies | Kubernetes](https://kubernetes.io/docs/reference/networking/virtual-ips/)
 
 </details>
 
