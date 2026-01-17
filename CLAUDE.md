@@ -39,11 +39,8 @@ Create a comprehensive MCQ study repository for all 5 Kubestronaut certification
 ## Directory Structure
 ```
 KCNA/
-├── 01a-kubernetes-fundamentals/
-│   └── 01-kubernetes-core-concepts.md ✅ (Q1-100)
-├── 01b-kubernetes-fundamentals/
-│   └── 01-kubernetes-core-concepts.md ✅ (Q101-200)
 ├── 01-kubernetes-fundamentals/
+│   ├── 01-kubernetes-core-concepts.md ✅
 │   ├── 02-administration.md ✅
 │   ├── 03-scheduling.md ✅
 │   └── 04-containerization.md ✅
