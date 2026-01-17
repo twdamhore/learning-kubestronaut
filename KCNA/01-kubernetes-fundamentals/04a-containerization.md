@@ -68,7 +68,7 @@ D) Only the first container uses the layers
 
 **B) The layers are shared, saving disk space**
 
-Container images are built from layers, and these layers are cached on nodes. When multiple containers use the same base image, the shared layers are stored only once on disk, reducing storage usage. Subsequent image pulls avoid re-downloading layers that already exist locally, speeding up container creation.
+Container images are built from layers, and nodes cache these layers. When pulling images, nodes reuse cached layers to avoid re-downloading content that already exists locally. This caching behavior reduces network usage and speeds up container creation.
 
 **Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 
@@ -106,7 +106,7 @@ D) containerd with CRI plugin
 
 **C) Docker Engine (dockershim)**
 
-Docker Engine itself does not implement CRI natively. Kubernetes used dockershim as an adapter to communicate with Docker, but this was deprecated and removed in Kubernetes 1.24. containerd and CRI-O are native CRI implementations. Docker uses containerd under the hood, which is CRI-compliant.
+Docker Engine itself does not implement CRI natively. Kubernetes used dockershim as an adapter to communicate with Docker, but this was deprecated and removed in Kubernetes 1.24. containerd and CRI-O are native CRI implementations.
 
 **Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
