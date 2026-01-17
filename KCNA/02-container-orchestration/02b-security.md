@@ -944,6 +944,17 @@ B) Secrets are stored in tmpfs when mounted, have stricter RBAC defaults, and ca
 C) There is no security difference
 D) ConfigMaps are more secure
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Secrets have several security advantages: they're stored in tmpfs (memory-backed) when mounted as volumes, they have separate RBAC permissions allowing stricter access control, and they can be encrypted at rest in etcd. However, they're only base64-encoded by default, not encrypted.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
+</details>
+
 ---
 
 ### Question 42
@@ -955,6 +966,17 @@ A) For OAuth tokens
 B) For storing username and password credentials
 C) For API keys
 D) For SSH keys
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The kubernetes.io/basic-auth Secret type stores basic authentication credentials. It requires 'username' and 'password' keys. This type is used for authenticating to services that require basic auth, though the credentials are only base64-encoded, not encrypted.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret)
+
+</details>
 
 ---
 
@@ -968,6 +990,17 @@ B) By configuring an EncryptionConfiguration that specifies encryption providers
 C) Secrets are always encrypted automatically
 D) Using the kubelet
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To encrypt Secrets at rest, you configure an EncryptionConfiguration resource specifying encryption providers (like aescbc, aesgcm, secretbox, or KMS). The API server uses this configuration with the --encryption-provider-config flag to encrypt Secrets before storing them in etcd.
+
+**Source:** [Encrypting Confidential Data at Rest | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/)
+
+</details>
+
 ---
 
 ### Question 44
@@ -979,6 +1012,17 @@ A) Encrypting the Secret manifest
 B) Encrypting data with a DEK, then encrypting the DEK with a KEK from a KMS
 C) Double encryption with the same key
 D) Encrypting during transmission
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Envelope encryption uses two layers: data is encrypted with a Data Encryption Key (DEK), and the DEK is encrypted with a Key Encryption Key (KEK) stored in an external KMS (like AWS KMS, Azure Key Vault, or HashiCorp Vault). Only the encrypted DEK is stored alongside the data.
+
+**Source:** [Using a KMS provider for data encryption | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/)
+
+</details>
 
 ---
 
@@ -992,6 +1036,17 @@ B) Eventually by kubelet sync; depends on sync frequency and cache TTL
 C) Never; Pods must be restarted
 D) Only if the Pod has watch permissions
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a Secret changes, the kubelet eventually updates the mounted volume. The delay depends on kubelet sync period and API server cache TTL (total delay can be up to sync period + cache TTL). Environment variables from Secrets are NOT updated; only volume mounts are refreshed.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets)
+
+</details>
+
 ---
 
 ### Question 46
@@ -1003,6 +1058,17 @@ A) Secrets are stored in a separate database
 B) Secrets are stored in etcd, optionally encrypted at rest
 C) etcd cannot store Secrets
 D) Secrets are only stored in memory
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Like all Kubernetes resources, Secrets are stored in etcd. By default, they're stored base64-encoded but not encrypted. Enabling encryption at rest (via EncryptionConfiguration) encrypts Secrets before they're written to etcd. Securing etcd access is critical for Secret security.
+
+**Source:** [Encrypting Confidential Data at Rest | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/)
+
+</details>
 
 ---
 
@@ -1016,6 +1082,17 @@ B) Using tools like External Secrets Operator, Secrets Store CSI Driver, or cust
 C) External systems cannot be used
 D) By mounting network volumes
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** External secret managers (Vault, AWS Secrets Manager, Azure Key Vault) can be integrated using tools like External Secrets Operator (syncs to Kubernetes Secrets), Secrets Store CSI Driver (mounts secrets as volumes), or custom controllers. This keeps secrets in a centralized, audited store.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#alternatives-to-secrets)
+
+</details>
+
 ---
 
 ### Question 48
@@ -1028,6 +1105,17 @@ B) To load all key-value pairs from a Secret as environment variables
 C) To mount a Secret as a volume
 D) To create a new Secret
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The envFrom.secretRef field loads all key-value pairs from a Secret as environment variables in the container. Each key becomes an environment variable name, and its value becomes the variable's value. This is useful for bulk-loading configuration.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables)
+
+</details>
+
 ---
 
 ### Question 49
@@ -1039,6 +1127,17 @@ A) Using NetworkPolicies
 B) Using RBAC to control ServiceAccount access to Secrets
 C) Secrets are accessible by all Pods
 D) Using Secret labels
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** RBAC controls which ServiceAccounts can access Secrets. By creating Roles that grant 'get' permission on specific Secrets and binding them to ServiceAccounts, you control which Pods (using those ServiceAccounts) can access the Secrets. NetworkPolicies don't control Secret access.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#best-practices)
+
+</details>
 
 ---
 
@@ -1054,6 +1153,17 @@ B) A CNI plugin that supports NetworkPolicy
 C) A special kernel module
 D) The NetworkPolicy controller
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** NetworkPolicies are implemented by the CNI (Container Network Interface) plugin. Creating a NetworkPolicy has no effect unless a CNI plugin that supports NetworkPolicy (like Calico, Cilium, or Weave Net) is installed. The default kubenet plugin does not support NetworkPolicy.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+</details>
+
 ---
 
 ### Question 51
@@ -1065,6 +1175,17 @@ A) Allow and Deny
 B) Ingress and Egress
 C) Input and Output
 D) Inbound and Outbound
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** NetworkPolicies support two policyTypes: "Ingress" (controls incoming traffic to selected Pods) and "Egress" (controls outgoing traffic from selected Pods). You can specify one or both. If not specified, Ingress is assumed if ingress rules exist, and Egress if egress rules exist.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/#the-networkpolicy-resource)
+
+</details>
 
 ---
 
@@ -1078,6 +1199,17 @@ B) Use podSelector in the ingress from field
 C) Use a service selector
 D) Labels cannot be used in NetworkPolicies
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The ingress.from.podSelector field matches Pods by labels. For example, to allow traffic only from Pods with label "role: frontend", specify podSelector with matchLabels: {role: frontend}. This can be combined with namespaceSelector to match Pods in specific namespaces.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/#the-networkpolicy-resource)
+
+</details>
+
 ---
 
 ### Question 53
@@ -1089,6 +1221,17 @@ A) All ingress traffic is allowed
 B) All ingress traffic is denied
 C) The policy has no effect
 D) Only egress is controlled
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** An empty ingress array (ingress: []) with policyTypes including "Ingress" denies all incoming traffic to the selected Pods. This creates a deny-all ingress policy. To allow specific traffic, you must add ingress rules. No rules means no traffic is allowed.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/#default-deny-all-ingress-traffic)
+
+</details>
 
 ---
 
@@ -1102,6 +1245,17 @@ B) Create a NetworkPolicy selecting all Pods with policyTypes: ["Egress"] and no
 C) Configure the CNI plugin
 D) Use an annotation
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To create a default deny-all egress policy, create a NetworkPolicy with podSelector: {} (selects all Pods in namespace), policyTypes: ["Egress"], and no egress rules. This blocks all outbound traffic from Pods in the namespace until explicitly allowed by other policies.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/#default-deny-all-egress-traffic)
+
+</details>
+
 ---
 
 ### Question 55
@@ -1113,6 +1267,17 @@ A) To select Pods by IP
 B) To allow or deny traffic to/from specific IP CIDR ranges
 C) To block IP addresses
 D) To configure IP allocation
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The ipBlock selector allows specifying CIDR ranges for traffic rules. It's useful for allowing or controlling traffic to/from external IPs, on-premise networks, or specific IP ranges. It includes a 'cidr' field for the range and optional 'except' field for exclusions.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/#the-networkpolicy-resource)
+
+</details>
 
 ---
 
@@ -1126,6 +1291,17 @@ B) NetworkPolicies apply to Pod IPs, not Service IPs; traffic is filtered after 
 C) Services bypass NetworkPolicies
 D) NetworkPolicies must reference Services directly
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** NetworkPolicies operate at the Pod IP level. When traffic goes through a Service, the policy is evaluated after DNAT (Destination NAT) translates the Service IP to the Pod IP. You cannot directly reference Services in NetworkPolicies; you must use Pod selectors or IP blocks.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+</details>
+
 ---
 
 ### Question 57
@@ -1137,6 +1313,17 @@ A) To exclude specific CIDRs from the allowed/denied range
 B) To add exceptions to the policy
 C) To except certain ports
 D) To handle error cases
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** The 'except' field in ipBlock allows you to exclude specific CIDR ranges from the main CIDR. For example, allowing 10.0.0.0/8 except 10.0.0.0/24 allows all traffic from 10.x.x.x except the 10.0.0.x subnet. Except CIDRs must be within the main CIDR.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/#the-networkpolicy-resource)
+
+</details>
 
 ---
 
@@ -1150,6 +1337,17 @@ B) Use ipBlock to allow external CIDRs while not including Pod CIDRs
 C) Use a firewall instead
 D) Allow all egress and use another policy
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** You can use ipBlock to allow external CIDRs (like 0.0.0.0/0) while using 'except' to exclude the cluster's Pod CIDR ranges. This allows egress to external IPs while preventing direct Pod-to-Pod communication that doesn't go through allowed services.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+</details>
+
 ---
 
 ### Question 59
@@ -1161,6 +1359,17 @@ A) No limitations
 B) No deny rules, no cluster-wide policies, no logging, CNI-dependent enforcement
 C) Only work with TCP
 D) Cannot cross namespaces
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Standard NetworkPolicies have limitations: no explicit deny rules (only allow-list), no cluster-wide policies (must be created per-namespace), no built-in logging, and enforcement depends on CNI plugin support. Some CNI plugins offer extended features beyond the standard API.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+</details>
 
 ---
 
@@ -1175,6 +1384,17 @@ A) A username/password combination
 B) A token sent in the Authorization header to authenticate requests
 C) A certificate
 D) A cookie
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A bearer token is sent in the HTTP Authorization header as "Authorization: Bearer <token>". The API server validates the token and extracts the user identity. ServiceAccount tokens and static tokens are examples of bearer tokens in Kubernetes.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#putting-a-bearer-token-in-a-request)
+
+</details>
 
 ---
 
