@@ -966,7 +966,7 @@ D) Nothing, containers are fully isolated
 
 Containers in a Pod share the network namespace (same IP address, can communicate via localhost) and can mount the same volumes. PID namespace is not shared by default but can be enabled with `shareProcessNamespace: true`.
 
-**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
+**Source:** [PodSpec | Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec)
 
 </details>
 
