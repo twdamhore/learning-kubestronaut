@@ -2473,7 +2473,7 @@ D) Container name
 How do topology spread constraints differ from pod anti-affinity?
 
 A) No difference
-B) Spread ensures even distribution; anti-affinity just separates pods
+B) Spread constrains skew within maxSkew; anti-affinity just separates pods
 C) Anti-affinity is better
 D) Spread is deprecated
 
@@ -2482,9 +2482,9 @@ D) Spread is deprecated
 
 **Answer:** B
 
-**Explanation:** Anti-affinity only ensures pods are on different domains. Topology spread ensures EVEN distribution across domains, which is more sophisticated and useful for balanced workloads.
+**Explanation:** Anti-affinity only ensures pods are on different domains. Topology spread constrains skew within a configurable maxSkew to keep distribution balanced across domains. Unlike anti-affinity, spread allows controlled imbalance rather than strict separation.
 
-**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+**Source:** [Topology Spread Constraints | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
 
 </details>
 
@@ -2748,9 +2748,9 @@ D) Canary only
 
 **Answer:** B
 
-**Explanation:** DaemonSet updateStrategy can be RollingUpdate (gradually replaces pods) or OnDelete (only replaces when pod is manually deleted). RollingUpdate has maxUnavailable and maxSurge settings.
+**Explanation:** DaemonSet updateStrategy can be RollingUpdate (gradually replaces pods) or OnDelete (only replaces when pod is manually deleted). RollingUpdate uses maxUnavailable to control how many pods can be unavailable during updates.
 
-**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+**Source:** [DaemonSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
 
 </details>
 
@@ -4114,21 +4114,21 @@ D) UI dashboard
 
 ### Question 186
 [HARD]
-What is gang scheduling?
+What are scheduler profiles?
 
-A) Scheduling one pod
-B) Scheduling a group of pods together or not at all
-C) A native Kubernetes scheduler feature
-D) Random scheduling
+A) User account profiles
+B) Named configurations with different plugins/settings for a single scheduler
+C) Network profiles
+D) Storage profiles
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Gang scheduling schedules a group of pods together (all-or-nothing). If the group can't be placed entirely, none are scheduled. Used for tightly coupled workloads like MPI jobs. Note: Kubernetes does NOT provide native gang scheduling—it requires deploying a custom scheduler, which Kubernetes supports through the multiple schedulers feature.
+**Explanation:** Scheduler profiles allow running multiple scheduling configurations within a single kube-scheduler. Each profile has a unique name and can enable/disable different plugins or configure them differently. Pods select a profile via spec.schedulerName.
 
-**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -4136,21 +4136,21 @@ D) Random scheduling
 
 ### Question 187
 [HARD]
-What is bin packing in scheduling?
+What does the MostAllocated scoring strategy do in NodeResourcesFit?
 
-A) Spreading pods
-B) Packing pods tightly onto fewer nodes
-C) Compression
-D) Archiving
+A) Spreads pods across nodes
+B) Favors nodes with higher resource allocation (pack pods tightly)
+C) Ignores resource allocation
+D) Only considers CPU
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Bin packing maximizes utilization by filling nodes before using new ones. This reduces costs (fewer nodes needed) but may reduce resilience.
+**Explanation:** MostAllocated is a scoring strategy in the NodeResourcesFit plugin that favors nodes with higher resource allocation. This packs pods onto fewer nodes, maximizing utilization and potentially reducing costs.
 
-**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -4158,21 +4158,21 @@ D) Archiving
 
 ### Question 188
 [HARD]
-What is spreading in scheduling?
+What does the LeastAllocated scoring strategy do in NodeResourcesFit?
 
-A) Same as bin packing
-B) Distributing pods across many nodes
-C) Network spreading
-D) Data spreading
+A) Packs pods onto fewer nodes
+B) Favors nodes with lower resource allocation (spread pods)
+C) Ignores resource allocation
+D) Only considers memory
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Spreading distributes pods across nodes for resilience. The opposite of bin packing. It improves availability but may use more nodes.
+**Explanation:** LeastAllocated is a scoring strategy in the NodeResourcesFit plugin that favors nodes with lower resource allocation. This spreads pods across nodes, improving resilience but potentially using more nodes.
 
-**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -4434,9 +4434,9 @@ D) Rate limiting
 
 **Answer:** B
 
-**Explanation:** Scheduling gates (spec.schedulingGates) block a pod from being considered for scheduling until all gates are removed. External controllers can add/remove gates to control scheduling timing.
+**Explanation:** Scheduling gates (spec.schedulingGates) block a pod from being considered for scheduling until all gates are removed. External controllers can add/remove gates to control scheduling timing. This feature (PodSchedulingReadiness) is stable as of Kubernetes 1.27.
 
-**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+**Source:** [Pod Scheduling Readiness | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness/)
 
 </details>
 
