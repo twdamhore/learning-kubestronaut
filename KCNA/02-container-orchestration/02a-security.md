@@ -621,12 +621,22 @@ D) Only DNS traffic is allowed
 
 Which resource is used to control traffic flow between Pods?
 
+A) SecurityPolicy
+B) NetworkPolicy
+C) TrafficPolicy
+D) PodPolicy
+
 ---
 
 ### Question 52
 [MEDIUM-HARD]
 
 What happens when you apply a NetworkPolicy that selects a Pod?
+
+A) All traffic to that Pod is blocked
+B) The Pod becomes isolated and only explicitly allowed traffic is permitted
+C) The Pod's network is reset
+D) Nothing changes until the policy is activated
 
 ---
 
@@ -635,12 +645,22 @@ What happens when you apply a NetworkPolicy that selects a Pod?
 
 How do you create a default deny-all ingress policy for a namespace?
 
+A) Set a namespace annotation
+B) Create a NetworkPolicy with empty ingress rules that selects all Pods
+C) Configure the CNI plugin
+D) Use a ClusterNetworkPolicy
+
 ---
 
 ### Question 54
 [HARD]
 
 Can NetworkPolicies block traffic from the Kubernetes API server?
+
+A) Yes, always
+B) No, API server traffic bypasses NetworkPolicies
+C) It depends on the CNI plugin implementation
+D) Only with a ClusterNetworkPolicy
 
 ---
 
@@ -649,12 +669,22 @@ Can NetworkPolicies block traffic from the Kubernetes API server?
 
 What are the three types of selectors available in NetworkPolicy rules?
 
+A) podSelector, nodeSelector, serviceSelector
+B) podSelector, namespaceSelector, ipBlock
+C) labelSelector, fieldSelector, nameSelector
+D) ingressSelector, egressSelector, policySelector
+
 ---
 
 ### Question 56
 [HARD]
 
 How do you allow traffic from Pods in a different namespace using NetworkPolicy?
+
+A) Use a ClusterNetworkPolicy
+B) Use namespaceSelector in the ingress rules
+C) Reference the namespace directly by name
+D) NetworkPolicies cannot cross namespaces
 
 ---
 
@@ -663,6 +693,11 @@ How do you allow traffic from Pods in a different namespace using NetworkPolicy?
 
 What is the effect of an empty podSelector in a NetworkPolicy?
 
+A) The policy applies to no Pods
+B) The policy applies to all Pods in the namespace
+C) The policy is invalid
+D) The policy applies cluster-wide
+
 ---
 
 ### Question 58
@@ -670,12 +705,22 @@ What is the effect of an empty podSelector in a NetworkPolicy?
 
 How do you create an egress policy that allows DNS traffic?
 
+A) Allow all UDP traffic
+B) Allow egress to port 53 UDP (and TCP) to the DNS service or kube-dns namespace
+C) DNS traffic is always allowed
+D) Use a special DNS exception field
+
 ---
 
 ### Question 59
 [HARD]
 
 What is required for NetworkPolicies to be enforced in a cluster?
+
+A) A NetworkPolicy controller
+B) A CNI plugin that supports NetworkPolicy
+C) The NetworkPolicy API to be enabled
+D) A special kernel module
 
 ---
 
@@ -686,12 +731,22 @@ What is required for NetworkPolicies to be enforced in a cluster?
 
 Which component handles authentication in Kubernetes?
 
+A) kubelet
+B) kube-apiserver
+C) kube-controller-manager
+D) etcd
+
 ---
 
 ### Question 61
 [MEDIUM]
 
 What file contains cluster connection information and credentials for kubectl?
+
+A) /etc/kubernetes/admin.conf
+B) ~/.kube/config
+C) /var/lib/kubelet/kubeconfig
+D) Both A and B can be used
 
 ---
 
@@ -700,12 +755,22 @@ What file contains cluster connection information and credentials for kubectl?
 
 What authentication method uses X.509 certificates?
 
+A) Token authentication
+B) Client certificate authentication
+C) OIDC authentication
+D) Basic authentication
+
 ---
 
 ### Question 63
 [MEDIUM-HARD]
 
 How does OpenID Connect (OIDC) authentication work with Kubernetes?
+
+A) Kubernetes acts as an OIDC provider
+B) Users authenticate with an external OIDC provider and present tokens to the API server
+C) OIDC replaces all other authentication methods
+D) OIDC is only for ServiceAccounts
 
 ---
 
@@ -714,12 +779,22 @@ How does OpenID Connect (OIDC) authentication work with Kubernetes?
 
 What is the difference between authentication and authorization in Kubernetes?
 
+A) They are the same thing
+B) Authentication verifies identity; authorization determines what actions are permitted
+C) Authentication is for users; authorization is for services
+D) Authentication uses RBAC; authorization uses certificates
+
 ---
 
 ### Question 65
 [HARD]
 
 How are users represented in Kubernetes?
+
+A) As User resources in the API
+B) Users are not represented as API objects; they exist externally
+C) As special ServiceAccounts
+D) As ConfigMaps with user data
 
 ---
 
@@ -728,12 +803,22 @@ How are users represented in Kubernetes?
 
 What is the purpose of the --anonymous-auth flag on the API server?
 
+A) To disable all authentication
+B) To control whether unauthenticated requests are allowed
+C) To enable anonymous user creation
+D) To log anonymous access attempts
+
 ---
 
 ### Question 67
 [HARD]
 
 How do bootstrap tokens work in Kubernetes?
+
+A) They are permanent tokens for cluster access
+B) They are short-lived tokens used for node joining and initial cluster setup
+C) They replace ServiceAccount tokens
+D) They are used for kubectl authentication
 
 ---
 
@@ -742,12 +827,22 @@ How do bootstrap tokens work in Kubernetes?
 
 What information is extracted from an X.509 client certificate for authentication?
 
+A) Only the public key
+B) The Common Name (CN) as username and Organization (O) as groups
+C) The certificate serial number
+D) The issuer name only
+
 ---
 
 ### Question 69
 [HARD]
 
 What is the webhook token authentication method?
+
+A) Using webhooks to generate tokens
+B) Validating bearer tokens by calling an external webhook service
+C) Authenticating webhook requests
+D) Creating tokens for webhook endpoints
 
 ---
 
@@ -758,12 +853,22 @@ What is the webhook token authentication method?
 
 What is the default authorization mode in most Kubernetes distributions?
 
+A) ABAC
+B) RBAC
+C) AlwaysAllow
+D) Webhook
+
 ---
 
 ### Question 71
 [MEDIUM]
 
 Which authorization mode grants full access to the cluster?
+
+A) RBAC
+B) Node
+C) AlwaysAllow
+D) Webhook
 
 ---
 
@@ -772,12 +877,22 @@ Which authorization mode grants full access to the cluster?
 
 What are the four authorization modes available in Kubernetes?
 
+A) RBAC, ABAC, Webhook, AlwaysAllow
+B) Node, RBAC, ABAC, Webhook
+C) RBAC, Node, AlwaysAllow, AlwaysDeny
+D) All of the above modes exist
+
 ---
 
 ### Question 73
 [MEDIUM-HARD]
 
 How does the Node authorization mode work?
+
+A) Grants full access to nodes
+B) Authorizes kubelets to access resources needed to run Pods scheduled on their node
+C) Allows nodes to authenticate users
+D) Controls which nodes can join the cluster
 
 ---
 
@@ -786,12 +901,22 @@ How does the Node authorization mode work?
 
 In what order are authorization modes evaluated?
 
+A) Alphabetically
+B) In the order specified in --authorization-mode, first allow wins
+C) RBAC is always evaluated first
+D) All modes must agree
+
 ---
 
 ### Question 75
 [HARD]
 
 What is Attribute-Based Access Control (ABAC)?
+
+A) Authorization based on resource attributes only
+B) Authorization using policy files that define rules based on request attributes
+C) A newer replacement for RBAC
+D) Authorization based on Active Directory attributes
 
 ---
 
