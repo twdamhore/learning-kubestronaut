@@ -225,7 +225,7 @@ D) Init containers run in parallel, not sequentially
 What happens if an init container fails?
 
 A) The Pod continues with app containers anyway
-B) Kubernetes restarts the init container according to the Pod's restart policy
+B) The init container is restarted until it succeeds (or Pod fails if restartPolicy: Never)
 C) The Pod is immediately deleted
 D) The failed init container is skipped
 
@@ -234,7 +234,7 @@ D) The failed init container is skipped
 
 **Answer:** B
 
-**Explanation:** If an init container fails, Kubernetes restarts it according to the Pod's restart policy. With the default `Always` policy, the init container will keep restarting until it succeeds. The app containers will not start until all init containers complete successfully.
+**Explanation:** If an init container fails, the kubelet restarts it until it succeeds. App containers don't start until all init containers complete. Exception: if the Pod has `restartPolicy: Never`, the entire Pod is marked as failed. Init containers don't have per-container restart policies—the Pod's policy determines behavior.
 
 **Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
