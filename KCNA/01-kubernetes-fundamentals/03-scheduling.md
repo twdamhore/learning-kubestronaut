@@ -132,7 +132,7 @@ D) The Pod remains pending
 
 **Answer:** C
 
-**Explanation:** When multiple nodes have the same highest score, the scheduler selects one randomly (or round-robin in some implementations). This ensures fair distribution when nodes are equally suitable.
+**Explanation:** When multiple nodes have the same highest score, the scheduler selects one randomly. This ensures fair distribution when nodes are equally suitable.
 
 **Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
@@ -1982,7 +1982,7 @@ D) Resource sharing
 
 ### Question 90
 [HARD]
-How does the LeastRequestedPriority scoring plugin work?
+How does the NodeResourcesFit plugin's LeastAllocated scoring strategy work?
 
 A) Prefers busy nodes
 B) Prefers nodes with most available resources
@@ -1994,9 +1994,9 @@ D) Round-robin
 
 **Answer:** B
 
-**Explanation:** LeastRequestedPriority gives higher scores to nodes with more free resources (capacity minus requested). This spreads load across nodes rather than packing them.
+**Explanation:** The NodeResourcesFit plugin with LeastAllocated scoring strategy gives higher scores to nodes with more free resources (capacity minus requested). This spreads load across nodes rather than packing them. (Note: "LeastRequestedPriority" is legacy terminology.)
 
-**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
 </details>
 
@@ -2495,7 +2495,7 @@ D) Spread is deprecated
 Can you specify multiple topology spread constraints?
 
 A) No, only one
-B) Yes, all must be satisfied
+B) Yes, and all DoNotSchedule constraints must be satisfied
 C) Maximum of two
 D) Only in namespaces
 
@@ -2504,9 +2504,9 @@ D) Only in namespaces
 
 **Answer:** B
 
-**Explanation:** Multiple topology spread constraints can be specified. ALL constraints must be satisfied for scheduling. This allows spreading across both zones AND nodes.
+**Explanation:** Multiple topology spread constraints can be specified. All `DoNotSchedule` constraints must be satisfied for scheduling. However, `ScheduleAnyway` constraints are best-effort and may be violated if no node satisfies them. This allows spreading across both zones AND nodes.
 
-**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+**Source:** [Pod Topology Spread Constraints | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
 
 </details>
 
@@ -4118,7 +4118,7 @@ What is gang scheduling?
 
 A) Scheduling one pod
 B) Scheduling a group of pods together or not at all
-C) Priority scheduling
+C) A native Kubernetes scheduler feature
 D) Random scheduling
 
 <details>
@@ -4126,9 +4126,9 @@ D) Random scheduling
 
 **Answer:** B
 
-**Explanation:** Gang scheduling schedules a group of pods together (all-or-nothing). If the group can't be placed entirely, none are scheduled. Used for tightly coupled workloads like MPI jobs.
+**Explanation:** Gang scheduling schedules a group of pods together (all-or-nothing). If the group can't be placed entirely, none are scheduled. Used for tightly coupled workloads like MPI jobs. Note: Kubernetes does NOT provide native gang scheduling—it requires a custom scheduler or external controller (e.g., Volcano, coscheduling plugin).
 
-**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+**Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
 
 </details>
 
