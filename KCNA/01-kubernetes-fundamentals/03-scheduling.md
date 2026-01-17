@@ -554,9 +554,9 @@ D) No built-in labels exist
 
 **Answer:** B
 
-**Explanation:** Kubernetes automatically adds labels like kubernetes.io/hostname, kubernetes.io/os, kubernetes.io/arch, topology.kubernetes.io/zone, topology.kubernetes.io/region, and node.kubernetes.io/instance-type.
+**Explanation:** Nodes may have well-known labels such as kubernetes.io/hostname, kubernetes.io/os, kubernetes.io/arch, topology.kubernetes.io/zone, topology.kubernetes.io/region, and node.kubernetes.io/instance-type, depending on environment and cloud provider. These are set by kubelet or cloud controllers, not guaranteed on all nodes.
 
-**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+**Source:** [Well-Known Labels | Kubernetes](https://kubernetes.io/docs/reference/labels-annotations-taints/)
 
 </details>
 
@@ -666,7 +666,7 @@ D) Only new Pods follow the rules
 
 **Answer:** B
 
-**Explanation:** "IgnoredDuringExecution" means affinity rules are only checked at scheduling time. If a node's labels change after the Pod is running, the Pod won't be evicted. A future "RequiredDuringExecution" type would evict pods.
+**Explanation:** "IgnoredDuringExecution" means affinity rules are only checked at scheduling time. If a node's labels change after the Pod is running, the Pod won't be evicted. The Pod continues running even if it no longer satisfies the affinity rules.
 
 **Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity)
 
@@ -2616,7 +2616,7 @@ D) Only NoSchedule is respected
 
 **Answer:** B
 
-**Explanation:** DaemonSets respect taints but the DaemonSet controller automatically adds NoExecute tolerations for node.kubernetes.io/not-ready and node.kubernetes.io/unreachable. This ensures DaemonSet pods aren't evicted from unhealthy nodes, which is important for monitoring and logging workloads.
+**Explanation:** DaemonSets respect taints but the DaemonSet controller automatically adds tolerations for: not-ready and unreachable (NoExecute), plus disk-pressure, memory-pressure, pid-pressure, and unschedulable (NoSchedule). For hostNetwork pods, network-unavailable (NoSchedule) is also added. This ensures DaemonSet pods run on nodes that need monitoring/logging.
 
 **Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
@@ -2629,16 +2629,16 @@ D) Only NoSchedule is respected
 What tolerations do DaemonSets automatically get?
 
 A) None
-B) Tolerations for node.kubernetes.io/not-ready and unreachable with NoExecute
+B) Tolerations for not-ready, unreachable, disk-pressure, memory-pressure, pid-pressure, unschedulable
 C) All tolerations
-D) Only NoSchedule tolerations
+D) Only NoExecute tolerations
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** DaemonSet pods automatically get tolerations for not-ready and unreachable taints (with NoExecute effect) so they continue running on problematic nodes for monitoring/logging.
+**Explanation:** DaemonSet pods automatically get tolerations for: not-ready and unreachable (NoExecute), plus disk-pressure, memory-pressure, pid-pressure, and unschedulable (NoSchedule). For hostNetwork pods, network-unavailable is also added.
 
 **Source:** [Taints and Tolerations | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
@@ -3526,7 +3526,7 @@ D) Storage points
 
 **Answer:** B
 
-**Explanation:** Extension points are phases in scheduling where plugins run: PreFilter, Filter, PostFilter, PreScore, Score, Reserve, Permit, PreBind, Bind, PostBind.
+**Explanation:** Extension points are phases in scheduling where plugins run: QueueSort, PreFilter, Filter, PostFilter, PreScore, Score, Reserve, Permit, PreBind, Bind, PostBind.
 
 **Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
 
@@ -4080,7 +4080,7 @@ D) kubectl simulate
 
 **Answer:** B
 
-**Explanation:** There's no built-in simulation. Options: increase scheduler verbosity (-v=10) to see decisions, use tools like kubectl-scheduler_simulator, or manually check constraints.
+**Explanation:** There's no built-in dry-run for scheduling. To understand scheduling decisions: increase scheduler verbosity (-v=10), examine pod events (`kubectl describe pod`), or check scheduler logs for filtering/scoring information.
 
 **Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
@@ -4126,7 +4126,7 @@ D) Random scheduling
 
 **Answer:** B
 
-**Explanation:** Gang scheduling schedules a group of pods together (all-or-nothing). If the group can't be placed entirely, none are scheduled. Used for tightly coupled workloads like MPI jobs. Note: Kubernetes does NOT provide native gang scheduling—it requires a custom scheduler or external controller (e.g., Volcano, coscheduling plugin).
+**Explanation:** Gang scheduling schedules a group of pods together (all-or-nothing). If the group can't be placed entirely, none are scheduled. Used for tightly coupled workloads like MPI jobs. Note: Kubernetes does NOT provide native gang scheduling—it requires deploying a custom scheduler, which Kubernetes supports through the multiple schedulers feature.
 
 **Source:** [Configure Multiple Schedulers | Kubernetes](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
 
@@ -4368,9 +4368,9 @@ D) No scheduling needed
 
 **Answer:** B
 
-**Explanation:** For ephemeral volumes (CSI ephemeral, generic ephemeral), the scheduler can consider storage capacity tracking to avoid scheduling on nodes without sufficient storage.
+**Explanation:** Generic ephemeral volumes are PVC-backed and scheduled via PVC binding. Using WaitForFirstConsumer storage class enables topology-aware placement, ensuring pods are scheduled on nodes where storage is available.
 
-**Source:** [Scheduler Configuration | Kubernetes](https://kubernetes.io/docs/reference/scheduling/config/)
+**Source:** [Ephemeral Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/)
 
 </details>
 
@@ -4412,7 +4412,7 @@ D) Deprecated tool
 
 **Answer:** B
 
-**Explanation:** The Descheduler is a separate project (sigs.k8s.io/descheduler) that runs policies to evict pods. It's not built into Kubernetes and must be deployed separately.
+**Explanation:** The Descheduler is a separate component (not built into Kubernetes) that evicts pods based on policies to improve cluster balance. It complements the scheduler by handling post-scheduling optimization, but must be deployed separately.
 
 **Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
 
