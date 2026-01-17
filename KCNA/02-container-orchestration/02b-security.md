@@ -317,12 +317,22 @@ D) The ServiceAccount user
 
 What is the fsGroup field used for in securityContext?
 
+A) To set the filesystem type
+B) To set the group ID that owns Pod volumes
+C) To configure file permissions
+D) To specify filesystem quotas
+
 ---
 
 ### Question 27
 [MEDIUM-HARD]
 
 How do you drop all Linux capabilities from a container?
+
+A) Set privileged: false
+B) Use capabilities.drop: ["ALL"] in securityContext
+C) Set runAsNonRoot: true
+D) Capabilities cannot be dropped
 
 ---
 
@@ -331,12 +341,22 @@ How do you drop all Linux capabilities from a container?
 
 What is the difference between pod-level and container-level securityContext?
 
+A) No difference; they are the same
+B) Pod-level applies to all containers; container-level overrides for specific containers
+C) Pod-level is deprecated
+D) Container-level is more secure
+
 ---
 
 ### Question 29
 [HARD]
 
 What is the "baseline" Pod Security Standard designed to prevent?
+
+A) All security vulnerabilities
+B) Known privilege escalations while allowing common workloads
+C) Network attacks only
+D) Container escapes only
 
 ---
 
@@ -345,12 +365,22 @@ What is the "baseline" Pod Security Standard designed to prevent?
 
 How do you configure Pod Security Admission cluster-wide?
 
+A) Use namespace labels only
+B) Configure the PodSecurity admission controller with a configuration file
+C) Set cluster-wide annotations
+D) Modify the API server binary
+
 ---
 
 ### Question 31
 [HARD]
 
 What is the supplementalGroups field used for?
+
+A) To add groups to the primary group
+B) To specify additional group IDs for the container process
+C) To create new groups
+D) To supplement user permissions
 
 ---
 
@@ -359,12 +389,22 @@ What is the supplementalGroups field used for?
 
 How does the MustRunAsNonRoot security context constraint work?
 
+A) It sets the user to nobody
+B) It validates that the container's image does not run as UID 0
+C) It changes the user at runtime
+D) It blocks all root processes
+
 ---
 
 ### Question 33
 [HARD]
 
 What is the seLinuxOptions field used for?
+
+A) To enable SELinux
+B) To set SELinux labels (user, role, type, level) for containers
+C) To configure SELinux policies
+D) To disable SELinux
 
 ---
 
@@ -373,12 +413,22 @@ What is the seLinuxOptions field used for?
 
 What happens when you set readOnlyRootFilesystem to true?
 
+A) The image becomes read-only
+B) The container's root filesystem is mounted read-only
+C) Volumes become read-only
+D) Configuration files cannot be changed
+
 ---
 
 ### Question 35
 [HARD]
 
 How do you allow a container to bind to privileged ports (< 1024)?
+
+A) Set privileged: true
+B) Add the NET_BIND_SERVICE capability
+C) Run as root
+D) Use hostNetwork: true
 
 ---
 
@@ -387,12 +437,22 @@ How do you allow a container to bind to privileged ports (< 1024)?
 
 What is the windowsOptions field in securityContext?
 
+A) Configuration for Windows containers
+B) Window manager settings
+C) Terminal options
+D) Display settings
+
 ---
 
 ### Question 37
 [HARD]
 
 How do Pod Security Admission exemptions work?
+
+A) By deleting policies
+B) By configuring usernames, namespaces, or runtimeClasses that bypass checks
+C) By adding annotations
+D) Exemptions are not supported
 
 ---
 
@@ -403,12 +463,22 @@ How do Pod Security Admission exemptions work?
 
 What is the maximum size limit for a Kubernetes Secret?
 
+A) 1KB
+B) 1MB
+C) 10MB
+D) No limit
+
 ---
 
 ### Question 39
 [MEDIUM]
 
 How do you create a Secret from literal values using kubectl?
+
+A) kubectl create secret literal
+B) kubectl create secret generic --from-literal=key=value
+C) kubectl apply secret
+D) kubectl generate secret
 
 ---
 
@@ -417,12 +487,22 @@ How do you create a Secret from literal values using kubectl?
 
 What is the stringData field in a Secret manifest?
 
+A) A field for storing string data without base64 encoding
+B) A deprecated field
+C) A field for storing encrypted strings
+D) A field for multi-line strings only
+
 ---
 
 ### Question 41
 [MEDIUM-HARD]
 
 How do Secrets differ from ConfigMaps in terms of security?
+
+A) Secrets are encrypted by default
+B) Secrets are stored in tmpfs when mounted, have stricter RBAC defaults, and can be encrypted at rest
+C) There is no security difference
+D) ConfigMaps are more secure
 
 ---
 
@@ -431,12 +511,22 @@ How do Secrets differ from ConfigMaps in terms of security?
 
 What is the kubernetes.io/basic-auth Secret type used for?
 
+A) For OAuth tokens
+B) For storing username and password credentials
+C) For API keys
+D) For SSH keys
+
 ---
 
 ### Question 43
 [HARD]
 
 How does the kube-apiserver encrypt Secrets at rest?
+
+A) Using TLS
+B) By configuring an EncryptionConfiguration that specifies encryption providers
+C) Secrets are always encrypted automatically
+D) Using the kubelet
 
 ---
 
@@ -445,12 +535,22 @@ How does the kube-apiserver encrypt Secrets at rest?
 
 What is envelope encryption for Secrets?
 
+A) Encrypting the Secret manifest
+B) Encrypting data with a DEK, then encrypting the DEK with a KEK from a KMS
+C) Double encryption with the same key
+D) Encrypting during transmission
+
 ---
 
 ### Question 45
 [HARD]
 
 How are Secret volume mounts updated when the Secret changes?
+
+A) Immediately
+B) Eventually by kubelet sync; depends on sync frequency and cache TTL
+C) Never; Pods must be restarted
+D) Only if the Pod has watch permissions
 
 ---
 
@@ -459,12 +559,22 @@ How are Secret volume mounts updated when the Secret changes?
 
 What is the relationship between Secrets and etcd?
 
+A) Secrets are stored in a separate database
+B) Secrets are stored in etcd, optionally encrypted at rest
+C) etcd cannot store Secrets
+D) Secrets are only stored in memory
+
 ---
 
 ### Question 47
 [HARD]
 
 How can you use external secret management systems with Kubernetes?
+
+A) Direct integration only
+B) Using tools like External Secrets Operator, Secrets Store CSI Driver, or custom controllers
+C) External systems cannot be used
+D) By mounting network volumes
 
 ---
 
@@ -473,12 +583,22 @@ How can you use external secret management systems with Kubernetes?
 
 What is the secretRef field used for in Pod specs?
 
+A) To reference a specific key in a Secret
+B) To load all key-value pairs from a Secret as environment variables
+C) To mount a Secret as a volume
+D) To create a new Secret
+
 ---
 
 ### Question 49
 [HARD]
 
 How do you restrict which Pods can access a specific Secret?
+
+A) Using NetworkPolicies
+B) Using RBAC to control ServiceAccount access to Secrets
+C) Secrets are accessible by all Pods
+D) Using Secret labels
 
 ---
 
@@ -488,6 +608,11 @@ How do you restrict which Pods can access a specific Secret?
 [MEDIUM]
 
 What must be installed for NetworkPolicies to have any effect?
+
+A) A firewall
+B) A CNI plugin that supports NetworkPolicy
+C) A special kernel module
+D) The NetworkPolicy controller
 
 ---
 
