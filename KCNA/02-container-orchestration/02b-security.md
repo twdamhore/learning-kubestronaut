@@ -1408,6 +1408,17 @@ B) Using JWT tokens mounted in Pods
 C) Using SSH keys
 D) Using IP whitelisting
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ServiceAccounts authenticate using JWT (JSON Web Tokens) that are automatically mounted into Pods at /var/run/secrets/kubernetes.io/serviceaccount/token. The API server validates these tokens against the ServiceAccount signing key to authenticate the Pod.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#service-account-tokens)
+
+</details>
+
 ---
 
 ### Question 62
@@ -1419,6 +1430,17 @@ A) To set the server certificate
 B) To specify the CA bundle for validating client certificates
 C) To configure TLS
 D) To enable mTLS
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The --client-ca-file flag specifies a CA certificate bundle used to validate client certificates presented during X.509 client certificate authentication. If a client presents a certificate signed by one of these CAs, they are authenticated with the CN as username and O as groups.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#x509-client-certs)
+
+</details>
 
 ---
 
@@ -1432,6 +1454,17 @@ B) Pass multiple authentication flags; the API server tries each in order
 C) Use a configuration file only
 D) Run multiple API servers
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The API server supports multiple authentication methods simultaneously (X.509 certificates, bearer tokens, OIDC, etc.). Configure each using its respective flag. The API server tries each enabled authenticator until one succeeds. If all fail, the request is denied.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+
+</details>
+
 ---
 
 ### Question 64
@@ -1443,6 +1476,17 @@ A) Using a proxy server for load balancing
 B) A front proxy that authenticates users and passes identity via headers
 C) A reverse proxy for the API server
 D) A method to proxy authentication to LDAP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Authenticating proxy authentication allows a front proxy to authenticate users and pass their identity to the API server via request headers (like X-Remote-User, X-Remote-Group). The API server trusts requests from the proxy (validated by client certificate) and extracts identity from headers.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#authenticating-proxy)
+
+</details>
 
 ---
 
@@ -1456,6 +1500,17 @@ B) By verifying the certificate chain against the configured CA and extracting i
 C) By contacting a CA server
 D) By comparing to stored certificates
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The API server validates X.509 client certificates by verifying the certificate chain against the CA specified in --client-ca-file, checking expiration and revocation. It then extracts the Common Name (CN) as the username and Organization (O) fields as groups.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#x509-client-certs)
+
+</details>
+
 ---
 
 ### Question 66
@@ -1467,6 +1522,17 @@ A) To set the API server URL
 B) To specify the OIDC provider URL for token validation
 C) To issue OIDC tokens
 D) To configure OAuth
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The --oidc-issuer-url flag specifies the URL of the OpenID Connect provider. The API server uses this URL to discover the provider's configuration (via .well-known/openid-configuration) and validate ID tokens by checking the issuer claim matches this URL.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
+
+</details>
 
 ---
 
@@ -1480,6 +1546,17 @@ B) A CSV file maps tokens to users; the API server reads it at startup
 C) Tokens are stored in etcd
 D) Each user creates their own token file
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Static token authentication uses a CSV file (--token-auth-file) with format: token,user,uid,"group1,group2". The API server reads this file at startup. Changing tokens requires restarting the API server. This method is simple but not recommended for production.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#static-token-file)
+
+</details>
+
 ---
 
 ### Question 68
@@ -1492,6 +1569,17 @@ B) system:authenticated is added to all authenticated users
 C) admin group
 D) users group
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** All authenticated users are automatically added to the system:authenticated group. Similarly, unauthenticated requests (when anonymous auth is enabled) are assigned the system:unauthenticated group. These groups can be used in RBAC bindings for default permissions.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#anonymous-requests)
+
+</details>
+
 ---
 
 ### Question 69
@@ -1503,6 +1591,17 @@ A) No difference
 B) Impersonation allows acting as another user via API; sudo elevates privileges locally
 C) Sudo is for containers; impersonation is for users
 D) Impersonation is more secure
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubernetes impersonation (using --as flag or Impersonate headers) allows acting as another user/group for API requests, useful for testing permissions. Unlike sudo which elevates local system privileges, impersonation works at the API level and requires explicit RBAC permission for the "impersonate" verb.
+
+**Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#user-impersonation)
+
+</details>
 
 ---
 
@@ -1518,6 +1617,17 @@ B) All authenticated requests are authorized without checking permissions
 C) Allows all traffic
 D) Allows anonymous access
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** AlwaysAllow mode authorizes all authenticated requests without permission checks. Every authenticated user effectively has full cluster access. This mode is insecure and should only be used in development or when all users are trusted. Production clusters should use RBAC.
+
+**Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
+
+</details>
+
 ---
 
 ### Question 71
@@ -1529,6 +1639,17 @@ A) kubelet
 B) kube-apiserver
 C) kube-controller-manager
 D) etcd
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The kube-apiserver makes all authorization decisions. When a request arrives, after authentication, the API server evaluates the request against the configured authorization modules (RBAC, ABAC, Node, Webhook) to determine if the action is permitted.
+
+**Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/)
+
+</details>
 
 ---
 
@@ -1542,6 +1663,17 @@ B) User, group, verb, resource, namespace, and API group
 C) Only the resource
 D) The request body
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Authorization decisions use multiple request attributes: the authenticated user and groups, the API verb (get, list, create, etc.), the resource type and name, the namespace, and the API group. These attributes are matched against authorization rules (like RBAC policies).
+
+**Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#review-your-request-attributes)
+
+</details>
+
 ---
 
 ### Question 73
@@ -1553,6 +1685,17 @@ A) Only the first mode is used
 B) Modes are evaluated in order; first to allow or deny wins
 C) All modes must agree
 D) Modes are randomly selected
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When multiple authorization modes are specified (e.g., --authorization-mode=Node,RBAC), they're evaluated in order. Each authorizer can allow, deny, or make no decision. If one allows, the request proceeds. A request is denied only when no authorizer allows it.
+
+**Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
+
+</details>
 
 ---
 
@@ -1566,6 +1709,17 @@ B) To programmatically check if a subject can perform an action
 C) To audit access logs
 D) To create new subjects
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** SubjectAccessReview is an API for programmatically checking if a specific user/group can perform an action. You create a SubjectAccessReview resource specifying the subject and action, and the API returns whether it's allowed. Useful for building authorization UIs or automated checks.
+
+**Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#checking-api-access)
+
+</details>
+
 ---
 
 ### Question 75
@@ -1577,6 +1731,17 @@ A) Enable it by default
 B) Use --authorization-mode=Webhook and --authorization-webhook-config-file
 C) Deploy a webhook controller
 D) Configure in RBAC
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To enable webhook authorization, set --authorization-mode to include Webhook and specify the webhook configuration using --authorization-webhook-config-file. The config file contains the webhook service URL and authentication credentials for the API server to call the external authorizer.
+
+**Source:** [Webhook Mode | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/webhook/)
+
+</details>
 
 ---
 
@@ -1590,6 +1755,17 @@ B) For checking if the current user can perform a specific action
 C) For self-service account management
 D) For auditing your own actions
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** SelfSubjectAccessReview allows users to check their own permissions without needing admin access. Unlike SubjectAccessReview (which checks any user's permissions), SelfSubjectAccessReview only checks the calling user's permissions. This is what `kubectl auth can-i` uses.
+
+**Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#checking-api-access)
+
+</details>
+
 ---
 
 ### Question 77
@@ -1601,6 +1777,17 @@ A) By limiting network access
 B) By only allowing kubelets to access resources related to Pods scheduled on their node
 C) By requiring node certificates
 D) By rate limiting requests
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Node authorization restricts kubelets to only access resources they need: reading Services, Endpoints, Nodes, and Pods; reading Secrets/ConfigMaps/PVCs referenced by Pods on their node; and updating their own Node status. This limits the damage if a node is compromised.
+
+**Source:** [Node Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/node/)
+
+</details>
 
 ---
 
@@ -1614,6 +1801,17 @@ B) system:authenticated, system:unauthenticated, system:masters, system:servicea
 C) root, sudo, operator
 D) There are no special groups
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubernetes has special system groups: system:authenticated (all authenticated users), system:unauthenticated (anonymous requests), system:masters (superuser access), system:serviceaccounts (all ServiceAccounts), and system:serviceaccounts:<namespace> (ServiceAccounts in a namespace).
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings)
+
+</details>
+
 ---
 
 ### Question 79
@@ -1625,6 +1823,17 @@ A) Check kubectl output
 B) Enable audit logging with appropriate audit policy rules
 C) Query the authorization API
 D) Check etcd directly
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To audit authorization decisions, enable Kubernetes audit logging with an audit policy that captures authorization events. The audit log records who made requests, what resources were accessed, and whether requests were allowed or denied. Configure with --audit-policy-file and --audit-log-path.
+
+**Source:** [Auditing | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
+
+</details>
 
 ---
 
@@ -1639,6 +1848,17 @@ A) Before authentication
 B) After authentication and authorization, before persistence
 C) After object persistence
 D) During authentication
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Admission controllers are invoked after a request passes authentication and authorization, but before the object is persisted to etcd. The order is: Authentication → Authorization → Mutating Admission → Schema Validation → Validating Admission → Persistence.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
+
+</details>
 
 ---
 
