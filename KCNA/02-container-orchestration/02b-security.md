@@ -1872,6 +1872,17 @@ B) LimitRanger
 C) DefaultResources
 D) ResourceQuota
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The LimitRanger admission controller sets default resource requests and limits based on LimitRange objects in the namespace. If a Pod doesn't specify resource requests/limits, LimitRanger applies the defaults defined in the namespace's LimitRange.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#limitranger)
+
+</details>
+
 ---
 
 ### Question 82
@@ -1883,6 +1894,17 @@ A) A controller that changes behavior at runtime
 B) An admission webhook that is registered dynamically via API resources
 C) A controller that adapts to load
 D) A built-in controller that can be configured
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Dynamic admission controllers are webhooks registered through ValidatingWebhookConfiguration or MutatingWebhookConfiguration API resources. Unlike built-in admission controllers that require API server restart to change, webhooks can be added, modified, or removed at runtime.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+
+</details>
 
 ---
 
@@ -1896,6 +1918,17 @@ B) Using --enable-admission-plugins and --disable-admission-plugins flags
 C) By deploying or removing controllers
 D) Through RBAC settings
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Built-in admission controllers are enabled or disabled using API server flags: --enable-admission-plugins adds controllers to the default set, and --disable-admission-plugins removes them. Changes require API server restart. Some controllers are enabled by default.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#how-do-i-turn-on-an-admission-controller)
+
+</details>
+
 ---
 
 ### Question 84
@@ -1907,6 +1940,17 @@ A) To set default resource limits
 B) To enforce resource quotas on namespaces and reject requests that exceed them
 C) To monitor resource usage
 D) To allocate resources to pods
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The ResourceQuota admission controller enforces ResourceQuota objects in namespaces. It tracks resource usage and rejects requests that would cause the namespace to exceed its quota. This prevents any single namespace from consuming excessive cluster resources.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#resourcequota)
+
+</details>
 
 ---
 
@@ -1920,6 +1964,17 @@ B) A resource that configures webhooks that can modify objects during admission
 C) A configuration for mutating API servers
 D) A webhook for configuration changes
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** MutatingWebhookConfiguration is a Kubernetes resource that configures mutating admission webhooks. These webhooks can modify (mutate) objects during admission - adding defaults, injecting sidecars, or modifying fields. They run before validating webhooks.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+
+</details>
+
 ---
 
 ### Question 86
@@ -1931,6 +1986,17 @@ A) Using a label selector only
 B) Using the rules field with apiGroups, apiVersions, resources, and operations
 C) The webhook processes all resources by default
 D) Using RBAC rules
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The rules field in webhook configuration specifies which requests trigger the webhook: apiGroups (core, apps, etc.), apiVersions (v1, v1beta1), resources (pods, deployments), and operations (CREATE, UPDATE, DELETE). Only matching requests are sent to the webhook.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-rules)
+
+</details>
 
 ---
 
@@ -1944,6 +2010,17 @@ B) Defines behavior (Fail or Ignore) when the webhook cannot be reached
 C) Policy for failed admissions
 D) Retry policy
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The failurePolicy field specifies what happens when the webhook cannot be reached or returns an error: "Fail" rejects the request (fail-closed, more secure), "Ignore" allows the request to proceed (fail-open, more available). Default is "Fail".
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#failure-policy)
+
+</details>
+
 ---
 
 ### Question 88
@@ -1956,6 +2033,17 @@ B) ImagePolicyWebhook or custom ValidatingAdmissionWebhook
 C) RegistryEnforcer
 D) There is no such controller
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The ImagePolicyWebhook admission controller (or a custom ValidatingAdmissionWebhook) can enforce image policies like requiring images from specific registries. There's no built-in controller for this; you need to implement a webhook or use tools like OPA Gatekeeper or Kyverno.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook)
+
+</details>
+
 ---
 
 ### Question 89
@@ -1967,6 +2055,17 @@ A) They control retry behavior
 B) If set to IfNeeded, webhooks are re-invoked if other webhooks modified the object
 C) They control webhook ordering
 D) They prevent duplicate invocations
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The reinvocationPolicy field (Never or IfNeeded) controls whether mutating webhooks are called again if later webhooks modify the object. "IfNeeded" re-invokes webhooks that need to see the final object state. This handles dependencies between webhooks.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#reinvocation-policy)
+
+</details>
 
 ---
 
@@ -1982,6 +2081,17 @@ B) Tags are mutable labels; digests are immutable SHA256 hashes
 C) Digests are shorter
 D) Tags are more secure
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Image tags (like :latest or :v1.0) are mutable references that can point to different images over time. Digests (sha256:abc123...) are immutable SHA256 hashes that uniquely identify a specific image. Using digests ensures reproducible deployments.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
 ---
 
 ### Question 91
@@ -1993,6 +2103,17 @@ A) For better performance
 B) To limit damage if the container is compromised; principle of least privilege
 C) Containers cannot run as root
 D) For easier debugging
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Running containers as non-root follows the principle of least privilege. If a container is compromised, an attacker has limited capabilities compared to root. Root in a container might still exploit kernel vulnerabilities or misconfigured security to escalate privileges.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -2006,6 +2127,17 @@ B) An image containing only the application and runtime dependencies, no shell o
 C) A compressed image
 D) An image without configuration
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Distroless images contain only the application and its runtime dependencies - no shell, package manager, or other OS tools. This reduces attack surface significantly since attackers can't use common tools if they compromise the container. Google's distroless images are a popular example.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
 ---
 
 ### Question 93
@@ -2017,6 +2149,17 @@ A) Using annotations only
 B) Using securityContext.seccompProfile with type and optionally localhostProfile
 C) Through the container runtime only
 D) Seccomp cannot be configured in Kubernetes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Seccomp profiles are configured via securityContext.seccompProfile. The type can be RuntimeDefault (container runtime's default), Localhost (custom profile from node), or Unconfined (no filtering). For Localhost, specify the profile path via localhostProfile.
+
+**Source:** [Restrict a Container's Syscalls with seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
+
+</details>
 
 ---
 
@@ -2030,6 +2173,17 @@ B) Kernel features that isolate process views of system resources (PID, network,
 C) DNS namespaces
 D) File naming conventions
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Linux namespaces are kernel features that isolate what a process can see: PID (process IDs), network (network interfaces), mount (filesystems), UTS (hostname), IPC (inter-process communication), and user (UID/GID). Containers use namespaces for isolation from the host and each other.
+
+**Source:** [Container Runtime Interface | Kubernetes](https://kubernetes.io/docs/concepts/architecture/cri/)
+
+</details>
+
 ---
 
 ### Question 95
@@ -2041,6 +2195,17 @@ A) By creating new users
 B) By mapping container root (UID 0) to an unprivileged user on the host
 C) By encrypting user data
 D) By isolating user files
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** User namespace remapping maps UIDs inside the container to different UIDs on the host. Container root (UID 0) becomes an unprivileged user on the host. This means even if an attacker becomes root in the container, they have no root privileges on the host.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -2054,6 +2219,17 @@ B) A profile that applies no seccomp filtering
 C) The default secure profile
 D) A profile for untrusted workloads
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The Unconfined seccomp profile type disables seccomp filtering entirely, allowing all system calls. This is the least secure option and should be avoided. Use RuntimeDefault for basic protection or custom Localhost profiles for fine-grained control.
+
+**Source:** [Restrict a Container's Syscalls with seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
+
+</details>
+
 ---
 
 ### Question 97
@@ -2065,6 +2241,17 @@ A) By encrypting container data
 B) By limiting and isolating resource usage (CPU, memory, I/O) to prevent DoS
 C) By controlling network access
 D) By managing container images
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Control groups (cgroups) limit and isolate resource usage for containers. By setting CPU, memory, and I/O limits, cgroups prevent any single container from consuming all host resources (DoS prevention) and provide fair resource allocation between containers.
+
+**Source:** [Container Runtime Interface | Kubernetes](https://kubernetes.io/docs/concepts/architecture/cri/)
+
+</details>
 
 ---
 
@@ -2078,6 +2265,17 @@ B) Cryptographically signing images and verifying signatures before deployment
 C) Compressing images
 D) Watermarking images
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Image signing uses cryptographic signatures to verify image integrity and provenance. Tools like cosign, Notary, and sigstore sign images, and admission webhooks or policy engines can verify signatures before allowing deployment. This prevents deploying tampered or unauthorized images.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
 ---
 
 ### Question 99
@@ -2090,6 +2288,17 @@ B) Set allowPrivilegeEscalation: false, drop capabilities, use seccomp, run as n
 C) Use host networking
 D) Disable security contexts
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Prevent privilege escalation by: setting allowPrivilegeEscalation: false (prevents setuid binaries), dropping all capabilities, using seccomp profiles to restrict syscalls, running as non-root user, and using read-only root filesystem. The restricted Pod Security Standard enforces these.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 100
@@ -2101,5 +2310,16 @@ A) No implications
 B) Containers can access and modify host filesystem, potentially escaping isolation
 C) Only performance implications
 D) hostPath is automatically sandboxed
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** hostPath volumes mount host filesystem paths into containers, breaking isolation. Containers can read/write host files, potentially accessing secrets, modifying system files, or exploiting this for container escape. The baseline and restricted Pod Security Standards prohibit hostPath.
+
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+
+</details>
 
 ---
