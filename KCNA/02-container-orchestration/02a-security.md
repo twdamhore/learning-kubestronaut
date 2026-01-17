@@ -686,7 +686,7 @@ What Linux capabilities are dropped by the "restricted" Pod Security Standard?
 
 A) Only NET_RAW
 B) Only SYS_ADMIN
-C) ALL capabilities must be dropped, and no capabilities can be added
+C) ALL capabilities must be dropped; only NET_BIND_SERVICE may be added back
 D) No capabilities are dropped
 
 <details>
@@ -694,7 +694,7 @@ D) No capabilities are dropped
 
 **Answer:** C
 
-**Explanation:** The restricted Pod Security Standard requires that ALL capabilities be dropped and the capabilities.add field must be empty or unset. The baseline profile allows adding NET_BIND_SERVICE, but restricted does not permit adding any capabilities.
+**Explanation:** The restricted Pod Security Standard requires that ALL capabilities be dropped via capabilities.drop. The only capability that may be added back is NET_BIND_SERVICE (to allow binding to privileged ports without full root). Any other capability in capabilities.add violates the restricted profile.
 
 **Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
@@ -1333,7 +1333,7 @@ D) The policy applies cluster-wide
 How do you create an egress policy that allows DNS traffic?
 
 A) Allow all UDP traffic
-B) Allow egress to port 53 UDP/TCP to the DNS Service in kube-system namespace
+B) Allow egress to DNS pods using namespaceSelector/podSelector on port 53 UDP/TCP
 C) DNS traffic is always allowed
 D) Use a special DNS exception field
 
@@ -1342,9 +1342,9 @@ D) Use a special DNS exception field
 
 **Answer:** B
 
-**Explanation:** To allow DNS traffic in an egress policy, explicitly allow traffic to port 53 (both UDP and TCP) targeting the DNS Service (kube-dns or CoreDNS) in the kube-system namespace. DNS traffic is not automatically exempted from NetworkPolicies, so you must allow it explicitly when using egress policies.
+**Explanation:** To allow DNS traffic in an egress policy, explicitly allow traffic to port 53 (both UDP and TCP) targeting DNS pods. Since NetworkPolicies cannot select Services directly, use namespaceSelector to target kube-system and podSelector to match CoreDNS/kube-dns pods, or use ipBlock with the DNS ClusterIP. DNS traffic is not automatically exempted from NetworkPolicies.
 
-**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -1714,7 +1714,7 @@ D) All modes must agree
 
 **Answer:** B
 
-**Explanation:** Authorization modes are evaluated in the order specified in the --authorization-mode flag. Each authorizer can allow, deny, or pass (no opinion). If any authorizer explicitly denies the request, the request is rejected immediately. If any authorizer allows the request and none deny it, the request is permitted. If all authorizers have no opinion, the request is denied.
+**Explanation:** Authorization modes are evaluated in the order specified in the --authorization-mode flag using short-circuit logic. The first authorizer to return allow or deny decides the outcome immediately. If an authorizer has no opinion, evaluation continues to the next. If all authorizers have no opinion, the request is denied by default.
 
 **Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
 
