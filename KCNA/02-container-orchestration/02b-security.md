@@ -289,7 +289,7 @@ D) Wildcards only work for verbs
 ### Question 13
 [MEDIUM]
 
-What namespace contains the default ServiceAccount for system components?
+Which namespace typically contains ServiceAccounts for core system components?
 
 A) default
 B) kube-system
@@ -301,7 +301,7 @@ D) system
 
 **Answer:** B
 
-**Explanation:** The kube-system namespace contains ServiceAccounts for core Kubernetes system components like kube-controller-manager, kube-scheduler, and kube-proxy. Each component typically has its own ServiceAccount with appropriate RBAC permissions.
+**Explanation:** The kube-system namespace contains ServiceAccounts for core Kubernetes system components like kube-controller-manager, kube-scheduler, and kube-proxy. Note that every namespace also has its own "default" ServiceAccount created automatically, but system components use dedicated ServiceAccounts in kube-system.
 
 **Source:** [Managing Service Accounts | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
 
@@ -544,7 +544,7 @@ D) A container that can access secrets
 ### Question 24
 [MEDIUM]
 
-Which Pod Security Standards level allows most workloads to run?
+Which Pod Security Standards level prevents known privilege escalations while allowing most workloads?
 
 A) restricted
 B) baseline
@@ -554,9 +554,9 @@ D) permissive
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
 
-**Explanation:** The "privileged" Pod Security Standard level is unrestricted and allows any Pod configuration, enabling all workloads to run. However, it provides no security guarantees. "Baseline" prevents known privilege escalations while allowing most workloads, and "restricted" is the most secure but restrictive.
+**Explanation:** The "baseline" Pod Security Standard level prevents known privilege escalations while allowing most workloads to run. It blocks dangerous configurations like hostNetwork, hostPID, and privileged containers but allows common workload patterns. "Privileged" has no restrictions, while "restricted" is heavily locked down.
 
 **Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
@@ -728,10 +728,10 @@ D) To supplement user permissions
 ### Question 32
 [HARD]
 
-How does the MustRunAsNonRoot security context constraint work?
+How does runAsNonRoot: true work in securityContext?
 
 A) It sets the user to nobody
-B) It validates that the container's image does not run as UID 0
+B) It validates that the container will not run as UID 0 (root)
 C) It changes the user at runtime
 D) It blocks all root processes
 
@@ -740,7 +740,7 @@ D) It blocks all root processes
 
 **Answer:** B
 
-**Explanation:** MustRunAsNonRoot (runAsNonRoot: true) validates at Pod admission and container startup that the container will not run as root (UID 0). If the image is configured to run as root and no runAsUser is specified, the container fails to start. It enforces rather than changes the user.
+**Explanation:** Setting runAsNonRoot: true validates at container startup that the container will not run as root (UID 0). If the image is configured to run as root and no runAsUser is specified, the container fails to start. It enforces rather than changes the user - it's a validation, not a transformation.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -1505,7 +1505,7 @@ D) By comparing to stored certificates
 
 **Answer:** B
 
-**Explanation:** The API server validates X.509 client certificates by verifying the certificate chain against the CA specified in --client-ca-file, checking expiration and revocation. It then extracts the Common Name (CN) as the username and Organization (O) fields as groups.
+**Explanation:** The API server validates X.509 client certificates by verifying the certificate chain against the CA specified in --client-ca-file and checking expiration. It then extracts the Common Name (CN) as the username and Organization (O) fields as groups. Note: The API server does not check certificate revocation.
 
 **Source:** [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#x509-client-certs)
 
@@ -1613,16 +1613,16 @@ D) Impersonation is more secure
 What does it mean when authorization mode is set to AlwaysAllow?
 
 A) Only admin requests are allowed
-B) All authenticated requests are authorized without checking permissions
-C) Allows all traffic
-D) Allows anonymous access
+B) All requests are authorized without checking permissions
+C) Only allows RBAC-approved traffic
+D) Denies anonymous access
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** AlwaysAllow mode authorizes all authenticated requests without permission checks. Every authenticated user effectively has full cluster access. This mode is insecure and should only be used in development or when all users are trusted. Production clusters should use RBAC.
+**Explanation:** AlwaysAllow mode authorizes all requests without any permission checks, including anonymous requests if anonymous authentication is enabled. This mode provides no access control and should never be used in production. It may be used for testing or development scenarios.
 
 **Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
 
@@ -1682,7 +1682,7 @@ D) The request body
 How does the --authorization-mode flag work with multiple modes?
 
 A) Only the first mode is used
-B) Modes are evaluated in order; first to allow or deny wins
+B) Modes are evaluated in order; if any allows, the request is permitted
 C) All modes must agree
 D) Modes are randomly selected
 
@@ -1691,7 +1691,7 @@ D) Modes are randomly selected
 
 **Answer:** B
 
-**Explanation:** When multiple authorization modes are specified (e.g., --authorization-mode=Node,RBAC), they're evaluated in order. Each authorizer can allow, deny, or make no decision. If one allows, the request proceeds. A request is denied only when no authorizer allows it.
+**Explanation:** When multiple authorization modes are specified (e.g., --authorization-mode=Node,RBAC), they're evaluated in order. Each authorizer can allow the request or have no opinion (pass). If any authorizer allows, the request proceeds immediately. If all authorizers have no opinion, the request is denied.
 
 **Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
 
