@@ -894,7 +894,7 @@ D) Load balancing across clusters
 
 Common sidecar use cases include: log collection (Fluentd, Filebeat) to ship logs from the main container, service mesh proxies (Envoy) to handle traffic routing and security, syncing configuration or data from external sources, and providing TLS termination or authentication services.
 
-**Source:** [Sidecar Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
@@ -948,7 +948,7 @@ D) A pattern for network configuration
 
 The adapter pattern uses a sidecar to transform output from the main container into a standardized format. Common examples include log format conversion (transforming app-specific logs to JSON for centralized logging) or metrics adaptation (converting proprietary metrics to Prometheus format). This enables heterogeneous systems to present uniform interfaces.
 
-**Source:** [Sidecar Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 </details>
 
