@@ -4356,11 +4356,11 @@ D) Network limit
 
 ### Question 197
 [HARD]
-How does scheduling work with ephemeral volumes?
+How does scheduling work with generic ephemeral volumes?
 
 A) Not supported
-B) Scheduler considers storage capacity and topology
-C) Same as persistent
+B) Follows PVC binding; WaitForFirstConsumer enables topology-aware placement
+C) Same as emptyDir
 D) No scheduling needed
 
 <details>
@@ -4368,9 +4368,9 @@ D) No scheduling needed
 
 **Answer:** B
 
-**Explanation:** Generic ephemeral volumes are PVC-backed and scheduled via PVC binding. Using WaitForFirstConsumer storage class enables topology-aware placement, ensuring pods are scheduled on nodes where storage is available.
+**Explanation:** Generic ephemeral volumes are PVC-backed and follow standard PVC binding. Using WaitForFirstConsumer storage class enables topology-aware placement, ensuring pods are scheduled on nodes where storage is available. Note: other ephemeral volumes like emptyDir, configMap, and secret don't involve topology-aware scheduling.
 
-**Source:** [Ephemeral Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/)
+**Source:** [Ephemeral Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/) and [Storage Classes | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode)
 
 </details>
 
