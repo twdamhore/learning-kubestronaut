@@ -8,21 +8,21 @@ Create a comprehensive MCQ study repository for all 5 Kubestronaut certification
 ### KCNA (Kubernetes and Cloud Native Associate)
 **Curriculum:** 4 domains, 13 competencies, 2,600 total MCQs planned
 
-| Domain | Competency | Status |
-|--------|------------|--------|
-| 1. Kubernetes Fundamentals (44%) | Kubernetes Core Concepts | ✅ Done (200 MCQs) |
-| | Administration | ✅ Done (200 MCQs) |
-| | Scheduling | ✅ Done (200 MCQs) |
-| | Containerization | ✅ Done (200 MCQs) |
-| 2. Container Orchestration (28%) | Networking | ✅ Done (200 MCQs) |
-| | Security | ⏳ Pending |
-| | Troubleshooting | ⏳ Pending |
-| | Storage | ⏳ Pending |
-| 3. Cloud Native App Delivery (16%) | Application Delivery | ⏳ Pending |
-| | Debugging | ⏳ Pending |
-| 4. Cloud Native Architecture (12%) | Observability | ⏳ Pending |
-| | Cloud Native Ecosystem and Principles | ⏳ Pending |
-| | Cloud Native Community and Collaboration | ⏳ Pending |
+| Domain | Competency | Status | Codex Verified |
+|--------|------------|--------|----------------|
+| 1. Kubernetes Fundamentals (44%) | Kubernetes Core Concepts | ✅ Done (200 MCQs) | ✅ Done |
+| | Administration | ✅ Done (200 MCQs) | ✅ Done |
+| | Scheduling | ✅ Done (200 MCQs) | ✅ Done |
+| | Containerization | ✅ Done (200 MCQs) | ⏳ Pending |
+| 2. Container Orchestration (28%) | Networking | ✅ Done (200 MCQs) | ⏳ Pending |
+| | Security | ⏳ Pending | - |
+| | Troubleshooting | ⏳ Pending | - |
+| | Storage | ⏳ Pending | - |
+| 3. Cloud Native App Delivery (16%) | Application Delivery | ⏳ Pending | - |
+| | Debugging | ⏳ Pending | - |
+| 4. Cloud Native Architecture (12%) | Observability | ⏳ Pending | - |
+| | Cloud Native Ecosystem and Principles | ⏳ Pending | - |
+| | Cloud Native Community and Collaboration | ⏳ Pending | - |
 
 ### Other Certifications
 - **KCSA:** Not started
