@@ -13,12 +13,22 @@
 
 Which Kubernetes resource grants permissions cluster-wide rather than within a single namespace?
 
+A) Role
+B) ClusterRole
+C) RoleBinding
+D) ServiceAccount
+
 ---
 
 ### Question 2
 [MEDIUM]
 
 What is the purpose of a ClusterRoleBinding?
+
+A) To create a new ClusterRole
+B) To bind a ClusterRole to subjects cluster-wide
+C) To bind a Role across namespaces
+D) To restrict ClusterRole permissions
 
 ---
 
@@ -27,12 +37,22 @@ What is the purpose of a ClusterRoleBinding?
 
 Which RBAC verb is required to watch for changes to resources?
 
+A) observe
+B) monitor
+C) watch
+D) subscribe
+
 ---
 
 ### Question 4
 [MEDIUM-HARD]
 
 How do you grant read-only access to Pods in a namespace using RBAC?
+
+A) Create a Role with "read" verb
+B) Create a Role with "get", "list", and "watch" verbs for pods
+C) Assign the view ClusterRole directly
+D) Use the readonly annotation
 
 ---
 
@@ -41,12 +61,22 @@ How do you grant read-only access to Pods in a namespace using RBAC?
 
 What is the difference between "get" and "list" verbs in RBAC?
 
+A) No difference; they are aliases
+B) "get" retrieves a single resource by name; "list" retrieves all resources
+C) "get" is for reading; "list" is for writing
+D) "list" is deprecated in favor of "get"
+
 ---
 
 ### Question 6
 [HARD]
 
 What is the "impersonate" verb used for in RBAC?
+
+A) To copy another user's permissions
+B) To allow acting as another user, group, or ServiceAccount
+C) To create duplicate users
+D) To audit user actions
 
 ---
 
@@ -55,12 +85,22 @@ What is the "impersonate" verb used for in RBAC?
 
 How can you reference non-resource URLs in RBAC rules?
 
+A) Use the urls field in Role rules
+B) Use the nonResourceURLs field in ClusterRole rules
+C) Non-resource URLs cannot be referenced
+D) Use a special NetworkPolicy
+
 ---
 
 ### Question 8
 [HARD]
 
 What are aggregated ClusterRoles and how do they work?
+
+A) ClusterRoles that combine permissions from multiple Roles
+B) ClusterRoles with aggregationRule that automatically include rules from other ClusterRoles with matching labels
+C) ClusterRoles that are compressed for performance
+D) ClusterRoles that span multiple clusters
 
 ---
 
@@ -69,12 +109,22 @@ What are aggregated ClusterRoles and how do they work?
 
 Which default ClusterRole provides read access to most resources?
 
+A) cluster-reader
+B) view
+C) reader
+D) read-only
+
 ---
 
 ### Question 10
 [HARD]
 
 How do you grant access to subresources like pods/log using RBAC?
+
+A) Grant access to pods and logs separately
+B) Use the resources field with "pods/log" format
+C) Subresources cannot be individually controlled
+D) Use a special subresources field
 
 ---
 
@@ -83,12 +133,22 @@ How do you grant access to subresources like pods/log using RBAC?
 
 What is the purpose of the resourceNames field in RBAC rules?
 
+A) To define new resource types
+B) To restrict access to specific named resources
+C) To rename resources
+D) To create aliases for resources
+
 ---
 
 ### Question 12
 [HARD]
 
 How does RBAC handle wildcard permissions?
+
+A) Wildcards are not supported
+B) Use "*" to match all resources, verbs, or API groups
+C) Use "all" keyword
+D) Wildcards only work for verbs
 
 ---
 
@@ -99,12 +159,22 @@ How does RBAC handle wildcard permissions?
 
 What namespace contains the default ServiceAccount for system components?
 
+A) default
+B) kube-system
+C) kube-public
+D) system
+
 ---
 
 ### Question 14
 [MEDIUM]
 
 How do you assign a specific ServiceAccount to a Pod?
+
+A) Use the account field in the Pod spec
+B) Use the serviceAccountName field in the Pod spec
+C) Create a RoleBinding
+D) Use an annotation
 
 ---
 
@@ -113,12 +183,22 @@ How do you assign a specific ServiceAccount to a Pod?
 
 What is a projected volume in the context of ServiceAccount tokens?
 
+A) A volume that projects tokens to multiple locations
+B) A volume that combines multiple sources including ServiceAccount tokens
+C) A volume for storing projected data
+D) A deprecated token storage method
+
 ---
 
 ### Question 16
 [MEDIUM-HARD]
 
 Why were bound ServiceAccount tokens introduced?
+
+A) For better performance
+B) To improve security with time-limited, audience-bound tokens
+C) To simplify token management
+D) For backward compatibility
 
 ---
 
@@ -127,12 +207,22 @@ Why were bound ServiceAccount tokens introduced?
 
 What is the expirationSeconds field for ServiceAccount tokens?
 
+A) Time until the ServiceAccount is deleted
+B) The lifetime of the projected token
+C) Time until token refresh
+D) Maximum session duration
+
 ---
 
 ### Question 18
 [HARD]
 
 How do you create a non-expiring ServiceAccount token?
+
+A) Set expirationSeconds to 0
+B) Create a Secret of type kubernetes.io/service-account-token
+C) Use the --no-expire flag
+D) Non-expiring tokens are not possible
 
 ---
 
@@ -141,12 +231,22 @@ How do you create a non-expiring ServiceAccount token?
 
 What happens when the ServiceAccount associated with a running Pod is deleted?
 
+A) The Pod is immediately terminated
+B) The Pod continues running but token authentication may fail
+C) A new ServiceAccount is automatically created
+D) Nothing; Pods don't depend on ServiceAccounts
+
 ---
 
 ### Question 20
 [HARD]
 
 What is the purpose of the serviceAccountName vs serviceAccount field?
+
+A) They are identical
+B) serviceAccountName is the preferred field; serviceAccount is deprecated
+C) serviceAccount is for system accounts
+D) serviceAccountName is for external accounts
 
 ---
 
@@ -155,12 +255,22 @@ What is the purpose of the serviceAccountName vs serviceAccount field?
 
 How does the BoundServiceAccountTokenVolume feature work?
 
+A) It binds volumes to ServiceAccounts
+B) It projects time-bound, audience-bound tokens into Pods instead of Secret-based tokens
+C) It limits volume access by ServiceAccount
+D) It encrypts ServiceAccount volumes
+
 ---
 
 ### Question 22
 [HARD]
 
 What are the security benefits of using short-lived ServiceAccount tokens?
+
+A) Faster authentication
+B) Reduced blast radius if compromised; tokens expire quickly
+C) Better performance
+D) Simpler configuration
 
 ---
 
@@ -171,6 +281,11 @@ What are the security benefits of using short-lived ServiceAccount tokens?
 
 What is a privileged container?
 
+A) A container running as root
+B) A container with almost all host capabilities and no isolation restrictions
+C) A container with network privileges
+D) A container that can access secrets
+
 ---
 
 ### Question 24
@@ -178,12 +293,22 @@ What is a privileged container?
 
 Which Pod Security Standards level allows most workloads to run?
 
+A) restricted
+B) baseline
+C) privileged
+D) permissive
+
 ---
 
 ### Question 25
 [MEDIUM]
 
 What does the runAsUser field specify?
+
+A) The username to run as
+B) The numeric UID to run the container process as
+C) The user who created the Pod
+D) The ServiceAccount user
 
 ---
 
