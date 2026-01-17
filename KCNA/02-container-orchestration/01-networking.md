@@ -1875,6 +1875,8 @@ D) Using a Cookie header in the request
 
 **Explanation:** The nginx-ingress-controller supports sticky sessions via the nginx.ingress.kubernetes.io/affinity annotation set to "cookie", which uses cookies to maintain session affinity to specific backend Pods.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1895,6 +1897,8 @@ D) To group Ingress resources
 **Answer:** B
 
 **Explanation:** IngressClass resources define the controller that should implement Ingress resources and can include additional parameters, allowing different Ingress controllers to be specified for different Ingress resources.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1917,6 +1921,8 @@ D) It's automatic for the first IngressClass created
 
 **Explanation:** Setting the ingressclass.kubernetes.io/is-default-class annotation to "true" on an IngressClass makes it the default, so Ingress resources without an ingressClassName will use this controller.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1938,6 +1944,8 @@ D) There is no difference
 
 **Explanation:** Gateway API is a more expressive, extensible, and role-oriented successor to Ingress, supporting advanced routing, multiple protocols (HTTP, TCP, gRPC), and clearer separation between infrastructure and application concerns.
 
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
 </details>
 
 ---
@@ -1958,6 +1966,8 @@ D) Using a sidecar container
 **Answer:** B
 
 **Explanation:** nginx-ingress supports mTLS through annotations like nginx.ingress.kubernetes.io/auth-tls-secret (CA certificate for client verification) and nginx.ingress.kubernetes.io/auth-tls-verify-client to enforce client certificate authentication.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 </details>
 
@@ -1982,6 +1992,8 @@ D) To manage Service endpoints
 
 **Explanation:** Network Policies are Kubernetes resources that define rules to control which Pods can communicate with each other and with external endpoints, acting as a Pod-level firewall.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2002,6 +2014,8 @@ D) The API server
 **Answer:** B
 
 **Explanation:** Network Policies are enforced by the CNI plugin (like Calico, Cilium, or Weave), which programs the underlying network rules. CNI plugins that don't support Network Policies (like basic Flannel) will ignore them.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2024,6 +2038,8 @@ D) Only egress is allowed
 
 **Explanation:** By default, Kubernetes Pods are non-isolated and accept traffic from any source. Network Policies are additive, and isolation only occurs when at least one policy selects a Pod.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2044,6 +2060,8 @@ D) Nothing changes
 **Answer:** B
 
 **Explanation:** Once a Network Policy selects a Pod for a traffic direction (ingress/egress), that Pod becomes isolated in that direction, and only traffic explicitly allowed by some policy's rules is permitted.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2066,6 +2084,8 @@ D) All CNI plugins
 
 **Explanation:** Network Policy support requires CNI plugins that can implement the policy rules. Calico, Cilium, and Weave natively support Network Policies, while basic Flannel does not without additional components.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2086,6 +2106,8 @@ D) Invalid syntax
 **Answer:** B
 
 **Explanation:** An empty podSelector ({}) matches all Pods in the Network Policy's namespace, commonly used for creating default deny policies that affect all Pods.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2108,6 +2130,8 @@ D) Using ingressPods
 
 **Explanation:** In a Network Policy ingress rule, the "from" field contains a list of sources, and podSelector within a from entry specifies which Pods are allowed to send traffic to the selected Pods.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2128,6 +2152,8 @@ D) Only for TCP
 **Answer:** B
 
 **Explanation:** Network Policies support port-based filtering through the ports field in ingress and egress rules, allowing you to specify allowed protocols (TCP, UDP, SCTP) and port numbers.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2150,6 +2176,8 @@ D) Pod-scoped
 
 **Explanation:** Network Policies are namespace-scoped resources that only select Pods within their own namespace. To apply policies across namespaces, you must create policies in each namespace or use cluster-scoped alternatives from CNI plugins.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2170,6 +2198,8 @@ D) Network Policies can't filter by namespace
 **Answer:** A
 
 **Explanation:** The namespaceSelector in a from entry allows traffic from Pods in namespaces matching the label selector. Namespaces must have labels applied for this selector to match them.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2192,6 +2222,8 @@ D) Invalid syntax
 
 **Explanation:** An empty ingress array (ingress: []) means no ingress rules are defined, so no traffic matches, effectively denying all ingress traffic to the selected Pods. To allow all traffic, you would use ingress: [{}].
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2212,6 +2244,8 @@ D) Using sourceIP
 **Answer:** B
 
 **Explanation:** The ipBlock field in a from or to entry allows specifying CIDR ranges (e.g., 10.0.0.0/8) for allowing traffic from or to specific IP address blocks, useful for external traffic sources.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
@@ -2234,6 +2268,8 @@ D) To specify fallback IPs
 
 **Explanation:** The except field in an ipBlock allows you to exclude specific CIDR ranges from the allowed block, for example allowing 10.0.0.0/8 except for 10.0.0.0/24.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2255,6 +2291,8 @@ D) Configure kube-proxy
 
 **Explanation:** To deny all egress except DNS, create a Network Policy with policyTypes: [Egress] and an egress rule allowing only UDP/TCP port 53 to the cluster DNS service or kube-dns namespace.
 
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
 </details>
 
 ---
@@ -2275,6 +2313,8 @@ D) An error occurs
 **Answer:** C
 
 **Explanation:** Network Policies are additive - when multiple policies select the same Pod, the allowed traffic is the union of all their rules. Traffic is allowed if any policy permits it, and policies never conflict.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
