@@ -1872,6 +1872,17 @@ B) PodSecurity
 C) SecurityContextDeny
 D) PodSecurityAdmission
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The PodSecurity admission controller enforces Pod Security Standards (privileged, baseline, restricted) at the namespace level. It replaced the deprecated PodSecurityPolicy in Kubernetes v1.25. The controller is configured using namespace labels.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+</details>
+
 ---
 
 ### Question 82
@@ -1883,6 +1894,17 @@ A) Validating controllers are faster
 B) Mutating controllers can modify objects; validating controllers only accept or reject
 C) Validating controllers run first
 D) There is no difference
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Mutating admission controllers can modify the objects they process, adding defaults or changing fields. Validating admission controllers only accept or reject requests without modification. Mutating controllers run first so validators can check the final modified object.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
+
+</details>
 
 ---
 
@@ -1896,6 +1918,17 @@ B) Mutating first, then validating
 C) They run in parallel
 D) The order is random
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Mutating admission webhooks are called first, allowing them to modify the object. Then validating webhooks are called to verify the final object. This order ensures validators check the complete, modified object rather than the original request.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+
+</details>
+
 ---
 
 ### Question 84
@@ -1907,6 +1940,17 @@ A) NamespaceAutoProvision
 B) NamespaceExists
 C) NamespaceLifecycle
 D) NamespaceValidator
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** The NamespaceLifecycle admission controller prevents creating resources in non-existent namespaces, blocks deletion of system namespaces (default, kube-system, kube-public), and prevents creating resources in namespaces that are being terminated.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#namespacelifecycle)
+
+</details>
 
 ---
 
@@ -1920,6 +1964,17 @@ B) Create a ValidatingWebhookConfiguration resource
 C) Deploy a special controller
 D) Use kubectl plugins
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Custom validating admission webhooks are configured by creating a ValidatingWebhookConfiguration resource. This resource specifies the webhook service endpoint, which resources to intercept, the failure policy, and other settings. No API server restart is required.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#configure-admission-webhooks-on-the-fly)
+
+</details>
+
 ---
 
 ### Question 86
@@ -1931,6 +1986,17 @@ A) To limit the number of resources in a namespace
 B) To enforce default resource requests/limits and validate against LimitRange objects
 C) To limit API request rates
 D) To enforce network bandwidth limits
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The LimitRanger admission controller enforces LimitRange objects in namespaces. It sets default resource requests and limits for Pods that don't specify them, and validates that resource requests/limits fall within the defined ranges. It also enforces min/max ratios.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#limitranger)
+
+</details>
 
 ---
 
@@ -1944,6 +2010,17 @@ B) Depends on the failurePolicy setting (Fail or Ignore)
 C) The request always succeeds
 D) The API server retries indefinitely
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The failurePolicy field in webhook configuration determines behavior when the webhook is unavailable or returns an error. "Fail" rejects the request (fail-closed), while "Ignore" allows it to proceed (fail-open). The default is "Fail" for security.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#failure-policy)
+
+</details>
+
 ---
 
 ### Question 88
@@ -1956,6 +2033,17 @@ B) FinalizerProtection
 C) ResourceProtection
 D) DeletionGuard
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** The NamespaceLifecycle admission controller handles namespace lifecycle including preventing premature deletion. Namespaces with finalizers are marked for deletion but not removed until finalizers complete. This controller also prevents creation of resources in terminating namespaces.
+
+**Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#namespacelifecycle)
+
+</details>
+
 ---
 
 ### Question 89
@@ -1967,6 +2055,17 @@ A) Use the excludeResources field
 B) Use namespaceSelector, objectSelector, or matchPolicy in the webhook configuration
 C) Webhooks process all resources
 D) Add an annotation to skip webhooks
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Webhook configurations support several selectors to control which requests are sent to the webhook: namespaceSelector filters by namespace labels, objectSelector filters by object labels, and the rules field specifies which API groups, versions, resources, and operations to match.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector)
+
+</details>
 
 ---
 
@@ -1982,6 +2081,17 @@ B) A SHA256 hash that uniquely identifies an image
 C) The image's metadata
 D) A signature for the image
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A container image digest is a SHA256 hash of the image manifest that uniquely and immutably identifies a specific image version. Unlike tags which can be moved to point to different images, digests are content-addressable and cannot change.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
 ---
 
 ### Question 91
@@ -1993,6 +2103,17 @@ A) To improve performance
 B) To prevent malicious processes from modifying the filesystem
 C) To reduce image size
 D) To enable faster container startup
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A read-only root filesystem (readOnlyRootFilesystem: true in securityContext) prevents any process in the container from writing to the filesystem. This limits the impact of compromised containers by preventing attackers from modifying binaries, creating malware, or persisting changes.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -2006,6 +2127,17 @@ B) A secure communication protocol
 C) A secret management system
 D) A security compliance tool
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** Seccomp (Secure Computing Mode) is a Linux kernel feature that restricts which system calls a process can make. Kubernetes supports seccomp profiles to limit container syscalls, reducing the attack surface. Profiles can allow, deny, or log specific syscalls.
+
+**Source:** [Restrict a Container's Syscalls with seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
+
+</details>
+
 ---
 
 ### Question 93
@@ -2017,6 +2149,17 @@ A) image: myimage:sha256@abc123
 B) image: myimage@sha256:abc123...
 C) image: myimage#sha256:abc123
 D) digest: sha256:abc123 in the image spec
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To reference an image by digest, use the @ symbol followed by sha256: and the full digest hash (e.g., nginx@sha256:abc123...). This ensures the exact image version is used regardless of any tag changes, providing immutable deployments.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/#image-names)
+
+</details>
 
 ---
 
@@ -2030,6 +2173,17 @@ B) A Linux security module that restricts program capabilities via profiles
 C) A container runtime
 D) An admission controller
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** AppArmor is a Linux Security Module that restricts programs' capabilities using per-program profiles. In Kubernetes, AppArmor profiles can be applied to containers via annotations or the securityContext field, restricting file access, network capabilities, and other operations.
+
+**Source:** [Restrict a Container's Access to Resources with AppArmor | Kubernetes](https://kubernetes.io/docs/tutorials/security/apparmor/)
+
+</details>
+
 ---
 
 ### Question 95
@@ -2041,6 +2195,17 @@ A) A profile that blocks all system calls
 B) The container runtime's default seccomp profile
 C) A profile with no restrictions
 D) A profile specific to Kubernetes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** RuntimeDefault refers to the container runtime's (containerd, CRI-O) default seccomp profile. It provides a reasonable security baseline by blocking dangerous syscalls while allowing common operations. Setting seccompProfile.type: RuntimeDefault applies this profile to containers.
+
+**Source:** [Restrict a Container's Syscalls with seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
+
+</details>
 
 ---
 
@@ -2054,6 +2219,17 @@ B) Using Linux namespaces, cgroups, and security modules
 C) Using network segmentation only
 D) Using separate physical servers
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Container runtimes use Linux kernel features for isolation: namespaces isolate process trees, network, mounts, and users; cgroups limit and account for resource usage (CPU, memory); and security modules (SELinux, AppArmor, seccomp) restrict what processes can do.
+
+**Source:** [Container Runtime Interface | Kubernetes](https://kubernetes.io/docs/concepts/architecture/cri/)
+
+</details>
+
 ---
 
 ### Question 97
@@ -2065,6 +2241,17 @@ A) To run as root user
 B) To give the container almost all capabilities of the host
 C) To enable network privileges
 D) To access secrets
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Setting privileged: true gives a container almost all the capabilities of the host machine, including access to all devices. It disables most isolation mechanisms and should be avoided except for specific use cases like running Docker-in-Docker or certain system tools.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -2078,6 +2265,17 @@ B) Set runAsNonRoot: true in securityContext
 C) Use a non-root base image only
 D) Configure the container runtime
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Setting runAsNonRoot: true in securityContext causes the kubelet to validate that the container is not running as root (UID 0) at runtime. If the container image tries to run as root, the container will fail to start. This provides enforcement beyond just using a non-root base image.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 99
@@ -2090,6 +2288,17 @@ B) Container can see and potentially signal host processes
 C) Only affects networking
 D) Improves container isolation
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Setting hostPID: true allows container processes to see all processes on the host node. This breaks process isolation - containers can view process information, environment variables (potentially containing secrets), and with appropriate privileges, send signals to host processes.
+
+**Source:** [Share Process Namespace between Containers | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/)
+
+</details>
+
 ---
 
 ### Question 100
@@ -2101,5 +2310,16 @@ A) To mount the proc filesystem
 B) To control how /proc is mounted in the container (Default or Unmasked)
 C) To configure process limits
 D) To enable process monitoring
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The procMount field controls how the /proc filesystem is mounted in the container. "Default" uses the container runtime's default masked /proc (hiding sensitive paths), while "Unmasked" provides an unmasked /proc. Unmasked is only allowed when privileged mode is also enabled.
+
+**Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
