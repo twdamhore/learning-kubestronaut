@@ -927,12 +927,22 @@ D) The storage class is invalid
 
 How do you troubleshoot NFS mount failures?
 
+A) Restart the NFS server only
+B) Check NFS server availability, network connectivity, mount permissions, and firewall rules
+C) Delete the PVC
+D) Change to a different storage class
+
 ---
 
 ### Question 77
 [HARD]
 
 What are common causes of "Unable to attach or mount volumes"?
+
+A) Only Pod configuration errors
+B) Volume already attached elsewhere, node issues, storage backend problems, or CSI driver failures
+C) Only network issues
+D) Only permission issues
 
 ---
 
@@ -941,6 +951,11 @@ What are common causes of "Unable to attach or mount volumes"?
 
 How do you identify storage class issues?
 
+A) kubectl get pods
+B) kubectl describe storageclass, check provisioner status, and review PVC events
+C) kubectl logs storageclass
+D) kubectl debug storageclass
+
 ---
 
 ### Question 79
@@ -948,12 +963,22 @@ How do you identify storage class issues?
 
 What does the "FailedAttachVolume" event indicate?
 
+A) The volume is full
+B) The volume could not be attached to the node, often due to cloud provider or CSI issues
+C) The volume is corrupted
+D) The Pod is misconfigured
+
 ---
 
 ### Question 80
 [HARD]
 
 How do you troubleshoot CSI driver issues?
+
+A) Restart all nodes
+B) Check CSI driver pods, controller logs, node plugin logs, and CSI socket connectivity
+C) Reinstall Kubernetes
+D) Delete all PVCs
 
 ---
 
@@ -964,12 +989,22 @@ How do you troubleshoot CSI driver issues?
 
 What happens when a liveness probe fails?
 
+A) The Pod is rescheduled
+B) The container is restarted by kubelet
+C) The Pod is removed from Service endpoints
+D) Nothing happens
+
 ---
 
 ### Question 82
 [HARD]
 
 What happens when a readiness probe fails?
+
+A) The container is restarted
+B) The Pod is removed from Service endpoints but keeps running
+C) The Pod is deleted
+D) The node is marked unhealthy
 
 ---
 
@@ -978,12 +1013,22 @@ What happens when a readiness probe fails?
 
 How do you troubleshoot a container that keeps restarting due to probe failures?
 
+A) Disable all probes
+B) Check probe configuration, test the probe endpoint manually, review container logs and events
+C) Increase memory limits
+D) Change the container image
+
 ---
 
 ### Question 84
 [HARD]
 
 What are common causes of probe failures?
+
+A) Only network issues
+B) Application not ready, wrong port/path, timeout too short, or application crashes
+C) Only memory issues
+D) Only CPU issues
 
 ---
 
@@ -992,12 +1037,22 @@ What are common causes of probe failures?
 
 How do you check the probe configuration of a running Pod?
 
+A) kubectl logs <pod-name>
+B) kubectl get pod <pod-name> -o yaml or kubectl describe pod <pod-name>
+C) kubectl probe <pod-name>
+D) kubectl health <pod-name>
+
 ---
 
 ### Question 86
 [HARD]
 
 What is the difference between startup probe and liveness probe failures?
+
+A) They are the same
+B) Startup probe failures delay liveness checks; liveness failures restart the container after startup succeeds
+C) Startup probes are only for init containers
+D) Liveness probes run before startup probes
 
 ---
 
@@ -1006,12 +1061,22 @@ What is the difference between startup probe and liveness probe failures?
 
 How do you identify if an application is failing health checks?
 
+A) Only check application logs
+B) Check Pod events for Unhealthy warnings, verify probe endpoints, and test manually with kubectl exec
+C) Restart the application
+D) Check node status
+
 ---
 
 ### Question 88
 [HARD]
 
 What does "Unhealthy" in Pod events indicate?
+
+A) The node is unhealthy
+B) A probe (liveness, readiness, or startup) failed for the container
+C) The Pod is being deleted
+D) The image is corrupted
 
 ---
 
@@ -1020,12 +1085,22 @@ What does "Unhealthy" in Pod events indicate?
 
 How do you troubleshoot slow-starting containers that fail liveness probes?
 
+A) Remove the liveness probe
+B) Add a startup probe or increase initialDelaySeconds for the liveness probe
+C) Decrease the timeout
+D) Increase CPU limits only
+
 ---
 
 ### Question 90
 [HARD]
 
 What probe settings should you check when containers keep restarting?
+
+A) Only the probe path
+B) initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold, and the probe endpoint
+C) Only the container port
+D) Only the image tag
 
 ---
 
@@ -1036,12 +1111,22 @@ What probe settings should you check when containers keep restarting?
 
 How do you use ephemeral debug containers?
 
+A) kubectl exec --debug
+B) kubectl debug <pod-name> --image=<debug-image> --target=<container>
+C) kubectl attach --debug
+D) kubectl run --debug
+
 ---
 
 ### Question 92
 [HARD]
 
 What is the purpose of kubectl debug node?
+
+A) To debug network issues only
+B) To create a privileged Pod for debugging node-level issues with host access
+C) To restart the node
+D) To view node metrics
 
 ---
 
@@ -1050,12 +1135,22 @@ What is the purpose of kubectl debug node?
 
 How do you troubleshoot a Pod that cannot resolve external DNS names?
 
+A) Restart CoreDNS only
+B) Check CoreDNS pods, DNS policy, upstream DNS config, and network connectivity to DNS servers
+C) Delete the Pod
+D) Change the namespace
+
 ---
 
 ### Question 94
 [HARD]
 
 What tools can you use to capture network traffic in a Pod?
+
+A) Only kubectl logs
+B) tcpdump, wireshark, or similar tools via kubectl exec or ephemeral debug containers
+C) kubectl network capture
+D) kubectl debug --network
 
 ---
 
@@ -1064,12 +1159,22 @@ What tools can you use to capture network traffic in a Pod?
 
 How do you troubleshoot intermittent Pod failures?
 
+A) Ignore them
+B) Review historical logs, events, metrics, check for resource contention, and monitor over time
+C) Restart the cluster
+D) Delete and recreate the Pod
+
 ---
 
 ### Question 96
 [HARD]
 
 What is the purpose of the terminationMessagePath field?
+
+A) To specify where logs are stored
+B) To specify a file path where the container writes its termination message for debugging
+C) To configure graceful shutdown
+D) To set the termination grace period
 
 ---
 
@@ -1078,12 +1183,22 @@ What is the purpose of the terminationMessagePath field?
 
 How do you analyze a core dump from a crashed container?
 
+A) Use kubectl logs
+B) Configure the container to write core dumps to a volume, then analyze with debugging tools
+C) Core dumps are not supported
+D) Use kubectl describe only
+
 ---
 
 ### Question 98
 [HARD]
 
 What is the best approach to troubleshoot init container failures?
+
+A) Skip init containers
+B) Check init container logs with kubectl logs <pod> -c <init-container>, review events and status
+C) Delete the Pod
+D) Restart the node
 
 ---
 
@@ -1092,11 +1207,21 @@ What is the best approach to troubleshoot init container failures?
 
 How do you troubleshoot RBAC permission denied errors?
 
+A) Grant cluster-admin to everyone
+B) Use kubectl auth can-i, check RoleBindings/ClusterRoleBindings, and review API server audit logs
+C) Restart the API server
+D) Delete all RBAC resources
+
 ---
 
 ### Question 100
 [HARD]
 
 What is the systematic approach to troubleshooting a non-responsive application?
+
+A) Immediately restart everything
+B) Check Pod status, events, logs, resource usage, network connectivity, and probe health systematically
+C) Delete and recreate the deployment
+D) Scale down to zero replicas
 
 ---
