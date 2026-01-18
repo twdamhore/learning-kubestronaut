@@ -482,6 +482,17 @@ B) The node is not healthy and may have issues with kubelet, networking, or reso
 C) The node is being upgraded
 D) The node is cordoned
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a node's Ready condition is False, it indicates the node is not healthy. Common causes include kubelet not running, network issues preventing communication with the API server, or resource pressure (disk, memory, PID). The node controller will not schedule new Pods to this node.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#condition)
+
+</details>
+
 ---
 
 ### Question 22
@@ -493,6 +504,17 @@ A) kubectl describe nodes
 B) kubectl get nodes
 C) kubectl status nodes
 D) kubectl list nodes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl get nodes` command lists all nodes in the cluster with their status (Ready, NotReady), roles, age, and version. Add `-o wide` for additional details like internal/external IPs and container runtime. Use `kubectl describe node <name>` for detailed information about a specific node.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
+
+</details>
 
 ---
 
@@ -506,6 +528,17 @@ B) The node's available disk space is low
 C) The node has network issues
 D) The node's memory is full
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** DiskPressure indicates that the node's available disk space and inodes are low, below the eviction threshold. When this condition is True, kubelet will start evicting Pods to reclaim disk space. The thresholds are configurable via kubelet flags.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
 ---
 
 ### Question 24
@@ -517,6 +550,17 @@ A) kubectl logs node/<node-name>
 B) kubectl describe node <node-name>
 C) kubectl get node <node-name> --reason
 D) kubectl debug node <node-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe node <node-name>` to see detailed information about a node, including its conditions and reasons for any issues. The Conditions section shows Ready, MemoryPressure, DiskPressure, and PIDPressure status with reasons. Also check kubelet logs on the node itself.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -530,6 +574,17 @@ B) The node's available memory is below the eviction threshold
 C) The node's disk is full
 D) The node has too many Pods
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** MemoryPressure indicates that the node's available memory is below the eviction threshold configured for kubelet. When True, kubelet will begin evicting Pods based on their QoS class and memory usage to prevent the node from running out of memory.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
 ---
 
 ### Question 26
@@ -541,6 +596,17 @@ A) Pods are immediately deleted
 B) After a timeout, Pods may be evicted and rescheduled to other nodes
 C) Pods continue running normally
 D) Pods are paused until the node recovers
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a node becomes NotReady, the node controller waits for a configurable timeout (default 5 minutes via pod-eviction-timeout). After this timeout, Pods on the node are marked for eviction and may be rescheduled to other nodes if they are managed by a controller like Deployment or ReplicaSet.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-controller)
+
+</details>
 
 ---
 
@@ -554,6 +620,17 @@ B) kubectl cordon <node-name>
 C) kubectl disable <node-name>
 D) kubectl pause <node-name>
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl cordon <node-name>` command marks a node as unschedulable, preventing new Pods from being scheduled on it. Existing Pods continue running. This is useful before maintenance. Use `kubectl uncordon` to make the node schedulable again.
+
+**Source:** [Safely Drain a Node | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
+
+</details>
+
 ---
 
 ### Question 28
@@ -565,6 +642,17 @@ A) They are the same operation
 B) Cordon prevents new Pods; drain also evicts existing Pods
 C) Drain prevents new Pods; cordon evicts existing Pods
 D) Cordon is for nodes; drain is for namespaces
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Cordon marks a node as unschedulable but leaves existing Pods running. Drain does cordon plus safely evicts all Pods from the node (respecting PodDisruptionBudgets and graceful termination). Use drain before node maintenance to move workloads elsewhere.
+
+**Source:** [Safely Drain a Node | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
+
+</details>
 
 ---
 
@@ -578,6 +666,17 @@ B) kubelet
 C) kube-controller-manager
 D) kube-proxy
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The kubelet is responsible for reporting node status to the API server. It sends regular heartbeats and updates the node's conditions (Ready, MemoryPressure, DiskPressure, PIDPressure). If kubelet stops reporting, the node controller marks the node as Unknown after the timeout.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-status)
+
+</details>
+
 ---
 
 ### Question 30
@@ -589,6 +688,17 @@ A) The node has too many processes running
 B) The node is running low on available process IDs
 C) The node's CPU is overloaded
 D) The node has network issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** PIDPressure indicates the node is running low on available process IDs. Each process requires a PID, and the kernel has a limit (usually configurable). When PIDs are exhausted, new processes cannot be created. Kubelet can evict Pods when PID usage exceeds the threshold.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
 
 ---
 
