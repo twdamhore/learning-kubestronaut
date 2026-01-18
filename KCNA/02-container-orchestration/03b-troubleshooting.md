@@ -927,12 +927,22 @@ D) Restart the Pod
 
 What causes one container to affect another in the same Pod?
 
+A) Network isolation
+B) Shared resources (CPU, memory, network, volumes) within the Pod
+C) Separate namespaces
+D) Different nodes
+
 ---
 
 ### Question 77
 [HARD]
 
 How do you check resource consumption per container in a multi-container Pod?
+
+A) kubectl describe pod only
+B) kubectl top pod <name> --containers
+C) kubectl logs --all-containers
+D) kubectl get pod -o wide
 
 ---
 
@@ -941,6 +951,11 @@ How do you check resource consumption per container in a multi-container Pod?
 
 What indicates a lifecycle hook failure?
 
+A) Pod runs normally
+B) FailedPostStartHook or FailedPreStopHook events in Pod description
+C) Container restarts only
+D) Network errors only
+
 ---
 
 ### Question 79
@@ -948,12 +963,22 @@ What indicates a lifecycle hook failure?
 
 How do you troubleshoot postStart hook issues?
 
+A) Remove the hook
+B) Check events for hook failures, verify command/HTTP endpoint, and check container logs
+C) Restart the node
+D) Delete the namespace
+
 ---
 
 ### Question 80
 [HARD]
 
 What happens when a preStop hook times out?
+
+A) The hook runs indefinitely
+B) The container is forcefully terminated after terminationGracePeriodSeconds
+C) The Pod remains running
+D) The node is drained
 
 ---
 
@@ -964,12 +989,22 @@ What happens when a preStop hook times out?
 
 How do you troubleshoot ServiceAccount permission issues?
 
+A) Delete the ServiceAccount
+B) Use kubectl auth can-i --as=system:serviceaccount:<ns>:<sa-name>, check RBAC bindings
+C) Restart the API server
+D) Change namespaces
+
 ---
 
 ### Question 82
 [HARD]
 
 What causes "Forbidden" errors when accessing the API?
+
+A) Network issues
+B) RBAC denying the request due to missing permissions
+C) DNS failures
+D) Certificate issues only
 
 ---
 
@@ -978,12 +1013,22 @@ What causes "Forbidden" errors when accessing the API?
 
 How do you verify Pod security context is applied correctly?
 
+A) kubectl describe only
+B) kubectl exec into Pod and check id, cat /proc/1/status for capabilities
+C) kubectl logs only
+D) kubectl get pod -o wide
+
 ---
 
 ### Question 84
 [HARD]
 
 What indicates SecurityContext conflicts?
+
+A) Network errors
+B) Pod fails to start with security-related error in events
+C) DNS failures
+D) Storage issues
 
 ---
 
@@ -992,12 +1037,22 @@ What indicates SecurityContext conflicts?
 
 How do you troubleshoot PodSecurityPolicy violations?
 
+A) Delete all policies
+B) Check PSP annotations, verify ServiceAccount can use the PSP, and review Pod events
+C) Restart kubelet
+D) Delete the namespace
+
 ---
 
 ### Question 86
 [HARD]
 
 What causes service account token mount failures?
+
+A) Network issues
+B) ServiceAccount doesn't exist, automountServiceAccountToken issues, or token controller problems
+C) DNS failures
+D) Storage issues
 
 ---
 
@@ -1006,12 +1061,22 @@ What causes service account token mount failures?
 
 How do you check if a Pod has the required capabilities?
 
+A) kubectl describe pod only
+B) kubectl exec and check /proc/1/status or use capsh --print
+C) kubectl logs only
+D) kubectl get pod
+
 ---
 
 ### Question 88
 [HARD]
 
 What indicates a seccomp profile is blocking syscalls?
+
+A) Network errors
+B) Container crashes with SIGSYS or operation not permitted errors
+C) DNS failures
+D) Storage errors
 
 ---
 
@@ -1020,12 +1085,22 @@ What indicates a seccomp profile is blocking syscalls?
 
 How do you troubleshoot AppArmor profile issues?
 
+A) Disable AppArmor
+B) Check dmesg for denied operations, verify profile is loaded, and check Pod annotations
+C) Restart the node
+D) Delete the Pod
+
 ---
 
 ### Question 90
 [HARD]
 
 What causes "operation not permitted" errors in containers?
+
+A) Network issues
+B) Missing capabilities, seccomp/AppArmor restrictions, or read-only filesystem
+C) DNS failures
+D) Storage quota exceeded
 
 ---
 
@@ -1036,12 +1111,22 @@ What causes "operation not permitted" errors in containers?
 
 How do you use audit logs to troubleshoot issues?
 
+A) kubectl logs audit
+B) Review API server audit logs to see all API requests, including who made them and the response
+C) kubectl get audit
+D) kubectl describe audit
+
 ---
 
 ### Question 92
 [HARD]
 
 What information do Kubernetes events provide for troubleshooting?
+
+A) Only Pod creation times
+B) State changes, warnings, errors, and reasons for resource status changes
+C) Only network information
+D) Only storage information
 
 ---
 
@@ -1050,12 +1135,22 @@ What information do Kubernetes events provide for troubleshooting?
 
 How do you correlate metrics with cluster issues?
 
+A) Ignore metrics
+B) Compare metric timestamps with events, look for anomalies during incident timeframes
+C) Delete metrics
+D) Restart Prometheus
+
 ---
 
 ### Question 94
 [HARD]
 
 What is the role of the conditions field in resource troubleshooting?
+
+A) It shows only the resource name
+B) It provides detailed status information about the resource's current state and any issues
+C) It is only for internal use
+D) It shows only timestamps
 
 ---
 
@@ -1064,12 +1159,22 @@ What is the role of the conditions field in resource troubleshooting?
 
 How do you troubleshoot webhook timeout issues?
 
+A) Delete the webhook
+B) Check webhook pod health, network latency, increase timeout settings, and review webhook logs
+C) Restart the API server
+D) Delete all resources
+
 ---
 
 ### Question 96
 [HARD]
 
 What causes garbage collection to fail?
+
+A) Too many Pods
+B) Finalizers blocking deletion, owner references issues, or controller-manager problems
+C) Network issues only
+D) DNS failures only
 
 ---
 
@@ -1078,12 +1183,22 @@ What causes garbage collection to fail?
 
 How do you diagnose finalizer-related stuck resources?
 
+A) Delete the cluster
+B) kubectl get <resource> -o yaml to check finalizers, identify the controller, or manually remove
+C) Restart the API server
+D) Delete the namespace
+
 ---
 
 ### Question 98
 [HARD]
 
 What indicates a controller is not watching resources correctly?
+
+A) High CPU usage only
+B) Resources not being reconciled, stale status, or missing events in controller logs
+C) Network errors only
+D) Storage issues only
 
 ---
 
@@ -1092,11 +1207,21 @@ What indicates a controller is not watching resources correctly?
 
 How do you troubleshoot CRD validation errors?
 
+A) Delete the CRD
+B) Check the error message, verify spec against CRD schema, and use dry-run for testing
+C) Restart the API server
+D) Delete all Custom Resources
+
 ---
 
 ### Question 100
 [HARD]
 
 What is the systematic approach to diagnosing unknown cluster issues?
+
+A) Restart everything immediately
+B) Check component health, review events and logs, examine metrics, and narrow down systematically
+C) Delete and recreate the cluster
+D) Ignore the issues
 
 ---
