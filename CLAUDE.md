@@ -16,7 +16,7 @@ Create a comprehensive MCQ study repository for all 5 Kubestronaut certification
 | | Containerization | ✅ Done (200 MCQs) | ✅ Done |
 | 2. Container Orchestration (28%) | Networking | ✅ Done (200 MCQs) | ✅ Done |
 | | Security | ✅ Done (200 MCQs) | ✅ Done |
-| | Troubleshooting | ⏳ Pending | - |
+| | Troubleshooting | ✅ Done (200 MCQs) | ⏳ Pending |
 | | Storage | ⏳ Pending | - |
 | 3. Cloud Native App Delivery (16%) | Application Delivery | ⏳ Pending | - |
 | | Debugging | ⏳ Pending | - |
@@ -53,7 +53,8 @@ KCNA/
 │   ├── 01b-networking.md ✅ (Q101-200)
 │   ├── 02a-security.md ✅ (Q1-100)
 │   ├── 02b-security.md ✅ (Q101-200)
-│   ├── 03-troubleshooting.md
+│   ├── 03a-troubleshooting.md ✅ (Q1-100)
+│   ├── 03b-troubleshooting.md ✅ (Q101-200)
 │   └── 04-storage.md
 ├── 03-cloud-native-application-delivery/
 │   ├── 01-application-delivery.md
