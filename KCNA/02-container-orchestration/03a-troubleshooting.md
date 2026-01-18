@@ -250,6 +250,17 @@ B) kubectl exec
 C) kubectl attach
 D) kubectl shell
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl exec` command executes a command inside a running container. Use `kubectl exec <pod-name> -- <command>` for single commands or `kubectl exec -it <pod-name> -- /bin/sh` for an interactive shell session.
+
+**Source:** [Get a Shell to a Running Container | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/)
+
+</details>
+
 ---
 
 ### Question 12
@@ -261,6 +272,17 @@ A) kubectl shell <pod-name>
 B) kubectl exec -it <pod-name> -- /bin/sh
 C) kubectl connect <pod-name>
 D) kubectl attach <pod-name> --shell
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To get an interactive shell inside a container, use `kubectl exec -it <pod-name> -- /bin/sh` (or /bin/bash if available). The `-i` flag keeps stdin open and `-t` allocates a TTY. For multi-container Pods, add `-c <container-name>`.
+
+**Source:** [Get a Shell to a Running Container | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/)
+
+</details>
 
 ---
 
@@ -274,6 +296,17 @@ B) To create debugging sessions using ephemeral containers or copy of Pods
 C) To enable debug mode on the API server
 D) To increase log verbosity
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl debug` command creates debugging sessions by adding ephemeral containers to running Pods, creating a copy of a Pod with modifications, or creating a debugging Pod on a node. This is useful when containers lack debugging tools.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
+
 ---
 
 ### Question 14
@@ -285,6 +318,17 @@ A) kubectl logs <pod-name> --all
 B) kubectl logs <pod-name> -c <container-name>
 C) kubectl logs <pod-name>/<container-name>
 D) kubectl logs --container=<container-name> <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl logs <pod-name> -c <container-name>` to view logs from a specific container in a multi-container Pod. Without the `-c` flag, kubectl will prompt you to select a container if there are multiple containers in the Pod.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
 
 ---
 
@@ -298,6 +342,17 @@ B) Cluster-wide events including warnings, errors, and normal events
 C) Only error events
 D) Node metrics
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl get events` command shows cluster-wide events including Normal and Warning types. Events provide information about what is happening in the cluster such as Pod scheduling, image pulls, volume mounts, and errors. Use `--sort-by='.lastTimestamp'` to sort by time.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
 ---
 
 ### Question 16
@@ -309,6 +364,17 @@ A) kubectl logs <pod-name> --stream
 B) kubectl logs <pod-name> -f
 C) kubectl logs <pod-name> --live
 D) kubectl logs <pod-name> --tail
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `-f` (or `--follow`) flag streams logs from a container in real-time, similar to `tail -f`. This is useful for watching application behavior as it happens. Combine with `--tail=N` to start from the last N lines.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
 
 ---
 
@@ -322,6 +388,17 @@ B) kubectl top pod
 C) kubectl resources pod
 D) kubectl usage pod
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl top pod` command displays CPU and memory usage of Pods. This requires the Metrics Server to be installed in the cluster. Use `kubectl top pod --containers` to see per-container usage or `kubectl top nodes` for node-level metrics.
+
+**Source:** [Resource Metrics Pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
+
+</details>
+
 ---
 
 ### Question 18
@@ -333,6 +410,17 @@ A) kubectl describe deployment
 B) kubectl rollout status deployment/<name>
 C) kubectl get deployment --status
 D) kubectl deployment status <name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl rollout status deployment/<name>` command shows the progress of a Deployment rollout. It displays whether the rollout is complete, in progress, or has stalled. This is useful for monitoring updates and detecting issues during deployments.
+
+**Source:** [Managing Resources | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/)
+
+</details>
 
 ---
 
@@ -346,6 +434,17 @@ B) To forward local ports to a Pod for debugging
 C) To change the container port
 D) To configure port mapping in a Service
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl port-forward` command forwards one or more local ports to a Pod, allowing you to access applications running in the cluster from your local machine without exposing them externally. This is useful for debugging and testing.
+
+**Source:** [Use Port Forwarding to Access Applications in a Cluster | Kubernetes](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
+
+</details>
+
 ---
 
 ### Question 20
@@ -357,6 +456,17 @@ A) kubectl describe pod <pod-name> --yaml
 B) kubectl get pod <pod-name> -o yaml
 C) kubectl export pod <pod-name>
 D) kubectl show pod <pod-name> --format=yaml
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl get pod <pod-name> -o yaml` to output the full YAML definition of a running Pod, including its current status. You can also use `-o json` for JSON format. This shows both the spec and current status of the resource.
+
+**Source:** [kubectl Cheat Sheet | Kubernetes](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+</details>
 
 ---
 
