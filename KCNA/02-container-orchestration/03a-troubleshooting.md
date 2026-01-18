@@ -1178,6 +1178,17 @@ B) Access the /healthz or /livez endpoints, or check Pod status in kube-system
 C) kubectl describe apiserver
 D) kubectl health apiserver
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check API server health by accessing its /healthz, /livez, or /readyz endpoints (e.g., `curl -k https://<apiserver>:6443/healthz`). On kubeadm clusters, also check the kube-apiserver Pod status with `kubectl get pods -n kube-system`. Review API server logs for errors.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 52
@@ -1189,6 +1200,17 @@ A) Only network problems
 B) Slow API responses, failed writes, cluster instability, leader election failures
 C) Only Pod scheduling issues
 D) Only authentication failures
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** etcd issues manifest as slow API responses, failed write operations, cluster instability, leader election problems, and request timeouts. Common causes include disk I/O bottlenecks, network latency between etcd members, insufficient resources, or quorum loss in the etcd cluster.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
+</details>
 
 ---
 
@@ -1202,6 +1224,17 @@ B) kubectl logs -n kube-system <component-pod-name> or journalctl for static pod
 C) cat /var/log/kubernetes
 D) kubectl describe controlplane
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** On kubeadm clusters, control plane components run as static Pods. View their logs with `kubectl logs -n kube-system kube-apiserver-<node>` or similar. Alternatively, use `journalctl -u kubelet` on the control plane node, as kubelet logs include static Pod output. Check `/var/log/pods/` for log files.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 54
@@ -1213,6 +1246,17 @@ A) Pods are scheduled randomly
 B) New Pods remain in Pending state and are not assigned to nodes
 C) Existing Pods are terminated
 D) The cluster shuts down
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When the kube-scheduler is not running, new Pods that require scheduling remain in Pending state indefinitely because no component assigns them to nodes. Existing running Pods continue to run. The scheduler is responsible for the nodeName assignment based on resource requirements and constraints.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
+</details>
 
 ---
 
@@ -1226,6 +1270,17 @@ B) kubectl get pods -n kube-system and check controller-manager pod, or access /
 C) kubectl describe controller-manager
 D) kubectl status controller-manager
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check kube-controller-manager status by examining its Pod in kube-system namespace (`kubectl get pods -n kube-system | grep controller-manager`) and its logs. The /healthz endpoint provides health status. Controller-manager issues affect deployments, replicasets, and other controllers.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 56
@@ -1237,6 +1292,17 @@ A) Only network issues
 B) Certificate expiry, etcd unavailability, resource exhaustion, misconfigurations
 C) Only Pod failures
 D) Only DNS issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** API server unavailability can be caused by: expired or invalid TLS certificates, etcd cluster issues or unavailability, resource exhaustion (CPU, memory, file descriptors), misconfigured flags, network connectivity problems, or authentication/authorization configuration errors.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -1250,6 +1316,17 @@ B) Check certificate expiry dates, verify CA chain, check component logs for TLS
 C) Delete and recreate certificates automatically
 D) Ignore certificate errors
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For certificate issues: check expiry with `openssl x509 -in <cert> -noout -dates`, verify the CA chain is complete, examine component logs for TLS handshake errors, and ensure certificates match their intended purpose. For kubeadm clusters, use `kubeadm certs check-expiration`.
+
+**Source:** [PKI certificates and requirements | Kubernetes](https://kubernetes.io/docs/setup/best-practices/certificates/)
+
+</details>
+
 ---
 
 ### Question 58
@@ -1261,6 +1338,17 @@ A) kubectl health
 B) kubectl get componentstatuses (deprecated) or check /healthz endpoints
 C) kubectl cluster-health
 D) kubectl status components
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl get componentstatuses` (or `kubectl get cs`) command shows controller-manager, scheduler, and etcd health, but it is deprecated and may not work in all configurations. The recommended approach is to check /healthz endpoints of each component directly or verify Pod status in kube-system.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -1274,6 +1362,17 @@ B) Monitor etcd metrics, check latency, disk I/O, and etcd logs for slow operati
 C) Restart etcd
 D) Check Pod logs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify etcd bottlenecks by monitoring etcd metrics (disk sync duration, raft proposal latency), checking disk I/O performance (etcd is sensitive to disk latency), reviewing etcd logs for "slow request" warnings, and monitoring network latency between etcd members. Use etcdctl for direct health checks.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
+</details>
+
 ---
 
 ### Question 60
@@ -1285,6 +1384,17 @@ A) Only kubelet logs
 B) kube-scheduler logs and kubectl describe pod for scheduling events
 C) Only API server logs
 D) Only etcd logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When Pods are not being scheduled, first check `kubectl describe pod` for scheduling events and failure reasons (insufficient resources, node selectors, taints/tolerations). Then examine kube-scheduler logs for detailed scheduling decisions and errors. Common issues include resource constraints and affinity rules.
+
+**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/)
+
+</details>
 
 ---
 
