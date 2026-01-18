@@ -18,6 +18,17 @@ B) The Pod has been accepted but is not yet scheduled or has unmet dependencies
 C) The Pod has completed successfully
 D) The Pod is being deleted
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Pod in Pending status has been accepted by the Kubernetes system but is not yet running. This can occur because the Pod is waiting to be scheduled to a node, waiting for volumes to be bound, or waiting for images to be pulled. Use `kubectl describe pod` to see the specific reason.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase)
+
+</details>
+
 ---
 
 ### Question 2
@@ -29,6 +40,17 @@ A) kubectl logs <pod-name>
 B) kubectl describe pod <pod-name>
 C) kubectl get pod <pod-name> --events
 D) kubectl events <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl describe pod <pod-name>` command shows detailed information about a Pod, including its events at the bottom of the output. Events provide valuable troubleshooting information such as scheduling decisions, image pulls, and container state changes.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
 
 ---
 
@@ -42,6 +64,17 @@ B) The container keeps crashing and Kubernetes is waiting before restarting it
 C) The Pod is pending scheduling
 D) The node is under memory pressure
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** CrashLoopBackOff indicates that a container is repeatedly crashing after starting. Kubernetes uses an exponential backoff delay (10s, 20s, 40s, up to 5 minutes) before restarting the container again. Check container logs with `kubectl logs` to diagnose the crash cause.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/#my-pod-is-crashing-or-otherwise-unhealthy)
+
+</details>
+
 ---
 
 ### Question 4
@@ -53,6 +86,17 @@ A) kubectl describe pod <pod-name>
 B) kubectl logs <pod-name>
 C) kubectl get logs <pod-name>
 D) kubectl show logs <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl logs <pod-name>` command retrieves the logs from a container in a Pod. For multi-container Pods, use the `-c` flag to specify the container. This is essential for debugging application issues and understanding why containers might be failing.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
 
 ---
 
@@ -66,6 +110,17 @@ B) Kubernetes is waiting before retrying a failed image pull
 C) The Pod is waiting for a volume to be mounted
 D) The container is restarting repeatedly
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ImagePullBackOff indicates that Kubernetes failed to pull the container image and is waiting before retrying. Common causes include incorrect image names, missing registry credentials, network issues, or the image not existing. Use `kubectl describe pod` to see the specific error.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
 ---
 
 ### Question 6
@@ -77,6 +132,17 @@ A) kubectl logs <pod-name>
 B) kubectl describe pod <pod-name>
 C) kubectl exec <pod-name> -- cat /var/log/messages
 D) kubectl top pod <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a Pod is stuck in Pending, `kubectl describe pod <pod-name>` shows the reason in the Events section. Common causes include insufficient resources, node selector or affinity mismatches, taints without tolerations, or pending PersistentVolumeClaims.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/#my-pod-stays-pending)
+
+</details>
 
 ---
 
@@ -90,6 +156,17 @@ B) To show detailed information including events, status, and configuration
 C) To update a Pod's configuration
 D) To view only the container logs
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl describe pod` command provides comprehensive information about a Pod including its configuration, status, conditions, volumes, events, and container states. This is one of the most important troubleshooting commands for understanding Pod issues.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
 ---
 
 ### Question 8
@@ -101,6 +178,17 @@ A) status.phase
 B) status.containerStatuses[].state.terminated.reason
 C) status.message
 D) spec.terminationReason
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The termination reason is found in `status.containerStatuses[].state.terminated.reason`. Common values include "Completed" (exit code 0), "Error" (non-zero exit), and "OOMKilled" (out of memory). The exitCode field provides the actual exit code.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-states)
+
+</details>
 
 ---
 
@@ -114,6 +202,17 @@ B) Kubernetes failed to pull the container image
 C) The Pod is evicted
 D) The volume mount failed
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ErrImagePull indicates an immediate failure to pull a container image. This differs from ImagePullBackOff, which is the state after repeated failures. Common causes include wrong image name, authentication issues, network problems, or registry unavailability.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
 ---
 
 ### Question 10
@@ -125,6 +224,17 @@ A) kubectl logs <pod-name> --previous
 B) kubectl logs <pod-name> --old
 C) kubectl logs <pod-name> --history
 D) kubectl logs <pod-name> --last
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** The `kubectl logs <pod-name> --previous` (or `-p`) flag retrieves logs from the previous instance of a container. This is essential for debugging CrashLoopBackOff situations where the current container has restarted and the crash logs are in the previous instance.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
 
 ---
 
