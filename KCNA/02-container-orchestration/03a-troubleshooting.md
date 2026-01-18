@@ -1544,7 +1544,7 @@ D) Volume is read-only
 How do you troubleshoot imagePullSecrets not working?
 
 A) Delete the image
-B) Verify Secret exists, is type dockerconfigjson, is in same namespace, and check registry credentials
+B) Verify Secret exists, is type dockerconfigjson or dockercfg, is in same namespace, and check registry credentials
 C) Change registry
 D) Remove Secret
 
@@ -1553,7 +1553,7 @@ D) Remove Secret
 
 **Answer:** B
 
-**Explanation:** imagePullSecrets issues: 1) Secret must exist in same namespace as Pod, 2) Type must be `kubernetes.io/dockerconfigjson`, 3) Credentials must be valid for the registry, 4) Check Secret is referenced in Pod spec or ServiceAccount, 5) Events show auth failures.
+**Explanation:** imagePullSecrets issues: 1) Secret must exist in same namespace as Pod, 2) Type should be `kubernetes.io/dockerconfigjson` (recommended) or legacy `kubernetes.io/dockercfg`, 3) Credentials must be valid for the registry, 4) Check Secret is referenced in Pod spec or ServiceAccount, 5) Events show auth failures.
 
 **Source:** [Pull an Image from a Private Registry | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
 
