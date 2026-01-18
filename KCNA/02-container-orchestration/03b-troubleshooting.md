@@ -1642,6 +1642,17 @@ B) Check sidecar logs with -c flag, verify resource allocation, and check depend
 C) Remove the sidecar
 D) Restart the node
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot sidecars by: 1) `kubectl logs <pod> -c <sidecar-name>` for specific container logs, 2) `kubectl describe pod` to check container status and events, 3) Verify resource requests/limits aren't too restrictive, 4) Check if sidecar depends on main container or services that aren't ready.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
+
 ---
 
 ### Question 72
@@ -1653,6 +1664,17 @@ A) Random scheduling
 B) Init containers run sequentially; a failure blocks subsequent containers
 C) Network issues only
 D) Memory issues only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Init containers run sequentially in order defined. Each must complete successfully before the next starts. If one fails, the Pod stays in Init state and that container restarts with backoff. Check `kubectl describe pod` for init container status and `kubectl logs <pod> -c <init-container>` for errors.
+
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+
+</details>
 
 ---
 
@@ -1666,6 +1688,17 @@ B) kubectl describe pod and check restartCount per container in containerStatuse
 C) kubectl top pod
 D) kubectl get events only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe pod <name>` and check the `Containers` section. Each container shows `Restart Count`. The container with high restart count is the problem. Also check `Last State` to see why it terminated (exit code, reason). Use `kubectl logs -p` to see previous container's logs.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
+
 ---
 
 ### Question 74
@@ -1677,6 +1710,17 @@ A) The Pod fails immediately
 B) File conflicts, permission issues, or data corruption may occur
 C) The volume is automatically resized
 D) Containers are isolated automatically
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When containers share volumes incorrectly: 1) File conflicts if both write to same files, 2) Permission issues if containers run as different users, 3) Data corruption from concurrent writes without coordination. Use subPath for separate directories or ensure proper file locking/coordination.
+
+**Source:** [Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/)
+
+</details>
 
 ---
 
@@ -1690,6 +1734,17 @@ B) Containers share localhost; verify port bindings, check logs, and test with n
 C) Check network policies
 D) Restart the Pod
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Containers in a Pod share the network namespace, communicating via localhost. Troubleshoot by: 1) `kubectl exec <pod> -c <container> -- netstat -tlnp` to see listening ports, 2) Verify one container listens before others connect, 3) Check startup ordering, 4) Ensure no port conflicts between containers.
+
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
+
+</details>
+
 ---
 
 ### Question 76
@@ -1701,6 +1756,17 @@ A) Network isolation
 B) Shared resources (CPU, memory, network, volumes) within the Pod
 C) Separate namespaces
 D) Different nodes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Containers in a Pod share: network namespace (same IP, ports), IPC namespace, and mounted volumes. A container consuming too much CPU/memory affects others. Port conflicts prevent startup. A crashing container may affect shared volume state. Use resource limits to isolate CPU/memory impact.
+
+**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
+
+</details>
 
 ---
 
@@ -1714,6 +1780,17 @@ B) kubectl top pod <name> --containers
 C) kubectl logs --all-containers
 D) kubectl get pod -o wide
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl top pod <pod-name> --containers` to see CPU and memory usage per container. This requires metrics-server. Output shows each container's current resource consumption, helping identify which container is using excessive resources in a multi-container Pod.
+
+**Source:** [Tools for Monitoring Resources | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
+
+</details>
+
 ---
 
 ### Question 78
@@ -1725,6 +1802,17 @@ A) Pod runs normally
 B) FailedPostStartHook or FailedPreStopHook events in Pod description
 C) Container restarts only
 D) Network errors only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Hook failures show as events in `kubectl describe pod`: FailedPostStartHook means postStart failed (container may be killed), FailedPreStopHook means preStop failed (shutdown continues anyway). Check the event reason and message for details. A failing postStart hook prevents the container from reaching Running state.
+
+**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+
+</details>
 
 ---
 
@@ -1738,6 +1826,17 @@ B) Check events for hook failures, verify command/HTTP endpoint, and check conta
 C) Restart the node
 D) Delete the namespace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot postStart by: 1) `kubectl describe pod` for FailedPostStartHook events, 2) Check if command exists and is executable, 3) For HTTP hooks, verify endpoint is accessible, 4) Container may not have full environment when hook runs, 5) Hooks have no stdout capture - use logs/files for debugging.
+
+**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+
+</details>
+
 ---
 
 ### Question 80
@@ -1749,6 +1848,17 @@ A) The hook runs indefinitely
 B) The container is forcefully terminated after terminationGracePeriodSeconds
 C) The Pod remains running
 D) The node is drained
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The preStop hook runs during the grace period defined by terminationGracePeriodSeconds (default 30s). If the hook and application don't finish gracefully within this time, the container receives SIGKILL. Increase terminationGracePeriodSeconds if your cleanup needs more time.
+
+**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+
+</details>
 
 ---
 
