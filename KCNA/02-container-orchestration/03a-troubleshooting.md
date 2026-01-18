@@ -673,7 +673,7 @@ D) Service configuration
 
 **Explanation:** Slow API server: 1) Check etcd latency and health, 2) Review API server CPU/memory usage, 3) Check `apiserver_request_duration_seconds` metrics, 4) Look for expensive requests in audit logs, 5) Verify no webhook is timing out and blocking requests.
 
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+**Sources:** [Kubernetes Metrics | Kubernetes](https://kubernetes.io/docs/reference/instrumentation/metrics/), [Auditing | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/), [Admission Webhooks | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
 
 </details>
 
@@ -696,7 +696,7 @@ D) kubectl health-check
 
 **Explanation:** Check control plane health: 1) Query API server health endpoints (`/readyz`, `/livez`, `/healthz`), 2) Check control plane Pods in kube-system: `kubectl get pods -n kube-system`, 3) Review component logs: `kubectl logs -n kube-system <component-pod>`, 4) Verify etcd cluster health with etcdctl.
 
-**Source:** [API Server Health | Kubernetes](https://kubernetes.io/docs/reference/using-api/health-checks/)
+**Sources:** [API Server Health | Kubernetes](https://kubernetes.io/docs/reference/using-api/health-checks/), [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/), [Operating etcd | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
 
 </details>
 
@@ -2008,7 +2008,7 @@ D) kubectl get securitycontext
 A Pod fails with "cannot exec as root" but securityContext specifies runAsUser: 0. Why?
 
 A) Bug in Kubernetes
-B) Pod Security Admission or other admission controllers are overriding/blocking root
+B) runAsNonRoot: true or Pod Security Admission is blocking root execution
 C) Image doesn't support root
 D) Node doesn't allow root
 
@@ -2017,9 +2017,9 @@ D) Node doesn't allow root
 
 **Answer:** B
 
-**Explanation:** Admission controllers can override or block root. Check: 1) Namespace Pod Security Admission labels may enforce restricted or baseline (blocks root), 2) Custom admission webhooks (ValidatingWebhookConfiguration or MutatingWebhookConfiguration) may modify or reject. Check events for admission denials.
+**Explanation:** Root execution is blocked by: 1) `runAsNonRoot: true` in securityContext (blocks UID 0 at runtime), 2) Pod Security Admission with restricted or baseline level (requires non-root), 3) Custom admission webhooks. Check the Pod/container securityContext for runAsNonRoot and namespace PSA labels. Fix by removing runAsNonRoot, using a non-root UID, or adjusting the PSA policy.
 
-**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+**Sources:** [Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/), [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
 
 </details>
 
@@ -2042,7 +2042,7 @@ D) Increase memory limits
 
 **Explanation:** Bound ServiceAccount tokens (projected volume tokens) have configurable expiration. Troubleshoot by: 1) Check `expirationSeconds` in the projected volume configuration, 2) Verify the application refreshes tokens before expiration, 3) Review API server `--service-account-max-token-expiration` flag, 4) For legacy tokens (Secrets), they don't expire but are less secure.
 
-**Source:** [Configure Service Accounts | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+**Sources:** [Configure Service Accounts | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/), [kube-apiserver | Kubernetes](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/)
 
 </details>
 
