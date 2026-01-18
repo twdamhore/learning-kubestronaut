@@ -714,6 +714,17 @@ B) The Pod fails to start and shows a warning event
 C) The Pod starts without the ConfigMap
 D) The ConfigMap is created automatically
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a Pod references a non-existent ConfigMap (required by default), the Pod fails to start and stays in `ContainerCreating` state. Events show "configmap not found" warnings. Use `optional: true` in the volume/env source if the ConfigMap should be optional.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
+</details>
+
 ---
 
 ### Question 32
@@ -725,6 +736,17 @@ A) Restart the cluster
 B) Verify ConfigMap exists, check envFrom/env syntax, and exec into Pod to check env vars
 C) Delete the Pod only
 D) Check node status only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot ConfigMap env vars by: 1) Verify ConfigMap exists: `kubectl get configmap`, 2) Check Pod spec syntax for `envFrom` or `env.valueFrom.configMapKeyRef`, 3) Exec into Pod: `kubectl exec <pod> -- env | grep KEY`, 4) Note: env vars require Pod restart to update.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#configmaps-and-pods)
+
+</details>
 
 ---
 
@@ -738,6 +760,17 @@ B) ConfigMap not found, incorrect mount path, or permission issues
 C) CPU limits only
 D) Memory limits only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ConfigMap volume mount failures occur when: 1) ConfigMap doesn't exist in the namespace, 2) Mount path conflicts with existing directory or file, 3) Volume name mismatch between `volumes` and `volumeMounts`, 4) File permissions prevent reading. Check events with `kubectl describe pod`.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#using-configmaps-as-files-from-a-pod)
+
+</details>
+
 ---
 
 ### Question 34
@@ -749,6 +782,17 @@ A) kubectl describe secret only
 B) kubectl exec into the Pod and check the mount path contents
 C) kubectl get secret only
 D) kubectl logs only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify Secret mounts by: `kubectl exec <pod> -- ls /path/to/secret` to see files (each key becomes a file), and `kubectl exec <pod> -- cat /path/to/secret/<key>` to view contents. Secrets are mounted as tmpfs and each data key becomes a file with its value as contents.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-files-from-a-pod)
+
+</details>
 
 ---
 
@@ -762,6 +806,17 @@ B) Volume-mounted ConfigMaps update automatically; env vars require Pod restart
 C) No impact at all
 D) Pods are deleted
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When ConfigMaps are updated: 1) Volume-mounted ConfigMaps are automatically updated by kubelet (with sync period delay), 2) Environment variables from ConfigMaps are NOT updated until Pod restart. SubPath volume mounts also don't receive automatic updates.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#mounted-configmaps-are-updated-automatically)
+
+</details>
+
 ---
 
 ### Question 36
@@ -773,6 +828,17 @@ A) Delete the image
 B) Verify Secret exists, is type kubernetes.io/dockerconfigjson, and is referenced correctly
 C) Restart kubelet only
 D) Change the image registry
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot imagePullSecrets by: 1) Verify Secret exists: `kubectl get secret <name>`, 2) Check type is `kubernetes.io/dockerconfigjson`, 3) Ensure Secret is in same namespace as Pod, 4) Verify `imagePullSecrets` references correct Secret name, 5) Check credentials are valid for the registry.
+
+**Source:** [Pull an Image from a Private Registry | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+
+</details>
 
 ---
 
@@ -786,6 +852,17 @@ B) Secret doesn't exist, is in a different namespace, or name is misspelled
 C) CPU limits only
 D) Memory limits only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Secret not found" errors occur when: 1) Secret doesn't exist in the cluster, 2) Secret is in a different namespace (Secrets are namespace-scoped), 3) Secret name is misspelled in Pod spec. Verify with `kubectl get secret <name> -n <namespace>` and check spelling carefully.
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
+
+</details>
+
 ---
 
 ### Question 38
@@ -797,6 +874,17 @@ A) kubectl describe configmap only
 B) kubectl exec <pod> -- cat /path/to/mounted/file
 C) kubectl logs only
 D) kubectl get configmap only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify mounted ConfigMap contents by execing into the Pod: `kubectl exec <pod> -- cat /path/to/mounted/file`. This shows the actual data available to the application. Compare with `kubectl get configmap <name> -o yaml` to ensure data matches expectations.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
+</details>
 
 ---
 
@@ -810,6 +898,17 @@ B) The mounted files disappear, potentially causing application errors
 C) The Pod is automatically deleted
 D) A new ConfigMap is created
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a ConfigMap is deleted, volume-mounted files become unavailable. The mounted directory may become empty or inaccessible. Applications reading from the mount path will encounter errors. The Pod itself continues running but may fail if it depends on the ConfigMap data.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
+</details>
+
 ---
 
 ### Question 40
@@ -821,6 +920,17 @@ A) Delete the ConfigMap
 B) Verify subPath matches a key in the ConfigMap and check mount path is correct
 C) Increase volume size
 D) Change storage class
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For subPath issues: 1) Verify `subPath` value exactly matches a key in the ConfigMap, 2) Ensure `mountPath` is the full file path (not directory), 3) Note: subPath mounts don't receive automatic updates when ConfigMap changes. Check Pod events for mount errors.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#using-configmaps-as-files-from-a-pod)
+
+</details>
 
 ---
 
