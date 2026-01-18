@@ -301,7 +301,7 @@ D) system
 
 **Answer:** B
 
-**Explanation:** The kube-system namespace contains ServiceAccounts for core Kubernetes system components like kube-controller-manager, kube-scheduler, and kube-proxy. Note that every namespace also has its own "default" ServiceAccount created automatically, but system components use dedicated ServiceAccounts in kube-system.
+**Explanation:** The kube-system namespace contains ServiceAccounts for system components that run as Pods, such as kube-proxy and CoreDNS. Note that every namespace also has its own "default" ServiceAccount created automatically, but these system Pod components use dedicated ServiceAccounts in kube-system.
 
 **Source:** [Managing Service Accounts | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
 
@@ -659,10 +659,10 @@ D) Container-level is more secure
 ### Question 29
 [HARD]
 
-What does the "restricted" Pod Security Standard require?
+Which of the following is required by the "restricted" Pod Security Standard?
 
 A) Only that containers run as non-root
-B) Dropping all capabilities, running as non-root, disallowing privilege escalation, and a seccomp profile
+B) Running as non-root, dropping all capabilities, disallowing privilege escalation, and requiring a seccomp profile
 C) No hostPath mounts only
 D) No special requirements
 
@@ -671,7 +671,7 @@ D) No special requirements
 
 **Answer:** B
 
-**Explanation:** The restricted Pod Security Standard is the most stringent level, requiring: dropping all capabilities (only NET_BIND_SERVICE may be added), running as non-root, disallowing privilege escalation, and requiring a seccomp profile. It enforces current Pod hardening best practices.
+**Explanation:** The restricted Pod Security Standard is the most stringent level. Among its many requirements are: running as non-root, dropping all capabilities (only NET_BIND_SERVICE may be added), disallowing privilege escalation, requiring a seccomp profile, disallowing host namespaces, privileged containers, hostPath volumes, and host ports, plus restricting allowed volume types.
 
 **Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted)
 
@@ -871,7 +871,7 @@ D) Exemptions are not supported
 What is the maximum size limit for a Kubernetes Secret?
 
 A) 1KB
-B) 1MB
+B) 1 MiB
 C) 10MB
 D) No limit
 
@@ -880,7 +880,7 @@ D) No limit
 
 **Answer:** B
 
-**Explanation:** Kubernetes Secrets have a maximum size limit of 1MB. This limit exists because Secrets are stored in etcd, and large Secrets could impact API server and etcd performance. For larger data, consider using volume mounts or external storage solutions.
+**Explanation:** Kubernetes Secrets have a maximum size limit of 1 MiB (1,048,576 bytes). This limit exists because Secrets are stored in etcd, and large Secrets could impact API server and etcd performance. For larger data, consider using volume mounts or external storage solutions.
 
 **Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#restrictions)
 
@@ -940,7 +940,7 @@ D) A field for multi-line strings only
 How do Secrets differ from ConfigMaps in terms of security?
 
 A) Secrets are encrypted by default
-B) Secrets are stored in tmpfs when mounted, have stricter RBAC defaults, and can be encrypted at rest
+B) Secrets are stored in tmpfs when mounted, have separate RBAC resources, and can be encrypted at rest
 C) There is no security difference
 D) ConfigMaps are more secure
 
@@ -949,7 +949,7 @@ D) ConfigMaps are more secure
 
 **Answer:** B
 
-**Explanation:** Secrets have several security advantages: they're stored in tmpfs (memory-backed) when mounted as volumes, they have separate RBAC permissions allowing stricter access control, and they can be encrypted at rest in etcd. However, they're only base64-encoded by default, not encrypted.
+**Explanation:** Secrets have several security advantages: they're stored in tmpfs (memory-backed) when mounted as volumes (not written to disk), they are separate API resources allowing administrators to configure stricter RBAC if desired, and they can be encrypted at rest in etcd. However, they're only base64-encoded by default, not encrypted.
 
 **Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
 
@@ -1264,7 +1264,7 @@ D) Use an annotation
 What is the ipBlock selector used for in NetworkPolicies?
 
 A) To select Pods by IP
-B) To allow or deny traffic to/from specific IP CIDR ranges
+B) To allow traffic to/from specific IP CIDR ranges, with optional exclusions
 C) To block IP addresses
 D) To configure IP allocation
 
@@ -1273,7 +1273,7 @@ D) To configure IP allocation
 
 **Answer:** B
 
-**Explanation:** The ipBlock selector allows specifying CIDR ranges for traffic rules. It's useful for allowing or controlling traffic to/from external IPs, on-premise networks, or specific IP ranges. It includes a 'cidr' field for the range and optional 'except' field for exclusions.
+**Explanation:** The ipBlock selector allows specifying CIDR ranges in allow-list traffic rules. It's useful for allowing traffic to/from external IPs, on-premise networks, or specific IP ranges. It includes a 'cidr' field for the allowed range and optional 'except' field for exclusions within that range. NetworkPolicies only support allow rules, not explicit denies.
 
 **Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/#the-networkpolicy-resource)
 
