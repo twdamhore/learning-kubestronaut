@@ -946,6 +946,17 @@ B) One Pod completed successfully out of one required completion
 C) The Job is still running
 D) The Job was deleted
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "1/1 Completions" means the Job required 1 successful Pod completion and 1 has completed. The format is "current/desired". A Job is considered complete when all required completions are successful. Use `kubectl get jobs` to view this status.
+
+**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+
+</details>
+
 ---
 
 ### Question 42
@@ -957,6 +968,17 @@ A) Delete the Job only
 B) Check Pod exit codes, review restartPolicy, and examine backoffLimit settings
 C) Increase parallelism
 D) Change the image
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Jobs create new Pods when previous ones fail. Troubleshoot by: 1) Check Pod exit codes with `kubectl describe pod`, 2) Review application logs for errors, 3) Verify restartPolicy is Never or OnFailure, 4) Check backoffLimit (default 6) hasn't been reached. Address the root cause of failures.
+
+**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#pod-backoff-failure-policy)
+
+</details>
 
 ---
 
@@ -970,6 +992,17 @@ B) Pods failing repeatedly until the retry limit is reached
 C) Too many completions
 D) Network issues only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** backoffLimit specifies the number of retries before marking a Job as failed. When Pods exit with non-zero status or fail to start, the Job controller retries up to backoffLimit times (default 6). Once reached, the Job is marked as Failed. Check `kubectl describe job` for failure counts.
+
+**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#pod-backoff-failure-policy)
+
+</details>
+
 ---
 
 ### Question 44
@@ -981,6 +1014,17 @@ A) Check Pod logs only
 B) Verify schedule syntax, check CronJob status and events, and ensure it's not suspended
 C) Restart the API server
 D) Delete the namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot CronJob triggers by: 1) Verify schedule syntax is valid cron format, 2) Check `kubectl describe cronjob` for events and Last Schedule Time, 3) Ensure `suspend: false`, 4) Check for startingDeadlineSeconds issues, 5) Verify the cronjob controller is running in kube-system.
+
+**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
+
+</details>
 
 ---
 
@@ -994,6 +1038,17 @@ B) Prevents new Job creation from the CronJob while set to true
 C) Deletes the CronJob
 D) Increases concurrency
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When `suspend: true`, the CronJob controller stops creating new Jobs at scheduled times. Already-running Jobs continue to completion. Set `suspend: false` to resume scheduling. This is useful for temporarily pausing scheduled work without deleting the CronJob configuration.
+
+**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
+
+</details>
+
 ---
 
 ### Question 46
@@ -1005,6 +1060,17 @@ A) Increase parallelism
 B) Check concurrencyPolicy setting and adjust schedule or job duration
 C) Delete all Jobs
 D) Change the namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use concurrencyPolicy to control overlapping: `Allow` (default) allows concurrent Jobs, `Forbid` skips new Jobs if previous is running, `Replace` cancels current Job and starts new one. If Jobs overlap unexpectedly, adjust the schedule or optimize Job duration to complete before next trigger.
+
+**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#concurrency-policy)
+
+</details>
 
 ---
 
@@ -1018,6 +1084,17 @@ B) To set maximum time a Job can run before being terminated
 C) To set parallelism
 D) To set completions count
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** activeDeadlineSeconds sets the maximum duration for a Job. If the Job runs longer, it's terminated and marked as Failed with reason DeadlineExceeded. This applies to all Pods in aggregate. Use this to prevent runaway Jobs from consuming resources indefinitely.
+
+**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#job-termination-and-cleanup)
+
+</details>
+
 ---
 
 ### Question 48
@@ -1029,6 +1106,17 @@ A) kubectl get jobs only
 B) kubectl get pods --selector=job-name=<job> and check for Failed status
 C) kubectl logs job only
 D) kubectl describe job only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Find failed Job Pods with: `kubectl get pods --selector=job-name=<job-name>` to list all Pods for the Job. Check for Failed or Error status. Then `kubectl logs <pod-name>` or `kubectl describe pod <pod-name>` to see failure details and exit codes.
+
+**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+
+</details>
 
 ---
 
@@ -1042,6 +1130,17 @@ B) CronJob controller was unable to create Jobs for multiple scheduled times
 C) Network issues only
 D) Memory pressure only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** This occurs when more than 100 missed schedules accumulate (e.g., controller was down or CronJob suspended). The CronJob stops and logs this error. To recover, update the CronJob (even a no-op change) to reset the missed schedule counter, or delete and recreate it.
+
+**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#cron-job-limitations)
+
+</details>
+
 ---
 
 ### Question 50
@@ -1053,6 +1152,17 @@ A) Delete all Pods
 B) Check parallelism and completions settings, verify resources are available for parallel Pods
 C) Increase backoffLimit
 D) Change the schedule
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot parallelism by: 1) Check `parallelism` value in Job spec, 2) Verify enough cluster resources (CPU, memory) for parallel Pods, 3) Check ResourceQuota limits in namespace, 4) Review `completions` setting for indexed vs non-indexed Jobs. Pods pending due to resources limit effective parallelism.
+
+**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#parallel-jobs)
+
+</details>
 
 ---
 
