@@ -161,9 +161,9 @@ D) Modify labels only
 
 **Answer:** B
 
-**Explanation:** Eviction occurs due to node resource pressure (memory, disk, PIDs). Check: 1) Node conditions with `kubectl describe node`, 2) Pod QoS class (BestEffort evicted first), 3) Resource requests/limits, 4) PriorityClass settings. Set appropriate requests to get Guaranteed or Burstable QoS.
+**Explanation:** Eviction occurs due to node resource pressure (memory, disk, PIDs). Check: 1) Node conditions with `kubectl describe node`, 2) Pod QoS class (BestEffort evicted first), 3) Resource requests/limits, 4) PriorityClass settings. For Guaranteed QoS (evicted last), every container must have both CPU and memory requests and limits set, with requests equal to limits. For Burstable QoS, at least one container must have a CPU or memory request or limit.
 
-**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+**Source:** [Configure Quality of Service for Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/)
 
 </details>
 
@@ -347,9 +347,9 @@ D) Check events only
 
 **Answer:** B
 
-**Explanation:** For distroless or minimal images without shells, use `kubectl debug <pod> -it --image=busybox --target=<container>` to attach an ephemeral container that shares the process namespace. This allows inspection of the target container's filesystem and processes.
+**Explanation:** For distroless or minimal images without shells, use `kubectl debug <pod> -it --image=busybox --target=<container>` to attach an ephemeral container that shares the process namespace. This allows inspection of the target container's processes (via /proc) and any shared volumes, but not the target container's root filesystem since containers in a Pod do not share root filesystems.
 
-**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container)
+**Source:** [Ephemeral Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/)
 
 </details>
 
@@ -427,7 +427,7 @@ D) Event history
 ### Question 19
 [HARD]
 
-How do you stream logs from multiple Pods simultaneously?
+How do you stream logs from multiple Pods matching a label selector using kubectl?
 
 A) kubectl logs only works for one Pod
 B) kubectl logs -l <label-selector> --all-containers -f
@@ -439,9 +439,9 @@ D) kubectl get logs
 
 **Answer:** B
 
-**Explanation:** Use `kubectl logs -l app=myapp -f` to stream logs from all Pods matching the label selector. Add `--all-containers` for multi-container Pods. For production environments, implement centralized logging using the Kubernetes logging architecture (e.g., node-level agents that ship logs to a backend).
+**Explanation:** Use `kubectl logs -l app=myapp -f` to stream logs from all Pods matching the label selector. Add `--all-containers` for multi-container Pods. Add `--prefix` to show Pod names with each log line. This is useful for quick debugging but has limitations: output can be interleaved and there's no persistent storage.
 
-**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
 
 </details>
 
@@ -625,9 +625,9 @@ D) Memory leak
 
 **Answer:** B
 
-**Explanation:** DiskPressure means available disk space fell below the eviction threshold (default: 10% available for nodefs, 15% for imagefs). Resolve by: 1) Rely on kubelet's automatic image garbage collection to remove unused images, 2) Delete completed Pods and Jobs that are no longer needed, 3) Clean up old container logs, 4) Check for Pods writing excessive data to emptyDir volumes.
+**Explanation:** DiskPressure means available disk space fell below the kubelet eviction threshold. Default soft thresholds: nodefs.available < 10%, nodefs.inodesFree < 5%, imagefs.available < 15%. Resolve by: 1) Delete completed Pods and Jobs that are no longer needed, 2) Clean up old container logs, 3) Let kubelet's image garbage collection remove unused images, 4) Check for Pods writing excessive data to emptyDir volumes.
 
-**Source:** [Garbage Collection | Kubernetes](https://kubernetes.io/docs/concepts/architecture/garbage-collection/#container-image-garbage-collection)
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
 </details>
 
@@ -685,7 +685,7 @@ D) Service configuration
 How do you verify control plane component health?
 
 A) kubectl get pods only
-B) kubectl get componentstatuses, check control plane Pod logs, and verify endpoints
+B) Query API server health endpoints and check control plane Pod logs
 C) kubectl describe cluster
 D) kubectl health-check
 
@@ -1158,7 +1158,7 @@ D) Change access mode
 
 **Answer:** B
 
-**Explanation:** PVC resize issues: 1) Verify StorageClass has `allowVolumeExpansion: true`, 2) Check CSI driver supports expansion, 3) For filesystem resize, Pod may need restart, 4) Some storage backends require offline resize. Check `kubectl describe pvc` for resize conditions.
+**Explanation:** PVC resize issues: 1) Verify StorageClass has `allowVolumeExpansion: true`, 2) Check CSI driver supports expansion, 3) Pod restart is only required when the volume/driver doesn't support online expansion or when the PVC shows FileSystemResizePending condition. Check `kubectl describe pvc` for resize conditions and status.
 
 **Source:** [Resizing Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims)
 
@@ -1415,7 +1415,7 @@ D) Pod starts without the data
 
 **Answer:** B
 
-**Explanation:** If a required ConfigMap doesn't exist, the Pod stays in ContainerCreating with events showing "configmap not found". The container won't start until the ConfigMap exists. Use `optional: true` if the ConfigMap is not required.
+**Explanation:** If a required ConfigMap doesn't exist, the Pod won't start and shows an error such as CreateContainerConfigError with events indicating the ConfigMap wasn't found. The container won't start until the ConfigMap exists. Use `optional: true` in the volume or envFrom reference if the ConfigMap is not required.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -2028,21 +2028,21 @@ D) Node doesn't allow root
 ### Question 88
 [HARD]
 
-How do you troubleshoot NetworkPolicy blocking legitimate traffic?
+How do you troubleshoot a ServiceAccount token that is expiring too quickly?
 
-A) Delete all policies
-B) List policies, check selectors and rules, test connectivity with policy disabled temporarily
-C) Restart CNI
-D) Change namespaces
+A) Restart the kubelet
+B) Check token expiration settings, verify bound token volume projection, and review TokenRequest API configuration
+C) Delete and recreate the ServiceAccount
+D) Increase memory limits
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Debug NetworkPolicies: 1) `kubectl get networkpolicies -n <ns>` to list policies, 2) Check podSelector matches affected Pods, 3) Verify ingress/egress rules allow the traffic, 4) Test by temporarily removing policy, 5) Check CNI supports and correctly implements NetworkPolicy.
+**Explanation:** Bound ServiceAccount tokens (projected volume tokens) have configurable expiration. Troubleshoot by: 1) Check `expirationSeconds` in the projected volume configuration, 2) Verify the application refreshes tokens before expiration, 3) Review API server `--service-account-max-token-expiration` flag, 4) For legacy tokens (Secrets), they don't expire but are less secure.
 
-**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+**Source:** [Configure Service Accounts | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
 
 </details>
 
@@ -2306,10 +2306,10 @@ D) kubectl ssh node
 ### Question 100
 [HARD]
 
-What tools help aggregate logs from multiple Pods for troubleshooting?
+What is the recommended architecture for cluster-level log aggregation in production?
 
 A) Only kubectl logs
-B) kubectl logs -l <selector> or centralized logging with node-level agents
+B) Node-level logging agents that ship logs to a centralized backend
 C) kubectl describe only
 D) API server logs only
 
@@ -2318,7 +2318,7 @@ D) API server logs only
 
 **Answer:** B
 
-**Explanation:** For multi-Pod log aggregation: 1) Use `kubectl logs -l <selector> -f` to stream logs from Pods matching a label, 2) Implement cluster-level logging using node-level agents (e.g., Fluentd, Fluent Bit) that ship logs to a backend like Elasticsearch, 3) Some cloud providers offer integrated logging solutions. Centralized logging is essential for production troubleshooting.
+**Explanation:** The Kubernetes logging architecture recommends node-level logging agents (DaemonSets) that: 1) Run on every node and collect logs from /var/log/containers, 2) Ship logs to a centralized backend (e.g., Elasticsearch, cloud logging services), 3) Provide log persistence beyond Pod lifecycle, 4) Enable searching and filtering across the entire cluster. This is essential for production troubleshooting as Pod logs are lost when Pods are deleted.
 
 **Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
