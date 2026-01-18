@@ -103,7 +103,7 @@ D) They immediately fail and need recreation
 ### Question 5
 [HARD]
 
-A Pod transitions directly from "Pending" to "Failed" without ever being "Running". Which scenario causes this?
+A Pod with `restartPolicy: Never` transitions directly from "Pending" to "Failed" without ever being "Running". Which scenario causes this?
 
 A) Image pull failure after multiple retries
 B) Init container exits with non-zero code before main container starts
@@ -115,7 +115,7 @@ D) Container OOMKilled
 
 **Answer:** B
 
-**Explanation:** When an init container fails (exits with non-zero code) and the Pod has `restartPolicy: Never`, the Pod transitions to Failed without the main containers ever running. Image pull failures keep the Pod in Pending. Node pressure eviction and OOMKill require the container to be running first.
+**Explanation:** When an init container fails (exits with non-zero code) and the Pod has `restartPolicy: Never`, the Pod transitions to Failed without the main containers ever running. With other restart policies (Always or OnFailure), a failed init container would be retried instead of causing immediate Pod failure. Image pull failures keep the Pod in Pending. Node pressure eviction and OOMKill require the container to be running first.
 
 **Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
@@ -1220,7 +1220,7 @@ D) Edit the Deployment with --paused flag
 A StatefulSet Pod is stuck in Terminating state. What is blocking deletion?
 
 A) Pod has active connections
-B) PVC finalizers, Pod finalizers, or volume unmount operations
+B) Pod finalizers or stuck volume detach/unmount operations
 C) Too many replicas
 D) Node is healthy
 
@@ -1229,7 +1229,7 @@ D) Node is healthy
 
 **Answer:** B
 
-**Explanation:** StatefulSet Pods can get stuck in Terminating due to: finalizers preventing deletion until conditions are met, PVC deletion waiting on Pod termination (cascade), or volume unmount operations hanging. Check `kubectl get pod -o yaml` for finalizers and events.
+**Explanation:** StatefulSet Pods can get stuck in Terminating due to: Pod finalizers preventing deletion until conditions are met, or volume unmount/detach operations hanging (especially if the node is unreachable). Note: PVC finalizers prevent PVC deletion while in use, not Pod deletion. Check `kubectl get pod -o yaml` for finalizers and events.
 
 **Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
 
@@ -1776,7 +1776,7 @@ D) Only one can be active
 What causes "must specify limits" error even when LimitRange has defaults?
 
 A) LimitRange not applied yet
-B) ResourceQuota with specific scope (like BestEffort) requires matching resource specs
+B) ResourceQuota includes limits.* (e.g., limits.cpu, limits.memory) and LimitRange defaults don't cover all containers
 C) Wrong namespace
 D) LimitRange is invalid
 
@@ -1785,9 +1785,9 @@ D) LimitRange is invalid
 
 **Answer:** B
 
-**Explanation:** ResourceQuota scopes can require specific Pod QoS classes. A quota scope like `NotBestEffort` requires Pods to have limits (Burstable or Guaranteed QoS). LimitRange might set defaults but not for all containers, or the scope requirements might conflict with defaults.
+**Explanation:** When ResourceQuota includes `limits.cpu` or `limits.memory`, every container must specify those limits. LimitRange defaults may not apply if: they only set defaults for some resource types, there are init containers without defaults, or the LimitRange was created after the Pod creation attempt. Ensure LimitRange covers all resource types the quota requires.
 
-**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/#quota-scopes)
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/#compute-resource-quota)
 
 </details>
 
@@ -2031,7 +2031,7 @@ D) NetworkPolicy applies immediately
 A ServiceAccount token works from inside the cluster but not from outside. What's the likely cause?
 
 A) Token is invalid
-B) Bound service account tokens are audience-restricted and may not work with external API server URLs
+B) Audience mismatch - bound tokens include an `aud` claim that must match the API server's configured audiences
 C) RBAC is namespace-specific
 D) Token expired inside
 
@@ -2040,7 +2040,7 @@ D) Token expired inside
 
 **Answer:** B
 
-**Explanation:** Bound ServiceAccount tokens include audience claims for specific API servers. External access might use a different API server URL/audience than the token was issued for. For external access, create a long-lived token or ensure audience matches in token request.
+**Explanation:** Bound ServiceAccount tokens (projected volume tokens) include an `aud` (audience) claim that must match the API server's `--api-audiences` configuration. When accessing externally, if the audience in the token doesn't match what the API server expects, authentication fails. Use TokenRequest API with explicit audiences or ensure `--api-audiences` includes the external URL.
 
 **Source:** [Service Account Tokens | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
 
