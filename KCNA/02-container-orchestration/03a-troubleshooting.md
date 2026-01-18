@@ -625,7 +625,7 @@ D) Memory leak
 
 **Answer:** B
 
-**Explanation:** DiskPressure means available disk space fell below the kubelet eviction threshold. Default hard eviction thresholds: nodefs.available < 10%, nodefs.inodesFree < 5%, imagefs.available < 15%, pid.available < 10%. Resolve by: 1) Delete completed Pods and Jobs that are no longer needed, 2) Clean up old container logs, 3) Let kubelet's image garbage collection remove unused images, 4) Check for Pods writing excessive data to emptyDir volumes.
+**Explanation:** DiskPressure means available disk space or inodes fell below the kubelet eviction threshold for nodefs or imagefs (default hard thresholds: nodefs.available < 10%, nodefs.inodesFree < 5%, imagefs.available < 15%). Resolve by: 1) Delete completed Pods and Jobs that are no longer needed, 2) Clean up old container logs, 3) Let kubelet's image garbage collection remove unused images, 4) Check for Pods writing excessive data to emptyDir volumes.
 
 **Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
@@ -1739,7 +1739,7 @@ D) Network bandwidth
 
 **Answer:** B
 
-**Explanation:** OOM despite adequate limits: 1) Memory leak in application, 2) Limit doesn't account for JVM off-heap memory, 3) Multiple containers sharing Pod memory, 4) Kernel memory usage not counted properly, 5) Burst memory usage during garbage collection.
+**Explanation:** OOM despite adequate limits (note: limits are per-container, not shared at Pod level): 1) Memory leak in application, 2) Limit doesn't account for JVM off-heap/native memory, 3) Filesystem cache charged to container cgroup, 4) Burst memory usage during garbage collection or startup.
 
 **Source:** [Resource Management | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
@@ -2017,7 +2017,7 @@ D) Node doesn't allow root
 
 **Answer:** B
 
-**Explanation:** Admission controllers can override or block root. Check: 1) Namespace PSA labels may enforce restricted (blocks root), 2) Custom admission webhooks may modify or reject, 3) PodSecurityPolicies (if still enabled) may restrict. Check events for admission denials.
+**Explanation:** Admission controllers can override or block root. Check: 1) Namespace Pod Security Admission labels may enforce restricted or baseline (blocks root), 2) Custom admission webhooks (ValidatingWebhookConfiguration or MutatingWebhookConfiguration) may modify or reject. Check events for admission denials.
 
 **Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
 
