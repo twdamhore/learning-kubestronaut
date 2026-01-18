@@ -13,12 +13,22 @@
 
 What does it mean when a Deployment shows 0/3 ready replicas?
 
+A) The Deployment is being deleted
+B) None of the desired 3 Pods are in Ready state
+C) The Deployment is paused
+D) All Pods are running successfully
+
 ---
 
 ### Question 2
 [MEDIUM]
 
 How do you check why a ReplicaSet is not creating Pods?
+
+A) kubectl logs replicaset
+B) kubectl describe replicaset <name> and check events
+C) kubectl get pods only
+D) kubectl debug replicaset
 
 ---
 
@@ -27,12 +37,22 @@ How do you check why a ReplicaSet is not creating Pods?
 
 What causes a Deployment rollout to be stuck?
 
+A) Too many replicas
+B) Pods failing readiness probes, insufficient resources, or image pull errors
+C) Network issues only
+D) API server overload only
+
 ---
 
 ### Question 4
 [MEDIUM]
 
 How do you view the revision history of a Deployment?
+
+A) kubectl get deployment --history
+B) kubectl rollout history deployment/<name>
+C) kubectl describe deployment --revisions
+D) kubectl logs deployment
 
 ---
 
@@ -41,12 +61,22 @@ How do you view the revision history of a Deployment?
 
 What does kubectl rollout undo do?
 
+A) Deletes the Deployment
+B) Rolls back to the previous revision of the Deployment
+C) Pauses the rollout
+D) Restarts all Pods
+
 ---
 
 ### Question 6
 [MEDIUM]
 
 How do you check the status of a DaemonSet?
+
+A) kubectl logs daemonset
+B) kubectl get daemonset and kubectl describe daemonset <name>
+C) kubectl status daemonset
+D) kubectl top daemonset
 
 ---
 
@@ -55,12 +85,22 @@ How do you check the status of a DaemonSet?
 
 What could cause a DaemonSet to not schedule Pods on all nodes?
 
+A) Too few nodes
+B) Node taints without tolerations, node selectors, or affinity rules
+C) Insufficient memory only
+D) Network issues only
+
 ---
 
 ### Question 8
 [MEDIUM]
 
 How do you troubleshoot a StatefulSet with Pods stuck in Pending?
+
+A) Delete the StatefulSet
+B) Check PVC status, storage class, and Pod events for scheduling issues
+C) Increase replicas
+D) Change the service name
 
 ---
 
@@ -69,12 +109,22 @@ How do you troubleshoot a StatefulSet with Pods stuck in Pending?
 
 What is the purpose of checking the Pod template in a Deployment?
 
+A) To view running Pods
+B) To verify container specs, resource requests, and configuration that will be applied to new Pods
+C) To delete old Pods
+D) To scale the Deployment
+
 ---
 
 ### Question 10
 [MEDIUM]
 
 How do you identify which ReplicaSet is active for a Deployment?
+
+A) kubectl get deployment only
+B) kubectl get replicasets -l app=<name> and check which has non-zero desired replicas
+C) kubectl describe pods
+D) kubectl logs deployment
 
 ---
 
@@ -85,12 +135,22 @@ How do you identify which ReplicaSet is active for a Deployment?
 
 What should you check first when a Service is not accessible?
 
+A) Node status only
+B) Service endpoints, Pod readiness, and selector matching
+C) API server logs only
+D) etcd health only
+
 ---
 
 ### Question 12
 [MEDIUM]
 
 How do you verify a Service selector matches Pod labels?
+
+A) kubectl get service only
+B) Compare kubectl describe service selector with kubectl get pods --show-labels
+C) kubectl test selector
+D) kubectl validate service
 
 ---
 
@@ -99,12 +159,22 @@ How do you verify a Service selector matches Pod labels?
 
 What does kubectl get endpoints show for troubleshooting Services?
 
+A) Service configuration only
+B) The IP addresses and ports of Pods backing the Service
+C) Network policies
+D) Node information
+
 ---
 
 ### Question 14
 [MEDIUM]
 
 How do you test internal Service connectivity?
+
+A) ping the Service
+B) kubectl exec into a Pod and use curl/wget to access the Service
+C) kubectl connect service
+D) kubectl test service
 
 ---
 
@@ -113,12 +183,22 @@ How do you test internal Service connectivity?
 
 What could cause a LoadBalancer Service to stay in Pending state?
 
+A) Too many Pods
+B) Cloud provider integration issues or no LoadBalancer provisioner available
+C) DNS issues only
+D) Pod readiness failures only
+
 ---
 
 ### Question 16
 [MEDIUM]
 
 How do you troubleshoot a NodePort Service that is not accessible?
+
+A) Check DNS only
+B) Verify firewall rules, node security groups, and that Pods are ready
+C) Restart kube-proxy only
+D) Delete the Service
 
 ---
 
@@ -127,12 +207,22 @@ How do you troubleshoot a NodePort Service that is not accessible?
 
 What is the difference between ClusterIP and Endpoints in troubleshooting?
 
+A) They are the same
+B) ClusterIP is the Service virtual IP; Endpoints are actual Pod IPs that receive traffic
+C) ClusterIP is for external access
+D) Endpoints are always empty
+
 ---
 
 ### Question 18
 [MEDIUM]
 
 How do you check if kube-proxy is functioning correctly?
+
+A) kubectl get proxy
+B) Check kube-proxy pods/logs, and verify iptables/ipvs rules on nodes
+C) kubectl describe proxy
+D) kubectl test proxy
 
 ---
 
@@ -141,12 +231,22 @@ How do you check if kube-proxy is functioning correctly?
 
 What causes "connection refused" errors when accessing a Service?
 
+A) DNS issues only
+B) No Pods match the selector, Pods not ready, or application not listening on the port
+C) Network policy blocking
+D) kube-proxy failure only
+
 ---
 
 ### Question 20
 [MEDIUM]
 
 How do you verify the targetPort configuration in a Service?
+
+A) kubectl get service only
+B) Check Service targetPort matches the port the application listens on in the container
+C) kubectl validate port
+D) kubectl test connection
 
 ---
 
@@ -157,12 +257,22 @@ How do you verify the targetPort configuration in a Service?
 
 What should you check when an Ingress is not routing traffic?
 
+A) Only Pod logs
+B) Ingress controller status, backend Service health, and Ingress configuration
+C) Only DNS settings
+D) Only node status
+
 ---
 
 ### Question 22
 [MEDIUM-HARD]
 
 How do you verify the Ingress controller is running?
+
+A) kubectl get ingress only
+B) kubectl get pods -n <ingress-controller-namespace> and check controller logs
+C) kubectl describe ingress only
+D) kubectl test ingress
 
 ---
 
@@ -171,6 +281,11 @@ How do you verify the Ingress controller is running?
 
 What could cause a 404 error when accessing an Ingress path?
 
+A) TLS issues only
+B) Path not matching rules, backend Service not found, or no Pods ready
+C) DNS issues only
+D) Network policy blocking
+
 ---
 
 ### Question 24
@@ -178,12 +293,22 @@ What could cause a 404 error when accessing an Ingress path?
 
 How do you troubleshoot TLS certificate issues in Ingress?
 
+A) Ignore TLS errors
+B) Verify Secret exists, contains valid cert/key, and is referenced correctly in Ingress
+C) Delete the Ingress
+D) Restart the API server
+
 ---
 
 ### Question 25
 [MEDIUM-HARD]
 
 What does the Ingress ADDRESS field indicate?
+
+A) The internal cluster IP
+B) The external IP or hostname where the Ingress is accessible
+C) The backend Service IP
+D) The Pod IP
 
 ---
 
