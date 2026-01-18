@@ -1010,7 +1010,7 @@ D) Network plugin failure
 
 What causes "FailedMount" with message "timeout expired waiting for volumes to attach"?
 
-A) PVC doesn't exist
+A) Image pull error
 B) Volume attach operation taking too long, possibly due to cloud provider issues
 C) Incorrect volume permissions
 D) Container not starting
@@ -1020,9 +1020,9 @@ D) Container not starting
 
 **Answer:** B
 
-**Explanation:** This timeout indicates the volume attachment isn't completing within expected time. Causes include: cloud provider API throttling or errors, CSI driver issues, volume stuck in attaching state on previous node. Check cloud provider console and CSI controller logs.
+**Explanation:** This timeout indicates the volume attachment isn't completing within expected time (after the Pod was scheduled). Causes include: cloud provider API throttling or errors, CSI driver issues, volume stuck in attaching state on previous node. Note: missing PVCs cause scheduling failures (Pending), not FailedMount. Check cloud provider console and CSI controller logs.
 
-**Source:** [Storage | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
 
 </details>
 
@@ -1587,21 +1587,21 @@ D) They are aliases for the same probe
 ### Question 69
 [HARD]
 
-A gRPC probe is failing but the gRPC service works fine when tested manually. What might be wrong?
+An HTTP liveness probe is failing but the endpoint works when tested with `kubectl exec -- curl`. What might be wrong?
 
-A) gRPC not supported
-B) The health checking protocol implementation might be missing or the service name is incorrect
-C) Wrong port
-D) TLS required
+A) HTTP probes are not supported
+B) The application binds to 127.0.0.1 instead of 0.0.0.0, or probe uses wrong Host header
+C) Probes are disabled
+D) Container needs restart
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Kubernetes gRPC probes use the standard gRPC Health Checking Protocol. The application must implement this protocol and respond to health check requests. If only the main service works but health checks fail, the health service implementation is missing or the service name in the probe is wrong.
+**Explanation:** HTTP probes are executed by kubelet from outside the container. If the app binds to 127.0.0.1 (localhost only), kubelet can't reach it - it must bind to 0.0.0.0. Also, some apps validate the Host header; kubelet sends the Pod IP or `httpHeaders` if configured. Use `kubectl exec` to verify binding and test with the same headers kubelet would send.
 
-**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-grpc-liveness-probe)
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1994,7 +1994,7 @@ D) Wrong namespace
 
 **Answer:** B
 
-**Explanation:** With correct RBAC, API access failures suggest network issues: 1) NetworkPolicy may block egress to the API server, 2) The kubernetes Service endpoint may be unreachable, 3) Firewall rules may block traffic to port 443. Verify with `kubectl exec <pod> -- wget -qO- https://kubernetes.default.svc/healthz --no-check-certificate`.
+**Explanation:** With correct RBAC, API access failures suggest network issues: 1) NetworkPolicy may block egress to the API server, 2) The kubernetes Service endpoint may be unreachable, 3) Firewall rules may block traffic to port 443. Verify with `kubectl exec <pod> -- wget -qO- https://kubernetes.default.svc/readyz --no-check-certificate`.
 
 **Source:** [Access Cluster API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
