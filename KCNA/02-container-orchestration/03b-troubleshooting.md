@@ -616,7 +616,7 @@ D) Restarts all Pods
 How does the node controller determine when to evict Pods from an unreachable node?
 
 A) Immediately upon NotReady status
-B) After pod-eviction-timeout (default 5 minutes) of NotReady
+B) Via taint-based eviction after Pod tolerationSeconds (default 300s)
 C) Based on Pod priority only
 D) Never automatically evicts
 
@@ -625,9 +625,9 @@ D) Never automatically evicts
 
 **Answer:** B
 
-**Explanation:** The node controller waits for `pod-eviction-timeout` (default 5 minutes) after a node becomes NotReady before evicting Pods. This prevents unnecessary churn from transient network issues. With taint-based eviction, tolerations on Pods can extend this timeout.
+**Explanation:** When a node becomes NotReady or unreachable, the node controller adds `node.kubernetes.io/not-ready` or `node.kubernetes.io/unreachable` taints. Pods are evicted after their `tolerationSeconds` expires (default 300s for these taints). This taint-based eviction replaced the older `pod-eviction-timeout` approach.
 
-**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-controller)
+**Source:** [Taint Based Evictions | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/#taint-based-evictions)
 
 </details>
 
@@ -742,9 +742,9 @@ D) kubectl get endpoints <service-name>
 
 **Answer:** B
 
-**Explanation:** To verify selector matching, use `kubectl get pods -l <selector>` which shows all Pods matching the selector regardless of Ready state. Endpoints (`kubectl get endpoints`) only include Ready Pods by default, so empty endpoints could mean Pods exist but aren't Ready, not that the selector doesn't match. Check selector first, then endpoints to verify Pod readiness.
+**Explanation:** To verify selector matching, use `kubectl get pods -l <selector>` which shows all Pods matching the selector regardless of Ready state. The Endpoints object contains both `addresses` (Ready Pods) and `notReadyAddresses`; `kubectl get endpoints` shows only ready addresses, while `kubectl get endpoints -o yaml` reveals both. Check selector match first, then use endpoints YAML to distinguish readiness issues from label mismatches.
 
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+**Source:** [Endpoints | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#endpoints)
 
 </details>
 
@@ -942,7 +942,7 @@ D) Enables mTLS for internal traffic
 What does a PVC status of "Pending" indicate?
 
 A) PVC is being deleted
-B) No PV matches the PVC requirements or dynamic provisioning hasn't completed
+B) No PV matches the PVC requirements, dynamic provisioning hasn't completed, or WaitForFirstConsumer binding
 C) PVC is bound successfully
 D) PVC has been successfully provisioned but not yet attached
 
@@ -951,9 +951,9 @@ D) PVC has been successfully provisioned but not yet attached
 
 **Answer:** B
 
-**Explanation:** Pending status means the PVC is waiting for a PV. This occurs when: no existing PV matches (size, access modes, storage class), dynamic provisioning is slow or failing, or the specified storage class doesn't exist. Check PVC events with `kubectl describe pvc`.
+**Explanation:** Pending status means the PVC is waiting for a PV. This occurs when: no existing PV matches (size, access modes, storage class), dynamic provisioning is slow or failing, the specified storage class doesn't exist, or the StorageClass uses `volumeBindingMode: WaitForFirstConsumer` (PVC stays Pending until a Pod using it is scheduled). Check PVC events with `kubectl describe pvc`.
 
-**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#phase)
+**Source:** [Volume Binding Mode | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode)
 
 </details>
 
@@ -1776,7 +1776,7 @@ D) Only one can be active
 What causes "must specify limits" error even when LimitRange has defaults?
 
 A) LimitRange not applied yet
-B) ResourceQuota includes limits.* (e.g., limits.cpu, limits.memory) and LimitRange defaults don't cover all containers
+B) ResourceQuota includes limits.* but LimitRange only sets defaultRequest (not default limits)
 C) Wrong namespace
 D) LimitRange is invalid
 
@@ -1785,9 +1785,9 @@ D) LimitRange is invalid
 
 **Answer:** B
 
-**Explanation:** When ResourceQuota includes `limits.cpu` or `limits.memory`, every container must specify those limits. LimitRange defaults may not apply if: they only set defaults for some resource types, there are init containers without defaults, or the LimitRange was created after the Pod creation attempt. Ensure LimitRange covers all resource types the quota requires.
+**Explanation:** When ResourceQuota includes `limits.cpu` or `limits.memory`, every container must have those limits. LimitRange must define `default` (for limits), not just `defaultRequest`. Other causes: LimitRange only covers some resource types, init containers lack defaults, or LimitRange was created after the Pod attempt. Ensure LimitRange `default` covers all resource types the quota requires.
 
-**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/#compute-resource-quota)
+**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
 
 </details>
 
