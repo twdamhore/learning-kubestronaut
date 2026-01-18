@@ -221,7 +221,7 @@ D) Based on resource consumption
 A Pod's container keeps restarting after receiving SIGKILL but shows no OOMKilled events. What should you investigate?
 
 A) Syntax error in container command
-B) Container not terminating within terminationGracePeriodSeconds, or external SIGKILL
+B) Container not responding to liveness probes or not terminating gracefully within terminationGracePeriodSeconds
 C) Container reached CPU limit
 D) Network timeout
 
@@ -230,9 +230,9 @@ D) Network timeout
 
 **Answer:** B
 
-**Explanation:** SIGKILL without OOMKilled events occurs when: the container doesn't terminate gracefully within `terminationGracePeriodSeconds` during Pod deletion (kubelet sends SIGKILL after SIGTERM timeout), or an external process sends SIGKILL. Check Pod termination settings and investigate if the application handles SIGTERM properly.
+**Explanation:** SIGKILL without OOMKilled events typically occurs when: (1) a liveness probe fails and the container doesn't terminate gracefully within `terminationGracePeriodSeconds` during kubelet-initiated restart, or (2) the application ignores SIGTERM and kubelet sends SIGKILL after the grace period expires. Check liveness probe configuration and whether the application handles SIGTERM properly. CPU limits cause throttling, not SIGKILL.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
+**Source:** [Configure Liveness, Readiness, and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 </details>
 
@@ -1730,7 +1730,7 @@ D) Pods use node capacity
 How do you identify which Pods are consuming the most resources against a quota?
 
 A) kubectl top quota
-B) List Pods in namespace and sum their resource requests; compare with quota
+B) List Pods in namespace and sum the resource type enforced by the quota (requests or limits), including init containers and Pod overhead
 C) Check kubelet metrics
 D) View etcd directly
 
@@ -1739,9 +1739,9 @@ D) View etcd directly
 
 **Answer:** B
 
-**Explanation:** ResourceQuota counts requests, not actual usage. List Pods: `kubectl get pods -n <ns> -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[*].resources.requests}{"\n"}{end}'`. Sum requests per resource type to find major consumers. `kubectl top pods` shows actual usage, not quota consumption.
+**Explanation:** ResourceQuota tracks the resource type specified (requests.cpu, limits.memory, etc.), not actual usage. To find major consumers: list Pods and sum the matching resource type. Include init containers (use max of init containers vs sum of app containers) and Pod overhead if set. `kubectl top pods` shows actual usage, which differs from quota accounting.
 
-**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/#compute-resource-quota)
 
 </details>
 
