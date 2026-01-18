@@ -218,10 +218,10 @@ D) Based on resource consumption
 ### Question 10
 [HARD]
 
-A Pod's container keeps restarting with exit code 137. After investigation, you find no OOMKilled events. What else causes exit code 137?
+A Pod's container keeps restarting after receiving SIGKILL but shows no OOMKilled events. What should you investigate?
 
 A) Syntax error in container command
-B) SIGKILL sent from external process or exceeded terminationGracePeriodSeconds
+B) Container not terminating within terminationGracePeriodSeconds, or external SIGKILL
 C) Container reached CPU limit
 D) Network timeout
 
@@ -230,7 +230,7 @@ D) Network timeout
 
 **Answer:** B
 
-**Explanation:** Exit code 137 means SIGKILL (128+9=137). Besides OOMKilled, this occurs when: the container doesn't terminate within `terminationGracePeriodSeconds` during Pod deletion, an external process sends SIGKILL, or `docker kill` is used. Check Pod termination settings and external signal sources.
+**Explanation:** SIGKILL without OOMKilled events occurs when: the container doesn't terminate gracefully within `terminationGracePeriodSeconds` during Pod deletion (kubelet sends SIGKILL after SIGTERM timeout), or an external process sends SIGKILL. Check Pod termination settings and investigate if the application handles SIGTERM properly.
 
 **Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
 
@@ -944,14 +944,14 @@ What does a PVC status of "Pending" indicate?
 A) PVC is being deleted
 B) No PV matches the PVC requirements or dynamic provisioning hasn't completed
 C) PVC is bound successfully
-D) Storage class doesn't exist
+D) PVC has been successfully provisioned but not yet attached
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Pending status means the PVC is waiting for a PV. This occurs when: no existing PV matches (size, access modes, storage class), dynamic provisioning is slow or failing, or the storage class doesn't exist. Check PVC events with `kubectl describe pvc`.
+**Explanation:** Pending status means the PVC is waiting for a PV. This occurs when: no existing PV matches (size, access modes, storage class), dynamic provisioning is slow or failing, or the specified storage class doesn't exist. Check PVC events with `kubectl describe pvc`.
 
 **Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#phase)
 
@@ -1530,7 +1530,7 @@ D) RBAC blocking
 
 **Answer:** B
 
-**Explanation:** Environment variables from Secrets/ConfigMaps are injected at container startup and don't update afterward. To see changes, the Pod must be restarted. For dynamic updates, mount Secrets as volumes - kubelet syncs volume contents periodically (default ~1 minute).
+**Explanation:** Environment variables from Secrets/ConfigMaps are injected at container startup and don't update afterward. To see changes, the Pod must be restarted. For dynamic updates, mount Secrets as volumes - kubelet syncs volume contents periodically (kubelet sync period plus cache TTL, up to ~2 minutes by default).
 
 **Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables)
 
@@ -1541,10 +1541,10 @@ D) RBAC blocking
 ### Question 67
 [HARD]
 
-What causes errors when using ConfigMap keys as environment variable names?
+What causes ConfigMap keys to be skipped when using envFrom to set environment variables?
 
 A) ConfigMap too large
-B) Key names are not valid C identifiers (must start with letter/underscore, contain only alphanumerics/underscores)
+B) Key names are not valid environment variable names (must start with letter/underscore, contain only alphanumerics/underscores)
 C) Wrong namespace
 D) ConfigMap is secret type
 
@@ -1553,7 +1553,7 @@ D) ConfigMap is secret type
 
 **Answer:** B
 
-**Explanation:** When using `envFrom` to load all ConfigMap keys as environment variables, keys that are not valid env var names are skipped and a warning event is recorded (not a hard API error). However, when using `env` with `valueFrom.configMapKeyRef`, the env var name you specify must be valid. Valid env var names: start with a letter or underscore, contain only letters, digits, and underscores.
+**Explanation:** When using `envFrom` to load all ConfigMap keys as environment variables, keys that are not valid env var names are skipped and a warning event is recorded (not a hard error). Valid env var names must start with a letter or underscore and contain only letters, digits, and underscores. When using `env` with `valueFrom.configMapKeyRef`, the env var name you explicitly specify must also be valid.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -1982,21 +1982,21 @@ D) API server down
 ### Question 86
 [HARD]
 
-How do you troubleshoot "dial tcp: lookup kubernetes.default.svc: no such host" from inside a Pod?
+A Pod can't access the Kubernetes API with "connection refused" errors despite correct ServiceAccount permissions. What should you check?
 
-A) API server is down
-B) DNS resolution failing - check CoreDNS Pods, /etc/resolv.conf in Pod
-C) Service doesn't exist
-D) Wrong credentials
+A) RBAC permissions only
+B) Network connectivity to API server, NetworkPolicy blocking egress, or API server endpoint
+C) ServiceAccount doesn't exist
+D) Wrong namespace
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** This error indicates DNS failure for the kubernetes API Service. Check: CoreDNS Pods running, Pod's /etc/resolv.conf points to CoreDNS ClusterIP, and CoreDNS has the kubernetes plugin enabled. The kubernetes.default.svc Service always exists in healthy clusters.
+**Explanation:** With correct RBAC, API access failures suggest network issues: 1) NetworkPolicy may block egress to the API server, 2) The kubernetes Service endpoint may be unreachable, 3) Firewall rules may block traffic to port 443. Verify with `kubectl exec <pod> -- wget -qO- https://kubernetes.default.svc/healthz --no-check-certificate`.
 
-**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+**Source:** [Access Cluster API | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 
 </details>
 
@@ -2028,19 +2028,19 @@ D) NetworkPolicy applies immediately
 ### Question 88
 [HARD]
 
-A ServiceAccount token works from inside the cluster but not from outside. What's the likely cause?
+A bound ServiceAccount token fails authentication with "audience mismatch" error. What causes this?
 
 A) Token is invalid
-B) Audience mismatch - bound tokens include an `aud` claim that must match the API server's configured audiences
+B) The token's `aud` claim doesn't match the API server's `--api-audiences` configuration
 C) RBAC is namespace-specific
-D) Token expired inside
+D) Token hasn't been refreshed
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Bound ServiceAccount tokens (projected volume tokens) include an `aud` (audience) claim that must match the API server's `--api-audiences` configuration. When accessing externally, if the audience in the token doesn't match what the API server expects, authentication fails. Use TokenRequest API with explicit audiences or ensure `--api-audiences` includes the external URL.
+**Explanation:** Bound ServiceAccount tokens (projected volume tokens) include an `aud` (audience) claim. The API server validates this against its `--api-audiences` configuration. If they don't match, authentication fails. This commonly occurs when using TokenRequest API with a custom audience or when the API server's audiences are misconfigured. Create tokens with correct audiences using TokenRequest API.
 
 **Source:** [Service Account Tokens | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
 
