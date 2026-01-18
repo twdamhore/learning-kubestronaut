@@ -1874,6 +1874,17 @@ B) Use kubectl auth can-i --as=system:serviceaccount:<ns>:<sa-name>, check RBAC 
 C) Restart the API server
 D) Change namespaces
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Test ServiceAccount permissions with: `kubectl auth can-i <verb> <resource> --as=system:serviceaccount:<namespace>:<sa-name>`. List bindings: `kubectl get rolebindings,clusterrolebindings -A -o wide | grep <sa-name>`. Verify the Role/ClusterRole has required permissions.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 82
@@ -1885,6 +1896,17 @@ A) Network issues
 B) RBAC denying the request due to missing permissions
 C) DNS failures
 D) Certificate issues only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Forbidden" (403) means authentication succeeded but authorization failed - the user/ServiceAccount lacks RBAC permissions for the requested action. Check: 1) Which Role/ClusterRole is bound, 2) What verbs/resources it allows, 3) Use `kubectl auth can-i` to verify specific permissions.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
 
 ---
 
@@ -1898,6 +1920,17 @@ B) kubectl exec into Pod and check id, cat /proc/1/status for capabilities
 C) kubectl logs only
 D) kubectl get pod -o wide
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify security context by execing into the Pod: 1) `id` shows runAsUser/runAsGroup, 2) `cat /proc/1/status | grep Cap` shows capabilities, 3) Check filesystem with `mount | grep ro` for readOnlyRootFilesystem, 4) Try privileged operations to test restrictions.
+
+**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 84
@@ -1909,6 +1942,17 @@ A) Network errors
 B) Pod fails to start with security-related error in events
 C) DNS failures
 D) Storage issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** SecurityContext conflicts show as: 1) Pod stuck in ContainerCreating with security errors, 2) Events showing "container has runAsNonRoot and image will run as root", 3) Capability denied messages, 4) Pod Security admission violations. Check `kubectl describe pod` and events for specific errors.
+
+**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
@@ -1922,6 +1966,17 @@ B) Check PSP annotations, verify ServiceAccount can use the PSP, and review Pod 
 C) Restart kubelet
 D) Delete the namespace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Note: PSP is deprecated since v1.21, replaced by Pod Security Admission. For legacy troubleshooting: 1) Check which PSP the ServiceAccount can use via RBAC, 2) Review Pod events for specific violations, 3) Check PSP annotations on the Pod showing which policy was applied.
+
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+
+</details>
+
 ---
 
 ### Question 86
@@ -1933,6 +1988,17 @@ A) Network issues
 B) ServiceAccount doesn't exist, automountServiceAccountToken issues, or token controller problems
 C) DNS failures
 D) Storage issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Token mount failures occur when: 1) Referenced ServiceAccount doesn't exist in namespace, 2) `automountServiceAccountToken: false` is set, 3) Token controller in controller-manager isn't running, 4) Token projection issues. Check Pod events and verify ServiceAccount exists with `kubectl get sa`.
+
+**Source:** [Configure Service Accounts | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+</details>
 
 ---
 
@@ -1946,6 +2012,17 @@ B) kubectl exec and check /proc/1/status or use capsh --print
 C) kubectl logs only
 D) kubectl get pod
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check container capabilities by: 1) `kubectl exec <pod> -- cat /proc/1/status | grep Cap` shows capability bitmasks, 2) `kubectl exec <pod> -- capsh --print` (if available) shows human-readable capabilities, 3) Decode bitmask with `capsh --decode=<hex>`. Compare with securityContext.capabilities settings.
+
+**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
+
 ---
 
 ### Question 88
@@ -1957,6 +2034,17 @@ A) Network errors
 B) Container crashes with SIGSYS or operation not permitted errors
 C) DNS failures
 D) Storage errors
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Seccomp blocks show as: 1) Container killed with signal SIGSYS (31), 2) "operation not permitted" errors for specific syscalls, 3) Unexpected "Bad system call" messages. Debug with seccomp audit mode to log blocked calls without killing the process. Check dmesg for seccomp audit logs.
+
+**Source:** [Restrict syscalls with seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
+
+</details>
 
 ---
 
@@ -1970,6 +2058,17 @@ B) Check dmesg for denied operations, verify profile is loaded, and check Pod an
 C) Restart the node
 D) Delete the Pod
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot AppArmor by: 1) Check `dmesg | grep apparmor` for denied operations, 2) Verify profile is loaded: `aa-status`, 3) Check Pod annotations match loaded profiles, 4) Profile must be loaded on all nodes where Pod may run. Missing profiles cause container creation failures.
+
+**Source:** [Restrict Container Access with AppArmor | Kubernetes](https://kubernetes.io/docs/tutorials/security/apparmor/)
+
+</details>
+
 ---
 
 ### Question 90
@@ -1981,6 +2080,17 @@ A) Network issues
 B) Missing capabilities, seccomp/AppArmor restrictions, or read-only filesystem
 C) DNS failures
 D) Storage quota exceeded
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Operation not permitted" (EPERM) occurs due to: 1) Missing Linux capabilities (drop all is default in restricted), 2) Seccomp blocking the syscall, 3) AppArmor denying the action, 4) Read-only filesystem for write operations, 5) Running as non-root without required privileges. Check security context and system logs.
+
+**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+</details>
 
 ---
 
