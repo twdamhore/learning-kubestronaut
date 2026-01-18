@@ -625,7 +625,7 @@ D) Memory leak
 
 **Answer:** B
 
-**Explanation:** DiskPressure means available disk space fell below the kubelet eviction threshold. Default soft thresholds: nodefs.available < 10%, nodefs.inodesFree < 5%, imagefs.available < 15%. Resolve by: 1) Delete completed Pods and Jobs that are no longer needed, 2) Clean up old container logs, 3) Let kubelet's image garbage collection remove unused images, 4) Check for Pods writing excessive data to emptyDir volumes.
+**Explanation:** DiskPressure means available disk space fell below the kubelet eviction threshold. Default hard eviction thresholds: nodefs.available < 10%, nodefs.inodesFree < 5%, imagefs.available < 15%, pid.available < 10%. Resolve by: 1) Delete completed Pods and Jobs that are no longer needed, 2) Clean up old container logs, 3) Let kubelet's image garbage collection remove unused images, 4) Check for Pods writing excessive data to emptyDir volumes.
 
 **Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
@@ -802,7 +802,7 @@ D) Change CNI plugin
 A Pod can reach external services but not other Pods. What should you check?
 
 A) External firewall only
-B) CNI plugin status, kube-proxy, NetworkPolicies, and Pod network configuration
+B) CNI plugin status, NetworkPolicies, Pod CIDR routing, and node firewall rules
 C) API server logs only
 D) etcd health only
 
@@ -811,7 +811,7 @@ D) etcd health only
 
 **Answer:** B
 
-**Explanation:** Pod-to-Pod issues while external works: 1) Check CNI plugin Pods are healthy, 2) Verify kube-proxy is running on nodes, 3) Look for NetworkPolicies blocking internal traffic, 4) Check Pod CIDR routing, 5) Verify no iptables rules blocking cluster traffic.
+**Explanation:** Pod-to-Pod issues while external works (note: kube-proxy handles Service VIPs, not direct Pod-to-Pod traffic): 1) Check CNI plugin Pods are healthy, 2) Verify Pod CIDR routes are configured on nodes, 3) Look for NetworkPolicies blocking internal traffic, 4) Check node firewall rules aren't blocking Pod CIDR traffic.
 
 **Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
@@ -2286,7 +2286,7 @@ D) Ignore and wait
 How do you use kubectl debug to troubleshoot a node?
 
 A) kubectl debug node doesn't exist
-B) kubectl debug node/<name> -it --image=<debug-image> creates a privileged Pod with host access
+B) kubectl debug node/<name> -it --image=<debug-image> creates a debug Pod with host namespaces and /host mount
 C) kubectl debug --node flag only
 D) kubectl ssh node
 
@@ -2295,7 +2295,7 @@ D) kubectl ssh node
 
 **Answer:** B
 
-**Explanation:** `kubectl debug node/<name> -it --image=busybox` creates a privileged debugging Pod on that node with access to host filesystem (/host), host network, and host PID namespace. This allows inspection of node-level issues, kubelet logs, and system resources directly.
+**Explanation:** `kubectl debug node/<name> -it --image=busybox` creates a debug Pod on that node using host network, host PID namespace, and mounts the host filesystem at /host. This allows inspection of node-level issues, kubelet logs (via /host/var/log), and system resources. The Pod uses host namespaces but isn't necessarily privileged unless required and allowed by policy.
 
 **Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#debugging-via-a-shell-on-the-node)
 
