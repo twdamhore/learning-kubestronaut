@@ -714,6 +714,17 @@ B) kubectl exec <pod> -- nslookup <service-name>
 C) kubectl resolve <service-name>
 D) kubectl network test dns
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To test DNS resolution from within a Pod, use `kubectl exec <pod> -- nslookup <service-name>` or similar tools like `dig` or `host` if available. This verifies that the Pod can resolve Service names through CoreDNS. You can also test with the full FQDN.
+
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+
+</details>
+
 ---
 
 ### Question 32
@@ -725,6 +736,17 @@ A) dns-service
 B) kube-dns
 C) cluster-dns
 D) core-dns
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The default DNS service in Kubernetes is named "kube-dns" in the kube-system namespace, even when using CoreDNS as the DNS provider. This naming convention provides backwards compatibility. The service exposes DNS on port 53 (UDP and TCP).
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
+</details>
 
 ---
 
@@ -738,6 +760,17 @@ B) kubectl exec <pod> -- curl <service-name>:<port> or wget
 C) kubectl ping <service-name>
 D) kubectl connect <service-name>
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To test Service reachability from a Pod, use `kubectl exec <pod> -- curl <service-name>:<port>` or `wget`. This tests both DNS resolution and network connectivity to the Service. For non-HTTP services, use tools like `nc` (netcat) to test TCP connectivity.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
 ---
 
 ### Question 34
@@ -749,6 +782,17 @@ A) The Service port is incorrect
 B) No Pods match the Service selector, or matching Pods are not ready
 C) The Service type is ClusterIP
 D) The namespace is wrong
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Service has no endpoints when no Pods match its selector labels, or when matching Pods exist but are not in Ready state (failed readiness probes). Check the Service selector matches Pod labels and verify Pod readiness. Use `kubectl get endpoints` to see current endpoints.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
 
 ---
 
@@ -762,6 +806,17 @@ B) Test connectivity from affected Pods and verify traffic is allowed or blocked
 C) kubectl validate networkpolicy
 D) kubectl describe networkpolicy shows test results
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** NetworkPolicies must be tested empirically by attempting connections from affected Pods and verifying that allowed traffic succeeds and blocked traffic fails. Use `kubectl exec` to run connectivity tests (curl, wget, nc) from Pods that should or should not be able to connect.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+</details>
+
 ---
 
 ### Question 36
@@ -773,6 +828,17 @@ A) kubectl get service <name> --endpoints
 B) kubectl get endpoints <service-name>
 C) kubectl describe endpoints
 D) kubectl list endpoints <service-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl get endpoints <service-name>` to see the IP addresses and ports of Pods backing a Service. An empty endpoints list indicates no Pods match the Service selector or none are ready. You can also see endpoints in `kubectl describe service`.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
 
 ---
 
@@ -786,6 +852,17 @@ B) Check Pod IPs, DNS resolution, NetworkPolicies, and CNI plugin status
 C) Restart all Pods
 D) Only check the CNI plugin
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshooting inter-Pod communication requires a systematic approach: verify Pod IPs are assigned, test DNS resolution, check for NetworkPolicies that might block traffic, verify the CNI plugin is functioning, and ensure nodes can route Pod network traffic. Use kubectl exec to test from within Pods.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
 ---
 
 ### Question 38
@@ -797,6 +874,17 @@ A) The Service is working correctly
 B) No Pods match the Service selector or no matching Pods are ready
 C) The Service is of type ExternalName
 D) The endpoints are being updated
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Endpoints: <none>" means the Service has no backend Pods to route traffic to. This occurs when no Pods have labels matching the Service's selector, or when matching Pods exist but fail their readiness probes. Verify label selectors and Pod readiness status.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
 
 ---
 
@@ -810,6 +898,17 @@ B) kubectl get pods -n kube-system -l k8s-app=kube-dns
 C) kubectl dns status
 D) kubectl check coredns
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check CoreDNS status with `kubectl get pods -n kube-system -l k8s-app=kube-dns`. Verify Pods are Running and Ready. For detailed troubleshooting, check CoreDNS logs with `kubectl logs` and test DNS resolution from application Pods using nslookup or dig.
+
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+
+</details>
+
 ---
 
 ### Question 40
@@ -821,6 +920,17 @@ A) <service-name>.<namespace>
 B) <service-name>.<namespace>.svc.cluster.local
 C) <namespace>.<service-name>.local
 D) <service-name>.cluster.local
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The fully qualified domain name (FQDN) for a Service is `<service-name>.<namespace>.svc.cluster.local`. Within the same namespace, you can use just `<service-name>`. Across namespaces, use at least `<service-name>.<namespace>`. The cluster domain (cluster.local) is configurable.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
+</details>
 
 ---
 
