@@ -986,7 +986,7 @@ D) For SSH keys
 How does the kube-apiserver encrypt Secrets at rest?
 
 A) Using TLS
-B) By configuring an EncryptionConfiguration that specifies encryption providers
+B) By configuring an EncryptionConfiguration file that specifies encryption providers
 C) Secrets are always encrypted automatically
 D) Using the kubelet
 
@@ -995,7 +995,7 @@ D) Using the kubelet
 
 **Answer:** B
 
-**Explanation:** To encrypt Secrets at rest, you configure an EncryptionConfiguration resource specifying encryption providers (like aescbc, aesgcm, secretbox, or KMS). The API server uses this configuration with the --encryption-provider-config flag to encrypt Secrets before storing them in etcd.
+**Explanation:** To encrypt Secrets at rest, you create an EncryptionConfiguration file specifying encryption providers (like aescbc, aesgcm, secretbox, or KMS). The API server uses this configuration file via the --encryption-provider-config flag to encrypt Secrets before storing them in etcd.
 
 **Source:** [Encrypting Confidential Data at Rest | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/)
 
@@ -1149,7 +1149,7 @@ D) Using Secret labels
 What must be installed for NetworkPolicies to have any effect?
 
 A) A firewall
-B) A CNI plugin that supports NetworkPolicy
+B) A network plugin that supports NetworkPolicy
 C) A special kernel module
 D) The NetworkPolicy controller
 
@@ -1158,7 +1158,7 @@ D) The NetworkPolicy controller
 
 **Answer:** B
 
-**Explanation:** NetworkPolicies are implemented by the CNI (Container Network Interface) plugin. Creating a NetworkPolicy has no effect unless a CNI plugin that supports NetworkPolicy (like Calico, Cilium, or Weave Net) is installed. The default kubenet plugin does not support NetworkPolicy.
+**Explanation:** NetworkPolicies are implemented by the network plugin. Creating a NetworkPolicy has no effect unless a network plugin that supports NetworkPolicy is installed. Common plugins with NetworkPolicy support include Calico, Cilium, and Weave Net.
 
 **Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
