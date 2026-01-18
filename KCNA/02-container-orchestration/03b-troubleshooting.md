@@ -250,6 +250,17 @@ B) Service endpoints, Pod readiness, and selector matching
 C) API server logs only
 D) etcd health only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a Service is not accessible, first check: 1) `kubectl get endpoints` to see if there are backend Pods, 2) `kubectl get pods` to verify Pods are Ready, 3) Verify selector labels match. Empty endpoints usually means no Pods match the selector or Pods aren't Ready.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
 ---
 
 ### Question 12
@@ -261,6 +272,17 @@ A) kubectl get service only
 B) Compare kubectl describe service selector with kubectl get pods --show-labels
 C) kubectl test selector
 D) kubectl validate service
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To verify selector matching: 1) `kubectl describe service <name>` shows the Selector field, 2) `kubectl get pods --show-labels` shows Pod labels. Compare them to ensure they match exactly. Even a small typo will prevent the Service from discovering Pods.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
 
 ---
 
@@ -274,6 +296,17 @@ B) The IP addresses and ports of Pods backing the Service
 C) Network policies
 D) Node information
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl get endpoints <service-name>` shows the actual Pod IPs and ports that will receive traffic. If it shows `<none>`, no Pods match the selector or none are Ready. This is crucial for verifying that the Service has backend targets.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
 ---
 
 ### Question 14
@@ -285,6 +318,17 @@ A) ping the Service
 B) kubectl exec into a Pod and use curl/wget to access the Service
 C) kubectl connect service
 D) kubectl test service
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Test Service connectivity by running `kubectl exec <pod> -- curl <service-name>:<port>` or `wget`. This tests both DNS resolution and actual connectivity. Services use TCP, so ping (ICMP) won't work. Test from within the cluster to verify internal networking.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
 
 ---
 
@@ -298,6 +342,17 @@ B) Cloud provider integration issues or no LoadBalancer provisioner available
 C) DNS issues only
 D) Pod readiness failures only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A LoadBalancer Service stays Pending when: the cluster isn't running on a cloud provider with LoadBalancer support, the cloud-controller-manager isn't configured, there's no MetalLB or similar on bare metal, or there are cloud API errors. Check `kubectl describe service` for events.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer)
+
+</details>
+
 ---
 
 ### Question 16
@@ -309,6 +364,17 @@ A) Check DNS only
 B) Verify firewall rules, node security groups, and that Pods are ready
 C) Restart kube-proxy only
 D) Delete the Service
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For NodePort access issues: verify firewall/security groups allow the NodePort (30000-32767), ensure kube-proxy is running on nodes, check that Pods are Ready and endpoints exist. Test locally on the node first with `curl localhost:<nodeport>` to isolate network vs. service issues.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+
+</details>
 
 ---
 
@@ -322,6 +388,17 @@ B) ClusterIP is the Service virtual IP; Endpoints are actual Pod IPs that receiv
 C) ClusterIP is for external access
 D) Endpoints are always empty
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ClusterIP is the stable virtual IP assigned to the Service. Endpoints are the actual Pod IPs and ports that receive traffic. Traffic to ClusterIP is forwarded to Endpoints by kube-proxy. If ClusterIP works but no response, check if Endpoints exist and Pods are responding.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+</details>
+
 ---
 
 ### Question 18
@@ -333,6 +410,17 @@ A) kubectl get proxy
 B) Check kube-proxy pods/logs, and verify iptables/ipvs rules on nodes
 C) kubectl describe proxy
 D) kubectl test proxy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify kube-proxy by: 1) `kubectl get pods -n kube-system -l k8s-app=kube-proxy` to check it's running, 2) Review kube-proxy logs for errors, 3) On nodes, check `iptables -L -t nat` or `ipvsadm -Ln` to verify Service rules exist. Missing rules indicate kube-proxy issues.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
 
 ---
 
@@ -346,6 +434,17 @@ B) No Pods match the selector, Pods not ready, or application not listening on t
 C) Network policy blocking
 D) kube-proxy failure only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Connection refused" typically means: nothing is listening on the target port. This occurs when: no endpoints exist (no matching Pods or Pods not Ready), or the application inside the container isn't listening on the expected port. Check endpoints and verify the app is running and bound to the correct port.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
 ---
 
 ### Question 20
@@ -357,6 +456,17 @@ A) kubectl get service only
 B) Check Service targetPort matches the port the application listens on in the container
 C) kubectl validate port
 D) kubectl test connection
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify targetPort by: 1) `kubectl describe service` to see the targetPort, 2) Check the Pod spec's containerPort or exec into the Pod and use `netstat -tlnp` or `ss -tlnp` to see what port the application is listening on. Mismatched ports cause connection failures.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+</details>
 
 ---
 
