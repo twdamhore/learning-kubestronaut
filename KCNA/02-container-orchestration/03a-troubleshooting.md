@@ -1080,7 +1080,7 @@ D) CPU throttling
 How do you diagnose slow storage performance affecting Pods?
 
 A) Increase replicas
-B) Check storage class IOPS limits, monitor disk metrics, and test with fio benchmark
+B) Check StorageClass parameters, PV/PVC events, and monitor node disk metrics
 C) Change images
 D) Modify labels
 
@@ -1089,9 +1089,9 @@ D) Modify labels
 
 **Answer:** B
 
-**Explanation:** Diagnose storage performance: 1) Check StorageClass provisioner and parameters for IOPS limits, 2) Monitor disk latency/throughput metrics, 3) Run `fio` benchmark from a debug Pod, 4) Check if storage backend is overloaded, 5) Consider using faster storage class.
+**Explanation:** Diagnose storage performance: 1) Check StorageClass parameters for your provisioner (parameters are provisioner-specific), 2) Review PV/PVC events for provisioning issues, 3) Monitor node disk metrics for latency/throughput, 4) Check CSI driver logs for errors.
 
-**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+**Source:** [Storage Classes | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/)
 
 </details>
 
@@ -1252,7 +1252,7 @@ D) Modify Pod template
 
 **Answer:** B
 
-**Explanation:** StatefulSet Pods often wait for storage. Check: 1) PVCs for each Pod: `kubectl get pvc`, 2) PVCs are bound (not Pending), 3) StorageClass exists and can provision, 4) StatefulSets create Pods sequentially - if first Pod fails, others wait.
+**Explanation:** StatefulSet Pods often wait for storage. Check: 1) PVCs for each Pod: `kubectl get pvc`, 2) PVCs are bound (not Pending), 3) StorageClass exists and can provision, 4) By default (OrderedReady policy), StatefulSets create Pods sequentially - if first Pod fails, others wait. With `podManagementPolicy: Parallel`, Pods are created concurrently.
 
 **Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
 
@@ -1321,9 +1321,9 @@ D) PVC status
 
 **Answer:** B
 
-**Explanation:** CronJob not triggering: 1) Verify schedule syntax is valid cron format, 2) Check `spec.suspend` isn't true, 3) Look at `.status.lastScheduleTime`, 4) Check controller-manager logs, 5) Verify timezone (UTC by default), 6) Check if startingDeadlineSeconds was exceeded.
+**Explanation:** CronJob not triggering: 1) Verify schedule syntax is valid cron format, 2) Check `spec.suspend` isn't true, 3) Look at `.status.lastScheduleTime`, 4) Check controller-manager logs, 5) Verify timezone (uses kube-controller-manager's local timezone unless `spec.timeZone` is set), 6) Check if startingDeadlineSeconds was exceeded.
 
-**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
+**Source:** [CronJob Time Zones | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones)
 
 </details>
 
@@ -1344,7 +1344,7 @@ D) Network timeout
 
 **Answer:** B
 
-**Explanation:** progressDeadlineSeconds (default 600s) sets how long a rollout can stall. If new Pods don't progress (become Ready) within this time, the Deployment condition changes to Progressing=False. The rollout pauses but isn't automatically rolled back.
+**Explanation:** progressDeadlineSeconds (default 600s) sets how long a rollout can stall. If new Pods don't progress (become Ready) within this time, the Deployment condition changes to Progressing=False and the rollout is marked as failed. It is not automatically rolled back; manual intervention is required.
 
 **Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#progress-deadline-seconds)
 
@@ -2065,7 +2065,7 @@ D) Volume errors
 
 **Explanation:** "Operation not permitted" (EPERM) indicates security restrictions: 1) Required Linux capabilities dropped (default drops most), 2) Seccomp profile blocking syscall, 3) AppArmor/SELinux policy denial. Check dmesg for security denials, review securityContext capabilities.
 
-**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Sources:** [Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/), [AppArmor | Kubernetes](https://kubernetes.io/docs/tutorials/security/apparmor/), [Seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
 
 </details>
 
