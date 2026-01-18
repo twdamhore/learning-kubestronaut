@@ -946,6 +946,17 @@ B) The container exceeded its memory limit and was killed by the kernel
 C) The container crashed due to an application error
 D) The Pod was evicted due to node pressure
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** OOMKilled (Out Of Memory Killed) indicates the Linux kernel's OOM killer terminated the container because it exceeded its memory limit. The kernel does this to prevent the entire system from running out of memory. Increase the memory limit or optimize the application's memory usage.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
 ---
 
 ### Question 42
@@ -957,6 +968,17 @@ A) kubectl logs <pod-name>
 B) kubectl describe pod <pod-name> and check containerStatuses for terminated reason
 C) kubectl top pod <pod-name>
 D) kubectl events <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe pod <pod-name>` and examine the containerStatuses section. Look for `state.terminated.reason: OOMKilled` to identify which container was killed. The exitCode will typically be 137 (128 + SIGKILL signal 9). Also check `lastState` for previous terminations.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
 
 ---
 
@@ -970,6 +992,17 @@ B) Requests affect scheduling; limits affect runtime enforcement and OOM kills
 C) Limits affect scheduling; requests affect runtime
 D) Neither affects Pod behavior
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Requests are used by the scheduler to find a node with sufficient resources and affect QoS class. Limits are enforced at runtime: memory limits trigger OOMKill when exceeded, CPU limits cause throttling. When troubleshooting, check if requests are too high (scheduling issues) or limits too low (OOM/throttling).
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
 ---
 
 ### Question 44
@@ -981,6 +1014,17 @@ A) kubectl describe pod
 B) kubectl top pod <pod-name> --containers
 C) kubectl usage <pod-name>
 D) kubectl resources <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl top pod <pod-name> --containers` to see current CPU and memory usage of each container. This requires Metrics Server to be installed. Compare actual usage with configured limits to identify if containers are approaching their limits or being throttled.
+
+**Source:** [Resource Metrics Pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
+
+</details>
 
 ---
 
@@ -994,6 +1038,17 @@ B) The container is OOMKilled by the kernel
 C) The container continues running
 D) The Pod is rescheduled
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a container exceeds its memory limit, the Linux kernel's OOM killer terminates the container with SIGKILL (exit code 137). Unlike CPU, memory is not compressible and cannot be throttled. The container is restarted according to the Pod's restartPolicy.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
 ---
 
 ### Question 46
@@ -1005,6 +1060,17 @@ A) The container is killed
 B) The container is throttled but not killed
 C) The Pod is evicted
 D) The node becomes NotReady
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a container exceeds its CPU limit, it is throttled by the kernel (using cgroups) but not killed. CPU is a compressible resource, so the container simply receives less CPU time. This can cause performance degradation but not container termination. Monitor for high throttling metrics.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
 
 ---
 
@@ -1018,6 +1084,17 @@ B) Check node conditions, resource pressure, Pod QoS class, and resource request
 C) Delete and recreate the Pod
 D) Change the Pod priority
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For Pod eviction issues, check: node conditions for MemoryPressure/DiskPressure/PIDPressure, the Pod's QoS class (BestEffort Pods are evicted first), resource requests (unset requests result in BestEffort QoS), and node resource availability. Consider setting appropriate requests and limits.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
 ---
 
 ### Question 48
@@ -1029,6 +1106,17 @@ A) QoS class determines Pod priority; Guaranteed Pods are evicted last
 B) QoS class only affects scheduling
 C) QoS class determines network priority
 D) QoS class has no effect on eviction
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** Kubernetes assigns QoS classes based on resource requests and limits: Guaranteed (requests=limits for all containers), Burstable (at least one request set), or BestEffort (no requests/limits). During node pressure eviction, BestEffort Pods are evicted first, then Burstable, then Guaranteed.
+
+**Source:** [Pod Quality of Service Classes | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/)
+
+</details>
 
 ---
 
@@ -1042,6 +1130,17 @@ B) kubectl describe resourcequota and kubectl describe pod to see quota-related 
 C) kubectl get quota --status
 D) kubectl quota check
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe resourcequota` to see current usage vs. hard limits. When creating a Pod that would exceed quota, check the Pod's events with `kubectl describe pod` for "exceeded quota" errors. The error message specifies which resource limit was exceeded.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
 ---
 
 ### Question 50
@@ -1053,6 +1152,17 @@ A) The Pod was manually deleted
 B) The Pod was evicted due to node resource pressure
 C) The Pod completed successfully
 D) The Pod failed a health check
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "Evicted" status indicates the Pod was evicted by kubelet due to node resource pressure (memory, disk, or PID pressure). Check `kubectl describe pod` for the eviction reason. Evicted Pods are not automatically recreated unless managed by a controller like Deployment or ReplicaSet.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
 
 ---
 
