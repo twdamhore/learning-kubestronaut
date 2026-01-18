@@ -1410,6 +1410,17 @@ B) systemctl status kubelet on the node
 C) kubectl describe kubelet
 D) kubectl logs kubelet
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubelet runs as a system service on each node. Check its status with `systemctl status kubelet` when SSH'd into the node. This shows whether kubelet is running, any recent errors, and the service state. Also check node conditions with `kubectl describe node`.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 62
@@ -1421,6 +1432,17 @@ A) /var/log/pods
 B) journalctl -u kubelet or /var/log/kubelet.log depending on setup
 C) /etc/kubernetes/logs
 D) kubectl logs kubelet
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** On systemd-based systems, kubelet logs are accessed via `journalctl -u kubelet`. Some setups may write to /var/log/kubelet.log. The location depends on how kubelet is configured and the node's logging setup. Pod container logs are in /var/log/pods/ or /var/log/containers/.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -1434,6 +1456,17 @@ B) Configuration errors, certificate issues, container runtime not running, reso
 C) Only disk space issues
 D) Only memory issues
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubelet startup failures commonly result from: invalid configuration in kubelet config file, expired or invalid certificates, container runtime (containerd/CRI-O) not running, insufficient disk space for kubelet operations, or swap being enabled (when not allowed). Check kubelet logs for specific errors.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 64
@@ -1445,6 +1478,17 @@ A) Restart the node
 B) Check runtime status, logs, socket connectivity, and verify runtime configuration
 C) Reinstall Kubernetes
 D) Only check kubelet logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot container runtime (containerd, CRI-O) by: checking service status (`systemctl status containerd`), reviewing runtime logs, verifying the CRI socket exists and is accessible, testing with crictl commands, and checking runtime configuration files for errors.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
+</details>
 
 ---
 
@@ -1458,6 +1502,17 @@ B) Kubelet cannot communicate with the container runtime (containerd, CRI-O)
 C) The Pod is pending
 D) The image cannot be pulled
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** This error indicates kubelet cannot communicate with the container runtime over the CRI socket. Causes include: container runtime service not running, CRI socket permissions issues, socket path misconfiguration, or runtime process crash. Check runtime service status and socket connectivity.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
+</details>
+
 ---
 
 ### Question 66
@@ -1469,6 +1524,17 @@ A) kubectl get runtime
 B) crictl info or systemctl status containerd/cri-o
 C) docker ps only
 D) kubectl describe runtime
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `crictl info` to check CRI runtime status and connectivity (requires proper socket configuration). Also use `systemctl status containerd` (or cri-o) to verify the service is running. crictl is the standard tool for interacting with CRI-compatible runtimes.
+
+**Source:** [Debugging Kubernetes nodes with crictl | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
+
+</details>
 
 ---
 
@@ -1482,6 +1548,17 @@ B) Container Runtime Interface; check socket connectivity, runtime logs, and use
 C) Container Resource Interface; increase resources
 D) Cluster Runtime Interface; restart the cluster
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** CRI (Container Runtime Interface) is the standard interface between kubelet and container runtimes. Troubleshoot by: verifying the CRI socket exists (e.g., /run/containerd/containerd.sock), checking runtime logs, using crictl commands to test runtime operations, and ensuring kubelet points to the correct socket.
+
+**Source:** [Container Runtime Interface (CRI) | Kubernetes](https://kubernetes.io/docs/concepts/architecture/cri/)
+
+</details>
+
 ---
 
 ### Question 68
@@ -1493,6 +1570,17 @@ A) Check Pod logs
 B) Check kubelet logs for connection errors, verify network, certificates, and API server health
 C) Restart the API server
 D) Only check firewall rules
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify kubelet-to-API-server connectivity issues by: checking kubelet logs for connection refused/timeout errors, verifying network connectivity between node and control plane, checking certificate validity (kubelet client cert), ensuring the API server address in kubelet config is correct, and verifying API server is healthy.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -1506,6 +1594,17 @@ B) Container runtime issues, high Pod count, slow disk I/O, or runtime not respo
 C) Memory pressure only
 D) Certificate expiry only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** PLEG (Pod Lifecycle Event Generator) monitors container state changes. "PLEG is not healthy" indicates kubelet cannot list containers quickly enough, often caused by: container runtime being slow/unresponsive, very high Pod count on the node, slow disk I/O affecting runtime operations, or runtime socket issues.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 70
@@ -1517,6 +1616,17 @@ A) Use public images only
 B) Check imagePullSecrets, registry credentials, network connectivity, and registry availability
 C) Restart kubelet
 D) Delete the Pod
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For private registry pull failures: verify imagePullSecrets is correctly configured in the Pod or ServiceAccount, check that the Secret contains valid credentials (base64 decoded), test network connectivity to the registry, verify the registry URL and image path are correct, and check if the registry requires authentication.
+
+**Source:** [Pull an Image from a Private Registry | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+
+</details>
 
 ---
 
