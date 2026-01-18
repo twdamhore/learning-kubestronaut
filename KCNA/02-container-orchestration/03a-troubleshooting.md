@@ -393,7 +393,7 @@ D) kubectl top
 
 **Answer:** B
 
-**Explanation:** For network debugging: 1) Use `kubectl debug <pod> -it --image=busybox --target=<container>` to attach an ephemeral container with networking tools, 2) Or create a debug Pod in the same namespace to test connectivity, 3) From within the debug container, use standard diagnostics like `wget`, `nslookup`, and `nc` to diagnose network issues.
+**Explanation:** For network debugging: 1) Use `kubectl debug <pod> -it --image=<network-tools-image> --target=<container>` to attach an ephemeral container with packet-capture tools (note: busybox doesn't include tcpdump), 2) Or create a dedicated debug Pod with network diagnostic tools installed, 3) From within the debug container, use tools like `wget`, `nslookup`, `nc`, or `tcpdump` to diagnose network issues.
 
 **Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container)
 
@@ -533,7 +533,7 @@ D) CPU allocation only
 
 **Answer:** B
 
-**Explanation:** MemoryPressure means available memory is below the eviction threshold. Check: `kubectl top pods` on that node to find memory-heavy Pods, review Pod memory limits, look for Pods without limits (BestEffort QoS), and check for memory leaks in applications.
+**Explanation:** MemoryPressure means available memory is below the eviction threshold. Check: first list Pods on the node with `kubectl get pods -A --field-selector spec.nodeName=<node>`, then use `kubectl top pod -n <ns> <pod>` to check memory usage of specific Pods. Review Pod memory limits, look for Pods without limits (BestEffort QoS), and check for memory leaks in applications.
 
 **Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
@@ -625,7 +625,7 @@ D) Memory leak
 
 **Answer:** B
 
-**Explanation:** DiskPressure means available disk space or inodes fell below the kubelet eviction threshold for nodefs or imagefs (default hard thresholds: nodefs.available < 10%, nodefs.inodesFree < 5%, imagefs.available < 15%). Resolve by: 1) Delete completed Pods and Jobs that are no longer needed, 2) Clean up old container logs, 3) Let kubelet's image garbage collection remove unused images, 4) Check for Pods writing excessive data to emptyDir volumes.
+**Explanation:** DiskPressure means available disk space or inodes fell below the kubelet eviction threshold for nodefs or imagefs (default hard thresholds: nodefs.available < 10%, nodefs.inodesFree < 5%, imagefs.available < 15%, imagefs.inodesFree < 5%). Resolve by: 1) Delete completed Pods and Jobs that are no longer needed, 2) Clean up old container logs, 3) Let kubelet's image garbage collection remove unused images, 4) Check for Pods writing excessive data to emptyDir volumes.
 
 **Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
@@ -2295,7 +2295,7 @@ D) kubectl ssh node
 
 **Answer:** B
 
-**Explanation:** `kubectl debug node/<name> -it --image=busybox` creates a debug Pod on that node using host network, host PID namespace, and mounts the host filesystem at /host. This allows inspection of node-level issues, kubelet logs (via /host/var/log), and system resources. The Pod uses host namespaces but isn't necessarily privileged unless required and allowed by policy.
+**Explanation:** `kubectl debug node/<name> -it --image=busybox` creates a privileged debug Pod on that node using host network, host PID namespace, and mounts the host filesystem at /host. The Pod runs as privileged to allow full access to node resources. This enables inspection of node-level issues, kubelet logs (via /host/var/log), and system resources.
 
 **Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#debugging-via-a-shell-on-the-node)
 
