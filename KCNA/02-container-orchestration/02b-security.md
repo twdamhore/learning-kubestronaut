@@ -207,7 +207,7 @@ D) read-only
 
 **Answer:** B
 
-**Explanation:** The "view" ClusterRole is a default aggregated role that grants read-only access to most objects in a namespace (excluding secrets and role bindings). It's designed for non-destructive access, allowing users to see resources without modifying them.
+**Explanation:** The "view" ClusterRole is a default aggregated role that grants read-only access to most objects in a namespace (excluding Secrets). It's designed for non-destructive access, allowing users to see resources without modifying them.
 
 **Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles)
 
@@ -696,7 +696,7 @@ D) Modify the API server binary
 
 **Explanation:** Cluster-wide Pod Security Admission defaults can be configured by providing an AdmissionConfiguration file to the API server with the --admission-control-config-file flag. This sets default policies, exemptions, and audit settings that apply when namespaces don't have explicit labels.
 
-**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/#pod-security-admission-labels-for-namespaces)
+**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/#configure-the-admission-controller)
 
 </details>
 
@@ -2258,21 +2258,21 @@ D) By managing container images
 ### Question 98
 [HARD]
 
-Why should you use image digests instead of tags?
+How does imagePullPolicy interact with image tags versus digests?
 
-A) Digests are shorter
-B) Digests are immutable and guarantee you get the exact same image content
-C) Tags are deprecated
-D) Digests improve pull speed
+A) imagePullPolicy has no effect on digests
+B) IfNotPresent always pulls digests but caches tags
+C) With :latest tag, imagePullPolicy defaults to Always; with digests or specific tags, it defaults to IfNotPresent
+D) Digests force Always pull policy regardless of setting
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Image digests (e.g., image@sha256:abc123...) are immutable and uniquely identify specific image content. Unlike tags which can be moved to point to different images, digests guarantee you always pull the exact same image. This prevents unexpected changes when a tag is updated and improves security and reproducibility.
+**Explanation:** When using the :latest tag, Kubernetes defaults imagePullPolicy to Always, pulling the image on every Pod start. For images with specific version tags or digests, the default is IfNotPresent, only pulling if the image isn't cached locally. Since digests are immutable, IfNotPresent is safe—the cached image is guaranteed to match. With mutable tags like :latest, Always ensures you get the current version.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/#image-names)
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy)
 
 </details>
 
