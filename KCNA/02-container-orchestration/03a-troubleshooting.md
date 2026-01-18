@@ -13,12 +13,22 @@
 
 What does the Pod status "Pending" indicate?
 
+A) The Pod is running but not ready
+B) The Pod has been accepted but is not yet scheduled or has unmet dependencies
+C) The Pod has completed successfully
+D) The Pod is being deleted
+
 ---
 
 ### Question 2
 [MEDIUM]
 
 Which command displays the events associated with a specific Pod?
+
+A) kubectl logs <pod-name>
+B) kubectl describe pod <pod-name>
+C) kubectl get pod <pod-name> --events
+D) kubectl events <pod-name>
 
 ---
 
@@ -27,12 +37,22 @@ Which command displays the events associated with a specific Pod?
 
 What does the "CrashLoopBackOff" status indicate?
 
+A) The container image cannot be pulled
+B) The container keeps crashing and Kubernetes is waiting before restarting it
+C) The Pod is pending scheduling
+D) The node is under memory pressure
+
 ---
 
 ### Question 4
 [MEDIUM]
 
 Which command is used to view container logs in a Pod?
+
+A) kubectl describe pod <pod-name>
+B) kubectl logs <pod-name>
+C) kubectl get logs <pod-name>
+D) kubectl show logs <pod-name>
 
 ---
 
@@ -41,12 +61,22 @@ Which command is used to view container logs in a Pod?
 
 What does the "ImagePullBackOff" status indicate?
 
+A) The container is running out of memory
+B) Kubernetes is waiting before retrying a failed image pull
+C) The Pod is waiting for a volume to be mounted
+D) The container is restarting repeatedly
+
 ---
 
 ### Question 6
 [MEDIUM]
 
 How do you check why a Pod is stuck in Pending state?
+
+A) kubectl logs <pod-name>
+B) kubectl describe pod <pod-name>
+C) kubectl exec <pod-name> -- cat /var/log/messages
+D) kubectl top pod <pod-name>
 
 ---
 
@@ -55,12 +85,22 @@ How do you check why a Pod is stuck in Pending state?
 
 What is the purpose of kubectl describe pod?
 
+A) To delete a Pod
+B) To show detailed information including events, status, and configuration
+C) To update a Pod's configuration
+D) To view only the container logs
+
 ---
 
 ### Question 8
 [MEDIUM]
 
 Which field in Pod status shows the reason for container termination?
+
+A) status.phase
+B) status.containerStatuses[].state.terminated.reason
+C) status.message
+D) spec.terminationReason
 
 ---
 
@@ -69,12 +109,22 @@ Which field in Pod status shows the reason for container termination?
 
 What does "ErrImagePull" status mean?
 
+A) The container has insufficient CPU
+B) Kubernetes failed to pull the container image
+C) The Pod is evicted
+D) The volume mount failed
+
 ---
 
 ### Question 10
 [MEDIUM]
 
 How do you view logs from a previous container instance?
+
+A) kubectl logs <pod-name> --previous
+B) kubectl logs <pod-name> --old
+C) kubectl logs <pod-name> --history
+D) kubectl logs <pod-name> --last
 
 ---
 
@@ -85,12 +135,22 @@ How do you view logs from a previous container instance?
 
 What command allows you to execute a command inside a running container?
 
+A) kubectl run
+B) kubectl exec
+C) kubectl attach
+D) kubectl shell
+
 ---
 
 ### Question 12
 [MEDIUM]
 
 How do you get a shell session inside a running container?
+
+A) kubectl shell <pod-name>
+B) kubectl exec -it <pod-name> -- /bin/sh
+C) kubectl connect <pod-name>
+D) kubectl attach <pod-name> --shell
 
 ---
 
@@ -99,12 +159,22 @@ How do you get a shell session inside a running container?
 
 What is the purpose of the kubectl debug command?
 
+A) To view debug logs only
+B) To create debugging sessions using ephemeral containers or copy of Pods
+C) To enable debug mode on the API server
+D) To increase log verbosity
+
 ---
 
 ### Question 14
 [MEDIUM]
 
 How do you view logs from a specific container in a multi-container Pod?
+
+A) kubectl logs <pod-name> --all
+B) kubectl logs <pod-name> -c <container-name>
+C) kubectl logs <pod-name>/<container-name>
+D) kubectl logs --container=<container-name> <pod-name>
 
 ---
 
@@ -113,12 +183,22 @@ How do you view logs from a specific container in a multi-container Pod?
 
 What does kubectl get events show?
 
+A) Only Pod creation events
+B) Cluster-wide events including warnings, errors, and normal events
+C) Only error events
+D) Node metrics
+
 ---
 
 ### Question 16
 [MEDIUM]
 
 How do you follow (stream) logs from a container in real-time?
+
+A) kubectl logs <pod-name> --stream
+B) kubectl logs <pod-name> -f
+C) kubectl logs <pod-name> --live
+D) kubectl logs <pod-name> --tail
 
 ---
 
@@ -127,12 +207,22 @@ How do you follow (stream) logs from a container in real-time?
 
 What command shows the resource usage of Pods?
 
+A) kubectl describe pod
+B) kubectl top pod
+C) kubectl resources pod
+D) kubectl usage pod
+
 ---
 
 ### Question 18
 [MEDIUM]
 
 How do you check the rollout status of a Deployment?
+
+A) kubectl describe deployment
+B) kubectl rollout status deployment/<name>
+C) kubectl get deployment --status
+D) kubectl deployment status <name>
 
 ---
 
@@ -141,12 +231,22 @@ How do you check the rollout status of a Deployment?
 
 What is the purpose of kubectl port-forward?
 
+A) To expose a Service externally
+B) To forward local ports to a Pod for debugging
+C) To change the container port
+D) To configure port mapping in a Service
+
 ---
 
 ### Question 20
 [MEDIUM]
 
 How do you view the YAML definition of a running Pod?
+
+A) kubectl describe pod <pod-name> --yaml
+B) kubectl get pod <pod-name> -o yaml
+C) kubectl export pod <pod-name>
+D) kubectl show pod <pod-name> --format=yaml
 
 ---
 
@@ -157,12 +257,22 @@ How do you view the YAML definition of a running Pod?
 
 What does a Node condition of "Ready: False" indicate?
 
+A) The node is healthy and accepting Pods
+B) The node is not healthy and may have issues with kubelet, networking, or resources
+C) The node is being upgraded
+D) The node is cordoned
+
 ---
 
 ### Question 22
 [MEDIUM-HARD]
 
 Which command shows the status of all nodes in a cluster?
+
+A) kubectl describe nodes
+B) kubectl get nodes
+C) kubectl status nodes
+D) kubectl list nodes
 
 ---
 
@@ -171,6 +281,11 @@ Which command shows the status of all nodes in a cluster?
 
 What does the "DiskPressure" node condition indicate?
 
+A) The node has high CPU usage
+B) The node's available disk space is low
+C) The node has network issues
+D) The node's memory is full
+
 ---
 
 ### Question 24
@@ -178,12 +293,22 @@ What does the "DiskPressure" node condition indicate?
 
 How do you check why a node is in NotReady state?
 
+A) kubectl logs node/<node-name>
+B) kubectl describe node <node-name>
+C) kubectl get node <node-name> --reason
+D) kubectl debug node <node-name>
+
 ---
 
 ### Question 25
 [MEDIUM-HARD]
 
 What is the "MemoryPressure" node condition?
+
+A) The node has high CPU utilization
+B) The node's available memory is below the eviction threshold
+C) The node's disk is full
+D) The node has too many Pods
 
 ---
 
