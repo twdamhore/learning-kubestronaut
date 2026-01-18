@@ -524,7 +524,7 @@ D) Simpler configuration
 What is a privileged container?
 
 A) A container running as root
-B) A container with almost all host capabilities and no isolation restrictions
+B) A container with almost all host capabilities and device access
 C) A container with network privileges
 D) A container that can access secrets
 
@@ -533,7 +533,7 @@ D) A container that can access secrets
 
 **Answer:** B
 
-**Explanation:** A privileged container (privileged: true) has almost all capabilities of the host, including access to all devices, no seccomp/AppArmor restrictions, and the ability to modify the host. This is different from just running as root - privileged mode disables container isolation entirely.
+**Explanation:** A privileged container (privileged: true) runs with almost all capabilities of the host, including access to all host devices. This is essentially equivalent to running as root on the host. This is different from just running as root in a non-privileged container, which has fewer capabilities.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -659,21 +659,21 @@ D) Container-level is more secure
 ### Question 29
 [HARD]
 
-What is the "baseline" Pod Security Standard designed to prevent?
+What does the "restricted" Pod Security Standard require?
 
-A) All security vulnerabilities
-B) Known privilege escalations while allowing common workloads
-C) Network attacks only
-D) Container escapes only
+A) Only that containers run as non-root
+B) Dropping all capabilities, running as non-root, disallowing privilege escalation, and a seccomp profile
+C) No hostPath mounts only
+D) No special requirements
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The baseline Pod Security Standard prevents known privilege escalations (like privileged containers, hostPath mounts, hostNetwork/hostPID) while being permissive enough for most common workloads. It's a minimal policy that provides basic security without breaking typical applications.
+**Explanation:** The restricted Pod Security Standard is the most stringent level, requiring: dropping all capabilities (only NET_BIND_SERVICE may be added), running as non-root, disallowing privilege escalation, and requiring a seccomp profile. It enforces current Pod hardening best practices.
 
-**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline)
+**Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted)
 
 </details>
 
@@ -1018,7 +1018,7 @@ D) Encrypting during transmission
 
 **Answer:** B
 
-**Explanation:** Envelope encryption uses two layers: data is encrypted with a Data Encryption Key (DEK), and the DEK is encrypted with a Key Encryption Key (KEK) stored in an external KMS (like AWS KMS, Azure Key Vault, or HashiCorp Vault). Only the encrypted DEK is stored alongside the data.
+**Explanation:** Envelope encryption uses two layers: data is encrypted with a Data Encryption Key (DEK), and the DEK is encrypted with a Key Encryption Key (KEK) from an external KMS provider via the KMS plugin. Only the encrypted DEK is stored alongside the data, while the KEK remains in the external KMS.
 
 **Source:** [Using a KMS provider for data encryption | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/)
 
@@ -1078,7 +1078,7 @@ D) Secrets are only stored in memory
 How can you use external secret management systems with Kubernetes?
 
 A) Direct integration only
-B) Using tools like External Secrets Operator, Secrets Store CSI Driver, or custom controllers
+B) Using custom controllers or integrations that sync secrets into Kubernetes
 C) External systems cannot be used
 D) By mounting network volumes
 
@@ -1087,7 +1087,7 @@ D) By mounting network volumes
 
 **Answer:** B
 
-**Explanation:** External secret managers (Vault, AWS Secrets Manager, Azure Key Vault) can be integrated using tools like External Secrets Operator (syncs to Kubernetes Secrets), Secrets Store CSI Driver (mounts secrets as volumes), or custom controllers. This keeps secrets in a centralized, audited store.
+**Explanation:** External secret management systems can be integrated with Kubernetes using custom controllers or integrations that either sync secrets into Kubernetes Secret objects or provide secrets directly to Pods. This keeps the source of truth in a centralized, audited external store while making secrets available to workloads.
 
 **Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#alternatives-to-secrets)
 
@@ -1992,7 +1992,7 @@ D) Using RBAC rules
 
 **Answer:** B
 
-**Explanation:** The rules field in webhook configuration specifies which requests trigger the webhook: apiGroups (core, apps, etc.), apiVersions (v1, v1beta1), resources (pods, deployments), and operations (CREATE, UPDATE, DELETE). Only matching requests are sent to the webhook.
+**Explanation:** The rules field in webhook configuration specifies which requests trigger the webhook: apiGroups (core, apps, etc.), apiVersions (v1), resources (pods, deployments), and operations (CREATE, UPDATE, DELETE). Only matching requests are sent to the webhook.
 
 **Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-rules)
 
@@ -2038,7 +2038,7 @@ D) There is no such controller
 
 **Answer:** B
 
-**Explanation:** The ImagePolicyWebhook admission controller (or a custom ValidatingAdmissionWebhook) can enforce image policies like requiring images from specific registries. There's no built-in controller for this; you need to implement a webhook or use tools like OPA Gatekeeper or Kyverno.
+**Explanation:** The ImagePolicyWebhook admission controller can enforce image policies like requiring images from specific registries by delegating to an external service. Alternatively, a custom ValidatingAdmissionWebhook can implement registry restrictions. There's no built-in controller that directly restricts registries.
 
 **Source:** [Using Admission Controllers | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook)
 
@@ -2120,21 +2120,21 @@ D) For easier debugging
 ### Question 92
 [MEDIUM-HARD]
 
-What is a distroless container image?
+What is the purpose of the imagePullPolicy field?
 
-A) An image without a Linux distribution
-B) An image containing only the application and runtime dependencies, no shell or package manager
-C) A compressed image
-D) An image without configuration
+A) To set image compression level
+B) To control when kubelet pulls container images (Always, IfNotPresent, Never)
+C) To specify image registry credentials
+D) To validate image signatures
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Distroless images contain only the application and its runtime dependencies - no shell, package manager, or other OS tools. This reduces attack surface significantly since attackers can't use common tools if they compromise the container. Google's distroless images are a popular example.
+**Explanation:** The imagePullPolicy field controls when kubelet pulls container images: Always (pull every time), IfNotPresent (pull only if not cached locally), or Never (use local image only). Using Always with immutable tags or digests ensures you always get the intended image version.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy)
 
 </details>
 
@@ -2180,7 +2180,7 @@ D) File naming conventions
 
 **Explanation:** Linux namespaces are kernel features that isolate what a process can see: PID (process IDs), network (network interfaces), mount (filesystems), UTS (hostname), IPC (inter-process communication), and user (UID/GID). Containers use namespaces for isolation from the host and each other.
 
-**Source:** [Container Runtime Interface | Kubernetes](https://kubernetes.io/docs/concepts/architecture/cri/)
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -2189,19 +2189,19 @@ D) File naming conventions
 ### Question 95
 [HARD]
 
-How does user namespace remapping improve container security?
+What is the purpose of supplementalGroups in Pod securityContext?
 
-A) By creating new users
-B) By mapping container root (UID 0) to an unprivileged user on the host
-C) By encrypting user data
-D) By isolating user files
+A) To add users to the Pod
+B) To specify additional group IDs applied to all containers in the Pod
+C) To create backup groups
+D) To define RBAC groups
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** User namespace remapping maps UIDs inside the container to different UIDs on the host. Container root (UID 0) becomes an unprivileged user on the host. This means even if an attacker becomes root in the container, they have no root privileges on the host.
+**Explanation:** The supplementalGroups field specifies a list of additional group IDs that are applied to the first process in each container. These groups are in addition to the container's primary GID and any groups defined in the container image. Useful for accessing shared volumes with specific group permissions.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -2249,7 +2249,7 @@ D) By managing container images
 
 **Explanation:** Control groups (cgroups) limit and isolate resource usage for containers. By setting CPU, memory, and I/O limits, cgroups prevent any single container from consuming all host resources (DoS prevention) and provide fair resource allocation between containers.
 
-**Source:** [Container Runtime Interface | Kubernetes](https://kubernetes.io/docs/concepts/architecture/cri/)
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 </details>
 
@@ -2258,21 +2258,21 @@ D) By managing container images
 ### Question 98
 [HARD]
 
-What is container image signing and verification?
+Why should you use image digests instead of tags?
 
-A) Encrypting images
-B) Cryptographically signing images and verifying signatures before deployment
-C) Compressing images
-D) Watermarking images
+A) Digests are shorter
+B) Digests are immutable and guarantee you get the exact same image content
+C) Tags are deprecated
+D) Digests improve pull speed
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Image signing uses cryptographic signatures to verify image integrity and provenance. Tools like cosign, Notary, and sigstore sign images, and admission webhooks or policy engines can verify signatures before allowing deployment. This prevents deploying tampered or unauthorized images.
+**Explanation:** Image digests (e.g., image@sha256:abc123...) are immutable and uniquely identify specific image content. Unlike tags which can be moved to point to different images, digests guarantee you always pull the exact same image. This prevents unexpected changes when a tag is updated and improves security and reproducibility.
 
-**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/#image-names)
 
 </details>
 
