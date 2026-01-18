@@ -533,7 +533,7 @@ D) Pending Pod deployments
 
 **Answer:** B
 
-**Explanation:** NotReady status occurs when: kubelet stops sending heartbeats, node loses network connectivity to control plane, or critical conditions (MemoryPressure, DiskPressure, PIDPressure) are True. The node controller marks it NotReady after `node-monitor-grace-period` (default 40s).
+**Explanation:** NotReady status occurs when: kubelet stops sending heartbeats (after `node-monitor-grace-period`, default 40s), or node loses network connectivity to control plane. Note: Pressure conditions (MemoryPressure, DiskPressure, PIDPressure) are separate from Ready status - a node can be Ready while under pressure.
 
 **Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-status)
 
@@ -602,7 +602,7 @@ D) Restarts all Pods
 
 **Answer:** B
 
-**Explanation:** `kubectl cordon` marks a node as unschedulable (adds `node.kubernetes.io/unschedulable` taint) but doesn't affect running Pods. Existing workloads continue running until explicitly evicted with `kubectl drain` or until Pods terminate naturally.
+**Explanation:** `kubectl cordon` marks a node as unschedulable by setting `spec.unschedulable: true` on the node object (not a taint). This prevents the scheduler from placing new Pods on the node but doesn't affect running Pods. Existing workloads continue running until explicitly evicted with `kubectl drain` or until Pods terminate naturally.
 
 **Source:** [Safely Drain a Node | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
 
