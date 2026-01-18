@@ -482,6 +482,17 @@ B) Ingress controller status, backend Service health, and Ingress configuration
 C) Only DNS settings
 D) Only node status
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When Ingress is not routing traffic, check: 1) Ingress controller Pods are running and healthy, 2) Backend Services have endpoints (Pods are Ready), 3) Ingress rules are correctly configured with matching hosts/paths, 4) `kubectl describe ingress` for events and status.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+</details>
+
 ---
 
 ### Question 22
@@ -493,6 +504,17 @@ A) kubectl get ingress only
 B) kubectl get pods -n <ingress-controller-namespace> and check controller logs
 C) kubectl describe ingress only
 D) kubectl test ingress
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify the Ingress controller by: 1) Check controller Pods are Running: `kubectl get pods -n ingress-nginx` (namespace varies by controller), 2) Review logs: `kubectl logs -n ingress-nginx <controller-pod>`, 3) Check for configuration reload errors or backend connectivity issues in logs.
+
+**Source:** [Ingress Controllers | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)
+
+</details>
 
 ---
 
@@ -506,6 +528,17 @@ B) Path not matching rules, backend Service not found, or no Pods ready
 C) DNS issues only
 D) Network policy blocking
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A 404 error from Ingress typically means: 1) Request path doesn't match any Ingress rules (check pathType: Prefix vs Exact), 2) Backend Service doesn't exist or is misconfigured, 3) Service has no endpoints (no Ready Pods). Use `kubectl describe ingress` and `kubectl get endpoints` to diagnose.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+</details>
+
 ---
 
 ### Question 24
@@ -517,6 +550,17 @@ A) Ignore TLS errors
 B) Verify Secret exists, contains valid cert/key, and is referenced correctly in Ingress
 C) Delete the Ingress
 D) Restart the API server
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot TLS issues by: 1) Verify Secret exists in same namespace: `kubectl get secret <tls-secret>`, 2) Ensure Secret type is `kubernetes.io/tls` with `tls.crt` and `tls.key`, 3) Check Ingress references correct Secret name, 4) Verify certificate validity with `openssl x509 -in tls.crt -text`.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls)
+
+</details>
 
 ---
 
@@ -530,6 +574,17 @@ B) The external IP or hostname where the Ingress is accessible
 C) The backend Service IP
 D) The Pod IP
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The ADDRESS field in `kubectl get ingress` shows the external IP or hostname assigned by the Ingress controller for external access. If empty, the controller hasn't assigned an address yet (common with pending LoadBalancer). This is the entry point for external traffic to reach the Ingress.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+</details>
+
 ---
 
 ### Question 26
@@ -541,6 +596,17 @@ A) kubectl logs ingress
 B) kubectl logs -n <ingress-namespace> <ingress-controller-pod>
 C) kubectl describe ingress only
 D) kubectl get events only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Access Ingress controller logs with: `kubectl logs -n <namespace> <controller-pod>`. For nginx-ingress: `kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx`. Logs show upstream connection errors, configuration reloads, and routing decisions helpful for diagnosing issues.
+
+**Source:** [Ingress Controllers | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)
+
+</details>
 
 ---
 
@@ -554,6 +620,17 @@ B) Backend Service or Pods not responding, or misconfigured health checks
 C) TLS errors only
 D) Path configuration only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "502 Bad Gateway" means the Ingress controller couldn't get a response from the backend. Common causes: 1) Backend Pods not Ready or crashing, 2) Service endpoints empty, 3) Application not responding on the targetPort, 4) Health check failures. Check `kubectl get endpoints` and Pod status.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+</details>
+
 ---
 
 ### Question 28
@@ -565,6 +642,17 @@ A) Check Ingress status only
 B) Verify Service endpoints exist and Pods are ready and responding
 C) Check node status only
 D) Restart the Ingress controller
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify backend health by: 1) `kubectl get endpoints <service>` to confirm Pod IPs exist, 2) `kubectl get pods` to check Pods are Ready, 3) Test backend directly: `kubectl exec <debug-pod> -- curl <service>:<port>`. The Ingress controller only routes to healthy backends.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
 
 ---
 
@@ -578,6 +666,17 @@ B) Verify annotation syntax, check controller supports the annotation, and revie
 C) DNS settings only
 D) Service configuration only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When annotations don't work: 1) Verify annotation key syntax matches your controller (e.g., `nginx.ingress.kubernetes.io/` for nginx-ingress), 2) Confirm controller version supports the annotation, 3) Check controller logs for configuration errors or warnings about unknown annotations.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+</details>
+
 ---
 
 ### Question 30
@@ -589,6 +688,17 @@ A) Check DNS only
 B) Verify path rules, pathType setting, and test with exact paths matching the configuration
 C) Restart all Pods
 D) Delete the Ingress
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot path routing by: 1) Review pathType: `Prefix` matches path prefixes, `Exact` requires exact match, `ImplementationSpecific` depends on controller, 2) Check path order (more specific rules first), 3) Test with curl using exact paths, 4) Review controller logs for routing decisions.
+
+**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types)
+
+</details>
 
 ---
 
