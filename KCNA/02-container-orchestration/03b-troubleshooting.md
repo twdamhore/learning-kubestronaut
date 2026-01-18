@@ -1622,7 +1622,7 @@ D) Network issues
 
 **Answer:** B
 
-**Explanation:** Predictable restart intervals suggest probe timing issues. Calculate: `initialDelaySeconds + (failureThreshold × periodSeconds)`. If restarts match this, the probe fails before the app is truly ready or responsive. Adjust timing or add startupProbe for slow apps.
+**Explanation:** Predictable restart intervals suggest probe timing issues. Calculate: `initialDelaySeconds + ((failureThreshold - 1) × periodSeconds)`. For example, with defaults (initialDelaySeconds=0, periodSeconds=10, failureThreshold=3), restart occurs at 20 seconds. If restarts match this calculation, the probe fails before the app is truly ready. Adjust timing or add startupProbe for slow apps.
 
 **Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
