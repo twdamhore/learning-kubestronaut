@@ -317,12 +317,22 @@ D) The node has too many Pods
 
 What happens to Pods when a node becomes NotReady?
 
+A) Pods are immediately deleted
+B) After a timeout, Pods may be evicted and rescheduled to other nodes
+C) Pods continue running normally
+D) Pods are paused until the node recovers
+
 ---
 
 ### Question 27
 [MEDIUM-HARD]
 
 How do you cordon a node to prevent new Pod scheduling?
+
+A) kubectl taint node <node-name>
+B) kubectl cordon <node-name>
+C) kubectl disable <node-name>
+D) kubectl pause <node-name>
 
 ---
 
@@ -331,6 +341,11 @@ How do you cordon a node to prevent new Pod scheduling?
 
 What is the difference between cordon and drain?
 
+A) They are the same operation
+B) Cordon prevents new Pods; drain also evicts existing Pods
+C) Drain prevents new Pods; cordon evicts existing Pods
+D) Cordon is for nodes; drain is for namespaces
+
 ---
 
 ### Question 29
@@ -338,12 +353,22 @@ What is the difference between cordon and drain?
 
 Which component is responsible for reporting node status?
 
+A) kube-scheduler
+B) kubelet
+C) kube-controller-manager
+D) kube-proxy
+
 ---
 
 ### Question 30
 [MEDIUM-HARD]
 
 What does the "PIDPressure" node condition indicate?
+
+A) The node has too many processes running
+B) The node is running low on available process IDs
+C) The node's CPU is overloaded
+D) The node has network issues
 
 ---
 
@@ -354,12 +379,22 @@ What does the "PIDPressure" node condition indicate?
 
 How do you test DNS resolution from within a Pod?
 
+A) kubectl dns test
+B) kubectl exec <pod> -- nslookup <service-name>
+C) kubectl resolve <service-name>
+D) kubectl network test dns
+
 ---
 
 ### Question 32
 [MEDIUM-HARD]
 
 What is the default DNS service name in Kubernetes?
+
+A) dns-service
+B) kube-dns
+C) cluster-dns
+D) core-dns
 
 ---
 
@@ -368,12 +403,22 @@ What is the default DNS service name in Kubernetes?
 
 How do you check if a Service is reachable from a Pod?
 
+A) kubectl test service <service-name>
+B) kubectl exec <pod> -- curl <service-name>:<port> or wget
+C) kubectl ping <service-name>
+D) kubectl connect <service-name>
+
 ---
 
 ### Question 34
 [MEDIUM-HARD]
 
 What could cause a Service to have no endpoints?
+
+A) The Service port is incorrect
+B) No Pods match the Service selector, or matching Pods are not ready
+C) The Service type is ClusterIP
+D) The namespace is wrong
 
 ---
 
@@ -382,12 +427,22 @@ What could cause a Service to have no endpoints?
 
 How do you verify that a NetworkPolicy is working correctly?
 
+A) kubectl test networkpolicy
+B) Test connectivity from affected Pods and verify traffic is allowed or blocked as expected
+C) kubectl validate networkpolicy
+D) kubectl describe networkpolicy shows test results
+
 ---
 
 ### Question 36
 [MEDIUM-HARD]
 
 What command shows the endpoints for a Service?
+
+A) kubectl get service <name> --endpoints
+B) kubectl get endpoints <service-name>
+C) kubectl describe endpoints
+D) kubectl list endpoints <service-name>
 
 ---
 
@@ -396,12 +451,22 @@ What command shows the endpoints for a Service?
 
 How do you troubleshoot inter-Pod communication issues?
 
+A) Only check NetworkPolicies
+B) Check Pod IPs, DNS resolution, NetworkPolicies, and CNI plugin status
+C) Restart all Pods
+D) Only check the CNI plugin
+
 ---
 
 ### Question 38
 [MEDIUM-HARD]
 
 What does it mean when a Service has "Endpoints: <none>"?
+
+A) The Service is working correctly
+B) No Pods match the Service selector or no matching Pods are ready
+C) The Service is of type ExternalName
+D) The endpoints are being updated
 
 ---
 
@@ -410,12 +475,22 @@ What does it mean when a Service has "Endpoints: <none>"?
 
 How do you check if CoreDNS is running properly?
 
+A) kubectl get dns
+B) kubectl get pods -n kube-system -l k8s-app=kube-dns
+C) kubectl dns status
+D) kubectl check coredns
+
 ---
 
 ### Question 40
 [MEDIUM-HARD]
 
 What is the FQDN format for a Service in Kubernetes?
+
+A) <service-name>.<namespace>
+B) <service-name>.<namespace>.svc.cluster.local
+C) <namespace>.<service-name>.local
+D) <service-name>.cluster.local
 
 ---
 
@@ -426,12 +501,22 @@ What is the FQDN format for a Service in Kubernetes?
 
 What does the "OOMKilled" termination reason indicate?
 
+A) The container ran out of CPU
+B) The container exceeded its memory limit and was killed by the kernel
+C) The container crashed due to an application error
+D) The Pod was evicted due to node pressure
+
 ---
 
 ### Question 42
 [HARD]
 
 How do you identify which container in a Pod was OOMKilled?
+
+A) kubectl logs <pod-name>
+B) kubectl describe pod <pod-name> and check containerStatuses for terminated reason
+C) kubectl top pod <pod-name>
+D) kubectl events <pod-name>
 
 ---
 
@@ -440,12 +525,22 @@ How do you identify which container in a Pod was OOMKilled?
 
 What is the difference between resource requests and limits in troubleshooting context?
 
+A) They are the same thing
+B) Requests affect scheduling; limits affect runtime enforcement and OOM kills
+C) Limits affect scheduling; requests affect runtime
+D) Neither affects Pod behavior
+
 ---
 
 ### Question 44
 [HARD]
 
 How do you check the actual resource usage of a container?
+
+A) kubectl describe pod
+B) kubectl top pod <pod-name> --containers
+C) kubectl usage <pod-name>
+D) kubectl resources <pod-name>
 
 ---
 
@@ -454,12 +549,22 @@ How do you check the actual resource usage of a container?
 
 What happens when a container exceeds its memory limit?
 
+A) The container is throttled
+B) The container is OOMKilled by the kernel
+C) The container continues running
+D) The Pod is rescheduled
+
 ---
 
 ### Question 46
 [HARD]
 
 What happens when a container exceeds its CPU limit?
+
+A) The container is killed
+B) The container is throttled but not killed
+C) The Pod is evicted
+D) The node becomes NotReady
 
 ---
 
@@ -468,12 +573,22 @@ What happens when a container exceeds its CPU limit?
 
 How do you troubleshoot a Pod that keeps getting evicted?
 
+A) Increase the node count
+B) Check node conditions, resource pressure, Pod QoS class, and resource requests
+C) Delete and recreate the Pod
+D) Change the Pod priority
+
 ---
 
 ### Question 48
 [HARD]
 
 What is the QoS class of a Pod and how does it affect eviction?
+
+A) QoS class determines Pod priority; Guaranteed Pods are evicted last
+B) QoS class only affects scheduling
+C) QoS class determines network priority
+D) QoS class has no effect on eviction
 
 ---
 
@@ -482,12 +597,22 @@ What is the QoS class of a Pod and how does it affect eviction?
 
 How do you check if a ResourceQuota is blocking Pod creation?
 
+A) kubectl logs
+B) kubectl describe resourcequota and kubectl describe pod to see quota-related events
+C) kubectl get quota --status
+D) kubectl quota check
+
 ---
 
 ### Question 50
 [HARD]
 
 What does the "Evicted" Pod status indicate?
+
+A) The Pod was manually deleted
+B) The Pod was evicted due to node resource pressure
+C) The Pod completed successfully
+D) The Pod failed a health check
 
 ---
 
