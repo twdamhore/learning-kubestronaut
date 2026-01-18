@@ -1410,6 +1410,17 @@ B) Check API server metrics, audit logs, etcd latency, and request queuing
 C) Delete Pods only
 D) Increase node count
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Diagnose slow API server by: 1) Check `apiserver_request_duration_seconds` metrics, 2) Review audit logs for expensive requests, 3) Check etcd latency (slow etcd = slow API), 4) Monitor request queue depth and rate limiting. Common causes: large list requests, etcd issues, or resource contention.
+
+**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 62
@@ -1421,6 +1432,17 @@ A) Pod count only
 B) API server request latency, etcd disk sync duration, scheduler queue depth, and controller work queue
 C) Node memory only
 D) Network throughput only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Key control plane metrics: 1) API server: request latency, error rates, 2) etcd: disk sync duration, backend commit latency, 3) Scheduler: scheduling latency, pending pods queue depth, 4) Controller-manager: work queue depth, reconciliation errors. Monitor these for early warning of issues.
+
+**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -1434,6 +1456,17 @@ B) Check component logs, verify connectivity between replicas, and check for net
 C) Restart all components
 D) Delete the cluster
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Leader election issues: 1) Check component logs for election timeout errors, 2) Verify network connectivity between replicas, 3) Check lease objects: `kubectl get lease -n kube-system`, 4) Look for clock skew between nodes, 5) Verify API server accessibility from components.
+
+**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 64
@@ -1445,6 +1478,17 @@ A) Too many Pods
 B) Network issues, API server restarts, resource pressure, or client-side timeouts
 C) DNS failures only
 D) Storage issues only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Watch disconnections occur due to: 1) Network interruptions between client and API server, 2) API server restarts or leader changes, 3) Resource pressure causing connection drops, 4) Client timeout settings too aggressive. Controllers should handle reconnection gracefully with exponential backoff.
+
+**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -1458,6 +1502,17 @@ B) etcdctl endpoint health, member list, and check etcd metrics
 C) kubectl describe etcd
 D) kubectl logs etcd
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check etcd health with etcdctl: 1) `etcdctl endpoint health` for quick health check, 2) `etcdctl member list` to verify all members, 3) `etcdctl endpoint status` for detailed status. Also monitor etcd metrics like `etcd_disk_backend_commit_duration_seconds` for performance issues.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
+</details>
+
 ---
 
 ### Question 66
@@ -1469,6 +1524,17 @@ A) High CPU usage
 B) High disk sync duration metrics, slow writes, and backend commit latency
 C) Network errors only
 D) Memory pressure only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** etcd disk I/O issues show: 1) High `etcd_disk_wal_fsync_duration_seconds`, 2) High `etcd_disk_backend_commit_duration_seconds`, 3) Warning logs about slow fdatasync. etcd requires fast disk I/O (SSD recommended). Slow disks cause API server timeouts and cluster instability.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
+</details>
 
 ---
 
@@ -1482,6 +1548,17 @@ B) Check webhook pod health, network connectivity, timeout settings, and webhook
 C) Restart the API server only
 D) Delete namespaces
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot admission webhooks: 1) Check webhook Pod is running and ready, 2) Verify network: API server must reach webhook Service, 3) Check timeout settings (default 10s may be too short), 4) Review webhook logs for errors, 5) Check failurePolicy (Fail vs Ignore) for impact assessment.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+
+</details>
+
 ---
 
 ### Question 68
@@ -1493,6 +1570,17 @@ A) Pod is running normally
 B) Container not running, kubelet issues, or container runtime problems
 C) DNS failures only
 D) Network policies only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Unable to retrieve logs" occurs when: 1) Container hasn't started or has completed, 2) Kubelet can't access the container runtime, 3) Container runtime (containerd/CRI-O) issues, 4) Log files don't exist or are inaccessible. Check `kubectl describe pod` for container state and node kubelet logs.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
 
 ---
 
@@ -1506,6 +1594,17 @@ B) Check controller-manager logs, look for reconciliation errors, and verify RBA
 C) Restart all Pods
 D) Delete the namespace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Diagnose reconciliation by: 1) Check kube-controller-manager logs for errors, 2) Look for "unable to sync" or RBAC denied messages, 3) Verify ServiceAccount has required permissions, 4) Check work queue metrics for stuck items, 5) Review resource events for controller-generated errors.
+
+**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
 ---
 
 ### Question 70
@@ -1517,6 +1616,17 @@ A) Delete the CRD
 B) Verify operator/controller is running, check its logs, and verify CRD is installed correctly
 C) Restart the API server
 D) Delete all Custom Resources
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When CRs aren't processed: 1) Verify the operator/controller Pod is running, 2) Check controller logs for reconciliation errors, 3) Ensure CRD is installed: `kubectl get crd`, 4) Verify RBAC permissions for the controller, 5) Check CR status field for condition messages from the controller.
+
+**Source:** [Custom Resources | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+
+</details>
 
 ---
 
