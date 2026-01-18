@@ -393,9 +393,9 @@ D) kubectl top
 
 **Answer:** B
 
-**Explanation:** For network debugging: 1) `kubectl debug <pod> --image=nicolaka/netshoot` attaches network tools, 2) Run tcpdump inside to capture traffic, 3) Or deploy a separate debug Pod in same namespace to test connectivity. Network tools like curl, dig, netstat help diagnose issues.
+**Explanation:** For network debugging: 1) Use `kubectl debug <pod> -it --image=busybox --target=<container>` to attach an ephemeral container with networking tools, 2) Or create a debug Pod in the same namespace to test connectivity, 3) From within the debug container, use standard diagnostics like `wget`, `nslookup`, and `nc` to diagnose network issues.
 
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container)
 
 </details>
 
@@ -439,9 +439,9 @@ D) kubectl get logs
 
 **Answer:** B
 
-**Explanation:** Use `kubectl logs -l app=myapp -f` to stream logs from all Pods matching the label selector. Add `--all-containers` for multi-container Pods. For more advanced log aggregation across Pods, consider tools like stern or kubetail.
+**Explanation:** Use `kubectl logs -l app=myapp -f` to stream logs from all Pods matching the label selector. Add `--all-containers` for multi-container Pods. For production environments, implement centralized logging using the Kubernetes logging architecture (e.g., node-level agents that ship logs to a backend).
 
-**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
 </details>
 
@@ -625,9 +625,9 @@ D) Memory leak
 
 **Answer:** B
 
-**Explanation:** DiskPressure means available disk space fell below the eviction threshold (default: 10% available for nodefs, 15% for imagefs). Resolve by: 1) Run `crictl rmi --prune` to remove unused images, 2) Clear old container logs, 3) Delete completed Pods/Jobs, 4) Check for Pods writing excessive data to emptyDir volumes.
+**Explanation:** DiskPressure means available disk space fell below the eviction threshold (default: 10% available for nodefs, 15% for imagefs). Resolve by: 1) Rely on kubelet's automatic image garbage collection to remove unused images, 2) Delete completed Pods and Jobs that are no longer needed, 3) Clean up old container logs, 4) Check for Pods writing excessive data to emptyDir volumes.
 
-**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+**Source:** [Garbage Collection | Kubernetes](https://kubernetes.io/docs/concepts/architecture/garbage-collection/#container-image-garbage-collection)
 
 </details>
 
@@ -694,9 +694,9 @@ D) kubectl health-check
 
 **Answer:** B
 
-**Explanation:** Check control plane health: 1) `kubectl get cs` (deprecated but still works), 2) Check Pods in kube-system: `kubectl get pods -n kube-system`, 3) Review logs: `kubectl logs -n kube-system <component-pod>`, 4) Verify etcd cluster health with etcdctl.
+**Explanation:** Check control plane health: 1) Query API server health endpoints (`/readyz`, `/livez`, `/healthz`), 2) Check control plane Pods in kube-system: `kubectl get pods -n kube-system`, 3) Review component logs: `kubectl logs -n kube-system <component-pod>`, 4) Verify etcd cluster health with etcdctl.
 
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+**Source:** [API Server Health | Kubernetes](https://kubernetes.io/docs/reference/using-api/health-checks/)
 
 </details>
 
@@ -2309,7 +2309,7 @@ D) kubectl ssh node
 What tools help aggregate logs from multiple Pods for troubleshooting?
 
 A) Only kubectl logs
-B) Stern, kubetail, or centralized logging solutions like Elasticsearch/Loki
+B) kubectl logs -l <selector> or centralized logging with node-level agents
 C) kubectl describe only
 D) API server logs only
 
@@ -2318,7 +2318,7 @@ D) API server logs only
 
 **Answer:** B
 
-**Explanation:** For multi-Pod log aggregation: 1) Stern - tail multiple Pods with color coding, 2) Kubetail - similar functionality, 3) Centralized logging (EFK stack, Loki) for historical analysis and search, 4) `kubectl logs -l <selector>` for basic multi-Pod logs. Centralized logging is essential for production troubleshooting.
+**Explanation:** For multi-Pod log aggregation: 1) Use `kubectl logs -l <selector> -f` to stream logs from Pods matching a label, 2) Implement cluster-level logging using node-level agents (e.g., Fluentd, Fluent Bit) that ship logs to a backend like Elasticsearch, 3) Some cloud providers offer integrated logging solutions. Centralized logging is essential for production troubleshooting.
 
 **Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 
