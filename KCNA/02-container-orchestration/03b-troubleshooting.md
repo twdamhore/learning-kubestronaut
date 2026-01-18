@@ -18,6 +18,17 @@ B) None of the desired 3 Pods are in Ready state
 C) The Deployment is paused
 D) All Pods are running successfully
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "0/3 ready replicas" means the Deployment wants 3 Pods but none are currently Ready. This could be due to Pods not yet created, Pods in Pending state, containers failing to start, or readiness probes failing. Check `kubectl describe deployment` and `kubectl get pods` to diagnose.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+</details>
+
 ---
 
 ### Question 2
@@ -29,6 +40,17 @@ A) kubectl logs replicaset
 B) kubectl describe replicaset <name> and check events
 C) kubectl get pods only
 D) kubectl debug replicaset
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe replicaset <name>` to see events explaining why Pods aren't being created. Common issues include ResourceQuota limits, LimitRange violations, or Pod template problems. The Events section shows creation failures and their reasons.
+
+**Source:** [ReplicaSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+
+</details>
 
 ---
 
@@ -42,6 +64,17 @@ B) Pods failing readiness probes, insufficient resources, or image pull errors
 C) Network issues only
 D) API server overload only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A stuck rollout occurs when new Pods cannot become Ready. Common causes include: Pods failing readiness probes, insufficient cluster resources to schedule Pods, image pull errors, or misconfigured Pod specs. Use `kubectl rollout status` and `kubectl describe pod` to diagnose.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#failed-deployment)
+
+</details>
+
 ---
 
 ### Question 4
@@ -53,6 +86,17 @@ A) kubectl get deployment --history
 B) kubectl rollout history deployment/<name>
 C) kubectl describe deployment --revisions
 D) kubectl logs deployment
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl rollout history deployment/<name>` to view revision history. Add `--revision=N` to see details of a specific revision. The history shows revision numbers and change causes, useful for understanding what changed and for rollback decisions.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#checking-rollout-history-of-a-deployment)
+
+</details>
 
 ---
 
@@ -66,6 +110,17 @@ B) Rolls back to the previous revision of the Deployment
 C) Pauses the rollout
 D) Restarts all Pods
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl rollout undo deployment/<name>` rolls back to the previous revision. Add `--to-revision=N` to roll back to a specific revision. This creates a new revision with the old Pod template, useful for recovering from failed deployments.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment)
+
+</details>
+
 ---
 
 ### Question 6
@@ -77,6 +132,17 @@ A) kubectl logs daemonset
 B) kubectl get daemonset and kubectl describe daemonset <name>
 C) kubectl status daemonset
 D) kubectl top daemonset
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl get daemonset` to see desired, current, ready, and available counts. Use `kubectl describe daemonset <name>` to see detailed status, node selection criteria, and events. The counts should match the number of eligible nodes.
+
+**Source:** [DaemonSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+
+</details>
 
 ---
 
@@ -90,6 +156,17 @@ B) Node taints without tolerations, node selectors, or affinity rules
 C) Insufficient memory only
 D) Network issues only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** DaemonSets might not schedule on all nodes due to: node taints that the DaemonSet doesn't tolerate, nodeSelector limiting eligible nodes, or node affinity rules excluding nodes. Check `kubectl describe daemonset` for the node selector and tolerations.
+
+**Source:** [DaemonSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+
+</details>
+
 ---
 
 ### Question 8
@@ -101,6 +178,17 @@ A) Delete the StatefulSet
 B) Check PVC status, storage class, and Pod events for scheduling issues
 C) Increase replicas
 D) Change the service name
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** StatefulSet Pods stuck in Pending often relate to storage: PVCs not being bound due to no matching PV or StorageClass provisioning failures. StatefulSets create Pods sequentially, so check the first stuck Pod's events and its PVC status with `kubectl get pvc` and `kubectl describe pod`.
+
+**Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
+
+</details>
 
 ---
 
@@ -114,6 +202,17 @@ B) To verify container specs, resource requests, and configuration that will be 
 C) To delete old Pods
 D) To scale the Deployment
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The Pod template in a Deployment defines the spec for all Pods it creates. Checking it helps verify: container images, resource requests/limits, environment variables, volumes, and probes. Any misconfiguration here affects all Pods. View with `kubectl get deployment -o yaml`.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+</details>
+
 ---
 
 ### Question 10
@@ -125,6 +224,17 @@ A) kubectl get deployment only
 B) kubectl get replicasets -l app=<name> and check which has non-zero desired replicas
 C) kubectl describe pods
 D) kubectl logs deployment
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Deployment manages multiple ReplicaSets (one per revision). The active ReplicaSet has non-zero desired replicas while old ones have 0. Use `kubectl get replicasets -l app=<deployment-label>` to see all ReplicaSets and their replica counts to identify the current active one.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+</details>
 
 ---
 
