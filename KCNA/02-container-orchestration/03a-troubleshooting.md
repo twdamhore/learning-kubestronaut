@@ -623,12 +623,22 @@ D) The Pod failed a health check
 
 How do you check the health of the kube-apiserver?
 
+A) kubectl get apiserver
+B) Access the /healthz or /livez endpoints, or check Pod status in kube-system
+C) kubectl describe apiserver
+D) kubectl health apiserver
+
 ---
 
 ### Question 52
 [HARD]
 
 What are the common symptoms of etcd issues?
+
+A) Only network problems
+B) Slow API responses, failed writes, cluster instability, leader election failures
+C) Only Pod scheduling issues
+D) Only authentication failures
 
 ---
 
@@ -637,12 +647,22 @@ What are the common symptoms of etcd issues?
 
 How do you view logs from control plane components on a kubeadm cluster?
 
+A) kubectl logs -n default
+B) kubectl logs -n kube-system <component-pod-name> or journalctl for static pods
+C) cat /var/log/kubernetes
+D) kubectl describe controlplane
+
 ---
 
 ### Question 54
 [HARD]
 
 What happens when the kube-scheduler is not running?
+
+A) Pods are scheduled randomly
+B) New Pods remain in Pending state and are not assigned to nodes
+C) Existing Pods are terminated
+D) The cluster shuts down
 
 ---
 
@@ -651,12 +671,22 @@ What happens when the kube-scheduler is not running?
 
 How do you check the status of the kube-controller-manager?
 
+A) kubectl get controllers
+B) kubectl get pods -n kube-system and check controller-manager pod, or access /healthz
+C) kubectl describe controller-manager
+D) kubectl status controller-manager
+
 ---
 
 ### Question 56
 [HARD]
 
 What are common causes of API server unavailability?
+
+A) Only network issues
+B) Certificate expiry, etcd unavailability, resource exhaustion, misconfigurations
+C) Only Pod failures
+D) Only DNS issues
 
 ---
 
@@ -665,12 +695,22 @@ What are common causes of API server unavailability?
 
 How do you troubleshoot certificate-related issues in Kubernetes?
 
+A) Restart all components
+B) Check certificate expiry dates, verify CA chain, check component logs for TLS errors
+C) Delete and recreate certificates automatically
+D) Ignore certificate errors
+
 ---
 
 ### Question 58
 [HARD]
 
 What command checks the health of cluster components?
+
+A) kubectl health
+B) kubectl get componentstatuses (deprecated) or check /healthz endpoints
+C) kubectl cluster-health
+D) kubectl status components
 
 ---
 
@@ -679,12 +719,22 @@ What command checks the health of cluster components?
 
 How do you identify if etcd is the bottleneck?
 
+A) Only check CPU usage
+B) Monitor etcd metrics, check latency, disk I/O, and etcd logs for slow operations
+C) Restart etcd
+D) Check Pod logs
+
 ---
 
 ### Question 60
 [HARD]
 
 What logs should you check when Pods are not being scheduled?
+
+A) Only kubelet logs
+B) kube-scheduler logs and kubectl describe pod for scheduling events
+C) Only API server logs
+D) Only etcd logs
 
 ---
 
@@ -695,12 +745,22 @@ What logs should you check when Pods are not being scheduled?
 
 How do you check the status of kubelet on a node?
 
+A) kubectl get kubelet
+B) systemctl status kubelet on the node
+C) kubectl describe kubelet
+D) kubectl logs kubelet
+
 ---
 
 ### Question 62
 [HARD]
 
 Where are kubelet logs typically located?
+
+A) /var/log/pods
+B) journalctl -u kubelet or /var/log/kubelet.log depending on setup
+C) /etc/kubernetes/logs
+D) kubectl logs kubelet
 
 ---
 
@@ -709,12 +769,22 @@ Where are kubelet logs typically located?
 
 What are common causes of kubelet failing to start?
 
+A) Only network issues
+B) Configuration errors, certificate issues, container runtime not running, resource issues
+C) Only disk space issues
+D) Only memory issues
+
 ---
 
 ### Question 64
 [HARD]
 
 How do you troubleshoot container runtime issues?
+
+A) Restart the node
+B) Check runtime status, logs, socket connectivity, and verify runtime configuration
+C) Reinstall Kubernetes
+D) Only check kubelet logs
 
 ---
 
@@ -723,12 +793,22 @@ How do you troubleshoot container runtime issues?
 
 What does "container runtime is down" error indicate?
 
+A) The container is crashing
+B) Kubelet cannot communicate with the container runtime (containerd, CRI-O)
+C) The Pod is pending
+D) The image cannot be pulled
+
 ---
 
 ### Question 66
 [HARD]
 
 How do you check if the container runtime is responding?
+
+A) kubectl get runtime
+B) crictl info or systemctl status containerd/cri-o
+C) docker ps only
+D) kubectl describe runtime
 
 ---
 
@@ -737,12 +817,22 @@ How do you check if the container runtime is responding?
 
 What is the CRI and how do you troubleshoot CRI issues?
 
+A) Container Runtime Integration; restart Docker
+B) Container Runtime Interface; check socket connectivity, runtime logs, and use crictl
+C) Container Resource Interface; increase resources
+D) Cluster Runtime Interface; restart the cluster
+
 ---
 
 ### Question 68
 [HARD]
 
 How do you identify kubelet connectivity issues with the API server?
+
+A) Check Pod logs
+B) Check kubelet logs for connection errors, verify network, certificates, and API server health
+C) Restart the API server
+D) Only check firewall rules
 
 ---
 
@@ -751,12 +841,22 @@ How do you identify kubelet connectivity issues with the API server?
 
 What could cause kubelet to report "PLEG is not healthy"?
 
+A) Network issues only
+B) Container runtime issues, high Pod count, slow disk I/O, or runtime not responding
+C) Memory pressure only
+D) Certificate expiry only
+
 ---
 
 ### Question 70
 [HARD]
 
 How do you troubleshoot image pull failures from private registries?
+
+A) Use public images only
+B) Check imagePullSecrets, registry credentials, network connectivity, and registry availability
+C) Restart kubelet
+D) Delete the Pod
 
 ---
 
@@ -767,12 +867,22 @@ How do you troubleshoot image pull failures from private registries?
 
 What does a PVC status of "Pending" indicate?
 
+A) The PVC is ready to use
+B) No matching PV is available or StorageClass cannot provision a volume
+C) The PVC is being deleted
+D) The volume is mounted
+
 ---
 
 ### Question 72
 [HARD]
 
 How do you troubleshoot a Pod stuck waiting for volume mount?
+
+A) Delete the Pod
+B) Check PVC status, PV binding, node availability, and Pod events for mount errors
+C) Increase volume size
+D) Change storage class
 
 ---
 
@@ -781,6 +891,11 @@ How do you troubleshoot a Pod stuck waiting for volume mount?
 
 What causes a "FailedMount" warning in Pod events?
 
+A) Only permission issues
+B) Volume not found, mount path issues, node cannot access storage, or CSI driver issues
+C) Only network issues
+D) Only Pod configuration errors
+
 ---
 
 ### Question 74
@@ -788,12 +903,22 @@ What causes a "FailedMount" warning in Pod events?
 
 How do you check if a PersistentVolume is correctly bound?
 
+A) kubectl get volume
+B) kubectl get pv and verify STATUS is Bound and CLAIM shows the correct PVC
+C) kubectl describe storage
+D) kubectl check pv
+
 ---
 
 ### Question 75
 [HARD]
 
 What does "VolumeBindingWaitForFirstConsumer" mean?
+
+A) The volume failed to bind
+B) Volume binding is delayed until a Pod using the PVC is scheduled to a node
+C) The volume is corrupted
+D) The storage class is invalid
 
 ---
 
