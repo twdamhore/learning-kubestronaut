@@ -2008,7 +2008,7 @@ D) kubectl get securitycontext
 A Pod fails with "cannot exec as root" but securityContext specifies runAsUser: 0. Why?
 
 A) Bug in Kubernetes
-B) runAsNonRoot: true or Pod Security Admission is blocking root execution
+B) runAsNonRoot: true or Pod Security Admission (restricted level) is blocking root execution
 C) Image doesn't support root
 D) Node doesn't allow root
 
@@ -2017,9 +2017,9 @@ D) Node doesn't allow root
 
 **Answer:** B
 
-**Explanation:** Root execution is blocked by: 1) `runAsNonRoot: true` in securityContext (blocks UID 0 at runtime), 2) Pod Security Admission with restricted or baseline level (requires non-root), 3) Custom admission webhooks. Check the Pod/container securityContext for runAsNonRoot and namespace PSA labels. Fix by removing runAsNonRoot, using a non-root UID, or adjusting the PSA policy.
+**Explanation:** Root execution is blocked by: 1) `runAsNonRoot: true` in securityContext (blocks UID 0 at runtime), 2) Pod Security Admission with restricted level (requires non-root; baseline does not), 3) Custom admission webhooks. Check the Pod/container securityContext for runAsNonRoot and namespace PSA labels. Fix by removing runAsNonRoot, using a non-root UID, or adjusting the PSA policy.
 
-**Sources:** [Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/), [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+**Sources:** [Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/), [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
 </details>
 
