@@ -638,8 +638,8 @@ D) Never automatically evicts
 
 A node has "NetworkUnavailable" condition True. What component is responsible for clearing this condition?
 
-A) Kubelet
-B) Cloud controller manager (route controller) or the CNI plugin
+A) Kubelet (in non-cloud setups)
+B) Cloud controller manager (route controller) in cloud setups, or kubelet otherwise
 C) kube-proxy
 D) API server
 
@@ -648,7 +648,7 @@ D) API server
 
 **Answer:** B
 
-**Explanation:** The NetworkUnavailable condition is typically cleared by the cloud controller manager's route controller (which sets up node routes) or by some CNI plugins that manage this condition directly. The kubelet initially sets this condition to True, and it's cleared once networking is properly configured. If this stays True, check cloud-controller-manager logs, CNI plugin status, and node route configuration.
+**Explanation:** The kubelet sets NetworkUnavailable to True on startup. In cloud-provider setups, the cloud controller manager's route controller clears it after configuring node routes. In non-cloud setups, the kubelet clears it. If this stays True, check cloud-controller-manager logs (cloud) or kubelet logs (non-cloud), and verify node network configuration.
 
 **Source:** [Node Conditions | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#condition)
 
@@ -2157,9 +2157,9 @@ D) Network component health
 
 **Answer:** B
 
-**Explanation:** `kubectl get componentstatuses` (or `cs`) shows control plane component health: scheduler, controller-manager, etcd. However, this API is deprecated and may show incorrect data in modern clusters. Use direct health endpoints (`/healthz`) on each component instead.
+**Explanation:** `kubectl get componentstatuses` (or `cs`) shows control plane component health: scheduler, controller-manager, etcd. However, this API is deprecated and may show incorrect data in modern clusters. Use direct health endpoints (`/livez` and `/readyz`) on each component instead; `/healthz` is also deprecated.
 
-**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+**Source:** [API Server Health Checks | Kubernetes](https://kubernetes.io/docs/reference/using-api/health-checks/)
 
 </details>
 
