@@ -2106,6 +2106,17 @@ B) Review API server audit logs to see all API requests, including who made them
 C) kubectl get audit
 D) kubectl describe audit
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Audit logs record all API requests including: user/ServiceAccount, timestamp, verb, resource, and response code. Useful for: tracking who deleted resources, identifying unauthorized access attempts, understanding the sequence of operations during incidents. Configure via kube-apiserver audit policy.
+
+**Source:** [Auditing | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
+
+</details>
+
 ---
 
 ### Question 92
@@ -2117,6 +2128,17 @@ A) Only Pod creation times
 B) State changes, warnings, errors, and reasons for resource status changes
 C) Only network information
 D) Only storage information
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Events provide: scheduling decisions, image pull status, container state changes, probe failures, resource creation/deletion, and warnings/errors. View with `kubectl get events --sort-by=.lastTimestamp` or `kubectl describe <resource>`. Events are retained for about 1 hour by default.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
 
 ---
 
@@ -2130,6 +2152,17 @@ B) Compare metric timestamps with events, look for anomalies during incident tim
 C) Delete metrics
 D) Restart Prometheus
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Correlate metrics by: 1) Identify incident timeframe from events/logs, 2) Query metrics (Prometheus) for that period, 3) Look for anomalies: CPU spikes, memory pressure, network errors, disk latency, 4) Cross-reference with component metrics (API server, etcd, kubelet) to identify root cause.
+
+**Source:** [Tools for Monitoring Resources | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
+
+</details>
+
 ---
 
 ### Question 94
@@ -2141,6 +2174,17 @@ A) It shows only the resource name
 B) It provides detailed status information about the resource's current state and any issues
 C) It is only for internal use
 D) It shows only timestamps
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `status.conditions` field provides structured status: type (e.g., Ready, PodScheduled), status (True/False/Unknown), reason, and message. Conditions explain why a resource isn't ready. Check with `kubectl get <resource> -o jsonpath='{.status.conditions}'` or `kubectl describe`.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions)
+
+</details>
 
 ---
 
@@ -2154,6 +2198,17 @@ B) Check webhook pod health, network latency, increase timeout settings, and rev
 C) Restart the API server
 D) Delete all resources
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot webhook timeouts: 1) Check webhook Pod is healthy and responsive, 2) Test network latency from API server to webhook, 3) Increase timeoutSeconds in webhook config (default 10s), 4) Review webhook logs for slow processing, 5) Consider failurePolicy impact.
+
+**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+
+</details>
+
 ---
 
 ### Question 96
@@ -2165,6 +2220,17 @@ A) Too many Pods
 B) Finalizers blocking deletion, owner references issues, or controller-manager problems
 C) Network issues only
 D) DNS failures only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Garbage collection failures occur due to: 1) Finalizers that can't complete (controller not running), 2) Orphaned resources with broken owner references, 3) Garbage collector in controller-manager not running, 4) API server issues preventing deletion. Check resources for stuck finalizers.
+
+**Source:** [Garbage Collection | Kubernetes](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)
+
+</details>
 
 ---
 
@@ -2178,6 +2244,17 @@ B) kubectl get <resource> -o yaml to check finalizers, identify the controller, 
 C) Restart the API server
 D) Delete the namespace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Diagnose stuck finalizers: 1) `kubectl get <resource> -o yaml` to see finalizers list, 2) Identify which controller should remove them, 3) Check controller logs for errors, 4) If controller is gone, manually remove finalizers with `kubectl patch` (caution: may orphan resources).
+
+**Source:** [Finalizers | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/)
+
+</details>
+
 ---
 
 ### Question 98
@@ -2189,6 +2266,17 @@ A) High CPU usage only
 B) Resources not being reconciled, stale status, or missing events in controller logs
 C) Network errors only
 D) Storage issues only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Watch issues show as: 1) Resources staying in stale state (no status updates), 2) Missing reconciliation messages in logs, 3) Watch timeout/error logs, 4) Increasing work queue but no processing. Check controller logs for watch connection errors and verify API server connectivity.
+
+**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
 
 ---
 
@@ -2202,6 +2290,17 @@ B) Check the error message, verify spec against CRD schema, and use dry-run for 
 C) Restart the API server
 D) Delete all Custom Resources
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot CRD validation: 1) Read the error message for specific field issues, 2) Compare CR spec against CRD schema: `kubectl get crd <name> -o yaml`, 3) Use `--dry-run=server` to test without applying, 4) Check for required fields, type mismatches, or enum violations.
+
+**Source:** [Custom Resources | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+
+</details>
+
 ---
 
 ### Question 100
@@ -2213,5 +2312,16 @@ A) Restart everything immediately
 B) Check component health, review events and logs, examine metrics, and narrow down systematically
 C) Delete and recreate the cluster
 D) Ignore the issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Systematic troubleshooting: 1) Check control plane components (API server, etcd, scheduler, controller-manager), 2) Review events: `kubectl get events -A`, 3) Check component logs for errors, 4) Examine metrics for resource/performance issues, 5) Narrow down: cluster-wide vs namespace vs specific resource, 6) Check recent changes.
+
+**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/)
+
+</details>
 
 ---
