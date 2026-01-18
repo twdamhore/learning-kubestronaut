@@ -625,7 +625,7 @@ D) Memory leak
 
 **Answer:** B
 
-**Explanation:** DiskPressure means disk usage exceeded eviction threshold (typically 85%). Resolve by: 1) Run `crictl rmi --prune` to remove unused images, 2) Clear old container logs, 3) Delete completed Pods/Jobs, 4) Check for Pods writing excessive data to emptyDir volumes.
+**Explanation:** DiskPressure means available disk space fell below the eviction threshold (default: 10% available for nodefs, 15% for imagefs). Resolve by: 1) Run `crictl rmi --prune` to remove unused images, 2) Clear old container logs, 3) Delete completed Pods/Jobs, 4) Check for Pods writing excessive data to emptyDir volumes.
 
 **Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 

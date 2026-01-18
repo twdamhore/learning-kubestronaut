@@ -172,19 +172,19 @@ D) Removes the Pod from the cluster
 ### Question 108
 [HARD]
 
-A Pod has two containers: one shows "Running" and one shows "Waiting" with reason "PodInitializing". What does this indicate?
+A multi-container Pod shows all containers as "Waiting" with reason "PodInitializing". What does this indicate?
 
-A) Normal behavior - containers start sequentially
-B) Impossible state - all containers must have same status
-C) Init container is still running
-D) Second container failed to pull image
+A) Main containers failed to start
+B) Init containers are still running or haven't completed yet
+C) The Pod is being deleted
+D) Image pull is in progress for main containers only
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
 
-**Explanation:** "PodInitializing" in Waiting state indicates init containers are still running. Main containers show this status until all init containers complete. However, once init containers finish, all main containers start simultaneously. One Running and one PodInitializing suggests init containers haven't finished yet.
+**Explanation:** "PodInitializing" in Waiting state indicates init containers are still running or haven't completed successfully. All main containers remain in this state until every init container completes with exit code 0. Once all init containers finish, main containers start simultaneously. Check init container status with `kubectl describe pod`.
 
 **Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/#understanding-init-containers)
 
@@ -1959,10 +1959,10 @@ D) Permission denied
 ### Question 185
 [HARD]
 
-A user has ClusterRoleBinding to "edit" but can't create Pods. What might restrict this?
+A user has ClusterRoleBinding to "edit" but can't create Pods in a namespace. What might restrict this?
 
 A) Edit role doesn't include Pods
-B) ResourceQuota, LimitRange, or namespace-level RoleBinding might override
+B) ResourceQuota, LimitRange, or admission controllers blocking Pod creation
 C) User token expired
 D) API server down
 
@@ -1971,7 +1971,7 @@ D) API server down
 
 **Answer:** B
 
-**Explanation:** The edit ClusterRole includes Pod creation. However: ResourceQuota might prevent Pod creation due to limits, LimitRange might reject Pods missing required fields, or a namespace RoleBinding might bind a more restrictive role that takes precedence over ClusterRoleBinding for that namespace.
+**Explanation:** The edit ClusterRole includes Pod creation permissions. However, non-RBAC mechanisms can block creation: ResourceQuota prevents creation when limits are exceeded, LimitRange rejects Pods missing required resource specs, Pod Security Admission blocks Pods violating namespace security policy, or custom admission webhooks reject the request. Note: RBAC is additive - RoleBindings cannot remove permissions granted by ClusterRoleBindings.
 
 **Source:** [RBAC | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
