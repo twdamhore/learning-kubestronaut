@@ -83,18 +83,18 @@ D) ResourceQuota is exceeded
 What happens to Pods in "Pending" state when the node they were scheduled to is removed?
 
 A) They automatically move to another node
-B) They stay Pending with the original node assignment
-C) They return to unscheduled Pending state for rescheduling
+B) They stay bound to the removed node until eviction or deletion
+C) They are immediately rescheduled by the scheduler
 D) They immediately fail and need recreation
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
 
-**Explanation:** When a node is removed, Pods that were scheduled to it but not yet running (Pending) return to an unscheduled state. The scheduler then attempts to place them on another suitable node. Already-running Pods follow different eviction/deletion rules.
+**Explanation:** Once a Pod has `spec.nodeName` set, the scheduler does not reschedule it. When the node is removed, the node controller detects the node is gone and applies taints after timeouts. The Pod stays bound until evicted or deleted. Controllers (Deployment, StatefulSet) then create replacement Pods which get scheduled to healthy nodes.
 
-**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+**Source:** [Node Controller | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-controller)
 
 </details>
 
@@ -1323,7 +1323,7 @@ D) Scales down automatically
 
 **Explanation:** StatefulSet maintains strict ordering and identity. If a Pod is stuck Terminating, StatefulSet won't create a replacement with the same ordinal to prevent duplicate identities. Manual intervention (force delete) may be needed. Consider `--force --grace-period=0` for stuck Pods.
 
-**Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#forced-rollback)
+**Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies)
 
 </details>
 
@@ -1541,10 +1541,10 @@ D) RBAC blocking
 ### Question 167
 [HARD]
 
-What causes "invalid reference format" errors when using ConfigMap data?
+What causes errors when using ConfigMap keys as environment variable names?
 
 A) ConfigMap too large
-B) Key names contain invalid characters for environment variables or mount paths
+B) Key names are not valid C identifiers (must start with letter/underscore, contain only alphanumerics/underscores)
 C) Wrong namespace
 D) ConfigMap is secret type
 
@@ -1553,7 +1553,7 @@ D) ConfigMap is secret type
 
 **Answer:** B
 
-**Explanation:** ConfigMap keys used as environment variables must be valid env var names (letters, digits, underscores, not starting with digit). Keys used as filenames in volume mounts must be valid filenames. Invalid characters cause reference format errors during Pod creation.
+**Explanation:** ConfigMap keys used as environment variables must be valid C identifiers: start with a letter or underscore, contain only letters, digits, and underscores. Keys violating these rules cause API validation errors when creating the Pod. Note: "invalid reference format" errors are typically from container runtime image parsing, not ConfigMap issues.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -1845,7 +1845,7 @@ D) Container restarted before measurement
 How does eviction priority work when a node is under memory pressure?
 
 A) Random selection
-B) Pods exceeding requests are evicted first, then by priority class
+B) By QoS class first (BestEffort, then Burstable, then Guaranteed), then by priority and usage within each class
 C) Alphabetical by name
 D) Oldest first
 
@@ -1854,7 +1854,7 @@ D) Oldest first
 
 **Answer:** B
 
-**Explanation:** Eviction order: BestEffort Pods first, then Pods exceeding their requests (sorted by amount over request), then by PriorityClass value. Pods using less than their request and with higher priority are evicted last. Guaranteed Pods with usage below limits are most protected.
+**Explanation:** Kubelet eviction order follows QoS class first: BestEffort Pods are evicted before Burstable, and Burstable before Guaranteed. Within each QoS class, Pods are ranked by priority and then by how much their usage exceeds their requests. Guaranteed Pods with usage at or below requests are most protected.
 
 **Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
@@ -1936,10 +1936,10 @@ D) Container image
 ### Question 184
 [MEDIUM-HARD]
 
-What does "Forbidden: pod has unready container" error indicate when exec-ing into a Pod?
+What does "error: unable to upgrade connection" or container not ready error indicate when exec-ing into a Pod?
 
 A) Wrong container name
-B) Some admission policies restrict exec into Pods with unhealthy containers
+B) The container is not in a running state; kubectl exec requires the container to be running
 C) Container doesn't exist
 D) Permission denied
 
@@ -1948,9 +1948,9 @@ D) Permission denied
 
 **Answer:** B
 
-**Explanation:** Some admission controllers or policies restrict kubectl exec to only Ready containers. This is a security/operational control to prevent accessing unstable containers. Wait for the container to become Ready or check if there's an exception process.
+**Explanation:** kubectl exec requires the target container to be in a running state. If the container is still starting, in CrashLoopBackOff, or otherwise not running, exec will fail. Wait for the container to become Running, check why it's not starting with `kubectl describe pod`, or fix any startup issues first.
 
-**Source:** [Admission Controllers Reference | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
+**Source:** [Get a Shell to a Running Container | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/)
 
 </details>
 
