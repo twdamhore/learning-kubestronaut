@@ -1,4 +1,4 @@
-# Troubleshooting - 100 MCQ Questions (Part B: Q101-200)
+# Troubleshooting - 100 MCQ Questions (Part B: Q1-100)
 
 **Domain:** Container Orchestration (28%)
 **Competency:** Troubleshooting
@@ -8,7 +8,7 @@
 
 ## Pod Status and Lifecycle Issues
 
-### Question 101
+### Question 1
 [MEDIUM]
 
 What does the "Completed" status indicate for a Pod?
@@ -31,7 +31,7 @@ D) The Pod has been marked for deletion
 
 ---
 
-### Question 102
+### Question 2
 [MEDIUM]
 
 Which field in Pod spec determines how many times a container restarts before giving up?
@@ -54,7 +54,7 @@ D) maxRestartCount
 
 ---
 
-### Question 103
+### Question 3
 [MEDIUM-HARD]
 
 A Pod shows status "Unknown". What is the most likely cause?
@@ -77,7 +77,7 @@ D) ResourceQuota is exceeded
 
 ---
 
-### Question 104
+### Question 4
 [MEDIUM-HARD]
 
 What happens to Pods in "Pending" state when the node they were scheduled to is removed?
@@ -100,7 +100,7 @@ D) They immediately fail and need recreation
 
 ---
 
-### Question 105
+### Question 5
 [HARD]
 
 A Pod transitions directly from "Pending" to "Failed" without ever being "Running". Which scenario causes this?
@@ -123,7 +123,7 @@ D) Container OOMKilled
 
 ---
 
-### Question 106
+### Question 6
 [HARD]
 
 What is the significance of the "deletionTimestamp" field on a Pod object?
@@ -146,7 +146,7 @@ D) Scheduled time for Pod restart
 
 ---
 
-### Question 107
+### Question 7
 [HARD]
 
 How does Kubernetes handle a Pod whose container continuously exits with code 0 when restartPolicy is "Always"?
@@ -169,7 +169,7 @@ D) Removes the Pod from the cluster
 
 ---
 
-### Question 108
+### Question 8
 [HARD]
 
 A multi-container Pod shows all containers as "Waiting" with reason "PodInitializing". What does this indicate?
@@ -192,7 +192,7 @@ D) Image pull is in progress for main containers only
 
 ---
 
-### Question 109
+### Question 9
 [HARD]
 
 What determines the order of container termination when a Pod is deleted?
@@ -215,7 +215,7 @@ D) Based on resource consumption
 
 ---
 
-### Question 110
+### Question 10
 [HARD]
 
 A Pod's container keeps restarting with exit code 137. After investigation, you find no OOMKilled events. What else causes exit code 137?
@@ -240,7 +240,7 @@ D) Network timeout
 
 ## Debugging Commands and Techniques
 
-### Question 111
+### Question 11
 [MEDIUM]
 
 What is the purpose of `kubectl debug` with the `--copy-to` flag?
@@ -263,7 +263,7 @@ D) Backup the Pod specification
 
 ---
 
-### Question 112
+### Question 12
 [MEDIUM]
 
 How do you view the YAML manifest of a running Pod including runtime fields?
@@ -286,7 +286,7 @@ D) kubectl export pod <name>
 
 ---
 
-### Question 113
+### Question 13
 [MEDIUM-HARD]
 
 What does `kubectl logs --previous` display?
@@ -309,7 +309,7 @@ D) Logs from the previous namespace
 
 ---
 
-### Question 114
+### Question 14
 [MEDIUM-HARD]
 
 How do you execute a command in a specific container of a multi-container Pod?
@@ -332,7 +332,7 @@ D) kubectl exec <pod>/<container> -- <command>
 
 ---
 
-### Question 115
+### Question 15
 [HARD]
 
 What is the difference between `kubectl debug` with `--target` versus `--share-processes`?
@@ -355,7 +355,7 @@ D) --share-processes is deprecated
 
 ---
 
-### Question 116
+### Question 16
 [HARD]
 
 How do you collect Pod logs that span multiple restarts during a crash loop?
@@ -378,7 +378,7 @@ D) kubectl logs --history
 
 ---
 
-### Question 117
+### Question 17
 [HARD]
 
 What does `kubectl get events --field-selector reason=FailedScheduling` show?
@@ -401,7 +401,7 @@ D) Network scheduling failures
 
 ---
 
-### Question 118
+### Question 18
 [HARD]
 
 How can you debug a container that crashes immediately on startup before you can exec into it?
@@ -424,7 +424,7 @@ D) Use kubectl attach immediately
 
 ---
 
-### Question 119
+### Question 19
 [HARD]
 
 What information does `kubectl get pod -o wide` provide that standard output doesn't?
@@ -447,7 +447,7 @@ D) Event history
 
 ---
 
-### Question 120
+### Question 20
 [HARD]
 
 How do you debug a node using `kubectl debug node`?
@@ -472,7 +472,7 @@ D) It restarts kubelet
 
 ## Node and Cluster Troubleshooting
 
-### Question 121
+### Question 21
 [MEDIUM]
 
 What does the "DiskPressure" condition on a node indicate?
@@ -487,7 +487,7 @@ D) Memory pressure
 
 **Answer:** B
 
-**Explanation:** DiskPressure condition becomes True when available disk space or inodes fall below eviction thresholds (default: 10% space, 5% inodes). This triggers Pod eviction based on disk usage. Monitor with `kubectl describe node` and check Conditions section.
+**Explanation:** DiskPressure condition becomes True when available disk space or inodes fall below kubelet eviction thresholds (configurable; defaults vary for nodefs and imagefs). This triggers Pod eviction based on disk usage. Monitor with `kubectl describe node` and check Conditions section.
 
 **Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
@@ -495,7 +495,7 @@ D) Memory pressure
 
 ---
 
-### Question 122
+### Question 22
 [MEDIUM]
 
 How do you safely remove a node from the cluster for maintenance?
@@ -518,7 +518,7 @@ D) kubectl remove node <name>
 
 ---
 
-### Question 123
+### Question 23
 [MEDIUM-HARD]
 
 What causes a node to show "NotReady" status?
@@ -541,7 +541,7 @@ D) Pending Pod deployments
 
 ---
 
-### Question 124
+### Question 24
 [MEDIUM-HARD]
 
 How do you view kubelet logs on a node using systemd?
@@ -564,13 +564,13 @@ D) kubectl describe node --logs
 
 ---
 
-### Question 125
+### Question 25
 [HARD]
 
 A node shows Ready but Pods report "NodeNotReady" mount errors. What is likely wrong?
 
 A) Node doesn't exist
-B) Kubelet is Ready but container runtime has issues
+B) Kubelet volume plugin or CSI driver has issues
 C) Network plugin failure
 D) All of the above could cause this
 
@@ -579,7 +579,7 @@ D) All of the above could cause this
 
 **Answer:** B
 
-**Explanation:** The node can be Ready (kubelet responsive) while the container runtime (containerd, CRI-O) has issues. Mount errors suggest volume plugin or CSI driver problems rather than kubelet health. Check container runtime status: `systemctl status containerd` or `crictl info`.
+**Explanation:** The node can be Ready (kubelet responsive) while volume operations fail. Mount errors suggest kubelet volume plugin or CSI driver problems. Check CSI driver Pods are healthy, CSI node plugin logs, and kubelet logs for volume-related errors: `journalctl -u kubelet | grep -i volume`.
 
 **Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
 
@@ -587,7 +587,7 @@ D) All of the above could cause this
 
 ---
 
-### Question 126
+### Question 26
 [HARD]
 
 What is the effect of `kubectl cordon` on existing Pods running on the node?
@@ -610,7 +610,7 @@ D) Restarts all Pods
 
 ---
 
-### Question 127
+### Question 27
 [HARD]
 
 How does the node controller determine when to evict Pods from an unreachable node?
@@ -633,13 +633,13 @@ D) Never automatically evicts
 
 ---
 
-### Question 128
+### Question 28
 [HARD]
 
 A node has "NetworkUnavailable" condition True. What component is responsible for clearing this condition?
 
 A) Kubelet
-B) The network plugin (CNI)
+B) Cloud controller manager (route controller) or the CNI plugin
 C) kube-proxy
 D) API server
 
@@ -648,15 +648,15 @@ D) API server
 
 **Answer:** B
 
-**Explanation:** The CNI plugin (Calico, Flannel, etc.) is responsible for setting up node networking and clearing the NetworkUnavailable condition. If this condition stays True, check CNI plugin installation, configuration, and logs. The kubelet reports it, but the CNI must clear it.
+**Explanation:** The NetworkUnavailable condition is typically cleared by the cloud controller manager's route controller (which sets up node routes) or by some CNI plugins that manage this condition directly. The kubelet initially sets this condition to True, and it's cleared once networking is properly configured. If this stays True, check cloud-controller-manager logs, CNI plugin status, and node route configuration.
 
-**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+**Source:** [Node Conditions | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#condition)
 
 </details>
 
 ---
 
-### Question 129
+### Question 29
 [HARD]
 
 What happens to static Pods on a node when the API server is unreachable?
@@ -679,7 +679,7 @@ D) They restart continuously
 
 ---
 
-### Question 130
+### Question 30
 [HARD]
 
 What does high "node-lease" renewal latency indicate?
@@ -704,7 +704,7 @@ D) Pod scheduling delays
 
 ## Network and Service Troubleshooting
 
-### Question 131
+### Question 31
 [MEDIUM]
 
 Why might a Service not be reachable even when endpoints exist?
@@ -727,7 +727,7 @@ D) Service doesn't exist
 
 ---
 
-### Question 132
+### Question 32
 [MEDIUM]
 
 How do you verify if a Service selector matches any Pods?
@@ -750,7 +750,7 @@ D) Both A and B work, but B shows actual Pod IPs
 
 ---
 
-### Question 133
+### Question 33
 [MEDIUM-HARD]
 
 A Pod can reach other Pods by IP but not by Service DNS name. What should you check?
@@ -773,7 +773,7 @@ D) Firewall rules only
 
 ---
 
-### Question 134
+### Question 34
 [MEDIUM-HARD]
 
 What causes a NodePort Service to be unreachable from outside the cluster?
@@ -796,7 +796,7 @@ D) Incorrect ClusterIP
 
 ---
 
-### Question 135
+### Question 35
 [HARD]
 
 How do you test if a Pod can reach a Service without relying on DNS?
@@ -819,7 +819,7 @@ D) Restart kube-proxy
 
 ---
 
-### Question 136
+### Question 36
 [HARD]
 
 What does an empty "Subsets" field in Endpoints indicate?
@@ -842,7 +842,7 @@ D) Service uses ExternalName type
 
 ---
 
-### Question 137
+### Question 37
 [HARD]
 
 How does `publishNotReadyAddresses: true` on a Service affect endpoint registration?
@@ -865,7 +865,7 @@ D) Enables headless mode
 
 ---
 
-### Question 138
+### Question 38
 [HARD]
 
 A Service shows "EXTERNAL-IP: Pending" indefinitely. What's the most likely cause?
@@ -888,7 +888,7 @@ D) Service port conflict
 
 ---
 
-### Question 139
+### Question 39
 [HARD]
 
 How do you diagnose intermittent Service connectivity issues?
@@ -911,7 +911,7 @@ D) Recreate the Service
 
 ---
 
-### Question 140
+### Question 40
 [HARD]
 
 What is the effect of `internalTrafficPolicy: Local` on Service traffic?
@@ -936,7 +936,7 @@ D) Enables mTLS for internal traffic
 
 ## Storage and Volume Troubleshooting
 
-### Question 141
+### Question 41
 [MEDIUM]
 
 What does a PVC status of "Pending" indicate?
@@ -959,7 +959,7 @@ D) Storage class doesn't exist
 
 ---
 
-### Question 142
+### Question 42
 [MEDIUM]
 
 How do you check why a PV is not binding to a PVC?
@@ -982,7 +982,7 @@ D) kubectl get events --all-namespaces
 
 ---
 
-### Question 143
+### Question 43
 [MEDIUM-HARD]
 
 A Pod is stuck in "ContainerCreating" with event "FailedAttachVolume". What is the likely cause?
@@ -1005,7 +1005,7 @@ D) Network plugin failure
 
 ---
 
-### Question 144
+### Question 44
 [MEDIUM-HARD]
 
 What causes "FailedMount" with message "timeout expired waiting for volumes to attach"?
@@ -1028,7 +1028,7 @@ D) Container not starting
 
 ---
 
-### Question 145
+### Question 45
 [HARD]
 
 How do you troubleshoot CSI driver issues?
@@ -1051,7 +1051,7 @@ D) Recreate PVCs
 
 ---
 
-### Question 146
+### Question 46
 [HARD]
 
 A PVC shows "Bound" but the Pod still shows "FailedMount" errors. What could cause this?
@@ -1074,7 +1074,7 @@ D) Service account missing
 
 ---
 
-### Question 147
+### Question 47
 [HARD]
 
 What is the purpose of the `volumeBindingMode: WaitForFirstConsumer` in a StorageClass?
@@ -1097,7 +1097,7 @@ D) Binds volume to first requesting namespace
 
 ---
 
-### Question 148
+### Question 48
 [HARD]
 
 A volume shows "VolumeAttachment" stuck in attaching state. How do you force detach it?
@@ -1120,7 +1120,7 @@ D) Scale Deployment to 0
 
 ---
 
-### Question 149
+### Question 49
 [HARD]
 
 Why might a Pod fail with "subPath" related mount errors?
@@ -1143,7 +1143,7 @@ D) Memory limit exceeded
 
 ---
 
-### Question 150
+### Question 50
 [HARD]
 
 How do you diagnose slow volume mount times?
@@ -1168,7 +1168,7 @@ D) Use faster storage class
 
 ## Workload Controllers Troubleshooting
 
-### Question 151
+### Question 51
 [MEDIUM]
 
 What happens when a Deployment's selector is changed after creation?
@@ -1191,7 +1191,7 @@ D) Deployment is deleted and recreated
 
 ---
 
-### Question 152
+### Question 52
 [MEDIUM]
 
 How do you pause a Deployment rollout to make multiple changes?
@@ -1214,7 +1214,7 @@ D) Edit the Deployment with --paused flag
 
 ---
 
-### Question 153
+### Question 53
 [MEDIUM-HARD]
 
 A StatefulSet Pod is stuck in Terminating state. What is blocking deletion?
@@ -1237,7 +1237,7 @@ D) Node is healthy
 
 ---
 
-### Question 154
+### Question 54
 [MEDIUM-HARD]
 
 What does "ProgressDeadlineExceeded" reason in Deployment conditions mean?
@@ -1260,7 +1260,7 @@ D) Deployment is paused
 
 ---
 
-### Question 155
+### Question 55
 [HARD]
 
 Why might a DaemonSet not schedule Pods on certain nodes?
@@ -1283,7 +1283,7 @@ D) DaemonSet is paused
 
 ---
 
-### Question 156
+### Question 56
 [HARD]
 
 A ReplicaSet shows desired replicas but actual is 0. What should you investigate first?
@@ -1306,7 +1306,7 @@ D) Delete the ReplicaSet
 
 ---
 
-### Question 157
+### Question 57
 [HARD]
 
 How does StatefulSet handle a Pod that's stuck and not terminating?
@@ -1329,7 +1329,7 @@ D) Scales down automatically
 
 ---
 
-### Question 158
+### Question 58
 [HARD]
 
 What is the purpose of `.spec.minReadySeconds` in a Deployment?
@@ -1352,7 +1352,7 @@ D) Scheduling delay
 
 ---
 
-### Question 159
+### Question 59
 [HARD]
 
 A Job with parallelism=3 and completions=10 only runs 2 Pods. What might cause this?
@@ -1375,7 +1375,7 @@ D) Job timeout exceeded
 
 ---
 
-### Question 160
+### Question 60
 [HARD]
 
 How do you troubleshoot a Deployment stuck at "1 old replicas are pending termination"?
@@ -1400,7 +1400,7 @@ D) Scale to 0
 
 ## Configuration and Probes Troubleshooting
 
-### Question 161
+### Question 61
 [MEDIUM]
 
 What happens if a ConfigMap referenced by a Pod doesn't exist?
@@ -1423,7 +1423,7 @@ D) Pod starts without the ConfigMap data
 
 ---
 
-### Question 162
+### Question 62
 [MEDIUM]
 
 How do you make a Pod continue starting even if a ConfigMap is missing?
@@ -1446,7 +1446,7 @@ D) Use default values in container
 
 ---
 
-### Question 163
+### Question 63
 [MEDIUM-HARD]
 
 A Pod keeps restarting due to failed liveness probe but logs show the application is running fine. What's the likely issue?
@@ -1469,7 +1469,7 @@ D) Network policy blocking
 
 ---
 
-### Question 164
+### Question 64
 [MEDIUM-HARD]
 
 What is the difference between a Pod showing "Running" but with 0/1 Ready versus 1/1 Ready?
@@ -1492,7 +1492,7 @@ D) 0/1 means Pod is terminating
 
 ---
 
-### Question 165
+### Question 65
 [HARD]
 
 How do you debug probe failures when there are no obvious errors?
@@ -1515,7 +1515,7 @@ D) Increase all timeout values
 
 ---
 
-### Question 166
+### Question 66
 [HARD]
 
 A Secret update doesn't reflect in a running Pod's environment variables. Why?
@@ -1538,7 +1538,7 @@ D) RBAC blocking
 
 ---
 
-### Question 167
+### Question 67
 [HARD]
 
 What causes errors when using ConfigMap keys as environment variable names?
@@ -1553,7 +1553,7 @@ D) ConfigMap is secret type
 
 **Answer:** B
 
-**Explanation:** ConfigMap keys used as environment variables must be valid C identifiers: start with a letter or underscore, contain only letters, digits, and underscores. Keys violating these rules cause API validation errors when creating the Pod. Note: "invalid reference format" errors are typically from container runtime image parsing, not ConfigMap issues.
+**Explanation:** When using `envFrom` to load all ConfigMap keys as environment variables, keys that are not valid env var names are skipped and a warning event is recorded (not a hard API error). However, when using `env` with `valueFrom.configMapKeyRef`, the env var name you specify must be valid. Valid env var names: start with a letter or underscore, contain only letters, digits, and underscores.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
@@ -1561,7 +1561,7 @@ D) ConfigMap is secret type
 
 ---
 
-### Question 168
+### Question 68
 [HARD]
 
 How do startupProbe, livenessProbe, and readinessProbe interact during Pod startup?
@@ -1584,7 +1584,7 @@ D) They are aliases for the same probe
 
 ---
 
-### Question 169
+### Question 69
 [HARD]
 
 A gRPC probe is failing but the gRPC service works fine when tested manually. What might be wrong?
@@ -1607,7 +1607,7 @@ D) TLS required
 
 ---
 
-### Question 170
+### Question 70
 [HARD]
 
 How do you troubleshoot a Pod that restarts exactly at the same interval repeatedly?
@@ -1632,7 +1632,7 @@ D) Network issues
 
 ## Resource Management and Quotas
 
-### Question 171
+### Question 71
 [MEDIUM]
 
 What happens when a namespace exceeds its ResourceQuota for CPU requests?
@@ -1655,7 +1655,7 @@ D) Quota is automatically increased
 
 ---
 
-### Question 172
+### Question 72
 [MEDIUM]
 
 How do you view current ResourceQuota usage in a namespace?
@@ -1678,7 +1678,7 @@ D) kubectl get limits
 
 ---
 
-### Question 173
+### Question 73
 [MEDIUM-HARD]
 
 A Pod creation fails with "exceeded quota" but calculations show quota should be available. What might cause this?
@@ -1701,7 +1701,7 @@ D) Wrong namespace
 
 ---
 
-### Question 174
+### Question 74
 [MEDIUM-HARD]
 
 What is the effect of LimitRange on Pods without resource specifications?
@@ -1724,7 +1724,7 @@ D) Pods use node capacity
 
 ---
 
-### Question 175
+### Question 75
 [HARD]
 
 How do you identify which Pods are consuming the most resources against a quota?
@@ -1747,7 +1747,7 @@ D) View etcd directly
 
 ---
 
-### Question 176
+### Question 76
 [HARD]
 
 A namespace has both ResourceQuota and LimitRange. In what order are they evaluated?
@@ -1770,7 +1770,7 @@ D) Only one can be active
 
 ---
 
-### Question 177
+### Question 77
 [HARD]
 
 What causes "must specify limits" error even when LimitRange has defaults?
@@ -1793,7 +1793,7 @@ D) LimitRange is invalid
 
 ---
 
-### Question 178
+### Question 78
 [HARD]
 
 How do PriorityClass and ResourceQuota interact?
@@ -1816,7 +1816,7 @@ D) Priority determines quota order
 
 ---
 
-### Question 179
+### Question 79
 [HARD]
 
 A container is OOMKilled but its memory usage (from kubectl top) shows below the limit. What explains this?
@@ -1839,7 +1839,7 @@ D) Container restarted before measurement
 
 ---
 
-### Question 180
+### Question 80
 [HARD]
 
 How does eviction priority work when a node is under memory pressure?
@@ -1864,7 +1864,7 @@ D) Oldest first
 
 ## Security and Access Troubleshooting
 
-### Question 181
+### Question 81
 [MEDIUM]
 
 A Pod fails with "Error: container has runAsNonRoot and image will run as root". How do you fix this?
@@ -1887,7 +1887,7 @@ D) Disable security policy
 
 ---
 
-### Question 182
+### Question 82
 [MEDIUM]
 
 How do you check if a ServiceAccount has permission to perform an action?
@@ -1910,7 +1910,7 @@ D) kubectl get rolebinding
 
 ---
 
-### Question 183
+### Question 83
 [MEDIUM-HARD]
 
 A Pod can't access the Kubernetes API despite having a ServiceAccount with appropriate RBAC. What else should you check?
@@ -1933,7 +1933,7 @@ D) Container image
 
 ---
 
-### Question 184
+### Question 84
 [MEDIUM-HARD]
 
 What does "error: unable to upgrade connection" or container not ready error indicate when exec-ing into a Pod?
@@ -1956,7 +1956,7 @@ D) Permission denied
 
 ---
 
-### Question 185
+### Question 85
 [HARD]
 
 A user has ClusterRoleBinding to "edit" but can't create Pods in a namespace. What might restrict this?
@@ -1979,7 +1979,7 @@ D) API server down
 
 ---
 
-### Question 186
+### Question 86
 [HARD]
 
 How do you troubleshoot "dial tcp: lookup kubernetes.default.svc: no such host" from inside a Pod?
@@ -2002,7 +2002,7 @@ D) Wrong credentials
 
 ---
 
-### Question 187
+### Question 87
 [HARD]
 
 A NetworkPolicy is created but Pod traffic isn't being filtered. What might cause this?
@@ -2025,7 +2025,7 @@ D) NetworkPolicy applies immediately
 
 ---
 
-### Question 188
+### Question 88
 [HARD]
 
 A ServiceAccount token works from inside the cluster but not from outside. What's the likely cause?
@@ -2048,7 +2048,7 @@ D) Token expired inside
 
 ---
 
-### Question 189
+### Question 89
 [HARD]
 
 A Pod fails to start with "operation not permitted" for seccomp profile. How do you diagnose this?
@@ -2071,7 +2071,7 @@ D) Change container user
 
 ---
 
-### Question 190
+### Question 90
 [HARD]
 
 How do you audit which RBAC permissions a failing API request needed?
@@ -2096,7 +2096,7 @@ D) Check API server logs only
 
 ## Advanced Diagnostics and Tools
 
-### Question 191
+### Question 91
 [MEDIUM]
 
 What is the purpose of `kubectl cluster-info dump`?
@@ -2119,7 +2119,7 @@ D) Backup etcd
 
 ---
 
-### Question 192
+### Question 92
 [MEDIUM]
 
 How do you check if the API server is healthy?
@@ -2142,7 +2142,7 @@ D) kubectl cluster-info only
 
 ---
 
-### Question 193
+### Question 93
 [MEDIUM-HARD]
 
 What information does `kubectl get componentstatuses` provide?
@@ -2165,7 +2165,7 @@ D) Network component health
 
 ---
 
-### Question 194
+### Question 94
 [MEDIUM-HARD]
 
 How do you get detailed information about why a specific Pod is not being scheduled?
@@ -2188,7 +2188,7 @@ D) kubectl get events only
 
 ---
 
-### Question 195
+### Question 95
 [HARD]
 
 How do you enable verbose output for kubectl to debug API issues?
@@ -2211,7 +2211,7 @@ D) Set DEBUG=true environment variable
 
 ---
 
-### Question 196
+### Question 96
 [HARD]
 
 What does high "workqueue depth" in controller-manager metrics indicate?
@@ -2234,7 +2234,7 @@ D) Metrics are broken
 
 ---
 
-### Question 197
+### Question 97
 [HARD]
 
 How do you identify etcd performance issues affecting the cluster?
@@ -2257,7 +2257,7 @@ D) Check kubelet logs
 
 ---
 
-### Question 198
+### Question 98
 [HARD]
 
 What does the admission webhook timeout error indicate and how do you troubleshoot it?
@@ -2280,7 +2280,7 @@ D) RBAC issue
 
 ---
 
-### Question 199
+### Question 99
 [HARD]
 
 How do you trace the path of a request through the Kubernetes API server?
@@ -2303,7 +2303,7 @@ D) Use network packet capture
 
 ---
 
-### Question 200
+### Question 100
 [HARD]
 
 A cluster has intermittent API server errors. How do you identify if it's a specific control plane component issue?
