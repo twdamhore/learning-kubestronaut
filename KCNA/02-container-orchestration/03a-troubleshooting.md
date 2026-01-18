@@ -1874,6 +1874,17 @@ B) The container is restarted by kubelet
 C) The Pod is removed from Service endpoints
 D) Nothing happens
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a liveness probe fails (after failureThreshold consecutive failures), kubelet kills the container and restarts it according to the Pod's restartPolicy. Liveness probes detect if an application is stuck or deadlocked and need to be restarted to recover.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
 ---
 
 ### Question 82
@@ -1885,6 +1896,17 @@ A) The container is restarted
 B) The Pod is removed from Service endpoints but keeps running
 C) The Pod is deleted
 D) The node is marked unhealthy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a readiness probe fails, the Pod is removed from Service endpoints so it stops receiving traffic, but the container continues running. This is useful for temporarily unavailable applications (e.g., during initialization or maintenance). The Pod returns to Service endpoints when readiness succeeds again.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
 
 ---
 
@@ -1898,6 +1920,17 @@ B) Check probe configuration, test the probe endpoint manually, review container
 C) Increase memory limits
 D) Change the container image
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot probe-related restarts by: checking probe configuration in Pod spec, testing the probe endpoint manually using `kubectl exec` (curl, wget), reviewing container logs for application errors, checking Pod events for Unhealthy warnings with specific probe failure details, and verifying timing settings.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
 ---
 
 ### Question 84
@@ -1909,6 +1942,17 @@ A) Only network issues
 B) Application not ready, wrong port/path, timeout too short, or application crashes
 C) Only memory issues
 D) Only CPU issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Common probe failure causes include: application not listening on expected port/path, application still starting up (initialDelaySeconds too short), timeoutSeconds too short for slow responses, application crashed or hung, wrong HTTP scheme (http vs https), or the probe checking a dependent service that is unavailable.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
 
 ---
 
@@ -1922,6 +1966,17 @@ B) kubectl get pod <pod-name> -o yaml or kubectl describe pod <pod-name>
 C) kubectl probe <pod-name>
 D) kubectl health <pod-name>
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** View probe configuration with `kubectl get pod <pod-name> -o yaml` which shows the complete spec including livenessProbe, readinessProbe, and startupProbe settings. `kubectl describe pod` also shows this information in a more readable format along with current probe status in events.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
 ---
 
 ### Question 86
@@ -1933,6 +1988,17 @@ A) They are the same
 B) Startup probe failures delay liveness checks; liveness failures restart the container after startup succeeds
 C) Startup probes are only for init containers
 D) Liveness probes run before startup probes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Startup probes run first and disable liveness/readiness probes until they succeed, protecting slow-starting containers. Once startup succeeds, liveness probes take over. Startup probe failures result in container restart (like liveness), but they have separate timing configurations for long startup times.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
+
+</details>
 
 ---
 
@@ -1946,6 +2012,17 @@ B) Check Pod events for Unhealthy warnings, verify probe endpoints, and test man
 C) Restart the application
 D) Check node status
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify health check failures by: examining Pod events for "Unhealthy" warnings (which specify which probe failed and the error), verifying the probe endpoint responds correctly, using `kubectl exec` to test the endpoint from within the container, and checking container logs for application-level issues.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
 ---
 
 ### Question 88
@@ -1957,6 +2034,17 @@ A) The node is unhealthy
 B) A probe (liveness, readiness, or startup) failed for the container
 C) The Pod is being deleted
 D) The image is corrupted
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Unhealthy" events indicate a probe failure. The event message specifies which probe type failed (Liveness, Readiness, or Startup) and includes details like the HTTP response code or connection error. Multiple consecutive failures (failureThreshold) trigger the probe's action.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
 
 ---
 
@@ -1970,6 +2058,17 @@ B) Add a startup probe or increase initialDelaySeconds for the liveness probe
 C) Decrease the timeout
 D) Increase CPU limits only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For slow-starting containers, add a startup probe with generous timing to protect the container during initialization. Alternatively, increase initialDelaySeconds on the liveness probe. Startup probes are preferred as they disable liveness checks until startup succeeds, providing clearer separation of concerns.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
+
+</details>
+
 ---
 
 ### Question 90
@@ -1981,6 +2080,17 @@ A) Only the probe path
 B) initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold, and the probe endpoint
 C) Only the container port
 D) Only the image tag
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check all probe timing settings: initialDelaySeconds (time before first probe), periodSeconds (how often to probe), timeoutSeconds (how long to wait for response), failureThreshold (failures before action), and the actual probe endpoint (port, path, command). Also verify successThreshold for readiness probes.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
 
 ---
 
