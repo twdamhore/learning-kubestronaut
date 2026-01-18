@@ -733,16 +733,16 @@ D) Service doesn't exist
 How do you verify if a Service selector matches any Pods?
 
 A) kubectl describe service
-B) kubectl get endpoints <service-name>
+B) kubectl get pods -l <selector-labels>
 C) kubectl get pods --show-labels
-D) Both A and B work, but B shows actual Pod IPs
+D) kubectl get endpoints <service-name>
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** D
+**Answer:** B
 
-**Explanation:** `kubectl describe service` shows selector and endpoint IPs. `kubectl get endpoints <service-name>` directly shows which Pod IPs are registered as endpoints. If endpoints list is empty, the selector doesn't match any Ready Pods. Both work, but endpoints show concrete addresses.
+**Explanation:** To verify selector matching, use `kubectl get pods -l <selector>` which shows all Pods matching the selector regardless of Ready state. Endpoints (`kubectl get endpoints`) only include Ready Pods by default, so empty endpoints could mean Pods exist but aren't Ready, not that the selector doesn't match. Check selector first, then endpoints to verify Pod readiness.
 
 **Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 
@@ -1406,7 +1406,7 @@ D) Scale to 0
 What happens if a ConfigMap referenced by a Pod doesn't exist?
 
 A) Pod uses default values
-B) Pod fails to start with CreateContainerConfigError
+B) Pod won't start - behavior depends on usage type
 C) ConfigMap is created automatically
 D) Pod starts without the ConfigMap data
 
@@ -1415,7 +1415,7 @@ D) Pod starts without the ConfigMap data
 
 **Answer:** B
 
-**Explanation:** If a required ConfigMap doesn't exist, the Pod cannot start and shows `CreateContainerConfigError` status. This applies to ConfigMaps mounted as volumes or used for environment variables. Mark ConfigMap reference as optional to allow Pod startup without it.
+**Explanation:** If a required ConfigMap doesn't exist, the Pod won't start, but the behavior differs by usage: for ConfigMap volumes, the Pod stays Pending with mount errors; for environment variable references (envFrom or valueFrom), the container fails with `CreateContainerConfigError`. Mark ConfigMap reference as optional to allow Pod startup without it.
 
 **Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
