@@ -2106,6 +2106,17 @@ B) kubectl debug <pod-name> --image=<debug-image> --target=<container>
 C) kubectl attach --debug
 D) kubectl run --debug
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl debug <pod-name> --image=<debug-image> --target=<container>` to add an ephemeral container to a running Pod. The debug container shares the process namespace with the target container, allowing inspection with tools like strace or debuggers. The debug image should contain necessary troubleshooting tools.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container)
+
+</details>
+
 ---
 
 ### Question 92
@@ -2117,6 +2128,17 @@ A) To debug network issues only
 B) To create a privileged Pod for debugging node-level issues with host access
 C) To restart the node
 D) To view node metrics
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl debug node/<node-name>` creates a privileged Pod on the specified node with access to the host filesystem, network, and processes. This enables debugging node-level issues like filesystem problems, network configuration, or system service issues without direct SSH access.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#node-shell-session)
+
+</details>
 
 ---
 
@@ -2130,6 +2152,17 @@ B) Check CoreDNS pods, DNS policy, upstream DNS config, and network connectivity
 C) Delete the Pod
 D) Change the namespace
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For external DNS resolution issues: verify CoreDNS pods are running and healthy, check the Pod's dnsPolicy setting, verify CoreDNS Corefile has correct upstream DNS servers configured, test network connectivity to upstream DNS servers, and check for NetworkPolicies blocking DNS traffic to external servers.
+
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+
+</details>
+
 ---
 
 ### Question 94
@@ -2141,6 +2174,17 @@ A) Only kubectl logs
 B) tcpdump, wireshark, or similar tools via kubectl exec or ephemeral debug containers
 C) kubectl network capture
 D) kubectl debug --network
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Capture network traffic using tools like tcpdump via `kubectl exec` (if available in the container) or by adding an ephemeral debug container with network tools. You can also use `kubectl debug` with a debug image containing tcpdump. Copy capture files out using `kubectl cp` for analysis with Wireshark.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
 
 ---
 
@@ -2154,6 +2198,17 @@ B) Review historical logs, events, metrics, check for resource contention, and m
 C) Restart the cluster
 D) Delete and recreate the Pod
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot intermittent failures by: reviewing historical logs and events (including from previous container instances with `--previous`), analyzing metrics for patterns (resource spikes, timing), checking for resource contention, examining node health during failures, and setting up monitoring/alerting to capture issues when they occur.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
 ---
 
 ### Question 96
@@ -2165,6 +2220,17 @@ A) To specify where logs are stored
 B) To specify a file path where the container writes its termination message for debugging
 C) To configure graceful shutdown
 D) To set the termination grace period
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** terminationMessagePath specifies a file (default: /dev/termination-log) where the container can write a message before exiting. This message appears in the container's terminated state and `kubectl describe pod`. It's useful for providing custom error messages or diagnostic information when containers crash.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
+
+</details>
 
 ---
 
@@ -2178,6 +2244,17 @@ B) Configure the container to write core dumps to a volume, then analyze with de
 C) Core dumps are not supported
 D) Use kubectl describe only
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To analyze core dumps: configure the container's ulimit to allow core dumps, mount a PersistentVolume to store dumps, set the core_pattern to write to the volume, then retrieve the dump files and analyze with gdb or similar tools. Some debugging containers can also be attached to examine the crashed process.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
+
 ---
 
 ### Question 98
@@ -2189,6 +2266,17 @@ A) Skip init containers
 B) Check init container logs with kubectl logs <pod> -c <init-container>, review events and status
 C) Delete the Pod
 D) Restart the node
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot init containers by: checking their logs with `kubectl logs <pod> -c <init-container-name>`, reviewing Pod events for init container specific errors, checking the Pod status for which init container failed, and examining the init container's exit code and termination reason in `kubectl describe pod`.
+
+**Source:** [Debug Init Containers | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-init-containers/)
+
+</details>
 
 ---
 
@@ -2202,6 +2290,17 @@ B) Use kubectl auth can-i, check RoleBindings/ClusterRoleBindings, and review AP
 C) Restart the API server
 D) Delete all RBAC resources
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot RBAC issues by: using `kubectl auth can-i <verb> <resource> --as=<user>` to test permissions, listing RoleBindings/ClusterRoleBindings to verify the subject is bound, checking the referenced Role/ClusterRole has required permissions, and reviewing API server audit logs for denied requests and their details.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
 ---
 
 ### Question 100
@@ -2213,5 +2312,16 @@ A) Immediately restart everything
 B) Check Pod status, events, logs, resource usage, network connectivity, and probe health systematically
 C) Delete and recreate the deployment
 D) Scale down to zero replicas
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Systematic troubleshooting approach: 1) Check Pod status and phase, 2) Review events with kubectl describe, 3) Examine container logs, 4) Check resource usage vs limits, 5) Test network connectivity to the Pod, 6) Verify probe health, 7) Check dependent services. This methodical approach identifies the root cause without masking issues.
+
+**Source:** [Troubleshooting Applications | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/)
+
+</details>
 
 ---
