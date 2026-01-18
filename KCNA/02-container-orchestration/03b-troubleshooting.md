@@ -623,12 +623,22 @@ D) Change the schedule
 
 What happens when a namespace has no available ResourceQuota?
 
+A) All Pods are deleted
+B) Pods can be created without resource restrictions
+C) The namespace is deleted
+D) No Pods can be created
+
 ---
 
 ### Question 52
 [HARD]
 
 How do you check current resource usage against quotas?
+
+A) kubectl get pods only
+B) kubectl describe resourcequota <name> shows Used vs Hard limits
+C) kubectl top namespace
+D) kubectl quota status
 
 ---
 
@@ -637,12 +647,22 @@ How do you check current resource usage against quotas?
 
 What causes "exceeded quota" errors during Pod creation?
 
+A) Network issues
+B) Creating resources would exceed the namespace's ResourceQuota limits
+C) DNS failures
+D) API server issues
+
 ---
 
 ### Question 54
 [HARD]
 
 How do you troubleshoot LimitRange violations?
+
+A) Delete the LimitRange
+B) Check LimitRange settings and ensure Pod requests/limits comply with min/max constraints
+C) Increase node resources
+D) Change namespace
 
 ---
 
@@ -651,12 +671,22 @@ How do you troubleshoot LimitRange violations?
 
 What is the impact of deleting a namespace on its resources?
 
+A) Resources are orphaned
+B) All resources within the namespace are deleted
+C) Resources are moved to default namespace
+D) Only Pods are deleted
+
 ---
 
 ### Question 56
 [HARD]
 
 How do you identify pods consuming the most resources in a namespace?
+
+A) kubectl get pods only
+B) kubectl top pods -n <namespace> --sort-by=cpu or memory
+C) kubectl describe namespace
+D) kubectl logs namespace
 
 ---
 
@@ -665,12 +695,22 @@ How do you identify pods consuming the most resources in a namespace?
 
 What happens when a namespace is stuck in Terminating state?
 
+A) It will eventually delete
+B) Finalizers on resources are blocking deletion; identify and remove them
+C) Restart the API server
+D) Delete the cluster
+
 ---
 
 ### Question 58
 [HARD]
 
 How do you troubleshoot cross-namespace communication issues?
+
+A) Only check DNS
+B) Check NetworkPolicies, Service FQDN usage, and DNS resolution across namespaces
+C) Delete namespaces
+D) Restart all Pods
 
 ---
 
@@ -679,12 +719,22 @@ How do you troubleshoot cross-namespace communication issues?
 
 What causes namespace isolation to fail?
 
+A) Too many namespaces
+B) No NetworkPolicies applied, or NetworkPolicies misconfigured
+C) DNS issues only
+D) Resource quota issues
+
 ---
 
 ### Question 60
 [HARD]
 
 How do you verify ResourceQuota is correctly applied?
+
+A) kubectl get pods
+B) kubectl describe resourcequota and attempt to create resources exceeding limits
+C) kubectl validate quota
+D) kubectl test quota
 
 ---
 
@@ -695,12 +745,22 @@ How do you verify ResourceQuota is correctly applied?
 
 How do you diagnose slow API server responses?
 
+A) Restart the API server only
+B) Check API server metrics, audit logs, etcd latency, and request queuing
+C) Delete Pods only
+D) Increase node count
+
 ---
 
 ### Question 62
 [HARD]
 
 What metrics indicate control plane health issues?
+
+A) Pod count only
+B) API server request latency, etcd disk sync duration, scheduler queue depth, and controller work queue
+C) Node memory only
+D) Network throughput only
 
 ---
 
@@ -709,12 +769,22 @@ What metrics indicate control plane health issues?
 
 How do you troubleshoot leader election failures?
 
+A) Delete the leader
+B) Check component logs, verify connectivity between replicas, and check for network issues
+C) Restart all components
+D) Delete the cluster
+
 ---
 
 ### Question 64
 [HARD]
 
 What causes watch connection drops from the API server?
+
+A) Too many Pods
+B) Network issues, API server restarts, resource pressure, or client-side timeouts
+C) DNS failures only
+D) Storage issues only
 
 ---
 
@@ -723,12 +793,22 @@ What causes watch connection drops from the API server?
 
 How do you check for etcd cluster health?
 
+A) kubectl get etcd
+B) etcdctl endpoint health, member list, and check etcd metrics
+C) kubectl describe etcd
+D) kubectl logs etcd
+
 ---
 
 ### Question 66
 [HARD]
 
 What indicates etcd disk I/O problems?
+
+A) High CPU usage
+B) High disk sync duration metrics, slow writes, and backend commit latency
+C) Network errors only
+D) Memory pressure only
 
 ---
 
@@ -737,12 +817,22 @@ What indicates etcd disk I/O problems?
 
 How do you troubleshoot admission webhook failures?
 
+A) Delete all webhooks
+B) Check webhook pod health, network connectivity, timeout settings, and webhook logs
+C) Restart the API server only
+D) Delete namespaces
+
 ---
 
 ### Question 68
 [HARD]
 
 What causes "unable to retrieve container logs" errors?
+
+A) Pod is running normally
+B) Container not running, kubelet issues, or container runtime problems
+C) DNS failures only
+D) Network policies only
 
 ---
 
@@ -751,12 +841,22 @@ What causes "unable to retrieve container logs" errors?
 
 How do you diagnose controller reconciliation issues?
 
+A) Delete the controller
+B) Check controller-manager logs, look for reconciliation errors, and verify RBAC permissions
+C) Restart all Pods
+D) Delete the namespace
+
 ---
 
 ### Question 70
 [HARD]
 
 What should you check when Custom Resources are not being processed?
+
+A) Delete the CRD
+B) Verify operator/controller is running, check its logs, and verify CRD is installed correctly
+C) Restart the API server
+D) Delete all Custom Resources
 
 ---
 
@@ -767,12 +867,22 @@ What should you check when Custom Resources are not being processed?
 
 How do you troubleshoot sidecar container failures?
 
+A) Delete the Pod
+B) Check sidecar logs with -c flag, verify resource allocation, and check dependencies
+C) Remove the sidecar
+D) Restart the node
+
 ---
 
 ### Question 72
 [HARD]
 
 What causes init container ordering issues?
+
+A) Random scheduling
+B) Init containers run sequentially; a failure blocks subsequent containers
+C) Network issues only
+D) Memory issues only
 
 ---
 
@@ -781,6 +891,11 @@ What causes init container ordering issues?
 
 How do you identify which container is causing Pod restarts?
 
+A) kubectl logs only
+B) kubectl describe pod and check restartCount per container in containerStatuses
+C) kubectl top pod
+D) kubectl get events only
+
 ---
 
 ### Question 74
@@ -788,12 +903,22 @@ How do you identify which container is causing Pod restarts?
 
 What happens when containers share a volume incorrectly?
 
+A) The Pod fails immediately
+B) File conflicts, permission issues, or data corruption may occur
+C) The volume is automatically resized
+D) Containers are isolated automatically
+
 ---
 
 ### Question 75
 [HARD]
 
 How do you troubleshoot inter-container communication within a Pod?
+
+A) Check DNS only
+B) Containers share localhost; verify port bindings, check logs, and test with netstat/ss
+C) Check network policies
+D) Restart the Pod
 
 ---
 
