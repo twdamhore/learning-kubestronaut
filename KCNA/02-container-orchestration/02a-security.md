@@ -686,7 +686,7 @@ What Linux capabilities are dropped by the "restricted" Pod Security Standard?
 
 A) Only NET_RAW
 B) Only SYS_ADMIN
-C) ALL capabilities must be dropped; only NET_BIND_SERVICE may be added back
+C) ALL capabilities must be dropped; no capabilities may be added back
 D) No capabilities are dropped
 
 <details>
@@ -694,7 +694,7 @@ D) No capabilities are dropped
 
 **Answer:** C
 
-**Explanation:** The restricted Pod Security Standard requires that ALL capabilities be dropped via capabilities.drop. The only capability that may be added back is NET_BIND_SERVICE (to allow binding to privileged ports without full root). Any other capability in capabilities.add violates the restricted profile.
+**Explanation:** The restricted Pod Security Standard requires that ALL capabilities be dropped via capabilities.drop, and no capabilities may be added back (capabilities.add must be undefined/nil). This is more restrictive than the baseline profile, which allows adding certain safe capabilities like NET_BIND_SERVICE.
 
 **Source:** [Pod Security Standards | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 
