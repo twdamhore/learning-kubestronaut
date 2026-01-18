@@ -1,4 +1,4 @@
-# Troubleshooting - 100 MCQ Questions (Part B)
+# Troubleshooting - 100 MCQ Questions (Part B: Q101-200)
 
 **Domain:** Container Orchestration (28%)
 **Competency:** Troubleshooting
@@ -6,1671 +6,116 @@
 
 ---
 
-## Workload Troubleshooting
+## Pod Status and Lifecycle Issues
 
-### Question 1
+### Question 101
 [MEDIUM]
 
-What does it mean when a Deployment shows 0/3 ready replicas?
+What does the "Completed" status indicate for a Pod?
 
-A) The Deployment is being deleted
-B) None of the desired 3 Pods are in Ready state
-C) The Deployment is paused
-D) All Pods are running successfully
+A) The Pod crashed and cannot restart
+B) All containers in the Pod exited with exit code 0
+C) The Pod is waiting for resources
+D) The Pod has been marked for deletion
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The "0/3 ready replicas" means the Deployment wants 3 Pods but none are currently Ready. This could be due to Pods not yet created, Pods in Pending state, containers failing to start, or readiness probes failing. Check `kubectl describe deployment` and `kubectl get pods` to diagnose.
+**Explanation:** A Pod shows "Completed" status when all its containers have successfully terminated with exit code 0. This is common for Job Pods that run batch workloads. The Pod remains in this state until garbage collected or manually deleted.
 
-**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 
 </details>
 
 ---
 
-### Question 2
+### Question 102
 [MEDIUM]
 
-How do you check why a ReplicaSet is not creating Pods?
+Which field in Pod spec determines how many times a container restarts before giving up?
 
-A) kubectl logs replicaset
-B) kubectl describe replicaset <name> and check events
-C) kubectl get pods only
-D) kubectl debug replicaset
+A) restartLimit
+B) backoffLimit
+C) restartPolicy only controls restart behavior, not count
+D) maxRestartCount
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Use `kubectl describe replicaset <name>` to see events explaining why Pods aren't being created. Common issues include ResourceQuota limits, LimitRange violations, or Pod template problems. The Events section shows creation failures and their reasons.
+**Explanation:** The `restartPolicy` field (Always, OnFailure, Never) controls whether containers restart but doesn't limit the count. Kubernetes uses exponential backoff for restarts but doesn't stop after a fixed count. For Jobs, `backoffLimit` controls total Pod retry count, not container restarts.
 
-**Source:** [ReplicaSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy)
 
 </details>
 
 ---
 
-### Question 3
-[MEDIUM]
-
-What causes a Deployment rollout to be stuck?
-
-A) Too many replicas
-B) Pods failing readiness probes, insufficient resources, or image pull errors
-C) Network issues only
-D) API server overload only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** A stuck rollout occurs when new Pods cannot become Ready. Common causes include: Pods failing readiness probes, insufficient cluster resources to schedule Pods, image pull errors, or misconfigured Pod specs. Use `kubectl rollout status` and `kubectl describe pod` to diagnose.
-
-**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#failed-deployment)
-
-</details>
-
----
-
-### Question 4
-[MEDIUM]
-
-How do you view the revision history of a Deployment?
-
-A) kubectl get deployment --history
-B) kubectl rollout history deployment/<name>
-C) kubectl describe deployment --revisions
-D) kubectl logs deployment
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Use `kubectl rollout history deployment/<name>` to view revision history. Add `--revision=N` to see details of a specific revision. The history shows revision numbers and change causes, useful for understanding what changed and for rollback decisions.
-
-**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#checking-rollout-history-of-a-deployment)
-
-</details>
-
----
-
-### Question 5
-[MEDIUM]
-
-What does kubectl rollout undo do?
-
-A) Deletes the Deployment
-B) Rolls back to the previous revision of the Deployment
-C) Pauses the rollout
-D) Restarts all Pods
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** `kubectl rollout undo deployment/<name>` rolls back to the previous revision. Add `--to-revision=N` to roll back to a specific revision. This creates a new revision with the old Pod template, useful for recovering from failed deployments.
-
-**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment)
-
-</details>
-
----
-
-### Question 6
-[MEDIUM]
-
-How do you check the status of a DaemonSet?
-
-A) kubectl logs daemonset
-B) kubectl get daemonset and kubectl describe daemonset <name>
-C) kubectl status daemonset
-D) kubectl top daemonset
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Use `kubectl get daemonset` to see desired, current, ready, and available counts. Use `kubectl describe daemonset <name>` to see detailed status, node selection criteria, and events. The counts should match the number of eligible nodes.
-
-**Source:** [DaemonSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-
-</details>
-
----
-
-### Question 7
-[MEDIUM]
-
-What could cause a DaemonSet to not schedule Pods on all nodes?
-
-A) Too few nodes
-B) Node taints without tolerations, node selectors, or affinity rules
-C) Insufficient memory only
-D) Network issues only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** DaemonSets might not schedule on all nodes due to: node taints that the DaemonSet doesn't tolerate, nodeSelector limiting eligible nodes, or node affinity rules excluding nodes. Check `kubectl describe daemonset` for the node selector and tolerations.
-
-**Source:** [DaemonSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-
-</details>
-
----
-
-### Question 8
-[MEDIUM]
-
-How do you troubleshoot a StatefulSet with Pods stuck in Pending?
-
-A) Delete the StatefulSet
-B) Check PVC status, storage class, and Pod events for scheduling issues
-C) Increase replicas
-D) Change the service name
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** StatefulSet Pods stuck in Pending often relate to storage: PVCs not being bound due to no matching PV or StorageClass provisioning failures. StatefulSets create Pods sequentially, so check the first stuck Pod's events and its PVC status with `kubectl get pvc` and `kubectl describe pod`.
-
-**Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
-
-</details>
-
----
-
-### Question 9
-[MEDIUM]
-
-What is the purpose of checking the Pod template in a Deployment?
-
-A) To view running Pods
-B) To verify container specs, resource requests, and configuration that will be applied to new Pods
-C) To delete old Pods
-D) To scale the Deployment
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** The Pod template in a Deployment defines the spec for all Pods it creates. Checking it helps verify: container images, resource requests/limits, environment variables, volumes, and probes. Any misconfiguration here affects all Pods. View with `kubectl get deployment -o yaml`.
-
-**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
-
-</details>
-
----
-
-### Question 10
-[MEDIUM]
-
-How do you identify which ReplicaSet is active for a Deployment?
-
-A) kubectl get deployment only
-B) kubectl get replicasets -l app=<name> and check which has non-zero desired replicas
-C) kubectl describe pods
-D) kubectl logs deployment
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** A Deployment manages multiple ReplicaSets (one per revision). The active ReplicaSet has non-zero desired replicas while old ones have 0. Use `kubectl get replicasets -l app=<deployment-label>` to see all ReplicaSets and their replica counts to identify the current active one.
-
-**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
-
-</details>
-
----
-
-## Service Troubleshooting
-
-### Question 11
-[MEDIUM]
-
-What should you check first when a Service is not accessible?
-
-A) Node status only
-B) Service endpoints, Pod readiness, and selector matching
-C) API server logs only
-D) etcd health only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** When a Service is not accessible, first check: 1) `kubectl get endpoints` to see if there are backend Pods, 2) `kubectl get pods` to verify Pods are Ready, 3) Verify selector labels match. Empty endpoints usually means no Pods match the selector or Pods aren't Ready.
-
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
-
-</details>
-
----
-
-### Question 12
-[MEDIUM]
-
-How do you verify a Service selector matches Pod labels?
-
-A) kubectl get service only
-B) Compare kubectl describe service selector with kubectl get pods --show-labels
-C) kubectl test selector
-D) kubectl validate service
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** To verify selector matching: 1) `kubectl describe service <name>` shows the Selector field, 2) `kubectl get pods --show-labels` shows Pod labels. Compare them to ensure they match exactly. Even a small typo will prevent the Service from discovering Pods.
-
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
-
-</details>
-
----
-
-### Question 13
-[MEDIUM]
-
-What does kubectl get endpoints show for troubleshooting Services?
-
-A) Service configuration only
-B) The IP addresses and ports of Pods backing the Service
-C) Network policies
-D) Node information
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** `kubectl get endpoints <service-name>` shows the actual Pod IPs and ports that will receive traffic. If it shows `<none>`, no Pods match the selector or none are Ready. This is crucial for verifying that the Service has backend targets.
-
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
-
-</details>
-
----
-
-### Question 14
-[MEDIUM]
-
-How do you test internal Service connectivity?
-
-A) ping the Service
-B) kubectl exec into a Pod and use curl/wget to access the Service
-C) kubectl connect service
-D) kubectl test service
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Test Service connectivity by running `kubectl exec <pod> -- curl <service-name>:<port>` or `wget`. This tests both DNS resolution and actual connectivity. Services use TCP, so ping (ICMP) won't work. Test from within the cluster to verify internal networking.
-
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
-
-</details>
-
----
-
-### Question 15
-[MEDIUM]
-
-What could cause a LoadBalancer Service to stay in Pending state?
-
-A) Too many Pods
-B) Cloud provider integration issues or no LoadBalancer provisioner available
-C) DNS issues only
-D) Pod readiness failures only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** A LoadBalancer Service stays Pending when: the cluster isn't running on a cloud provider with LoadBalancer support, the cloud-controller-manager isn't configured, there's no MetalLB or similar on bare metal, or there are cloud API errors. Check `kubectl describe service` for events.
-
-**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer)
-
-</details>
-
----
-
-### Question 16
-[MEDIUM]
-
-How do you troubleshoot a NodePort Service that is not accessible?
-
-A) Check DNS only
-B) Verify firewall rules, node security groups, and that Pods are ready
-C) Restart kube-proxy only
-D) Delete the Service
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** For NodePort access issues: verify firewall/security groups allow the NodePort (30000-32767), ensure kube-proxy is running on nodes, check that Pods are Ready and endpoints exist. Test locally on the node first with `curl localhost:<nodeport>` to isolate network vs. service issues.
-
-**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
-
-</details>
-
----
-
-### Question 17
-[MEDIUM]
-
-What is the difference between ClusterIP and Endpoints in troubleshooting?
-
-A) They are the same
-B) ClusterIP is the Service virtual IP; Endpoints are actual Pod IPs that receive traffic
-C) ClusterIP is for external access
-D) Endpoints are always empty
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** ClusterIP is the stable virtual IP assigned to the Service. Endpoints are the actual Pod IPs and ports that receive traffic. Traffic to ClusterIP is forwarded to Endpoints by kube-proxy. If ClusterIP works but no response, check if Endpoints exist and Pods are responding.
-
-**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
-
-</details>
-
----
-
-### Question 18
-[MEDIUM]
-
-How do you check if kube-proxy is functioning correctly?
-
-A) kubectl get proxy
-B) Check kube-proxy pods/logs, and verify iptables/ipvs rules on nodes
-C) kubectl describe proxy
-D) kubectl test proxy
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Verify kube-proxy by: 1) `kubectl get pods -n kube-system -l k8s-app=kube-proxy` to check it's running, 2) Review kube-proxy logs for errors, 3) On nodes, check `iptables -L -t nat` or `ipvsadm -Ln` to verify Service rules exist. Missing rules indicate kube-proxy issues.
-
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
-
-</details>
-
----
-
-### Question 19
-[MEDIUM]
-
-What causes "connection refused" errors when accessing a Service?
-
-A) DNS issues only
-B) No Pods match the selector, Pods not ready, or application not listening on the port
-C) Network policy blocking
-D) kube-proxy failure only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** "Connection refused" typically means: nothing is listening on the target port. This occurs when: no endpoints exist (no matching Pods or Pods not Ready), or the application inside the container isn't listening on the expected port. Check endpoints and verify the app is running and bound to the correct port.
-
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
-
-</details>
-
----
-
-### Question 20
-[MEDIUM]
-
-How do you verify the targetPort configuration in a Service?
-
-A) kubectl get service only
-B) Check Service targetPort matches the port the application listens on in the container
-C) kubectl validate port
-D) kubectl test connection
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Verify targetPort by: 1) `kubectl describe service` to see the targetPort, 2) Check the Pod spec's containerPort or exec into the Pod and use `netstat -tlnp` or `ss -tlnp` to see what port the application is listening on. Mismatched ports cause connection failures.
-
-**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
-
-</details>
-
----
-
-## Ingress and External Access Troubleshooting
-
-### Question 21
+### Question 103
 [MEDIUM-HARD]
 
-What should you check when an Ingress is not routing traffic?
+A Pod shows status "Unknown". What is the most likely cause?
 
-A) Only Pod logs
-B) Ingress controller status, backend Service health, and Ingress configuration
-C) Only DNS settings
-D) Only node status
+A) The container image doesn't exist
+B) Node running the Pod has lost contact with the control plane
+C) The Pod spec is invalid
+D) ResourceQuota is exceeded
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** When Ingress is not routing traffic, check: 1) Ingress controller Pods are running and healthy, 2) Backend Services have endpoints (Pods are Ready), 3) Ingress rules are correctly configured with matching hosts/paths, 4) `kubectl describe ingress` for events and status.
+**Explanation:** "Unknown" status typically means the node running the Pod cannot be contacted. This occurs when the node loses network connectivity, crashes, or the kubelet stops reporting. The control plane cannot determine the actual Pod state, so it reports Unknown.
 
-**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase)
 
 </details>
 
 ---
 
-### Question 22
+### Question 104
 [MEDIUM-HARD]
 
-How do you verify the Ingress controller is running?
+What happens to Pods in "Pending" state when the node they were scheduled to is removed?
 
-A) kubectl get ingress only
-B) kubectl get pods -n <ingress-controller-namespace> and check controller logs
-C) kubectl describe ingress only
-D) kubectl test ingress
+A) They automatically move to another node
+B) They stay Pending with the original node assignment
+C) They return to unscheduled Pending state for rescheduling
+D) They immediately fail and need recreation
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Verify the Ingress controller by: 1) Check controller Pods are Running: `kubectl get pods -n ingress-nginx` (namespace varies by controller), 2) Review logs: `kubectl logs -n ingress-nginx <controller-pod>`, 3) Check for configuration reload errors or backend connectivity issues in logs.
+**Explanation:** When a node is removed, Pods that were scheduled to it but not yet running (Pending) return to an unscheduled state. The scheduler then attempts to place them on another suitable node. Already-running Pods follow different eviction/deletion rules.
 
-**Source:** [Ingress Controllers | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)
+**Source:** [Assigning Pods to Nodes | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
 </details>
 
 ---
 
-### Question 23
-[MEDIUM-HARD]
-
-What could cause a 404 error when accessing an Ingress path?
-
-A) TLS issues only
-B) Path not matching rules, backend Service not found, or no Pods ready
-C) DNS issues only
-D) Network policy blocking
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** A 404 error from Ingress typically means: 1) Request path doesn't match any Ingress rules (check pathType: Prefix vs Exact), 2) Backend Service doesn't exist or is misconfigured, 3) Service has no endpoints (no Ready Pods). Use `kubectl describe ingress` and `kubectl get endpoints` to diagnose.
-
-**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
-
-</details>
-
----
-
-### Question 24
-[MEDIUM-HARD]
-
-How do you troubleshoot TLS certificate issues in Ingress?
-
-A) Ignore TLS errors
-B) Verify Secret exists, contains valid cert/key, and is referenced correctly in Ingress
-C) Delete the Ingress
-D) Restart the API server
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot TLS issues by: 1) Verify Secret exists in same namespace: `kubectl get secret <tls-secret>`, 2) Ensure Secret type is `kubernetes.io/tls` with `tls.crt` and `tls.key`, 3) Check Ingress references correct Secret name, 4) Verify certificate validity with `openssl x509 -in tls.crt -text`.
-
-**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls)
-
-</details>
-
----
-
-### Question 25
-[MEDIUM-HARD]
-
-What does the Ingress ADDRESS field indicate?
-
-A) The internal cluster IP
-B) The external IP or hostname where the Ingress is accessible
-C) The backend Service IP
-D) The Pod IP
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** The ADDRESS field in `kubectl get ingress` shows the external IP or hostname assigned by the Ingress controller for external access. If empty, the controller hasn't assigned an address yet (common with pending LoadBalancer). This is the entry point for external traffic to reach the Ingress.
-
-**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
-
-</details>
-
----
-
-### Question 26
-[MEDIUM-HARD]
-
-How do you check Ingress controller logs for routing issues?
-
-A) kubectl logs ingress
-B) kubectl logs -n <ingress-namespace> <ingress-controller-pod>
-C) kubectl describe ingress only
-D) kubectl get events only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Access Ingress controller logs with: `kubectl logs -n <namespace> <controller-pod>`. For nginx-ingress: `kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx`. Logs show upstream connection errors, configuration reloads, and routing decisions helpful for diagnosing issues.
-
-**Source:** [Ingress Controllers | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)
-
-</details>
-
----
-
-### Question 27
-[MEDIUM-HARD]
-
-What causes "502 Bad Gateway" errors in Ingress?
-
-A) DNS issues only
-B) Backend Service or Pods not responding, or misconfigured health checks
-C) TLS errors only
-D) Path configuration only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** "502 Bad Gateway" means the Ingress controller couldn't get a response from the backend. Common causes: 1) Backend Pods not Ready or crashing, 2) Service endpoints empty, 3) Application not responding on the targetPort, 4) Health check failures. Check `kubectl get endpoints` and Pod status.
-
-**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
-
-</details>
-
----
-
-### Question 28
-[MEDIUM-HARD]
-
-How do you verify backend Service health from the Ingress perspective?
-
-A) Check Ingress status only
-B) Verify Service endpoints exist and Pods are ready and responding
-C) Check node status only
-D) Restart the Ingress controller
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Verify backend health by: 1) `kubectl get endpoints <service>` to confirm Pod IPs exist, 2) `kubectl get pods` to check Pods are Ready, 3) Test backend directly: `kubectl exec <debug-pod> -- curl <service>:<port>`. The Ingress controller only routes to healthy backends.
-
-**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
-
-</details>
-
----
-
-### Question 29
-[MEDIUM-HARD]
-
-What should you check when Ingress annotations are not working?
-
-A) Pod logs only
-B) Verify annotation syntax, check controller supports the annotation, and review controller logs
-C) DNS settings only
-D) Service configuration only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** When annotations don't work: 1) Verify annotation key syntax matches your controller (e.g., `nginx.ingress.kubernetes.io/` for nginx-ingress), 2) Confirm controller version supports the annotation, 3) Check controller logs for configuration errors or warnings about unknown annotations.
-
-**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/)
-
-</details>
-
----
-
-### Question 30
-[MEDIUM-HARD]
-
-How do you troubleshoot path-based routing in Ingress?
-
-A) Check DNS only
-B) Verify path rules, pathType setting, and test with exact paths matching the configuration
-C) Restart all Pods
-D) Delete the Ingress
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot path routing by: 1) Review pathType: `Prefix` matches path prefixes, `Exact` requires exact match, `ImplementationSpecific` depends on controller, 2) Check path order (more specific rules first), 3) Test with curl using exact paths, 4) Review controller logs for routing decisions.
-
-**Source:** [Ingress | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types)
-
-</details>
-
----
-
-## ConfigMap and Secret Troubleshooting
-
-### Question 31
-[MEDIUM-HARD]
-
-What happens when a Pod references a non-existent ConfigMap?
-
-A) The Pod uses default values
-B) The Pod fails to start and shows a warning event
-C) The Pod starts without the ConfigMap
-D) The ConfigMap is created automatically
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** When a Pod references a non-existent ConfigMap (required by default), the Pod fails to start and stays in `ContainerCreating` state. Events show "configmap not found" warnings. Use `optional: true` in the volume/env source if the ConfigMap should be optional.
-
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
-
-</details>
-
----
-
-### Question 32
-[MEDIUM-HARD]
-
-How do you troubleshoot environment variables not being set from ConfigMaps?
-
-A) Restart the cluster
-B) Verify ConfigMap exists, check envFrom/env syntax, and exec into Pod to check env vars
-C) Delete the Pod only
-D) Check node status only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot ConfigMap env vars by: 1) Verify ConfigMap exists: `kubectl get configmap`, 2) Check Pod spec syntax for `envFrom` or `env.valueFrom.configMapKeyRef`, 3) Exec into Pod: `kubectl exec <pod> -- env | grep KEY`, 4) Note: env vars require Pod restart to update.
-
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#configmaps-and-pods)
-
-</details>
-
----
-
-### Question 33
-[MEDIUM-HARD]
-
-What causes volume mount failures for ConfigMaps?
-
-A) Network issues only
-B) ConfigMap not found, incorrect mount path, or permission issues
-C) CPU limits only
-D) Memory limits only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** ConfigMap volume mount failures occur when: 1) ConfigMap doesn't exist in the namespace, 2) Mount path conflicts with existing directory or file, 3) Volume name mismatch between `volumes` and `volumeMounts`, 4) File permissions prevent reading. Check events with `kubectl describe pod`.
-
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#using-configmaps-as-files-from-a-pod)
-
-</details>
-
----
-
-### Question 34
-[MEDIUM-HARD]
-
-How do you check if a Secret was correctly mounted in a container?
-
-A) kubectl describe secret only
-B) kubectl exec into the Pod and check the mount path contents
-C) kubectl get secret only
-D) kubectl logs only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Verify Secret mounts by: `kubectl exec <pod> -- ls /path/to/secret` to see files (each key becomes a file), and `kubectl exec <pod> -- cat /path/to/secret/<key>` to view contents. Secrets are mounted as tmpfs and each data key becomes a file with its value as contents.
-
-**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-files-from-a-pod)
-
-</details>
-
----
-
-### Question 35
-[MEDIUM-HARD]
-
-What is the impact of updating a ConfigMap on running Pods?
-
-A) Pods restart automatically
-B) Volume-mounted ConfigMaps update automatically; env vars require Pod restart
-C) No impact at all
-D) Pods are deleted
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** When ConfigMaps are updated: 1) Volume-mounted ConfigMaps are automatically updated by kubelet (with sync period delay), 2) Environment variables from ConfigMaps are NOT updated until Pod restart. SubPath volume mounts also don't receive automatic updates.
-
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#mounted-configmaps-are-updated-automatically)
-
-</details>
-
----
-
-### Question 36
-[MEDIUM-HARD]
-
-How do you troubleshoot imagePullSecrets issues?
-
-A) Delete the image
-B) Verify Secret exists, is type kubernetes.io/dockerconfigjson, and is referenced correctly
-C) Restart kubelet only
-D) Change the image registry
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot imagePullSecrets by: 1) Verify Secret exists: `kubectl get secret <name>`, 2) Check type is `kubernetes.io/dockerconfigjson`, 3) Ensure Secret is in same namespace as Pod, 4) Verify `imagePullSecrets` references correct Secret name, 5) Check credentials are valid for the registry.
-
-**Source:** [Pull an Image from a Private Registry | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
-
-</details>
-
----
-
-### Question 37
-[MEDIUM-HARD]
-
-What could cause "secret not found" errors during Pod creation?
-
-A) Network issues only
-B) Secret doesn't exist, is in a different namespace, or name is misspelled
-C) CPU limits only
-D) Memory limits only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** "Secret not found" errors occur when: 1) Secret doesn't exist in the cluster, 2) Secret is in a different namespace (Secrets are namespace-scoped), 3) Secret name is misspelled in Pod spec. Verify with `kubectl get secret <name> -n <namespace>` and check spelling carefully.
-
-**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/)
-
-</details>
-
----
-
-### Question 38
-[MEDIUM-HARD]
-
-How do you verify the contents of a mounted ConfigMap?
-
-A) kubectl describe configmap only
-B) kubectl exec <pod> -- cat /path/to/mounted/file
-C) kubectl logs only
-D) kubectl get configmap only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Verify mounted ConfigMap contents by execing into the Pod: `kubectl exec <pod> -- cat /path/to/mounted/file`. This shows the actual data available to the application. Compare with `kubectl get configmap <name> -o yaml` to ensure data matches expectations.
-
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
-
-</details>
-
----
-
-### Question 39
-[MEDIUM-HARD]
-
-What happens when a ConfigMap used as a volume is deleted?
-
-A) The Pod continues with cached data
-B) The mounted files disappear, potentially causing application errors
-C) The Pod is automatically deleted
-D) A new ConfigMap is created
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** When a ConfigMap is deleted, volume-mounted files become unavailable. The mounted directory may become empty or inaccessible. Applications reading from the mount path will encounter errors. The Pod itself continues running but may fail if it depends on the ConfigMap data.
-
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
-
-</details>
-
----
-
-### Question 40
-[MEDIUM-HARD]
-
-How do you troubleshoot subPath mount issues with ConfigMaps?
-
-A) Delete the ConfigMap
-B) Verify subPath matches a key in the ConfigMap and check mount path is correct
-C) Increase volume size
-D) Change storage class
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** For subPath issues: 1) Verify `subPath` value exactly matches a key in the ConfigMap, 2) Ensure `mountPath` is the full file path (not directory), 3) Note: subPath mounts don't receive automatic updates when ConfigMap changes. Check Pod events for mount errors.
-
-**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#using-configmaps-as-files-from-a-pod)
-
-</details>
-
----
-
-## Job and CronJob Troubleshooting
-
-### Question 41
+### Question 105
 [HARD]
 
-What does a Job status of "1/1 Completions" indicate?
+A Pod transitions directly from "Pending" to "Failed" without ever being "Running". Which scenario causes this?
 
-A) The Job failed
-B) One Pod completed successfully out of one required completion
-C) The Job is still running
-D) The Job was deleted
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** "1/1 Completions" means the Job required 1 successful Pod completion and 1 has completed. The format is "current/desired". A Job is considered complete when all required completions are successful. Use `kubectl get jobs` to view this status.
-
-**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
-
-</details>
-
----
-
-### Question 42
-[HARD]
-
-How do you troubleshoot a Job that keeps creating new Pods?
-
-A) Delete the Job only
-B) Check Pod exit codes, review restartPolicy, and examine backoffLimit settings
-C) Increase parallelism
-D) Change the image
+A) Image pull failure after multiple retries
+B) Init container exits with non-zero code before main container starts
+C) Node pressure eviction
+D) Container OOMKilled
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Jobs create new Pods when previous ones fail. Troubleshoot by: 1) Check Pod exit codes with `kubectl describe pod`, 2) Review application logs for errors, 3) Verify restartPolicy is Never or OnFailure, 4) Check backoffLimit (default 6) hasn't been reached. Address the root cause of failures.
-
-**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#pod-backoff-failure-policy)
-
-</details>
-
----
-
-### Question 43
-[HARD]
-
-What causes a Job to reach its backoffLimit?
-
-A) Successful completion
-B) Pods failing repeatedly until the retry limit is reached
-C) Too many completions
-D) Network issues only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** backoffLimit specifies the number of retries before marking a Job as failed. When Pods exit with non-zero status or fail to start, the Job controller retries up to backoffLimit times (default 6). Once reached, the Job is marked as Failed. Check `kubectl describe job` for failure counts.
-
-**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#pod-backoff-failure-policy)
-
-</details>
-
----
-
-### Question 44
-[HARD]
-
-How do you check why a CronJob is not triggering?
-
-A) Check Pod logs only
-B) Verify schedule syntax, check CronJob status and events, and ensure it's not suspended
-C) Restart the API server
-D) Delete the namespace
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot CronJob triggers by: 1) Verify schedule syntax is valid cron format, 2) Check `kubectl describe cronjob` for events and Last Schedule Time, 3) Ensure `suspend: false`, 4) Check for startingDeadlineSeconds issues, 5) Verify the cronjob controller is running in kube-system.
-
-**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
-
-</details>
-
----
-
-### Question 45
-[HARD]
-
-What does the "Suspend" field in CronJob do?
-
-A) Pauses running Jobs
-B) Prevents new Job creation from the CronJob while set to true
-C) Deletes the CronJob
-D) Increases concurrency
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** When `suspend: true`, the CronJob controller stops creating new Jobs at scheduled times. Already-running Jobs continue to completion. Set `suspend: false` to resume scheduling. This is useful for temporarily pausing scheduled work without deleting the CronJob configuration.
-
-**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
-
-</details>
-
----
-
-### Question 46
-[HARD]
-
-How do you troubleshoot overlapping CronJob executions?
-
-A) Increase parallelism
-B) Check concurrencyPolicy setting and adjust schedule or job duration
-C) Delete all Jobs
-D) Change the namespace
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Use concurrencyPolicy to control overlapping: `Allow` (default) allows concurrent Jobs, `Forbid` skips new Jobs if previous is running, `Replace` cancels current Job and starts new one. If Jobs overlap unexpectedly, adjust the schedule or optimize Job duration to complete before next trigger.
-
-**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#concurrency-policy)
-
-</details>
-
----
-
-### Question 47
-[HARD]
-
-What is the purpose of activeDeadlineSeconds in Jobs?
-
-A) To set the retry limit
-B) To set maximum time a Job can run before being terminated
-C) To set parallelism
-D) To set completions count
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** activeDeadlineSeconds sets the maximum duration for a Job. If the Job runs longer, it's terminated and marked as Failed with reason DeadlineExceeded. This applies to all Pods in aggregate. Use this to prevent runaway Jobs from consuming resources indefinitely.
-
-**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#job-termination-and-cleanup)
-
-</details>
-
----
-
-### Question 48
-[HARD]
-
-How do you identify failed Job Pods?
-
-A) kubectl get jobs only
-B) kubectl get pods --selector=job-name=<job> and check for Failed status
-C) kubectl logs job only
-D) kubectl describe job only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Find failed Job Pods with: `kubectl get pods --selector=job-name=<job-name>` to list all Pods for the Job. Check for Failed or Error status. Then `kubectl logs <pod-name>` or `kubectl describe pod <pod-name>` to see failure details and exit codes.
-
-**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
-
-</details>
-
----
-
-### Question 49
-[HARD]
-
-What causes "Too many missed start times" in CronJobs?
-
-A) Too many completions
-B) CronJob controller was unable to create Jobs for multiple scheduled times
-C) Network issues only
-D) Memory pressure only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** This occurs when more than 100 missed schedules accumulate (e.g., controller was down or CronJob suspended). The CronJob stops and logs this error. To recover, update the CronJob (even a no-op change) to reset the missed schedule counter, or delete and recreate it.
-
-**Source:** [CronJob | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#cron-job-limitations)
-
-</details>
-
----
-
-### Question 50
-[HARD]
-
-How do you troubleshoot a Job with parallelism issues?
-
-A) Delete all Pods
-B) Check parallelism and completions settings, verify resources are available for parallel Pods
-C) Increase backoffLimit
-D) Change the schedule
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot parallelism by: 1) Check `parallelism` value in Job spec, 2) Verify enough cluster resources (CPU, memory) for parallel Pods, 3) Check ResourceQuota limits in namespace, 4) Review `completions` setting for indexed vs non-indexed Jobs. Pods pending due to resources limit effective parallelism.
-
-**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/#parallel-jobs)
-
-</details>
-
----
-
-## Namespace and Resource Quota Issues
-
-### Question 51
-[HARD]
-
-What happens when a namespace has no available ResourceQuota?
-
-A) All Pods are deleted
-B) Pods can be created without resource restrictions
-C) The namespace is deleted
-D) No Pods can be created
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Without ResourceQuota, there are no namespace-level resource restrictions. Pods can be created freely limited only by cluster capacity. To enforce limits, create a ResourceQuota. Note: LimitRange can still apply per-Pod defaults even without ResourceQuota.
-
-**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
-
-</details>
-
----
-
-### Question 52
-[HARD]
-
-How do you check current resource usage against quotas?
-
-A) kubectl get pods only
-B) kubectl describe resourcequota <name> shows Used vs Hard limits
-C) kubectl top namespace
-D) kubectl quota status
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Use `kubectl describe resourcequota <name> -n <namespace>` to see Used and Hard columns. Used shows current consumption; Hard shows the limits. If Used approaches Hard, new resource creation may be blocked. Also `kubectl get resourcequota -n <namespace>` shows a summary.
-
-**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
-
-</details>
-
----
-
-### Question 53
-[HARD]
-
-What causes "exceeded quota" errors during Pod creation?
-
-A) Network issues
-B) Creating resources would exceed the namespace's ResourceQuota limits
-C) DNS failures
-D) API server issues
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** "Exceeded quota" occurs when creating a resource would exceed ResourceQuota limits (CPU, memory, Pod count, etc.). Check quota usage with `kubectl describe resourcequota`. Solutions: delete unused resources, request quota increase, or reduce resource requests in Pod specs.
-
-**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
-
-</details>
-
----
-
-### Question 54
-[HARD]
-
-How do you troubleshoot LimitRange violations?
-
-A) Delete the LimitRange
-B) Check LimitRange settings and ensure Pod requests/limits comply with min/max constraints
-C) Increase node resources
-D) Change namespace
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** LimitRange violations occur when Pod specs exceed min/max constraints. Check with `kubectl describe limitrange -n <namespace>` to see min, max, and default values. Adjust Pod resource requests/limits to fall within the allowed range, or modify the LimitRange if appropriate.
-
-**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
-
-</details>
-
----
-
-### Question 55
-[HARD]
-
-What is the impact of deleting a namespace on its resources?
-
-A) Resources are orphaned
-B) All resources within the namespace are deleted
-C) Resources are moved to default namespace
-D) Only Pods are deleted
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Deleting a namespace triggers cascading deletion of all namespace-scoped resources: Pods, Services, ConfigMaps, Secrets, Deployments, etc. This is irreversible. The namespace enters Terminating state until all resources are deleted. Always backup important resources before namespace deletion.
-
-**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-
-</details>
-
----
-
-### Question 56
-[HARD]
-
-How do you identify pods consuming the most resources in a namespace?
-
-A) kubectl get pods only
-B) kubectl top pods -n <namespace> --sort-by=cpu or memory
-C) kubectl describe namespace
-D) kubectl logs namespace
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Use `kubectl top pods -n <namespace> --sort-by=cpu` or `--sort-by=memory` to see actual resource consumption. Requires metrics-server installed. This shows current usage, not requests/limits. Identify resource-heavy Pods for optimization or quota compliance.
-
-**Source:** [Tools for Monitoring Resources | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
-
-</details>
-
----
-
-### Question 57
-[HARD]
-
-What happens when a namespace is stuck in Terminating state?
-
-A) It will eventually delete
-B) Finalizers on resources are blocking deletion; identify and remove them
-C) Restart the API server
-D) Delete the cluster
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Namespaces stuck in Terminating usually have resources with finalizers that can't complete. Identify stuck resources: `kubectl api-resources --namespaced -o name | xargs -n1 kubectl get -n <ns>`. Remove problematic finalizers carefully, or address the underlying issue (e.g., orphaned custom resources).
-
-**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-
-</details>
-
----
-
-### Question 58
-[HARD]
-
-How do you troubleshoot cross-namespace communication issues?
-
-A) Only check DNS
-B) Check NetworkPolicies, Service FQDN usage, and DNS resolution across namespaces
-C) Delete namespaces
-D) Restart all Pods
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Cross-namespace issues: 1) Use FQDN: `service.namespace.svc.cluster.local`, 2) Check NetworkPolicies in both namespaces may block traffic, 3) Verify DNS works: `kubectl exec <pod> -- nslookup service.namespace`. Default allows cross-namespace traffic unless NetworkPolicies restrict it.
-
-**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
-
-</details>
-
----
-
-### Question 59
-[HARD]
-
-What causes namespace isolation to fail?
-
-A) Too many namespaces
-B) No NetworkPolicies applied, or NetworkPolicies misconfigured
-C) DNS issues only
-D) Resource quota issues
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** By default, Kubernetes has no network isolation between namespaces. To achieve isolation, apply NetworkPolicies. If isolation fails: 1) Verify NetworkPolicies exist and have correct podSelector, 2) Ensure CNI plugin supports NetworkPolicy, 3) Check egress/ingress rules don't have overly permissive selectors.
-
-**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
-
-</details>
-
----
-
-### Question 60
-[HARD]
-
-How do you verify ResourceQuota is correctly applied?
-
-A) kubectl get pods
-B) kubectl describe resourcequota and attempt to create resources exceeding limits
-C) kubectl validate quota
-D) kubectl test quota
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Verify ResourceQuota by: 1) `kubectl describe resourcequota -n <namespace>` to see current usage and limits, 2) Attempt to create a resource exceeding the quota - it should be rejected with "exceeded quota" error. This confirms the quota admission controller is enforcing limits.
-
-**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
-
-</details>
-
----
-
-## Cluster Component Diagnostics
-
-### Question 61
-[HARD]
-
-How do you diagnose slow API server responses?
-
-A) Restart the API server only
-B) Check API server metrics, audit logs, etcd latency, and request queuing
-C) Delete Pods only
-D) Increase node count
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Diagnose slow API server by: 1) Check `apiserver_request_duration_seconds` metrics, 2) Review audit logs for expensive requests, 3) Check etcd latency (slow etcd = slow API), 4) Monitor request queue depth and rate limiting. Common causes: large list requests, etcd issues, or resource contention.
-
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
-
-</details>
-
----
-
-### Question 62
-[HARD]
-
-What metrics indicate control plane health issues?
-
-A) Pod count only
-B) API server request latency, etcd disk sync duration, scheduler queue depth, and controller work queue
-C) Node memory only
-D) Network throughput only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Key control plane metrics: 1) API server: request latency, error rates, 2) etcd: disk sync duration, backend commit latency, 3) Scheduler: scheduling latency, pending pods queue depth, 4) Controller-manager: work queue depth, reconciliation errors. Monitor these for early warning of issues.
-
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
-
-</details>
-
----
-
-### Question 63
-[HARD]
-
-How do you troubleshoot leader election failures?
-
-A) Delete the leader
-B) Check component logs, verify connectivity between replicas, and check for network issues
-C) Restart all components
-D) Delete the cluster
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Leader election issues: 1) Check component logs for election timeout errors, 2) Verify network connectivity between replicas, 3) Check lease objects: `kubectl get lease -n kube-system`, 4) Look for clock skew between nodes, 5) Verify API server accessibility from components.
-
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
-
-</details>
-
----
-
-### Question 64
-[HARD]
-
-What causes watch connection drops from the API server?
-
-A) Too many Pods
-B) Network issues, API server restarts, resource pressure, or client-side timeouts
-C) DNS failures only
-D) Storage issues only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Watch disconnections occur due to: 1) Network interruptions between client and API server, 2) API server restarts or leader changes, 3) Resource pressure causing connection drops, 4) Client timeout settings too aggressive. Controllers should handle reconnection gracefully with exponential backoff.
-
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
-
-</details>
-
----
-
-### Question 65
-[HARD]
-
-How do you check for etcd cluster health?
-
-A) kubectl get etcd
-B) etcdctl endpoint health, member list, and check etcd metrics
-C) kubectl describe etcd
-D) kubectl logs etcd
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Check etcd health with etcdctl: 1) `etcdctl endpoint health` for quick health check, 2) `etcdctl member list` to verify all members, 3) `etcdctl endpoint status` for detailed status. Also monitor etcd metrics like `etcd_disk_backend_commit_duration_seconds` for performance issues.
-
-**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
-
-</details>
-
----
-
-### Question 66
-[HARD]
-
-What indicates etcd disk I/O problems?
-
-A) High CPU usage
-B) High disk sync duration metrics, slow writes, and backend commit latency
-C) Network errors only
-D) Memory pressure only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** etcd disk I/O issues show: 1) High `etcd_disk_wal_fsync_duration_seconds`, 2) High `etcd_disk_backend_commit_duration_seconds`, 3) Warning logs about slow fdatasync. etcd requires fast disk I/O (SSD recommended). Slow disks cause API server timeouts and cluster instability.
-
-**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
-
-</details>
-
----
-
-### Question 67
-[HARD]
-
-How do you troubleshoot admission webhook failures?
-
-A) Delete all webhooks
-B) Check webhook pod health, network connectivity, timeout settings, and webhook logs
-C) Restart the API server only
-D) Delete namespaces
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot admission webhooks: 1) Check webhook Pod is running and ready, 2) Verify network: API server must reach webhook Service, 3) Check timeout settings (default 10s may be too short), 4) Review webhook logs for errors, 5) Check failurePolicy (Fail vs Ignore) for impact assessment.
-
-**Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
-
-</details>
-
----
-
-### Question 68
-[HARD]
-
-What causes "unable to retrieve container logs" errors?
-
-A) Pod is running normally
-B) Container not running, kubelet issues, or container runtime problems
-C) DNS failures only
-D) Network policies only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** "Unable to retrieve logs" occurs when: 1) Container hasn't started or has completed, 2) Kubelet can't access the container runtime, 3) Container runtime (containerd/CRI-O) issues, 4) Log files don't exist or are inaccessible. Check `kubectl describe pod` for container state and node kubelet logs.
-
-**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
-
-</details>
-
----
-
-### Question 69
-[HARD]
-
-How do you diagnose controller reconciliation issues?
-
-A) Delete the controller
-B) Check controller-manager logs, look for reconciliation errors, and verify RBAC permissions
-C) Restart all Pods
-D) Delete the namespace
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Diagnose reconciliation by: 1) Check kube-controller-manager logs for errors, 2) Look for "unable to sync" or RBAC denied messages, 3) Verify ServiceAccount has required permissions, 4) Check work queue metrics for stuck items, 5) Review resource events for controller-generated errors.
-
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
-
-</details>
-
----
-
-### Question 70
-[HARD]
-
-What should you check when Custom Resources are not being processed?
-
-A) Delete the CRD
-B) Verify operator/controller is running, check its logs, and verify CRD is installed correctly
-C) Restart the API server
-D) Delete all Custom Resources
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** When CRs aren't processed: 1) Verify the operator/controller Pod is running, 2) Check controller logs for reconciliation errors, 3) Ensure CRD is installed: `kubectl get crd`, 4) Verify RBAC permissions for the controller, 5) Check CR status field for condition messages from the controller.
-
-**Source:** [Custom Resources | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-
-</details>
-
----
-
-## Multi-Container Pod Issues
-
-### Question 71
-[HARD]
-
-How do you troubleshoot sidecar container failures?
-
-A) Delete the Pod
-B) Check sidecar logs with -c flag, verify resource allocation, and check dependencies
-C) Remove the sidecar
-D) Restart the node
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot sidecars by: 1) `kubectl logs <pod> -c <sidecar-name>` for specific container logs, 2) `kubectl describe pod` to check container status and events, 3) Verify resource requests/limits aren't too restrictive, 4) Check if sidecar depends on main container or services that aren't ready.
-
-**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
-
-</details>
-
----
-
-### Question 72
-[HARD]
-
-What causes init container ordering issues?
-
-A) Random scheduling
-B) Init containers run sequentially; a failure blocks subsequent containers
-C) Network issues only
-D) Memory issues only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Init containers run sequentially in order defined. Each must complete successfully before the next starts. If one fails, the Pod stays in Init state and that container restarts with backoff. Check `kubectl describe pod` for init container status and `kubectl logs <pod> -c <init-container>` for errors.
+**Explanation:** When an init container fails (exits with non-zero code) and the Pod has `restartPolicy: Never`, the Pod transitions to Failed without the main containers ever running. Image pull failures keep the Pod in Pending. Node pressure eviction and OOMKill require the container to be running first.
 
 **Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 
@@ -1678,185 +123,1740 @@ D) Memory issues only
 
 ---
 
-### Question 73
+### Question 106
 [HARD]
 
-How do you identify which container is causing Pod restarts?
+What is the significance of the "deletionTimestamp" field on a Pod object?
 
-A) kubectl logs only
-B) kubectl describe pod and check restartCount per container in containerStatuses
-C) kubectl top pod
-D) kubectl get events only
+A) When the Pod was created
+B) When the Pod will be forcefully deleted regardless of state
+C) The Pod has been requested for deletion and is in termination
+D) Scheduled time for Pod restart
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Use `kubectl describe pod <name>` and check the `Containers` section. Each container shows `Restart Count`. The container with high restart count is the problem. Also check `Last State` to see why it terminated (exit code, reason). Use `kubectl logs -p` to see previous container's logs.
+**Explanation:** The `deletionTimestamp` is set when a delete request is received. The Pod enters "Terminating" state and begins graceful shutdown. Containers receive SIGTERM, and after `terminationGracePeriodSeconds`, remaining processes get SIGKILL. The field indicates deletion is in progress, not a forced deletion time.
 
-**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
 
 </details>
 
 ---
 
-### Question 74
+### Question 107
 [HARD]
 
-What happens when containers share a volume incorrectly?
+How does Kubernetes handle a Pod whose container continuously exits with code 0 when restartPolicy is "Always"?
 
-A) The Pod fails immediately
-B) File conflicts, permission issues, or data corruption may occur
-C) The volume is automatically resized
-D) Containers are isolated automatically
+A) Stops restarting after backoffLimit
+B) Keeps restarting with exponential backoff
+C) Marks Pod as Completed
+D) Removes the Pod from the cluster
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** When containers share volumes incorrectly: 1) File conflicts if both write to same files, 2) Permission issues if containers run as different users, 3) Data corruption from concurrent writes without coordination. Use subPath for separate directories or ensure proper file locking/coordination.
+**Explanation:** With `restartPolicy: Always`, Kubernetes restarts containers regardless of exit code. Even exit code 0 triggers a restart. The backoff delay increases exponentially (10s, 20s, 40s... up to 5 minutes) and resets after 10 minutes of successful running. This continues indefinitely.
 
-**Source:** [Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/)
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy)
 
 </details>
 
 ---
 
-### Question 75
+### Question 108
 [HARD]
 
-How do you troubleshoot inter-container communication within a Pod?
+A Pod has two containers: one shows "Running" and one shows "Waiting" with reason "PodInitializing". What does this indicate?
 
-A) Check DNS only
-B) Containers share localhost; verify port bindings, check logs, and test with netstat/ss
-C) Check network policies
-D) Restart the Pod
+A) Normal behavior - containers start sequentially
+B) Impossible state - all containers must have same status
+C) Init container is still running
+D) Second container failed to pull image
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Containers in a Pod share the network namespace, communicating via localhost. Troubleshoot by: 1) `kubectl exec <pod> -c <container> -- netstat -tlnp` to see listening ports, 2) Verify one container listens before others connect, 3) Check startup ordering, 4) Ensure no port conflicts between containers.
+**Explanation:** "PodInitializing" in Waiting state indicates init containers are still running. Main containers show this status until all init containers complete. However, once init containers finish, all main containers start simultaneously. One Running and one PodInitializing suggests init containers haven't finished yet.
 
-**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
+**Source:** [Init Containers | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/#understanding-init-containers)
 
 </details>
 
 ---
 
-### Question 76
+### Question 109
 [HARD]
 
-What causes one container to affect another in the same Pod?
+What determines the order of container termination when a Pod is deleted?
 
-A) Network isolation
-B) Shared resources (CPU, memory, network, volumes) within the Pod
-C) Separate namespaces
-D) Different nodes
+A) Reverse order of container definition
+B) Alphabetical by container name
+C) All containers receive SIGTERM simultaneously
+D) Based on resource consumption
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Containers in a Pod share: network namespace (same IP, ports), IPC namespace, and mounted volumes. A container consuming too much CPU/memory affects others. Port conflicts prevent startup. A crashing container may affect shared volume state. Use resource limits to isolate CPU/memory impact.
+**Explanation:** When a Pod is deleted, all containers receive SIGTERM at the same time - there's no defined order. Each container then has `terminationGracePeriodSeconds` to shut down gracefully. Containers that need ordered shutdown must implement their own coordination mechanism.
 
-**Source:** [Pods | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/)
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
 
 </details>
 
 ---
 
-### Question 77
+### Question 110
 [HARD]
 
-How do you check resource consumption per container in a multi-container Pod?
+A Pod's container keeps restarting with exit code 137. After investigation, you find no OOMKilled events. What else causes exit code 137?
 
-A) kubectl describe pod only
-B) kubectl top pod <name> --containers
-C) kubectl logs --all-containers
-D) kubectl get pod -o wide
+A) Syntax error in container command
+B) SIGKILL sent from external process or exceeded terminationGracePeriodSeconds
+C) Container reached CPU limit
+D) Network timeout
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Use `kubectl top pod <pod-name> --containers` to see CPU and memory usage per container. This requires metrics-server. Output shows each container's current resource consumption, helping identify which container is using excessive resources in a multi-container Pod.
+**Explanation:** Exit code 137 means SIGKILL (128+9=137). Besides OOMKilled, this occurs when: the container doesn't terminate within `terminationGracePeriodSeconds` during Pod deletion, an external process sends SIGKILL, or `docker kill` is used. Check Pod termination settings and external signal sources.
 
-**Source:** [Tools for Monitoring Resources | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
 
 </details>
 
 ---
 
-### Question 78
-[HARD]
+## Debugging Commands and Techniques
 
-What indicates a lifecycle hook failure?
+### Question 111
+[MEDIUM]
 
-A) Pod runs normally
-B) FailedPostStartHook or FailedPreStopHook events in Pod description
-C) Container restarts only
-D) Network errors only
+What is the purpose of `kubectl debug` with the `--copy-to` flag?
+
+A) Copy logs to a file
+B) Create a copy of the Pod with modified containers for debugging
+C) Copy the Pod to another node
+D) Backup the Pod specification
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Hook failures show as events in `kubectl describe pod`: FailedPostStartHook means postStart failed (container may be killed), FailedPreStopHook means preStop failed (shutdown continues anyway). Check the event reason and message for details. A failing postStart hook prevents the container from reaching Running state.
+**Explanation:** `kubectl debug --copy-to` creates a copy of a Pod with modifications for debugging, such as adding a debug container or changing the image to include debugging tools. The original Pod remains unaffected, allowing safe debugging without disrupting the running workload.
 
-**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+**Source:** [Debugging Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#copying-a-pod-while-changing-its-command)
 
 </details>
 
 ---
 
-### Question 79
-[HARD]
+### Question 112
+[MEDIUM]
 
-How do you troubleshoot postStart hook issues?
+How do you view the YAML manifest of a running Pod including runtime fields?
 
-A) Remove the hook
-B) Check events for hook failures, verify command/HTTP endpoint, and check container logs
-C) Restart the node
-D) Delete the namespace
+A) kubectl get pod <name> --show-all
+B) kubectl get pod <name> -o yaml
+C) kubectl describe pod <name> --yaml
+D) kubectl export pod <name>
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Troubleshoot postStart by: 1) `kubectl describe pod` for FailedPostStartHook events, 2) Check if command exists and is executable, 3) For HTTP hooks, verify endpoint is accessible, 4) Container may not have full environment when hook runs, 5) Hooks have no stdout capture - use logs/files for debugging.
+**Explanation:** `kubectl get pod <name> -o yaml` outputs the full Pod specification including status, conditions, and all runtime fields. This shows the complete object as stored in etcd, useful for seeing current state, assigned node, IP addresses, and container statuses.
 
-**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+**Source:** [kubectl Cheat Sheet | Kubernetes](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 
 </details>
 
 ---
 
-### Question 80
-[HARD]
+### Question 113
+[MEDIUM-HARD]
 
-What happens when a preStop hook times out?
+What does `kubectl logs --previous` display?
 
-A) The hook runs indefinitely
-B) The container is forcefully terminated after terminationGracePeriodSeconds
-C) The Pod remains running
-D) The node is drained
+A) Logs from the previous Pod version
+B) Logs from the last terminated container instance
+C) Logs from yesterday
+D) Logs from the previous namespace
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The preStop hook runs during the grace period defined by terminationGracePeriodSeconds (default 30s). If the hook and application don't finish gracefully within this time, the container receives SIGKILL. Increase terminationGracePeriodSeconds if your cleanup needs more time.
+**Explanation:** `kubectl logs --previous` retrieves logs from the previously terminated instance of a container. This is essential for debugging crash loops, as it shows what happened in the container before it crashed and restarted. Only the immediately previous instance's logs are available.
 
-**Source:** [Container Lifecycle Hooks | Kubernetes](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+**Source:** [Debugging Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#examine-pod-logs)
+
+</details>
+
+---
+
+### Question 114
+[MEDIUM-HARD]
+
+How do you execute a command in a specific container of a multi-container Pod?
+
+A) kubectl exec <pod> -- <command>
+B) kubectl exec <pod> -c <container> -- <command>
+C) kubectl run <container> -- <command>
+D) kubectl exec <pod>/<container> -- <command>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `-c` or `--container` flag to specify which container to execute commands in: `kubectl exec <pod> -c <container> -- <command>`. Without this flag in a multi-container Pod, kubectl targets the first container by default, which may not be the one you need.
+
+**Source:** [Get a Shell to a Running Container | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/)
+
+</details>
+
+---
+
+### Question 115
+[HARD]
+
+What is the difference between `kubectl debug` with `--target` versus `--share-processes`?
+
+A) They are the same option with different names
+B) --target joins container's namespace; --share-processes enables process namespace sharing at Pod level
+C) --target specifies node; --share-processes copies processes
+D) --share-processes is deprecated
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `--target` makes the ephemeral container join an existing container's namespace, allowing it to see that container's processes. `--share-processes` enables Pod-level process namespace sharing, letting all containers see each other's processes. They serve different debugging scenarios.
+
+**Source:** [Debugging Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container)
+
+</details>
+
+---
+
+### Question 116
+[HARD]
+
+How do you collect Pod logs that span multiple restarts during a crash loop?
+
+A) kubectl logs --all-restarts
+B) You cannot - only current and previous instance logs are available via kubectl
+C) kubectl logs --since-restart=all
+D) kubectl logs --history
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** kubectl can only retrieve logs from the current container instance and one previous instance (`--previous`). For logs spanning multiple restarts, you need external log aggregation (Fluentd, Loki) that captures logs before container termination, or check node-level log files if available.
+
+**Source:** [Logging Architecture | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+
+</details>
+
+---
+
+### Question 117
+[HARD]
+
+What does `kubectl get events --field-selector reason=FailedScheduling` show?
+
+A) All Pod events
+B) Only events where Pods could not be scheduled
+C) Node failure events
+D) Network scheduling failures
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Field selectors filter events by specific fields. `reason=FailedScheduling` shows only events where the scheduler couldn't place a Pod. This is useful for quickly identifying scheduling problems across the cluster without wading through unrelated events.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 118
+[HARD]
+
+How can you debug a container that crashes immediately on startup before you can exec into it?
+
+A) Use kubectl logs only
+B) Modify the Pod command to sleep infinity, then exec in
+C) Wait for the container to become stable
+D) Use kubectl attach immediately
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For containers that crash before you can investigate, override the entrypoint with a sleep command: `kubectl debug <pod> --copy-to=debug-pod --container=app -- sleep infinity`. This keeps the container running so you can exec in and manually run commands to diagnose the issue.
+
+**Source:** [Debugging Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#copying-a-pod-while-changing-its-command)
+
+</details>
+
+---
+
+### Question 119
+[HARD]
+
+What information does `kubectl get pod -o wide` provide that standard output doesn't?
+
+A) Full YAML specification
+B) Node name, IP address, nominated node, and readiness gates
+C) Container logs
+D) Event history
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `-o wide` flag adds columns: NODE (which node the Pod runs on), IP (Pod IP address), NOMINATED NODE (for preemption), and READINESS GATES. This information is essential for network troubleshooting and understanding Pod placement without running describe.
+
+**Source:** [kubectl Cheat Sheet | Kubernetes](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+</details>
+
+---
+
+### Question 120
+[HARD]
+
+How do you debug a node using `kubectl debug node`?
+
+A) It SSHs into the node
+B) It creates a privileged Pod with host namespaces and root filesystem mounted
+C) It shows node logs
+D) It restarts kubelet
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl debug node/<name>` creates a privileged Pod on that node with host namespaces (PID, network, IPC) and the node's root filesystem mounted at `/host`. This allows inspecting node-level processes, files, and system state without SSH access, using familiar container tools.
+
+**Source:** [Debugging Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#debugging-via-a-shell-on-the-node)
+
+</details>
+
+---
+
+## Node and Cluster Troubleshooting
+
+### Question 121
+[MEDIUM]
+
+What does the "DiskPressure" condition on a node indicate?
+
+A) Network connectivity issues
+B) Node's disk capacity or inodes are running low
+C) CPU overload
+D) Memory pressure
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** DiskPressure condition becomes True when available disk space or inodes fall below eviction thresholds (default: 10% space, 5% inodes). This triggers Pod eviction based on disk usage. Monitor with `kubectl describe node` and check Conditions section.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
+---
+
+### Question 122
+[MEDIUM]
+
+How do you safely remove a node from the cluster for maintenance?
+
+A) kubectl delete node <name>
+B) kubectl drain <name> followed by maintenance, then kubectl uncordon
+C) Simply shut down the node
+D) kubectl remove node <name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl drain <node>` to safely evict Pods and mark the node unschedulable. After maintenance, `kubectl uncordon <node>` allows new Pod scheduling. Direct delete removes the node object but doesn't gracefully migrate workloads, potentially causing disruption.
+
+**Source:** [Safely Drain a Node | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
+
+</details>
+
+---
+
+### Question 123
+[MEDIUM-HARD]
+
+What causes a node to show "NotReady" status?
+
+A) Too many Pods scheduled
+B) Kubelet stopped reporting, network issues, or critical node conditions
+C) High CPU usage only
+D) Pending Pod deployments
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** NotReady status occurs when: kubelet stops sending heartbeats, node loses network connectivity to control plane, or critical conditions (MemoryPressure, DiskPressure, PIDPressure) are True. The node controller marks it NotReady after `node-monitor-grace-period` (default 40s).
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-status)
+
+</details>
+
+---
+
+### Question 124
+[MEDIUM-HARD]
+
+How do you view kubelet logs on a node using systemd?
+
+A) kubectl logs kubelet
+B) journalctl -u kubelet on the node
+C) cat /var/log/kubelet.log
+D) kubectl describe node --logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** On systemd-based systems, kubelet logs are accessed via `journalctl -u kubelet`. Add `-f` for following logs or `--since` for time filtering. This requires node access (SSH or kubectl debug node). The log location varies by installation method.
+
+**Source:** [Troubleshooting kubeadm | Kubernetes](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
+
+</details>
+
+---
+
+### Question 125
+[HARD]
+
+A node shows Ready but Pods report "NodeNotReady" mount errors. What is likely wrong?
+
+A) Node doesn't exist
+B) Kubelet is Ready but container runtime has issues
+C) Network plugin failure
+D) All of the above could cause this
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The node can be Ready (kubelet responsive) while the container runtime (containerd, CRI-O) has issues. Mount errors suggest volume plugin or CSI driver problems rather than kubelet health. Check container runtime status: `systemctl status containerd` or `crictl info`.
+
+**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 126
+[HARD]
+
+What is the effect of `kubectl cordon` on existing Pods running on the node?
+
+A) Immediately evicts all Pods
+B) No effect on existing Pods; only prevents new scheduling
+C) Terminates non-critical Pods
+D) Restarts all Pods
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl cordon` marks a node as unschedulable (adds `node.kubernetes.io/unschedulable` taint) but doesn't affect running Pods. Existing workloads continue running until explicitly evicted with `kubectl drain` or until Pods terminate naturally.
+
+**Source:** [Safely Drain a Node | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
+
+</details>
+
+---
+
+### Question 127
+[HARD]
+
+How does the node controller determine when to evict Pods from an unreachable node?
+
+A) Immediately upon NotReady status
+B) After pod-eviction-timeout (default 5 minutes) of NotReady
+C) Based on Pod priority only
+D) Never automatically evicts
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The node controller waits for `pod-eviction-timeout` (default 5 minutes) after a node becomes NotReady before evicting Pods. This prevents unnecessary churn from transient network issues. With taint-based eviction, tolerations on Pods can extend this timeout.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-controller)
+
+</details>
+
+---
+
+### Question 128
+[HARD]
+
+A node has "NetworkUnavailable" condition True. What component is responsible for clearing this condition?
+
+A) Kubelet
+B) The network plugin (CNI)
+C) kube-proxy
+D) API server
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The CNI plugin (Calico, Flannel, etc.) is responsible for setting up node networking and clearing the NetworkUnavailable condition. If this condition stays True, check CNI plugin installation, configuration, and logs. The kubelet reports it, but the CNI must clear it.
+
+**Source:** [Cluster Networking | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
+</details>
+
+---
+
+### Question 129
+[HARD]
+
+What happens to static Pods on a node when the API server is unreachable?
+
+A) They are immediately deleted
+B) They continue running as kubelet manages them directly
+C) They enter Unknown state
+D) They restart continuously
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Static Pods are managed directly by kubelet from manifest files, not by the API server. They continue running even if the control plane is unreachable. The mirror Pods in the API server may show stale status, but actual static Pods remain unaffected.
+
+**Source:** [Static Pods | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+
+</details>
+
+---
+
+### Question 130
+[HARD]
+
+What does high "node-lease" renewal latency indicate?
+
+A) Network latency between kubelet and API server
+B) etcd performance issues
+C) Either A or B, as leases go through API server to etcd
+D) Pod scheduling delays
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** C
+
+**Explanation:** Node lease renewal requires kubelet to update a Lease object via the API server, which writes to etcd. High latency could indicate network issues between kubelet and API server, or etcd performance problems (disk I/O, compaction). Monitor both layers when troubleshooting.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#heartbeats)
+
+</details>
+
+---
+
+## Network and Service Troubleshooting
+
+### Question 131
+[MEDIUM]
+
+Why might a Service not be reachable even when endpoints exist?
+
+A) Wrong selector
+B) kube-proxy not running or iptables rules not created
+C) No Pods available
+D) Service doesn't exist
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** With valid endpoints, Service unreachability suggests kube-proxy issues. kube-proxy creates iptables/IPVS rules for traffic routing. Check `kubectl logs -n kube-system kube-proxy-<pod>` and verify iptables rules with `iptables -L -t nat | grep <service>` on the node.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 132
+[MEDIUM]
+
+How do you verify if a Service selector matches any Pods?
+
+A) kubectl describe service
+B) kubectl get endpoints <service-name>
+C) kubectl get pods --show-labels
+D) Both A and B work, but B shows actual Pod IPs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** D
+
+**Explanation:** `kubectl describe service` shows selector and endpoint IPs. `kubectl get endpoints <service-name>` directly shows which Pod IPs are registered as endpoints. If endpoints list is empty, the selector doesn't match any Ready Pods. Both work, but endpoints show concrete addresses.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 133
+[MEDIUM-HARD]
+
+A Pod can reach other Pods by IP but not by Service DNS name. What should you check?
+
+A) Pod's network configuration
+B) CoreDNS Pods and Service
+C) Kube-proxy logs
+D) Firewall rules only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** If Pod-to-Pod IP connectivity works but DNS fails, the issue is DNS resolution. Check: CoreDNS Pods running (`kubectl get pods -n kube-system -l k8s-app=kube-dns`), CoreDNS Service has endpoints, and the Pod's `/etc/resolv.conf` points to CoreDNS ClusterIP.
+
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+
+</details>
+
+---
+
+### Question 134
+[MEDIUM-HARD]
+
+What causes a NodePort Service to be unreachable from outside the cluster?
+
+A) Wrong Service type
+B) Firewall blocking the NodePort, node network issues, or kube-proxy not routing
+C) Pod not running
+D) Incorrect ClusterIP
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** External NodePort access requires: the port (30000-32767 range) open in firewalls/security groups, kube-proxy running to handle traffic, and network path to node IPs. Check cloud provider security groups, host firewall (iptables), and kube-proxy logs.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+
+</details>
+
+---
+
+### Question 135
+[HARD]
+
+How do you test if a Pod can reach a Service without relying on DNS?
+
+A) ping the Service
+B) Use Service ClusterIP directly: curl http://<cluster-ip>:<port>
+C) Check iptables rules
+D) Restart kube-proxy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To bypass DNS, curl the Service's ClusterIP directly from within a Pod: `kubectl exec <pod> -- curl http://<clusterIP>:<port>`. This isolates network connectivity from DNS issues. If ClusterIP works but DNS doesn't, focus on CoreDNS troubleshooting.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 136
+[HARD]
+
+What does an empty "Subsets" field in Endpoints indicate?
+
+A) Service is healthy
+B) No Pods match the selector or no Pods are Ready
+C) Endpoints object is corrupted
+D) Service uses ExternalName type
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Empty Subsets means no endpoints are registered. This occurs when: selector matches no Pods, matched Pods aren't Ready (failing readiness probes), or Pods haven't started. ExternalName Services don't use endpoints at all - they rely on DNS CNAME.
+
+**Source:** [Endpoints | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#endpoints)
+
+</details>
+
+---
+
+### Question 137
+[HARD]
+
+How does `publishNotReadyAddresses: true` on a Service affect endpoint registration?
+
+A) No effect
+B) Pods are added to endpoints even if not Ready
+C) Publishes the Service to external DNS
+D) Enables headless mode
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** By default, only Ready Pods appear in endpoints. Setting `publishNotReadyAddresses: true` includes all matched Pods regardless of readiness. This is useful for StatefulSets where Pods need to discover each other during initialization before becoming Ready.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services)
+
+</details>
+
+---
+
+### Question 138
+[HARD]
+
+A Service shows "EXTERNAL-IP: Pending" indefinitely. What's the most likely cause?
+
+A) Service type is wrong
+B) No cloud load balancer provisioner or controller running
+C) DNS not configured
+D) Service port conflict
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** LoadBalancer type Services require a cloud provider or load balancer controller (like MetalLB for bare metal) to provision external IPs. Without one, EXTERNAL-IP stays Pending indefinitely. Check cloud-controller-manager logs or install a LoadBalancer implementation.
+
+**Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer)
+
+</details>
+
+---
+
+### Question 139
+[HARD]
+
+How do you diagnose intermittent Service connectivity issues?
+
+A) Check Service YAML
+B) Investigate endpoint health, check for Pods cycling, verify CNI stability, and review kube-proxy rules
+C) Restart all Pods
+D) Recreate the Service
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Intermittent issues suggest: some endpoints are unhealthy (check Pod logs/readiness), Pods are being rescheduled (check events), CNI has issues (check plugin logs), or iptables rules are flapping (check kube-proxy). Systematic investigation across these layers is needed.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 140
+[HARD]
+
+What is the effect of `internalTrafficPolicy: Local` on Service traffic?
+
+A) Routes external traffic to local Pods
+B) Restricts internal traffic to Pods on the same node as the client
+C) Disables cross-node traffic completely
+D) Enables mTLS for internal traffic
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `internalTrafficPolicy: Local` routes cluster-internal traffic only to endpoints on the same node as the client Pod. If no local endpoints exist, traffic is dropped. This reduces latency and cross-node bandwidth but requires careful planning for endpoint availability.
+
+**Source:** [Service Internal Traffic Policy | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/)
+
+</details>
+
+---
+
+## Storage and Volume Troubleshooting
+
+### Question 141
+[MEDIUM]
+
+What does a PVC status of "Pending" indicate?
+
+A) PVC is being deleted
+B) No PV matches the PVC requirements or dynamic provisioning hasn't completed
+C) PVC is bound successfully
+D) Storage class doesn't exist
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Pending status means the PVC is waiting for a PV. This occurs when: no existing PV matches (size, access modes, storage class), dynamic provisioning is slow or failing, or the storage class doesn't exist. Check PVC events with `kubectl describe pvc`.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#phase)
+
+</details>
+
+---
+
+### Question 142
+[MEDIUM]
+
+How do you check why a PV is not binding to a PVC?
+
+A) kubectl get pv
+B) kubectl describe pv <name> and check for capacity, access modes, and storage class match
+C) kubectl logs pv
+D) kubectl get events --all-namespaces
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl describe pv` shows capacity, access modes, storage class, and claim reference. Compare these with PVC requirements. Binding fails when: capacity is less than requested, access modes don't match, storage class differs, or PV is already bound to another PVC.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#binding)
+
+</details>
+
+---
+
+### Question 143
+[MEDIUM-HARD]
+
+A Pod is stuck in "ContainerCreating" with event "FailedAttachVolume". What is the likely cause?
+
+A) Image pull error
+B) PV is attached to another node and the volume doesn't support multi-attach
+C) Container configuration error
+D) Network plugin failure
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** FailedAttachVolume typically means the volume is still attached to another node. Most block storage (EBS, GCE PD) only supports single-node attachment. If a Pod moves nodes, the previous attachment must be released first. Check if another Pod or orphaned attachment exists.
+
+**Source:** [Storage | Kubernetes](https://kubernetes.io/docs/concepts/storage/)
+
+</details>
+
+---
+
+### Question 144
+[MEDIUM-HARD]
+
+What causes "FailedMount" with message "timeout expired waiting for volumes to attach"?
+
+A) PVC doesn't exist
+B) Volume attach operation taking too long, possibly due to cloud provider issues
+C) Incorrect volume permissions
+D) Container not starting
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** This timeout indicates the volume attachment isn't completing within expected time. Causes include: cloud provider API throttling or errors, CSI driver issues, volume stuck in attaching state on previous node. Check cloud provider console and CSI controller logs.
+
+**Source:** [Storage | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
+---
+
+### Question 145
+[HARD]
+
+How do you troubleshoot CSI driver issues?
+
+A) Check kubelet logs
+B) Check CSI controller Pod logs, CSI node Pod logs, and kubelet logs
+C) Restart all Pods
+D) Recreate PVCs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** CSI debugging requires checking multiple components: CSI controller (handles provisioning/attachment), CSI node Pods (handle mount/unmount on each node), and kubelet (interacts with CSI). Use `kubectl logs` for CSI Pods and `journalctl -u kubelet` for kubelet issues.
+
+**Source:** [CSI | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/#csi)
+
+</details>
+
+---
+
+### Question 146
+[HARD]
+
+A PVC shows "Bound" but the Pod still shows "FailedMount" errors. What could cause this?
+
+A) PVC binding issue
+B) PV exists but underlying storage is unavailable, corrupted, or wrong filesystem type
+C) Pod doesn't request the PVC
+D) Service account missing
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Bound PVC means the Kubernetes binding succeeded, but actual storage might be problematic. Issues include: underlying storage deleted/corrupted, filesystem type mismatch, mount options invalid, or credentials expired. Check kubelet logs on the node for mount details.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
+---
+
+### Question 147
+[HARD]
+
+What is the purpose of the `volumeBindingMode: WaitForFirstConsumer` in a StorageClass?
+
+A) Waits for manual PV creation
+B) Delays PV provisioning until a Pod using the PVC is scheduled
+C) Requires admin approval
+D) Binds volume to first requesting namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `WaitForFirstConsumer` delays volume provisioning until a Pod requests the PVC. This ensures the volume is created in the same zone/region as the scheduled Pod, preventing zone mismatch issues. Without it, volumes might be provisioned in zones where no nodes can access them.
+
+**Source:** [Storage Classes | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode)
+
+</details>
+
+---
+
+### Question 148
+[HARD]
+
+A volume shows "VolumeAttachment" stuck in attaching state. How do you force detach it?
+
+A) Delete the Pod
+B) Delete the VolumeAttachment object (use caution - may cause data corruption)
+C) Restart kubelet
+D) Scale Deployment to 0
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Force detaching requires deleting the VolumeAttachment object: `kubectl delete volumeattachment <name>`. Warning: this can cause data corruption if the volume is actually in use. Ensure the Pod is truly gone and the previous attachment is orphaned before force-deleting.
+
+**Source:** [CSI | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/#csi)
+
+</details>
+
+---
+
+### Question 149
+[HARD]
+
+Why might a Pod fail with "subPath" related mount errors?
+
+A) Container doesn't exist
+B) SubPath refers to a non-existent path, symlink issues, or race condition during volume setup
+C) Wrong image tag
+D) Memory limit exceeded
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** SubPath errors occur when: the specified path doesn't exist in the volume, symlinks are used but subPathExpr isn't configured properly, or there's a race condition where the path is created after mount attempt. Ensure the path exists or use init containers to create it.
+
+**Source:** [Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/#using-subpath)
+
+</details>
+
+---
+
+### Question 150
+[HARD]
+
+How do you diagnose slow volume mount times?
+
+A) Check Pod age
+B) Examine CSI driver logs for slow operations, cloud provider latency, and node kubelet metrics
+C) Increase timeout settings
+D) Use faster storage class
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Slow mounts can be diagnosed by: checking CSI driver logs for operation timings, monitoring cloud provider API latency, examining kubelet volume manager metrics, and verifying filesystem creation time (formatting new volumes). Each stage can introduce delays.
+
+**Source:** [Storage | Kubernetes](https://kubernetes.io/docs/concepts/storage/)
+
+</details>
+
+---
+
+## Workload Controllers Troubleshooting
+
+### Question 151
+[MEDIUM]
+
+What happens when a Deployment's selector is changed after creation?
+
+A) Existing Pods are updated
+B) Selector is immutable after creation; changes are rejected
+C) New ReplicaSet is created
+D) Deployment is deleted and recreated
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `spec.selector` field of a Deployment is immutable after creation. Attempting to change it results in a validation error. This prevents orphaning existing Pods. To change selectors, you must delete and recreate the Deployment.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+</details>
+
+---
+
+### Question 152
+[MEDIUM]
+
+How do you pause a Deployment rollout to make multiple changes?
+
+A) kubectl stop deployment
+B) kubectl rollout pause deployment/<name>
+C) Scale to 0 replicas
+D) Edit the Deployment with --paused flag
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl rollout pause deployment/<name>` pauses the rollout, allowing multiple spec changes without triggering intermediate rollouts. After all changes, use `kubectl rollout resume deployment/<name>` to apply them in a single rollout.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#pausing-and-resuming-a-deployment)
+
+</details>
+
+---
+
+### Question 153
+[MEDIUM-HARD]
+
+A StatefulSet Pod is stuck in Terminating state. What is blocking deletion?
+
+A) Pod has active connections
+B) PVC finalizers, Pod finalizers, or volume unmount operations
+C) Too many replicas
+D) Node is healthy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** StatefulSet Pods can get stuck in Terminating due to: finalizers preventing deletion until conditions are met, PVC deletion waiting on Pod termination (cascade), or volume unmount operations hanging. Check `kubectl get pod -o yaml` for finalizers and events.
+
+**Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
+
+</details>
+
+---
+
+### Question 154
+[MEDIUM-HARD]
+
+What does "ProgressDeadlineExceeded" reason in Deployment conditions mean?
+
+A) Deployment was deleted
+B) Rollout didn't complete within progressDeadlineSeconds
+C) All replicas are ready
+D) Deployment is paused
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `ProgressDeadlineExceeded` indicates the rollout didn't complete within `progressDeadlineSeconds` (default 600s). New Pods couldn't become Ready in time. This doesn't roll back automatically but marks the Deployment as failed. Investigate why Pods aren't becoming Ready.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#progress-deadline-seconds)
+
+</details>
+
+---
+
+### Question 155
+[HARD]
+
+Why might a DaemonSet not schedule Pods on certain nodes?
+
+A) Node doesn't exist
+B) Node taints without matching tolerations, node selectors, or affinity rules
+C) Too many DaemonSets
+D) DaemonSet is paused
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** DaemonSets don't schedule Pods on nodes with: taints the DaemonSet doesn't tolerate, nodeSelector that doesn't match node labels, or node affinity rules excluding the node. Check `kubectl describe daemonset` for nodeSelector and tolerations, compare with node taints.
+
+**Source:** [DaemonSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+
+</details>
+
+---
+
+### Question 156
+[HARD]
+
+A ReplicaSet shows desired replicas but actual is 0. What should you investigate first?
+
+A) Check Service
+B) Check Events on ReplicaSet for admission/quota failures, then check Pod template validity
+C) Restart controller-manager
+D) Delete the ReplicaSet
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Zero actual replicas despite desired count indicates Pod creation is failing. Check ReplicaSet events for: ResourceQuota exceeded, LimitRange violations, admission webhook rejections, or invalid Pod template. `kubectl describe rs <name>` shows these creation failures.
+
+**Source:** [ReplicaSet | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+
+</details>
+
+---
+
+### Question 157
+[HARD]
+
+How does StatefulSet handle a Pod that's stuck and not terminating?
+
+A) Force deletes it
+B) Waits indefinitely by default; won't create replacement on same ordinal
+C) Creates duplicate Pod
+D) Scales down automatically
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** StatefulSet maintains strict ordering and identity. If a Pod is stuck Terminating, StatefulSet won't create a replacement with the same ordinal to prevent duplicate identities. Manual intervention (force delete) may be needed. Consider `--force --grace-period=0` for stuck Pods.
+
+**Source:** [StatefulSets | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#forced-rollback)
+
+</details>
+
+---
+
+### Question 158
+[HARD]
+
+What is the purpose of `.spec.minReadySeconds` in a Deployment?
+
+A) Minimum time Pods must exist
+B) Wait time after Pod becomes Ready before considering it Available
+C) Minimum container runtime
+D) Scheduling delay
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `minReadySeconds` specifies how long a new Pod must be Ready without any containers crashing before it's considered Available. This catches Pods that pass initial probes but crash shortly after. During rollout, progression waits for this period.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#min-ready-seconds)
+
+</details>
+
+---
+
+### Question 159
+[HARD]
+
+A Job with parallelism=3 and completions=10 only runs 2 Pods. What might cause this?
+
+A) Job completed
+B) ResourceQuota limiting Pods, pending Pod failures, or node capacity constraints
+C) Wrong parallelism setting
+D) Job timeout exceeded
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Less than expected parallelism can be caused by: ResourceQuota limiting total Pods in namespace, insufficient cluster resources to schedule more Pods, or previous Pod failures counting toward backoffLimit. Check Job events, namespace quotas, and cluster capacity.
+
+**Source:** [Jobs | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+
+</details>
+
+---
+
+### Question 160
+[HARD]
+
+How do you troubleshoot a Deployment stuck at "1 old replicas are pending termination"?
+
+A) Check Service
+B) Investigate the old Pod: check for finalizers, PreStop hooks, or termination grace period issues
+C) Delete the Deployment
+D) Scale to 0
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Pending termination" means the old Pod won't terminate. Check: finalizers blocking deletion, long PreStop hooks executing, long terminationGracePeriodSeconds, or stuck volume unmounts. Use `kubectl describe pod` on the terminating Pod to identify the block.
+
+**Source:** [Deployments | Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+</details>
+
+---
+
+## Configuration and Probes Troubleshooting
+
+### Question 161
+[MEDIUM]
+
+What happens if a ConfigMap referenced by a Pod doesn't exist?
+
+A) Pod uses default values
+B) Pod fails to start with CreateContainerConfigError
+C) ConfigMap is created automatically
+D) Pod starts without the ConfigMap data
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** If a required ConfigMap doesn't exist, the Pod cannot start and shows `CreateContainerConfigError` status. This applies to ConfigMaps mounted as volumes or used for environment variables. Mark ConfigMap reference as optional to allow Pod startup without it.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
+</details>
+
+---
+
+### Question 162
+[MEDIUM]
+
+How do you make a Pod continue starting even if a ConfigMap is missing?
+
+A) Use init containers
+B) Set optional: true in the volume or envFrom configuration
+C) Create an empty ConfigMap
+D) Use default values in container
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Adding `optional: true` to the ConfigMap reference allows the Pod to start even if the ConfigMap doesn't exist. For volumes, add it to the configMap volume spec. For envFrom, add it to the configMapRef. Missing data simply isn't injected.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/#optional-configmaps)
+
+</details>
+
+---
+
+### Question 163
+[MEDIUM-HARD]
+
+A Pod keeps restarting due to failed liveness probe but logs show the application is running fine. What's the likely issue?
+
+A) Wrong container image
+B) Liveness probe misconfigured: wrong port, path, or probe timing parameters
+C) Memory leak
+D) Network policy blocking
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** If the app runs but liveness probes fail, check probe configuration: correct port (container port, not host), correct path for HTTP probes, adequate initialDelaySeconds for slow-starting apps, and appropriate timeoutSeconds. Also verify the probe endpoint actually returns 200-399.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 164
+[MEDIUM-HARD]
+
+What is the difference between a Pod showing "Running" but with 0/1 Ready versus 1/1 Ready?
+
+A) No difference
+B) 0/1 means container is running but readiness probe is failing
+C) 0/1 means container hasn't started
+D) 0/1 means Pod is terminating
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Running with 0/1 Ready indicates the container is running but failing readiness probes. The Pod won't receive Service traffic until probes pass. This commonly occurs during application startup or when the app is unhealthy but not crashed.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes)
+
+</details>
+
+---
+
+### Question 165
+[HARD]
+
+How do you debug probe failures when there are no obvious errors?
+
+A) Remove the probes
+B) Exec into container and manually test the probe endpoint/command
+C) Restart the Pod
+D) Increase all timeout values
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Manually test what the probe does: `kubectl exec <pod> -- curl localhost:<port>/<path>` for HTTP probes, or run the command for exec probes. This shows actual responses and errors. Check if the app binds to correct interface (localhost vs 0.0.0.0) and port.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 166
+[HARD]
+
+A Secret update doesn't reflect in a running Pod's environment variables. Why?
+
+A) Secret is immutable
+B) Environment variables are set at container start and don't update dynamically
+C) Wrong Secret reference
+D) RBAC blocking
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Environment variables from Secrets/ConfigMaps are injected at container startup and don't update afterward. To see changes, the Pod must be restarted. For dynamic updates, mount Secrets as volumes - kubelet syncs volume contents periodically (default ~1 minute).
+
+**Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables)
+
+</details>
+
+---
+
+### Question 167
+[HARD]
+
+What causes "invalid reference format" errors when using ConfigMap data?
+
+A) ConfigMap too large
+B) Key names contain invalid characters for environment variables or mount paths
+C) Wrong namespace
+D) ConfigMap is secret type
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ConfigMap keys used as environment variables must be valid env var names (letters, digits, underscores, not starting with digit). Keys used as filenames in volume mounts must be valid filenames. Invalid characters cause reference format errors during Pod creation.
+
+**Source:** [ConfigMaps | Kubernetes](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
+</details>
+
+---
+
+### Question 168
+[HARD]
+
+How do startupProbe, livenessProbe, and readinessProbe interact during Pod startup?
+
+A) They run simultaneously from start
+B) startupProbe runs first; liveness and readiness only start after startup succeeds
+C) Only one probe type can be defined
+D) They are aliases for the same probe
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** startupProbe runs first for slow-starting containers. Until it succeeds, liveness and readiness probes are disabled. Once startup succeeds, it's disabled and liveness/readiness take over. This prevents liveness probes from killing slow-starting apps.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
+
+</details>
+
+---
+
+### Question 169
+[HARD]
+
+A gRPC probe is failing but the gRPC service works fine when tested manually. What might be wrong?
+
+A) gRPC not supported
+B) The health checking protocol implementation might be missing or the service name is incorrect
+C) Wrong port
+D) TLS required
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubernetes gRPC probes use the standard gRPC Health Checking Protocol. The application must implement this protocol and respond to health check requests. If only the main service works but health checks fail, the health service implementation is missing or the service name in the probe is wrong.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-grpc-liveness-probe)
+
+</details>
+
+---
+
+### Question 170
+[HARD]
+
+How do you troubleshoot a Pod that restarts exactly at the same interval repeatedly?
+
+A) Random failure
+B) Check if liveness probe failure timing matches restart interval; probe might be too aggressive
+C) Memory leak
+D) Network issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Predictable restart intervals suggest probe timing issues. Calculate: `initialDelaySeconds + (failureThreshold × periodSeconds)`. If restarts match this, the probe fails before the app is truly ready or responsive. Adjust timing or add startupProbe for slow apps.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+## Resource Management and Quotas
+
+### Question 171
+[MEDIUM]
+
+What happens when a namespace exceeds its ResourceQuota for CPU requests?
+
+A) Existing Pods are evicted
+B) New Pods that would exceed the quota are rejected
+C) Pods run with reduced CPU
+D) Quota is automatically increased
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ResourceQuota is enforced at admission time. When creating Pods would exceed the quota, the request is rejected with an error. Existing Pods are not affected. The quota prevents new resource consumption, not current usage.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
+---
+
+### Question 172
+[MEDIUM]
+
+How do you view current ResourceQuota usage in a namespace?
+
+A) kubectl get quota
+B) kubectl describe resourcequota <name> -n <namespace>
+C) kubectl top quota
+D) kubectl get limits
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl describe resourcequota <name>` shows both the quota limits and current usage for each resource type. It displays used/hard values making it easy to see how close to limits the namespace is. `kubectl get quota` shows quotas but less detail.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
+---
+
+### Question 173
+[MEDIUM-HARD]
+
+A Pod creation fails with "exceeded quota" but calculations show quota should be available. What might cause this?
+
+A) Calculation error
+B) Pods in Terminating state still count against quota until fully deleted
+C) Quota is disabled
+D) Wrong namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Pods in Terminating state continue counting against ResourceQuota until completely deleted. If Pods are stuck terminating, they consume quota space. Check for terminating Pods with `kubectl get pods` and investigate why they won't terminate.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
+---
+
+### Question 174
+[MEDIUM-HARD]
+
+What is the effect of LimitRange on Pods without resource specifications?
+
+A) Pods are rejected
+B) Default limits and requests are automatically applied
+C) Pods run unlimited
+D) Pods use node capacity
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** LimitRange can specify default resource requests and limits. Pods without explicit resources get these defaults applied automatically. This ensures all Pods in a namespace have resource constraints even if developers don't specify them, enabling better scheduling and quota accounting.
+
+**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
+
+</details>
+
+---
+
+### Question 175
+[HARD]
+
+How do you identify which Pods are consuming the most resources against a quota?
+
+A) kubectl top quota
+B) List Pods in namespace and sum their resource requests; compare with quota
+C) Check kubelet metrics
+D) View etcd directly
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ResourceQuota counts requests, not actual usage. List Pods: `kubectl get pods -n <ns> -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[*].resources.requests}{"\n"}{end}'`. Sum requests per resource type to find major consumers. `kubectl top pods` shows actual usage, not quota consumption.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
+---
+
+### Question 176
+[HARD]
+
+A namespace has both ResourceQuota and LimitRange. In what order are they evaluated?
+
+A) Quota first, then LimitRange
+B) LimitRange applies defaults first, then quota is evaluated
+C) They're evaluated simultaneously
+D) Only one can be active
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** LimitRange defaults are applied first to fill in missing resource specifications. Then ResourceQuota admission checks if the total (including defaults) fits within quota. This ordering means LimitRange defaults affect quota calculations, so ensure defaults align with quota capacity.
+
+**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
+
+</details>
+
+---
+
+### Question 177
+[HARD]
+
+What causes "must specify limits" error even when LimitRange has defaults?
+
+A) LimitRange not applied yet
+B) ResourceQuota with specific scope (like BestEffort) requires matching resource specs
+C) Wrong namespace
+D) LimitRange is invalid
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ResourceQuota scopes can require specific Pod QoS classes. A quota scope like `NotBestEffort` requires Pods to have limits (Burstable or Guaranteed QoS). LimitRange might set defaults but not for all containers, or the scope requirements might conflict with defaults.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/#quota-scopes)
+
+</details>
+
+---
+
+### Question 178
+[HARD]
+
+How do PriorityClass and ResourceQuota interact?
+
+A) No interaction
+B) Quota can be scoped to specific priority classes
+C) Higher priority bypasses quota
+D) Priority determines quota order
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ResourceQuota can use scope selectors to apply different quotas based on PriorityClass. For example, limit low-priority batch Pods differently than high-priority production Pods. This allows reserving cluster capacity for critical workloads while limiting lower-priority consumption.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/#resource-quota-per-priorityclass)
+
+</details>
+
+---
+
+### Question 179
+[HARD]
+
+A container is OOMKilled but its memory usage (from kubectl top) shows below the limit. What explains this?
+
+A) Metrics are wrong
+B) kubectl top shows container memory, but kernel also counts filesystem cache and other memory
+C) Limit isn't enforced
+D) Container restarted before measurement
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Container memory limits include all memory charged to the cgroup: anonymous memory, tmpfs, kernel buffers, and sometimes filesystem cache. `kubectl top` shows working set, but the actual cgroup memory can be higher. Check detailed cgroup stats for full picture.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
+---
+
+### Question 180
+[HARD]
+
+How does eviction priority work when a node is under memory pressure?
+
+A) Random selection
+B) Pods exceeding requests are evicted first, then by priority class
+C) Alphabetical by name
+D) Oldest first
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Eviction order: BestEffort Pods first, then Pods exceeding their requests (sorted by amount over request), then by PriorityClass value. Pods using less than their request and with higher priority are evicted last. Guaranteed Pods with usage below limits are most protected.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
 
 </details>
 
@@ -1864,68 +1864,22 @@ D) The node is drained
 
 ## Security and Access Troubleshooting
 
-### Question 81
-[HARD]
+### Question 181
+[MEDIUM]
 
-How do you troubleshoot ServiceAccount permission issues?
+A Pod fails with "Error: container has runAsNonRoot and image will run as root". How do you fix this?
 
-A) Delete the ServiceAccount
-B) Use kubectl auth can-i --as=system:serviceaccount:<ns>:<sa-name>, check RBAC bindings
-C) Restart the API server
-D) Change namespaces
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Test ServiceAccount permissions with: `kubectl auth can-i <verb> <resource> --as=system:serviceaccount:<namespace>:<sa-name>`. List bindings: `kubectl get rolebindings,clusterrolebindings -A -o wide | grep <sa-name>`. Verify the Role/ClusterRole has required permissions.
-
-**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
-
-</details>
-
----
-
-### Question 82
-[HARD]
-
-What causes "Forbidden" errors when accessing the API?
-
-A) Network issues
-B) RBAC denying the request due to missing permissions
-C) DNS failures
-D) Certificate issues only
+A) Remove the security context
+B) Use an image that runs as non-root or set runAsUser to a non-zero value
+C) Add root permissions
+D) Disable security policy
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** "Forbidden" (403) means authentication succeeded but authorization failed - the user/ServiceAccount lacks RBAC permissions for the requested action. Check: 1) Which Role/ClusterRole is bound, 2) What verbs/resources it allows, 3) Use `kubectl auth can-i` to verify specific permissions.
-
-**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
-
-</details>
-
----
-
-### Question 83
-[HARD]
-
-How do you verify Pod security context is applied correctly?
-
-A) kubectl describe only
-B) kubectl exec into Pod and check id, cat /proc/1/status for capabilities
-C) kubectl logs only
-D) kubectl get pod -o wide
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Verify security context by execing into the Pod: 1) `id` shows runAsUser/runAsGroup, 2) `cat /proc/1/status | grep Cap` shows capabilities, 3) Check filesystem with `mount | grep ro` for readOnlyRootFilesystem, 4) Try privileged operations to test restrictions.
+**Explanation:** The `runAsNonRoot: true` security context prevents containers from running as UID 0. Fix by: using an image built to run as non-root user, or explicitly setting `runAsUser: <non-zero-uid>` in securityContext. Don't remove the security control.
 
 **Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -1933,68 +1887,45 @@ D) kubectl get pod -o wide
 
 ---
 
-### Question 84
-[HARD]
+### Question 182
+[MEDIUM]
 
-What indicates SecurityContext conflicts?
+How do you check if a ServiceAccount has permission to perform an action?
 
-A) Network errors
-B) Pod fails to start with security-related error in events
-C) DNS failures
-D) Storage issues
+A) kubectl get serviceaccount
+B) kubectl auth can-i <verb> <resource> --as=system:serviceaccount:<namespace>:<name>
+C) kubectl describe serviceaccount
+D) kubectl get rolebinding
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** SecurityContext conflicts show as: 1) Pod stuck in ContainerCreating with security errors, 2) Events showing "container has runAsNonRoot and image will run as root", 3) Capability denied messages, 4) Pod Security admission violations. Check `kubectl describe pod` and events for specific errors.
+**Explanation:** Use `kubectl auth can-i` with `--as` flag to impersonate the ServiceAccount and check permissions. For example: `kubectl auth can-i get pods --as=system:serviceaccount:default:my-sa`. This directly tests RBAC rules without needing to trace through all bindings.
 
-**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Checking API Access | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#checking-api-access)
 
 </details>
 
 ---
 
-### Question 85
-[HARD]
+### Question 183
+[MEDIUM-HARD]
 
-How do you troubleshoot PodSecurityPolicy violations?
+A Pod can't access the Kubernetes API despite having a ServiceAccount with appropriate RBAC. What else should you check?
 
-A) Delete all policies
-B) Check PSP annotations, verify ServiceAccount can use the PSP, and review Pod events
-C) Restart kubelet
-D) Delete the namespace
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Note: PSP is deprecated since v1.21, replaced by Pod Security Admission. For legacy troubleshooting: 1) Check which PSP the ServiceAccount can use via RBAC, 2) Review Pod events for specific violations, 3) Check PSP annotations on the Pod showing which policy was applied.
-
-**Source:** [Pod Security Admission | Kubernetes](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
-
-</details>
-
----
-
-### Question 86
-[HARD]
-
-What causes service account token mount failures?
-
-A) Network issues
-B) ServiceAccount doesn't exist, automountServiceAccountToken issues, or token controller problems
-C) DNS failures
-D) Storage issues
+A) Only RBAC matters
+B) ServiceAccount token automount might be disabled, or the token might be expired
+C) Pod IP address
+D) Container image
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Token mount failures occur when: 1) Referenced ServiceAccount doesn't exist in namespace, 2) `automountServiceAccountToken: false` is set, 3) Token controller in controller-manager isn't running, 4) Token projection issues. Check Pod events and verify ServiceAccount exists with `kubectl get sa`.
+**Explanation:** Besides RBAC, check: `automountServiceAccountToken: false` in Pod or ServiceAccount spec disables token mounting, token expiration with bound service account tokens, NetworkPolicy blocking API server access, or the ServiceAccount specified doesn't exist.
 
 **Source:** [Configure Service Accounts | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
 
@@ -2002,116 +1933,160 @@ D) Storage issues
 
 ---
 
-### Question 87
-[HARD]
+### Question 184
+[MEDIUM-HARD]
 
-How do you check if a Pod has the required capabilities?
+What does "Forbidden: pod has unready container" error indicate when exec-ing into a Pod?
 
-A) kubectl describe pod only
-B) kubectl exec and check /proc/1/status or use capsh --print
-C) kubectl logs only
-D) kubectl get pod
+A) Wrong container name
+B) Some admission policies restrict exec into Pods with unhealthy containers
+C) Container doesn't exist
+D) Permission denied
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Check container capabilities by: 1) `kubectl exec <pod> -- cat /proc/1/status | grep Cap` shows capability bitmasks, 2) `kubectl exec <pod> -- capsh --print` (if available) shows human-readable capabilities, 3) Decode bitmask with `capsh --decode=<hex>`. Compare with securityContext.capabilities settings.
+**Explanation:** Some admission controllers or policies restrict kubectl exec to only Ready containers. This is a security/operational control to prevent accessing unstable containers. Wait for the container to become Ready or check if there's an exception process.
 
-**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Admission Controllers Reference | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
 
 </details>
 
 ---
 
-### Question 88
+### Question 185
 [HARD]
 
-What indicates a seccomp profile is blocking syscalls?
+A user has ClusterRoleBinding to "edit" but can't create Pods. What might restrict this?
 
-A) Network errors
-B) Container crashes with SIGSYS or operation not permitted errors
-C) DNS failures
-D) Storage errors
+A) Edit role doesn't include Pods
+B) ResourceQuota, LimitRange, or namespace-level RoleBinding might override
+C) User token expired
+D) API server down
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Seccomp blocks show as: 1) Container killed with signal SIGSYS (31), 2) "operation not permitted" errors for specific syscalls, 3) Unexpected "Bad system call" messages. Debug with seccomp audit mode to log blocked calls without killing the process. Check dmesg for seccomp audit logs.
+**Explanation:** The edit ClusterRole includes Pod creation. However: ResourceQuota might prevent Pod creation due to limits, LimitRange might reject Pods missing required fields, or a namespace RoleBinding might bind a more restrictive role that takes precedence over ClusterRoleBinding for that namespace.
 
-**Source:** [Restrict syscalls with seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
+**Source:** [RBAC | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
 </details>
 
 ---
 
-### Question 89
+### Question 186
 [HARD]
 
-How do you troubleshoot AppArmor profile issues?
+How do you troubleshoot "dial tcp: lookup kubernetes.default.svc: no such host" from inside a Pod?
 
-A) Disable AppArmor
-B) Check dmesg for denied operations, verify profile is loaded, and check Pod annotations
-C) Restart the node
-D) Delete the Pod
+A) API server is down
+B) DNS resolution failing - check CoreDNS Pods, /etc/resolv.conf in Pod
+C) Service doesn't exist
+D) Wrong credentials
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Troubleshoot AppArmor by: 1) Check `dmesg | grep apparmor` for denied operations, 2) Verify profile is loaded: `aa-status`, 3) Check Pod annotations match loaded profiles, 4) Profile must be loaded on all nodes where Pod may run. Missing profiles cause container creation failures.
+**Explanation:** This error indicates DNS failure for the kubernetes API Service. Check: CoreDNS Pods running, Pod's /etc/resolv.conf points to CoreDNS ClusterIP, and CoreDNS has the kubernetes plugin enabled. The kubernetes.default.svc Service always exists in healthy clusters.
 
-**Source:** [Restrict Container Access with AppArmor | Kubernetes](https://kubernetes.io/docs/tutorials/security/apparmor/)
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
 
 </details>
 
 ---
 
-### Question 90
+### Question 187
 [HARD]
 
-What causes "operation not permitted" errors in containers?
+A NetworkPolicy is created but Pod traffic isn't being filtered. What might cause this?
 
-A) Network issues
-B) Missing capabilities, seccomp/AppArmor restrictions, or read-only filesystem
-C) DNS failures
-D) Storage quota exceeded
+A) NetworkPolicy is namespace-scoped
+B) CNI plugin doesn't support NetworkPolicy or policy selectors don't match
+C) Pods need restart
+D) NetworkPolicy applies immediately
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** "Operation not permitted" (EPERM) occurs due to: 1) Missing Linux capabilities (drop all is default in restricted), 2) Seccomp blocking the syscall, 3) AppArmor denying the action, 4) Read-only filesystem for write operations, 5) Running as non-root without required privileges. Check security context and system logs.
+**Explanation:** Not all CNI plugins support NetworkPolicy (e.g., Flannel without Calico). Even with supported plugins, policies only apply to Pods matching the podSelector. Empty podSelector ({}) matches all Pods. Verify CNI supports policies and selector labels match target Pods.
 
-**Source:** [Configure a Security Context | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 </details>
 
 ---
 
-## Advanced Diagnostics
-
-### Question 91
+### Question 188
 [HARD]
 
-How do you use audit logs to troubleshoot issues?
+A ServiceAccount token works from inside the cluster but not from outside. What's the likely cause?
 
-A) kubectl logs audit
-B) Review API server audit logs to see all API requests, including who made them and the response
-C) kubectl get audit
-D) kubectl describe audit
+A) Token is invalid
+B) Bound service account tokens are audience-restricted and may not work with external API server URLs
+C) RBAC is namespace-specific
+D) Token expired inside
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Audit logs record all API requests including: user/ServiceAccount, timestamp, verb, resource, and response code. Useful for: tracking who deleted resources, identifying unauthorized access attempts, understanding the sequence of operations during incidents. Configure via kube-apiserver audit policy.
+**Explanation:** Bound ServiceAccount tokens include audience claims for specific API servers. External access might use a different API server URL/audience than the token was issued for. For external access, create a long-lived token or ensure audience matches in token request.
+
+**Source:** [Service Account Tokens | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
+
+</details>
+
+---
+
+### Question 189
+[HARD]
+
+A Pod fails to start with "operation not permitted" for seccomp profile. How do you diagnose this?
+
+A) Check container logs
+B) Verify seccomp profile exists on node, check profile path, and ensure kubelet can read it
+C) Remove seccomp configuration
+D) Change container user
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Seccomp profiles referenced in Pods must exist on nodes at the specified path. For custom profiles, check: profile file exists at correct path (default: /var/lib/kubelet/seccomp/), kubelet has read permissions, and JSON syntax is valid. Use RuntimeDefault for built-in profile.
+
+**Source:** [Restrict Syscalls with Seccomp | Kubernetes](https://kubernetes.io/docs/tutorials/security/seccomp/)
+
+</details>
+
+---
+
+### Question 190
+[HARD]
+
+How do you audit which RBAC permissions a failing API request needed?
+
+A) Check user permissions
+B) Enable audit logging and look for RBAC decision details in audit events
+C) Try different permissions
+D) Check API server logs only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubernetes audit logs capture RBAC decisions with details about required permissions. Configure audit policy to log request metadata and authorization decisions. The audit events show exactly which resource/verb/namespace was requested and why it was denied.
 
 **Source:** [Auditing | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
 
@@ -2119,91 +2094,185 @@ D) kubectl describe audit
 
 ---
 
-### Question 92
-[HARD]
+## Advanced Diagnostics and Tools
 
-What information do Kubernetes events provide for troubleshooting?
+### Question 191
+[MEDIUM]
 
-A) Only Pod creation times
-B) State changes, warnings, errors, and reasons for resource status changes
-C) Only network information
-D) Only storage information
+What is the purpose of `kubectl cluster-info dump`?
+
+A) Delete cluster information
+B) Export comprehensive cluster state for debugging including logs and configs
+C) Show cluster version
+D) Backup etcd
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Events provide: scheduling decisions, image pull status, container state changes, probe failures, resource creation/deletion, and warnings/errors. View with `kubectl get events --sort-by=.lastTimestamp` or `kubectl describe <resource>`. Events are retained for about 1 hour by default.
+**Explanation:** `kubectl cluster-info dump` exports cluster state: component status, node info, events, and logs from kube-system namespace. Add `--all-namespaces` for complete dump. Output goes to stdout or a directory with `--output-directory`. Useful for sharing debug info with support.
 
-**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
 
 </details>
 
 ---
 
-### Question 93
-[HARD]
+### Question 192
+[MEDIUM]
 
-How do you correlate metrics with cluster issues?
+How do you check if the API server is healthy?
 
-A) Ignore metrics
-B) Compare metric timestamps with events, look for anomalies during incident timeframes
-C) Delete metrics
-D) Restart Prometheus
+A) kubectl get nodes
+B) kubectl get --raw /healthz or /livez or /readyz
+C) ping the API server
+D) kubectl cluster-info only
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Correlate metrics by: 1) Identify incident timeframe from events/logs, 2) Query metrics (Prometheus) for that period, 3) Look for anomalies: CPU spikes, memory pressure, network errors, disk latency, 4) Cross-reference with component metrics (API server, etcd, kubelet) to identify root cause.
+**Explanation:** API server exposes health endpoints: `/healthz` (deprecated), `/livez` (liveness), `/readyz` (readiness). Use `kubectl get --raw /readyz?verbose=true` for detailed component health. These show individual subsystem health (etcd, informers, etc.).
 
-**Source:** [Tools for Monitoring Resources | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
+**Source:** [API Server | Kubernetes](https://kubernetes.io/docs/reference/using-api/health-checks/)
 
 </details>
 
 ---
 
-### Question 94
-[HARD]
+### Question 193
+[MEDIUM-HARD]
 
-What is the role of the conditions field in resource troubleshooting?
+What information does `kubectl get componentstatuses` provide?
 
-A) It shows only the resource name
-B) It provides detailed status information about the resource's current state and any issues
-C) It is only for internal use
-D) It shows only timestamps
+A) Pod statuses
+B) Health of control plane components (deprecated, may show inaccurate data)
+C) Node component status
+D) Network component health
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The `status.conditions` field provides structured status: type (e.g., Ready, PodScheduled), status (True/False/Unknown), reason, and message. Conditions explain why a resource isn't ready. Check with `kubectl get <resource> -o jsonpath='{.status.conditions}'` or `kubectl describe`.
+**Explanation:** `kubectl get componentstatuses` (or `cs`) shows control plane component health: scheduler, controller-manager, etcd. However, this API is deprecated and may show incorrect data in modern clusters. Use direct health endpoints (`/healthz`) on each component instead.
 
-**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions)
+**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
 
 </details>
 
 ---
 
-### Question 95
-[HARD]
+### Question 194
+[MEDIUM-HARD]
 
-How do you troubleshoot webhook timeout issues?
+How do you get detailed information about why a specific Pod is not being scheduled?
 
-A) Delete the webhook
-B) Check webhook pod health, network latency, increase timeout settings, and review webhook logs
-C) Restart the API server
-D) Delete all resources
+A) kubectl get pod
+B) kubectl describe pod <name> and check Events section for scheduler messages
+C) kubectl logs scheduler
+D) kubectl get events only
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Troubleshoot webhook timeouts: 1) Check webhook Pod is healthy and responsive, 2) Test network latency from API server to webhook, 3) Increase timeoutSeconds in webhook config (default 10s), 4) Review webhook logs for slow processing, 5) Consider failurePolicy impact.
+**Explanation:** `kubectl describe pod` shows Events including scheduler decisions. Messages like "0/3 nodes are available: 1 node had taint, 2 insufficient memory" explain exactly why scheduling failed. Events are attached to the Pod object by the scheduler.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 195
+[HARD]
+
+How do you enable verbose output for kubectl to debug API issues?
+
+A) kubectl --debug
+B) kubectl -v=<level> where higher levels show more detail (8-9 shows HTTP requests/responses)
+C) kubectl --trace
+D) Set DEBUG=true environment variable
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** kubectl verbosity levels: -v=6 shows request URLs, -v=7 shows request headers, -v=8 shows request/response bodies, -v=9 shows curl commands. Example: `kubectl -v=8 get pods` shows the full HTTP interaction with the API server.
+
+**Source:** [kubectl | Kubernetes](https://kubernetes.io/docs/reference/kubectl/)
+
+</details>
+
+---
+
+### Question 196
+[HARD]
+
+What does high "workqueue depth" in controller-manager metrics indicate?
+
+A) Normal operation
+B) Controllers are falling behind processing events, possible performance issue
+C) Queue is empty
+D) Metrics are broken
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Workqueue depth measures pending items for each controller. High depth means events are queuing faster than processing, indicating: controller performance issues, etcd latency, or excessive cluster changes. Monitor `workqueue_depth` metric per controller type.
+
+**Source:** [Controller Manager Metrics | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/system-metrics/)
+
+</details>
+
+---
+
+### Question 197
+[HARD]
+
+How do you identify etcd performance issues affecting the cluster?
+
+A) Check API server logs
+B) Monitor etcd metrics: request latency, disk fsync duration, leader changes, and database size
+C) Restart etcd
+D) Check kubelet logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Key etcd metrics: `etcd_disk_wal_fsync_duration_seconds` (disk performance), `etcd_server_leader_changes_seen_total` (cluster stability), `etcd_mvcc_db_total_size_in_bytes` (database size), and request latency histograms. Slow etcd causes cluster-wide API latency.
+
+**Source:** [Operating etcd | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
+</details>
+
+---
+
+### Question 198
+[HARD]
+
+What does the admission webhook timeout error indicate and how do you troubleshoot it?
+
+A) API server timeout
+B) Webhook service didn't respond in time; check webhook Pod logs and network connectivity
+C) Invalid webhook configuration
+D) RBAC issue
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Webhook timeouts mean the webhook service (ValidatingWebhookConfiguration or MutatingWebhookConfiguration) didn't respond within the configured timeout (default 10s). Check: webhook Pod health/logs, network connectivity to webhook Service, and consider adjusting timeoutSeconds or failurePolicy.
 
 **Source:** [Dynamic Admission Control | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
 
@@ -2211,117 +2280,46 @@ D) Delete all resources
 
 ---
 
-### Question 96
+### Question 199
 [HARD]
 
-What causes garbage collection to fail?
+How do you trace the path of a request through the Kubernetes API server?
 
-A) Too many Pods
-B) Finalizers blocking deletion, owner references issues, or controller-manager problems
-C) Network issues only
-D) DNS failures only
+A) Use kubectl describe
+B) Enable audit logging with RequestReceived stage and trace through audit events using audit ID
+C) Check API server logs only
+D) Use network packet capture
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Garbage collection failures occur due to: 1) Finalizers that can't complete (controller not running), 2) Orphaned resources with broken owner references, 3) Garbage collector in controller-manager not running, 4) API server issues preventing deletion. Check resources for stuck finalizers.
+**Explanation:** Kubernetes audit logs track requests through stages: RequestReceived, ResponseStarted, ResponseComplete, Panic. Each event includes an audit ID for correlation. Configure audit policy to capture needed detail level. This shows authentication, authorization, and admission decisions.
 
-**Source:** [Garbage Collection | Kubernetes](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)
+**Source:** [Auditing | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
 
 </details>
 
 ---
 
-### Question 97
+### Question 200
 [HARD]
 
-How do you diagnose finalizer-related stuck resources?
+A cluster has intermittent API server errors. How do you identify if it's a specific control plane component issue?
 
-A) Delete the cluster
-B) kubectl get <resource> -o yaml to check finalizers, identify the controller, or manually remove
-C) Restart the API server
-D) Delete the namespace
+A) Restart all components
+B) Check each component's health endpoint, logs, and metrics independently
+C) Assume it's network related
+D) Redeploy the cluster
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Diagnose stuck finalizers: 1) `kubectl get <resource> -o yaml` to see finalizers list, 2) Identify which controller should remove them, 3) Check controller logs for errors, 4) If controller is gone, manually remove finalizers with `kubectl patch` (caution: may orphan resources).
+**Explanation:** Systematic diagnosis: check API server `/readyz?verbose=true` for failing checks, examine each component's logs (scheduler, controller-manager, etcd), monitor metrics for latency and errors, and verify network connectivity between components. Correlate timestamps across components.
 
-**Source:** [Finalizers | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/)
-
-</details>
-
----
-
-### Question 98
-[HARD]
-
-What indicates a controller is not watching resources correctly?
-
-A) High CPU usage only
-B) Resources not being reconciled, stale status, or missing events in controller logs
-C) Network errors only
-D) Storage issues only
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Watch issues show as: 1) Resources staying in stale state (no status updates), 2) Missing reconciliation messages in logs, 3) Watch timeout/error logs, 4) Increasing work queue but no processing. Check controller logs for watch connection errors and verify API server connectivity.
-
-**Source:** [Debugging Kubernetes Nodes | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
 
 </details>
-
----
-
-### Question 99
-[HARD]
-
-How do you troubleshoot CRD validation errors?
-
-A) Delete the CRD
-B) Check the error message, verify spec against CRD schema, and use dry-run for testing
-C) Restart the API server
-D) Delete all Custom Resources
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Troubleshoot CRD validation: 1) Read the error message for specific field issues, 2) Compare CR spec against CRD schema: `kubectl get crd <name> -o yaml`, 3) Use `--dry-run=server` to test without applying, 4) Check for required fields, type mismatches, or enum violations.
-
-**Source:** [Custom Resources | Kubernetes](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-
-</details>
-
----
-
-### Question 100
-[HARD]
-
-What is the systematic approach to diagnosing unknown cluster issues?
-
-A) Restart everything immediately
-B) Check component health, review events and logs, examine metrics, and narrow down systematically
-C) Delete and recreate the cluster
-D) Ignore the issues
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer:** B
-
-**Explanation:** Systematic troubleshooting: 1) Check control plane components (API server, etcd, scheduler, controller-manager), 2) Review events: `kubectl get events -A`, 3) Check component logs for errors, 4) Examine metrics for resource/performance issues, 5) Narrow down: cluster-wide vs namespace vs specific resource, 6) Check recent changes.
-
-**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/)
-
-</details>
-
----
