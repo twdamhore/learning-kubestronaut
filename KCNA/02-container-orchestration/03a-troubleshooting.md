@@ -1642,6 +1642,17 @@ B) No matching PV is available or StorageClass cannot provision a volume
 C) The PVC is being deleted
 D) The volume is mounted
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Pending PVC indicates that no PersistentVolume matches the PVC requirements, or dynamic provisioning via StorageClass has not completed. Check `kubectl describe pvc` for events explaining why binding failed—common issues include no matching PV, storageClassName mismatch, or provisioner errors.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
 ---
 
 ### Question 72
@@ -1653,6 +1664,17 @@ A) Delete the Pod
 B) Check PVC status, PV binding, node availability, and Pod events for mount errors
 C) Increase volume size
 D) Change storage class
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For volume mount issues: verify PVC is Bound, check PV status and accessibility, review Pod events for mount errors (`kubectl describe pod`), ensure the node can access the storage backend, check CSI driver status, and verify volume is not attached to another node (for single-attach volumes).
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
 
 ---
 
@@ -1666,6 +1688,17 @@ B) Volume not found, mount path issues, node cannot access storage, or CSI drive
 C) Only network issues
 D) Only Pod configuration errors
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** FailedMount warnings occur when kubelet cannot mount a volume. Causes include: PV not found or not bound, storage backend unreachable, permission issues on mount, NFS/storage server unavailable, CSI driver not functioning, or timeout waiting for volume attachment.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
 ---
 
 ### Question 74
@@ -1677,6 +1710,17 @@ A) kubectl get volume
 B) kubectl get pv and verify STATUS is Bound and CLAIM shows the correct PVC
 C) kubectl describe storage
 D) kubectl check pv
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl get pv` to list all PersistentVolumes. A correctly bound PV shows STATUS as "Bound" and CLAIM shows the namespace/name of the bound PVC. Use `kubectl describe pv <name>` for detailed information including capacity, access modes, and storage class.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
 
 ---
 
@@ -1690,6 +1734,17 @@ B) Volume binding is delayed until a Pod using the PVC is scheduled to a node
 C) The volume is corrupted
 D) The storage class is invalid
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** WaitForFirstConsumer is a volumeBindingMode in StorageClass that delays PV binding and provisioning until a Pod using the PVC is scheduled. This ensures the volume is created in the same topology (zone/region) as the Pod. The PVC shows Pending until a Pod is scheduled.
+
+**Source:** [Storage Classes | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode)
+
+</details>
+
 ---
 
 ### Question 76
@@ -1701,6 +1756,17 @@ A) Restart the NFS server only
 B) Check NFS server availability, network connectivity, mount permissions, and firewall rules
 C) Delete the PVC
 D) Change to a different storage class
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For NFS mount failures: verify NFS server is running and accessible from nodes, test mount manually from the node, check NFS export permissions and allowed clients, verify firewall rules allow NFS ports (2049, etc.), and check that the export path exists on the server.
+
+**Source:** [Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
+
+</details>
 
 ---
 
@@ -1714,6 +1780,17 @@ B) Volume already attached elsewhere, node issues, storage backend problems, or 
 C) Only network issues
 D) Only permission issues
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** This error has multiple potential causes: volume already attached to another node (for RWO volumes), node lacking access to storage network, storage backend unavailable or full, CSI driver pods not running, incorrect volume configuration, or cloud provider API issues for cloud volumes.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
 ---
 
 ### Question 78
@@ -1725,6 +1802,17 @@ A) kubectl get pods
 B) kubectl describe storageclass, check provisioner status, and review PVC events
 C) kubectl logs storageclass
 D) kubectl debug storageclass
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify StorageClass issues by: examining StorageClass configuration (`kubectl describe sc`), verifying the provisioner exists and is running, checking PVC events for provisioning errors, and ensuring the provisioner has necessary permissions. For CSI provisioners, check the CSI controller logs.
+
+**Source:** [Storage Classes | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/)
+
+</details>
 
 ---
 
@@ -1738,6 +1826,17 @@ B) The volume could not be attached to the node, often due to cloud provider or 
 C) The volume is corrupted
 D) The Pod is misconfigured
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** FailedAttachVolume indicates the volume attachment to the node failed. Common causes include: volume already attached to another node, cloud provider API errors, CSI driver issues, node not authorized to attach the volume, or volume in a different availability zone than the node.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
 ---
 
 ### Question 80
@@ -1749,6 +1848,17 @@ A) Restart all nodes
 B) Check CSI driver pods, controller logs, node plugin logs, and CSI socket connectivity
 C) Reinstall Kubernetes
 D) Delete all PVCs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot CSI drivers by: checking CSI controller and node plugin pods are running (`kubectl get pods -n <csi-namespace>`), reviewing controller logs for provisioning errors, checking node plugin logs for mount issues, verifying CSI socket exists on nodes, and ensuring RBAC permissions are correct.
+
+**Source:** [Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/#csi)
+
+</details>
 
 ---
 
