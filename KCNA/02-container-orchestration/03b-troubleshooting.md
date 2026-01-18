@@ -1178,6 +1178,17 @@ B) Pods can be created without resource restrictions
 C) The namespace is deleted
 D) No Pods can be created
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Without ResourceQuota, there are no namespace-level resource restrictions. Pods can be created freely limited only by cluster capacity. To enforce limits, create a ResourceQuota. Note: LimitRange can still apply per-Pod defaults even without ResourceQuota.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
 ---
 
 ### Question 52
@@ -1189,6 +1200,17 @@ A) kubectl get pods only
 B) kubectl describe resourcequota <name> shows Used vs Hard limits
 C) kubectl top namespace
 D) kubectl quota status
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe resourcequota <name> -n <namespace>` to see Used and Hard columns. Used shows current consumption; Hard shows the limits. If Used approaches Hard, new resource creation may be blocked. Also `kubectl get resourcequota -n <namespace>` shows a summary.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
 
 ---
 
@@ -1202,6 +1224,17 @@ B) Creating resources would exceed the namespace's ResourceQuota limits
 C) DNS failures
 D) API server issues
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Exceeded quota" occurs when creating a resource would exceed ResourceQuota limits (CPU, memory, Pod count, etc.). Check quota usage with `kubectl describe resourcequota`. Solutions: delete unused resources, request quota increase, or reduce resource requests in Pod specs.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
 ---
 
 ### Question 54
@@ -1213,6 +1246,17 @@ A) Delete the LimitRange
 B) Check LimitRange settings and ensure Pod requests/limits comply with min/max constraints
 C) Increase node resources
 D) Change namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** LimitRange violations occur when Pod specs exceed min/max constraints. Check with `kubectl describe limitrange -n <namespace>` to see min, max, and default values. Adjust Pod resource requests/limits to fall within the allowed range, or modify the LimitRange if appropriate.
+
+**Source:** [Limit Ranges | Kubernetes](https://kubernetes.io/docs/concepts/policy/limit-range/)
+
+</details>
 
 ---
 
@@ -1226,6 +1270,17 @@ B) All resources within the namespace are deleted
 C) Resources are moved to default namespace
 D) Only Pods are deleted
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Deleting a namespace triggers cascading deletion of all namespace-scoped resources: Pods, Services, ConfigMaps, Secrets, Deployments, etc. This is irreversible. The namespace enters Terminating state until all resources are deleted. Always backup important resources before namespace deletion.
+
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+</details>
+
 ---
 
 ### Question 56
@@ -1237,6 +1292,17 @@ A) kubectl get pods only
 B) kubectl top pods -n <namespace> --sort-by=cpu or memory
 C) kubectl describe namespace
 D) kubectl logs namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl top pods -n <namespace> --sort-by=cpu` or `--sort-by=memory` to see actual resource consumption. Requires metrics-server installed. This shows current usage, not requests/limits. Identify resource-heavy Pods for optimization or quota compliance.
+
+**Source:** [Tools for Monitoring Resources | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
+
+</details>
 
 ---
 
@@ -1250,6 +1316,17 @@ B) Finalizers on resources are blocking deletion; identify and remove them
 C) Restart the API server
 D) Delete the cluster
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Namespaces stuck in Terminating usually have resources with finalizers that can't complete. Identify stuck resources: `kubectl api-resources --namespaced -o name | xargs -n1 kubectl get -n <ns>`. Remove problematic finalizers carefully, or address the underlying issue (e.g., orphaned custom resources).
+
+**Source:** [Namespaces | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+</details>
+
 ---
 
 ### Question 58
@@ -1261,6 +1338,17 @@ A) Only check DNS
 B) Check NetworkPolicies, Service FQDN usage, and DNS resolution across namespaces
 C) Delete namespaces
 D) Restart all Pods
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Cross-namespace issues: 1) Use FQDN: `service.namespace.svc.cluster.local`, 2) Check NetworkPolicies in both namespaces may block traffic, 3) Verify DNS works: `kubectl exec <pod> -- nslookup service.namespace`. Default allows cross-namespace traffic unless NetworkPolicies restrict it.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
+</details>
 
 ---
 
@@ -1274,6 +1362,17 @@ B) No NetworkPolicies applied, or NetworkPolicies misconfigured
 C) DNS issues only
 D) Resource quota issues
 
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** By default, Kubernetes has no network isolation between namespaces. To achieve isolation, apply NetworkPolicies. If isolation fails: 1) Verify NetworkPolicies exist and have correct podSelector, 2) Ensure CNI plugin supports NetworkPolicy, 3) Check egress/ingress rules don't have overly permissive selectors.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+</details>
+
 ---
 
 ### Question 60
@@ -1285,6 +1384,17 @@ A) kubectl get pods
 B) kubectl describe resourcequota and attempt to create resources exceeding limits
 C) kubectl validate quota
 D) kubectl test quota
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Verify ResourceQuota by: 1) `kubectl describe resourcequota -n <namespace>` to see current usage and limits, 2) Attempt to create a resource exceeding the quota - it should be rejected with "exceeded quota" error. This confirms the quota admission controller is enforcing limits.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
 
 ---
 
