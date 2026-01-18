@@ -80,11 +80,11 @@ D) subscribe
 ### Question 4
 [MEDIUM-HARD]
 
-How do you grant read-only access to Pods in a namespace using RBAC?
+How do you grant read-only access to only Pods (and no other resources) in a namespace using RBAC?
 
 A) Create a Role with "read" verb
-B) Create a Role with "get", "list", and "watch" verbs for pods
-C) Assign the view ClusterRole directly
+B) Create a Role with "get", "list", and "watch" verbs for pods resource only
+C) Assign the view ClusterRole (grants access to many resources)
 D) Use the readonly annotation
 
 <details>
@@ -92,7 +92,7 @@ D) Use the readonly annotation
 
 **Answer:** B
 
-**Explanation:** RBAC doesn't have a "read" verb. To grant read-only access, you create a Role with "get" (fetch single resources), "list" (fetch collections), and "watch" (receive updates) verbs for the pods resource. Then bind this Role to the subject with a RoleBinding.
+**Explanation:** RBAC doesn't have a "read" verb. To grant read-only access to only Pods, create a Role with "get", "list", and "watch" verbs specifically for the pods resource. The view ClusterRole grants read access to many resources, not just Pods.
 
 **Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
@@ -797,11 +797,11 @@ D) Configuration files cannot be changed
 ### Question 35
 [HARD]
 
-How do you allow a container to bind to privileged ports (< 1024)?
+What is the least-privilege way to allow a non-root container to bind to privileged ports (< 1024)?
 
 A) Set privileged: true
 B) Add the NET_BIND_SERVICE capability
-C) Run as root
+C) Run as root instead
 D) Use hostNetwork: true
 
 <details>
@@ -809,7 +809,7 @@ D) Use hostNetwork: true
 
 **Answer:** B
 
-**Explanation:** The NET_BIND_SERVICE capability allows a non-root process to bind to privileged ports (ports below 1024). This is preferable to running as root or in privileged mode, as it grants only the specific capability needed following the principle of least privilege.
+**Explanation:** The NET_BIND_SERVICE capability allows a non-root process to bind to privileged ports (ports below 1024). This follows the principle of least privilege by granting only the specific capability needed, rather than running as root or in privileged mode which grant far more permissions.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container)
 
@@ -1098,7 +1098,7 @@ D) By mounting network volumes
 ### Question 48
 [HARD]
 
-What is the secretRef field used for in Pod specs?
+What is envFrom.secretRef used for in a Pod spec?
 
 A) To reference a specific key in a Secret
 B) To load all key-value pairs from a Secret as environment variables
@@ -1110,7 +1110,7 @@ D) To create a new Secret
 
 **Answer:** B
 
-**Explanation:** The envFrom.secretRef field loads all key-value pairs from a Secret as environment variables in the container. Each key becomes an environment variable name, and its value becomes the variable's value. This is useful for bulk-loading configuration.
+**Explanation:** The envFrom.secretRef field loads all key-value pairs from a Secret as environment variables in the container. Each key becomes an environment variable name, and its value becomes the variable's value. This is useful for bulk-loading configuration from a Secret.
 
 **Source:** [Secrets | Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables)
 
@@ -1682,7 +1682,7 @@ D) The request body
 How does the --authorization-mode flag work with multiple modes?
 
 A) Only the first mode is used
-B) Modes are evaluated in order; if any allows, the request is permitted
+B) Modes are evaluated in order; first allow or deny decision wins
 C) All modes must agree
 D) Modes are randomly selected
 
@@ -1691,7 +1691,7 @@ D) Modes are randomly selected
 
 **Answer:** B
 
-**Explanation:** When multiple authorization modes are specified (e.g., --authorization-mode=Node,RBAC), they're evaluated in order. Each authorizer can allow the request or have no opinion (pass). If any authorizer allows, the request proceeds immediately. If all authorizers have no opinion, the request is denied.
+**Explanation:** When multiple authorization modes are specified (e.g., --authorization-mode=Node,RBAC), they're evaluated in order. The first authorizer to return allow or deny makes the final decision. If an authorizer has no opinion, evaluation continues to the next. If all authorizers have no opinion, the request is denied.
 
 **Source:** [Authorization Overview | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
 
@@ -2189,19 +2189,19 @@ D) File naming conventions
 ### Question 95
 [HARD]
 
-What is the purpose of supplementalGroups in Pod securityContext?
+What is the purpose of the procMount field in container securityContext?
 
-A) To add users to the Pod
-B) To specify additional group IDs applied to all containers in the Pod
-C) To create backup groups
-D) To define RBAC groups
+A) To configure process monitoring
+B) To control how the /proc filesystem is mounted in the container
+C) To enable process listing
+D) To mount additional processes
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** The supplementalGroups field specifies a list of additional group IDs that are applied to the first process in each container. These groups are in addition to the container's primary GID and any groups defined in the container image. Useful for accessing shared volumes with specific group permissions.
+**Explanation:** The procMount field controls how /proc is mounted in the container. The default value "Default" masks sensitive /proc paths for security. "Unmasked" provides full access to /proc but requires the container to run in privileged mode. This affects what process information is visible inside the container.
 
 **Source:** [Configure a Security Context for a Pod or Container | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
