@@ -1,0 +1,2327 @@
+# Troubleshooting - 100 MCQ Questions (Part A)
+
+**Domain:** Container Orchestration (28%)
+**Competency:** Troubleshooting
+**Difficulty Distribution:** 20% Medium | 20% Medium-Hard | 60% Hard
+
+---
+
+## Pod Status Troubleshooting
+
+### Question 1
+[MEDIUM]
+
+What does the Pod status "Pending" indicate?
+
+A) The Pod is running but not ready
+B) The Pod has been accepted but is not yet scheduled or has unmet dependencies
+C) The Pod has completed successfully
+D) The Pod is being deleted
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Pod in Pending status has been accepted by the Kubernetes system but is not yet running. This can occur because the Pod is waiting to be scheduled to a node, waiting for volumes to be bound, or waiting for images to be pulled. Use `kubectl describe pod` to see the specific reason.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase)
+
+</details>
+
+---
+
+### Question 2
+[MEDIUM]
+
+Which command displays the events associated with a specific Pod?
+
+A) kubectl logs <pod-name>
+B) kubectl describe pod <pod-name>
+C) kubectl get pod <pod-name> --events
+D) kubectl events <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl describe pod <pod-name>` command shows detailed information about a Pod, including its events at the bottom of the output. Events provide valuable troubleshooting information such as scheduling decisions, image pulls, and container state changes.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 3
+[MEDIUM]
+
+What does the "CrashLoopBackOff" status indicate?
+
+A) The container image cannot be pulled
+B) The container keeps crashing and Kubernetes is waiting before restarting it
+C) The Pod is pending scheduling
+D) The node is under memory pressure
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** CrashLoopBackOff indicates that a container is repeatedly crashing after starting. Kubernetes uses an exponential backoff delay (10s, 20s, 40s, up to 5 minutes) before restarting the container again. Check container logs with `kubectl logs` to diagnose the crash cause.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/#my-pod-is-crashing-or-otherwise-unhealthy)
+
+</details>
+
+---
+
+### Question 4
+[MEDIUM]
+
+Which command is used to view container logs in a Pod?
+
+A) kubectl describe pod <pod-name>
+B) kubectl logs <pod-name>
+C) kubectl get logs <pod-name>
+D) kubectl show logs <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl logs <pod-name>` command retrieves the logs from a container in a Pod. For multi-container Pods, use the `-c` flag to specify the container. This is essential for debugging application issues and understanding why containers might be failing.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 5
+[MEDIUM]
+
+What does the "ImagePullBackOff" status indicate?
+
+A) The container is running out of memory
+B) Kubernetes is waiting before retrying a failed image pull
+C) The Pod is waiting for a volume to be mounted
+D) The container is restarting repeatedly
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ImagePullBackOff indicates that Kubernetes failed to pull the container image and is waiting before retrying. Common causes include incorrect image names, missing registry credentials, network issues, or the image not existing. Use `kubectl describe pod` to see the specific error.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
+---
+
+### Question 6
+[MEDIUM]
+
+How do you check why a Pod is stuck in Pending state?
+
+A) kubectl logs <pod-name>
+B) kubectl describe pod <pod-name>
+C) kubectl exec <pod-name> -- cat /var/log/messages
+D) kubectl top pod <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a Pod is stuck in Pending, `kubectl describe pod <pod-name>` shows the reason in the Events section. Common causes include insufficient resources, node selector or affinity mismatches, taints without tolerations, or pending PersistentVolumeClaims.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/#my-pod-stays-pending)
+
+</details>
+
+---
+
+### Question 7
+[MEDIUM]
+
+What is the purpose of kubectl describe pod?
+
+A) To delete a Pod
+B) To show detailed information including events, status, and configuration
+C) To update a Pod's configuration
+D) To view only the container logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl describe pod` command provides comprehensive information about a Pod including its configuration, status, conditions, volumes, events, and container states. This is one of the most important troubleshooting commands for understanding Pod issues.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 8
+[MEDIUM]
+
+Which field in Pod status shows the reason for container termination?
+
+A) status.phase
+B) status.containerStatuses[].state.terminated.reason
+C) status.message
+D) spec.terminationReason
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The termination reason is found in `status.containerStatuses[].state.terminated.reason`. Common values include "Completed" (exit code 0), "Error" (non-zero exit), and "OOMKilled" (out of memory). The exitCode field provides the actual exit code.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-states)
+
+</details>
+
+---
+
+### Question 9
+[MEDIUM]
+
+What does "ErrImagePull" status mean?
+
+A) The container has insufficient CPU
+B) Kubernetes failed to pull the container image
+C) The Pod is evicted
+D) The volume mount failed
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** ErrImagePull indicates an immediate failure to pull a container image. This differs from ImagePullBackOff, which is the state after repeated failures. Common causes include wrong image name, authentication issues, network problems, or registry unavailability.
+
+**Source:** [Images | Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+
+</details>
+
+---
+
+### Question 10
+[MEDIUM]
+
+How do you view logs from a previous container instance?
+
+A) kubectl logs <pod-name> --previous
+B) kubectl logs <pod-name> --old
+C) kubectl logs <pod-name> --history
+D) kubectl logs <pod-name> --last
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** The `kubectl logs <pod-name> --previous` (or `-p`) flag retrieves logs from the previous instance of a container. This is essential for debugging CrashLoopBackOff situations where the current container has restarted and the crash logs are in the previous instance.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+## Debugging Commands
+
+### Question 11
+[MEDIUM]
+
+What command allows you to execute a command inside a running container?
+
+A) kubectl run
+B) kubectl exec
+C) kubectl attach
+D) kubectl shell
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl exec` command executes a command inside a running container. Use `kubectl exec <pod-name> -- <command>` for single commands or `kubectl exec -it <pod-name> -- /bin/sh` for an interactive shell session.
+
+**Source:** [Get a Shell to a Running Container | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/)
+
+</details>
+
+---
+
+### Question 12
+[MEDIUM]
+
+How do you get a shell session inside a running container?
+
+A) kubectl shell <pod-name>
+B) kubectl exec -it <pod-name> -- /bin/sh
+C) kubectl connect <pod-name>
+D) kubectl attach <pod-name> --shell
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To get an interactive shell inside a container, use `kubectl exec -it <pod-name> -- /bin/sh` (or /bin/bash if available). The `-i` flag keeps stdin open and `-t` allocates a TTY. For multi-container Pods, add `-c <container-name>`.
+
+**Source:** [Get a Shell to a Running Container | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/)
+
+</details>
+
+---
+
+### Question 13
+[MEDIUM]
+
+What is the purpose of the kubectl debug command?
+
+A) To view debug logs only
+B) To create debugging sessions using ephemeral containers or copy of Pods
+C) To enable debug mode on the API server
+D) To increase log verbosity
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl debug` command creates debugging sessions by adding ephemeral containers to running Pods, creating a copy of a Pod with modifications, or creating a debugging Pod on a node. This is useful when containers lack debugging tools.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
+
+---
+
+### Question 14
+[MEDIUM]
+
+How do you view logs from a specific container in a multi-container Pod?
+
+A) kubectl logs <pod-name> --all
+B) kubectl logs <pod-name> -c <container-name>
+C) kubectl logs <pod-name>/<container-name>
+D) kubectl logs --container=<container-name> <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl logs <pod-name> -c <container-name>` to view logs from a specific container in a multi-container Pod. Without the `-c` flag, kubectl will prompt you to select a container if there are multiple containers in the Pod.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 15
+[MEDIUM]
+
+What does kubectl get events show?
+
+A) Only Pod creation events
+B) Cluster-wide events including warnings, errors, and normal events
+C) Only error events
+D) Node metrics
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl get events` command shows cluster-wide events including Normal and Warning types. Events provide information about what is happening in the cluster such as Pod scheduling, image pulls, volume mounts, and errors. Use `--sort-by='.lastTimestamp'` to sort by time.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 16
+[MEDIUM]
+
+How do you follow (stream) logs from a container in real-time?
+
+A) kubectl logs <pod-name> --stream
+B) kubectl logs <pod-name> -f
+C) kubectl logs <pod-name> --live
+D) kubectl logs <pod-name> --tail
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `-f` (or `--follow`) flag streams logs from a container in real-time, similar to `tail -f`. This is useful for watching application behavior as it happens. Combine with `--tail=N` to start from the last N lines.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 17
+[MEDIUM]
+
+What command shows the resource usage of Pods?
+
+A) kubectl describe pod
+B) kubectl top pod
+C) kubectl resources pod
+D) kubectl usage pod
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl top pod` command displays CPU and memory usage of Pods. This requires the Metrics Server to be installed in the cluster. Use `kubectl top pod --containers` to see per-container usage or `kubectl top nodes` for node-level metrics.
+
+**Source:** [Resource Metrics Pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
+
+</details>
+
+---
+
+### Question 18
+[MEDIUM]
+
+How do you check the rollout status of a Deployment?
+
+A) kubectl describe deployment
+B) kubectl rollout status deployment/<name>
+C) kubectl get deployment --status
+D) kubectl deployment status <name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl rollout status deployment/<name>` command shows the progress of a Deployment rollout. It displays whether the rollout is complete, in progress, or has stalled. This is useful for monitoring updates and detecting issues during deployments.
+
+**Source:** [Managing Resources | Kubernetes](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/)
+
+</details>
+
+---
+
+### Question 19
+[MEDIUM]
+
+What is the purpose of kubectl port-forward?
+
+A) To expose a Service externally
+B) To forward local ports to a Pod for debugging
+C) To change the container port
+D) To configure port mapping in a Service
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl port-forward` command forwards one or more local ports to a Pod, allowing you to access applications running in the cluster from your local machine without exposing them externally. This is useful for debugging and testing.
+
+**Source:** [Use Port Forwarding to Access Applications in a Cluster | Kubernetes](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
+
+</details>
+
+---
+
+### Question 20
+[MEDIUM]
+
+How do you view the YAML definition of a running Pod?
+
+A) kubectl describe pod <pod-name> --yaml
+B) kubectl get pod <pod-name> -o yaml
+C) kubectl export pod <pod-name>
+D) kubectl show pod <pod-name> --format=yaml
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl get pod <pod-name> -o yaml` to output the full YAML definition of a running Pod, including its current status. You can also use `-o json` for JSON format. This shows both the spec and current status of the resource.
+
+**Source:** [kubectl Cheat Sheet | Kubernetes](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+</details>
+
+---
+
+## Node Troubleshooting
+
+### Question 21
+[MEDIUM-HARD]
+
+What does a Node condition of "Ready: False" indicate?
+
+A) The node is healthy and accepting Pods
+B) The node is not healthy and may have issues with kubelet, networking, or resources
+C) The node is being upgraded
+D) The node is cordoned
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a node's Ready condition is False, it indicates the node is not healthy. Common causes include kubelet not running, network issues preventing communication with the API server, or resource pressure (disk, memory, PID). The node controller will not schedule new Pods to this node.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#condition)
+
+</details>
+
+---
+
+### Question 22
+[MEDIUM-HARD]
+
+Which command shows the status of all nodes in a cluster?
+
+A) kubectl describe nodes
+B) kubectl get nodes
+C) kubectl status nodes
+D) kubectl list nodes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl get nodes` command lists all nodes in the cluster with their status (Ready, NotReady), roles, age, and version. Add `-o wide` for additional details like internal/external IPs and container runtime. Use `kubectl describe node <name>` for detailed information about a specific node.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/)
+
+</details>
+
+---
+
+### Question 23
+[MEDIUM-HARD]
+
+What does the "DiskPressure" node condition indicate?
+
+A) The node has high CPU usage
+B) The node's available disk space is low
+C) The node has network issues
+D) The node's memory is full
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** DiskPressure indicates that the node's available disk space and inodes are low, below the eviction threshold. When this condition is True, kubelet will start evicting Pods to reclaim disk space. The thresholds are configurable via kubelet flags.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
+---
+
+### Question 24
+[MEDIUM-HARD]
+
+How do you check why a node is in NotReady state?
+
+A) kubectl logs node/<node-name>
+B) kubectl describe node <node-name>
+C) kubectl get node <node-name> --reason
+D) kubectl debug node <node-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe node <node-name>` to see detailed information about a node, including its conditions and reasons for any issues. The Conditions section shows Ready, MemoryPressure, DiskPressure, and PIDPressure status with reasons. Also check kubelet logs on the node itself.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 25
+[MEDIUM-HARD]
+
+What is the "MemoryPressure" node condition?
+
+A) The node has high CPU utilization
+B) The node's available memory is below the eviction threshold
+C) The node's disk is full
+D) The node has too many Pods
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** MemoryPressure indicates that the node's available memory is below the eviction threshold configured for kubelet. When True, kubelet will begin evicting Pods based on their QoS class and memory usage to prevent the node from running out of memory.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
+---
+
+### Question 26
+[MEDIUM-HARD]
+
+What happens to Pods when a node becomes NotReady?
+
+A) Pods are immediately deleted
+B) After a timeout, Pods may be evicted and rescheduled to other nodes
+C) Pods continue running normally
+D) Pods are paused until the node recovers
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a node becomes NotReady, the node controller waits for a configurable timeout (default 5 minutes via pod-eviction-timeout). After this timeout, Pods on the node are marked for eviction and may be rescheduled to other nodes if they are managed by a controller like Deployment or ReplicaSet.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-controller)
+
+</details>
+
+---
+
+### Question 27
+[MEDIUM-HARD]
+
+How do you cordon a node to prevent new Pod scheduling?
+
+A) kubectl taint node <node-name>
+B) kubectl cordon <node-name>
+C) kubectl disable <node-name>
+D) kubectl pause <node-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl cordon <node-name>` command marks a node as unschedulable, preventing new Pods from being scheduled on it. Existing Pods continue running. This is useful before maintenance. Use `kubectl uncordon` to make the node schedulable again.
+
+**Source:** [Safely Drain a Node | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
+
+</details>
+
+---
+
+### Question 28
+[MEDIUM-HARD]
+
+What is the difference between cordon and drain?
+
+A) They are the same operation
+B) Cordon prevents new Pods; drain also evicts existing Pods
+C) Drain prevents new Pods; cordon evicts existing Pods
+D) Cordon is for nodes; drain is for namespaces
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Cordon marks a node as unschedulable but leaves existing Pods running. Drain does cordon plus safely evicts all Pods from the node (respecting PodDisruptionBudgets and graceful termination). Use drain before node maintenance to move workloads elsewhere.
+
+**Source:** [Safely Drain a Node | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)
+
+</details>
+
+---
+
+### Question 29
+[MEDIUM-HARD]
+
+Which component is responsible for reporting node status?
+
+A) kube-scheduler
+B) kubelet
+C) kube-controller-manager
+D) kube-proxy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The kubelet is responsible for reporting node status to the API server. It sends regular heartbeats and updates the node's conditions (Ready, MemoryPressure, DiskPressure, PIDPressure). If kubelet stops reporting, the node controller marks the node as Unknown after the timeout.
+
+**Source:** [Node | Kubernetes](https://kubernetes.io/docs/concepts/architecture/nodes/#node-status)
+
+</details>
+
+---
+
+### Question 30
+[MEDIUM-HARD]
+
+What does the "PIDPressure" node condition indicate?
+
+A) The node has too many processes running
+B) The node is running low on available process IDs
+C) The node's CPU is overloaded
+D) The node has network issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** PIDPressure indicates the node is running low on available process IDs. Each process requires a PID, and the kernel has a limit (usually configurable). When PIDs are exhausted, new processes cannot be created. Kubelet can evict Pods when PID usage exceeds the threshold.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
+---
+
+## Network Troubleshooting
+
+### Question 31
+[MEDIUM-HARD]
+
+How do you test DNS resolution from within a Pod?
+
+A) kubectl dns test
+B) kubectl exec <pod> -- nslookup <service-name>
+C) kubectl resolve <service-name>
+D) kubectl network test dns
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To test DNS resolution from within a Pod, use `kubectl exec <pod> -- nslookup <service-name>` or similar tools like `dig` or `host` if available. This verifies that the Pod can resolve Service names through CoreDNS. You can also test with the full FQDN.
+
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+
+</details>
+
+---
+
+### Question 32
+[MEDIUM-HARD]
+
+What is the default DNS service name in Kubernetes?
+
+A) dns-service
+B) kube-dns
+C) cluster-dns
+D) core-dns
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The default DNS service in Kubernetes is named "kube-dns" in the kube-system namespace, even when using CoreDNS as the DNS provider. This naming convention provides backwards compatibility. The service exposes DNS on port 53 (UDP and TCP).
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
+</details>
+
+---
+
+### Question 33
+[MEDIUM-HARD]
+
+How do you check if a Service is reachable from a Pod?
+
+A) kubectl test service <service-name>
+B) kubectl exec <pod> -- curl <service-name>:<port> or wget
+C) kubectl ping <service-name>
+D) kubectl connect <service-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To test Service reachability from a Pod, use `kubectl exec <pod> -- curl <service-name>:<port>` or `wget`. This tests both DNS resolution and network connectivity to the Service. For non-HTTP services, use tools like `nc` (netcat) to test TCP connectivity.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 34
+[MEDIUM-HARD]
+
+What could cause a Service to have no endpoints?
+
+A) The Service port is incorrect
+B) No Pods match the Service selector, or matching Pods are not ready
+C) The Service type is ClusterIP
+D) The namespace is wrong
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Service has no endpoints when no Pods match its selector labels, or when matching Pods exist but are not in Ready state (failed readiness probes). Check the Service selector matches Pod labels and verify Pod readiness. Use `kubectl get endpoints` to see current endpoints.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 35
+[MEDIUM-HARD]
+
+How do you verify that a NetworkPolicy is working correctly?
+
+A) kubectl test networkpolicy
+B) Test connectivity from affected Pods and verify traffic is allowed or blocked as expected
+C) kubectl validate networkpolicy
+D) kubectl describe networkpolicy shows test results
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** NetworkPolicies must be tested empirically by attempting connections from affected Pods and verifying that allowed traffic succeeds and blocked traffic fails. Use `kubectl exec` to run connectivity tests (curl, wget, nc) from Pods that should or should not be able to connect.
+
+**Source:** [Network Policies | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+</details>
+
+---
+
+### Question 36
+[MEDIUM-HARD]
+
+What command shows the endpoints for a Service?
+
+A) kubectl get service <name> --endpoints
+B) kubectl get endpoints <service-name>
+C) kubectl describe endpoints
+D) kubectl list endpoints <service-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl get endpoints <service-name>` to see the IP addresses and ports of Pods backing a Service. An empty endpoints list indicates no Pods match the Service selector or none are ready. You can also see endpoints in `kubectl describe service`.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 37
+[MEDIUM-HARD]
+
+How do you troubleshoot inter-Pod communication issues?
+
+A) Only check NetworkPolicies
+B) Check Pod IPs, DNS resolution, NetworkPolicies, and CNI plugin status
+C) Restart all Pods
+D) Only check the CNI plugin
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshooting inter-Pod communication requires a systematic approach: verify Pod IPs are assigned, test DNS resolution, check for NetworkPolicies that might block traffic, verify the CNI plugin is functioning, and ensure nodes can route Pod network traffic. Use kubectl exec to test from within Pods.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 38
+[MEDIUM-HARD]
+
+What does it mean when a Service has "Endpoints: <none>"?
+
+A) The Service is working correctly
+B) No Pods match the Service selector or no matching Pods are ready
+C) The Service is of type ExternalName
+D) The endpoints are being updated
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Endpoints: <none>" means the Service has no backend Pods to route traffic to. This occurs when no Pods have labels matching the Service's selector, or when matching Pods exist but fail their readiness probes. Verify label selectors and Pod readiness status.
+
+**Source:** [Debug Services | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+
+</details>
+
+---
+
+### Question 39
+[MEDIUM-HARD]
+
+How do you check if CoreDNS is running properly?
+
+A) kubectl get dns
+B) kubectl get pods -n kube-system -l k8s-app=kube-dns
+C) kubectl dns status
+D) kubectl check coredns
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check CoreDNS status with `kubectl get pods -n kube-system -l k8s-app=kube-dns`. Verify Pods are Running and Ready. For detailed troubleshooting, check CoreDNS logs with `kubectl logs` and test DNS resolution from application Pods using nslookup or dig.
+
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+
+</details>
+
+---
+
+### Question 40
+[MEDIUM-HARD]
+
+What is the FQDN format for a Service in Kubernetes?
+
+A) <service-name>.<namespace>
+B) <service-name>.<namespace>.svc.cluster.local
+C) <namespace>.<service-name>.local
+D) <service-name>.cluster.local
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The fully qualified domain name (FQDN) for a Service is `<service-name>.<namespace>.svc.cluster.local`. Within the same namespace, you can use just `<service-name>`. Across namespaces, use at least `<service-name>.<namespace>`. The cluster domain (cluster.local) is configurable.
+
+**Source:** [DNS for Services and Pods | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
+</details>
+
+---
+
+## Resource and OOM Issues
+
+### Question 41
+[HARD]
+
+What does the "OOMKilled" termination reason indicate?
+
+A) The container ran out of CPU
+B) The container exceeded its memory limit and was killed by the kernel
+C) The container crashed due to an application error
+D) The Pod was evicted due to node pressure
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** OOMKilled (Out Of Memory Killed) indicates the Linux kernel's OOM killer terminated the container because it exceeded its memory limit. The kernel does this to prevent the entire system from running out of memory. Increase the memory limit or optimize the application's memory usage.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
+---
+
+### Question 42
+[HARD]
+
+How do you identify which container in a Pod was OOMKilled?
+
+A) kubectl logs <pod-name>
+B) kubectl describe pod <pod-name> and check containerStatuses for terminated reason
+C) kubectl top pod <pod-name>
+D) kubectl events <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe pod <pod-name>` and examine the containerStatuses section. Look for `state.terminated.reason: OOMKilled` to identify which container was killed. The exitCode will typically be 137 (128 + SIGKILL signal 9). Also check `lastState` for previous terminations.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 43
+[HARD]
+
+What is the difference between resource requests and limits in troubleshooting context?
+
+A) They are the same thing
+B) Requests affect scheduling; limits affect runtime enforcement and OOM kills
+C) Limits affect scheduling; requests affect runtime
+D) Neither affects Pod behavior
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Requests are used by the scheduler to find a node with sufficient resources and affect QoS class. Limits are enforced at runtime: memory limits trigger OOMKill when exceeded, CPU limits cause throttling. When troubleshooting, check if requests are too high (scheduling issues) or limits too low (OOM/throttling).
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
+---
+
+### Question 44
+[HARD]
+
+How do you check the actual resource usage of a container?
+
+A) kubectl describe pod
+B) kubectl top pod <pod-name> --containers
+C) kubectl usage <pod-name>
+D) kubectl resources <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl top pod <pod-name> --containers` to see current CPU and memory usage of each container. This requires Metrics Server to be installed. Compare actual usage with configured limits to identify if containers are approaching their limits or being throttled.
+
+**Source:** [Resource Metrics Pipeline | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
+
+</details>
+
+---
+
+### Question 45
+[HARD]
+
+What happens when a container exceeds its memory limit?
+
+A) The container is throttled
+B) The container is OOMKilled by the kernel
+C) The container continues running
+D) The Pod is rescheduled
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a container exceeds its memory limit, the Linux kernel's OOM killer terminates the container with SIGKILL (exit code 137). Unlike CPU, memory is not compressible and cannot be throttled. The container is restarted according to the Pod's restartPolicy.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
+---
+
+### Question 46
+[HARD]
+
+What happens when a container exceeds its CPU limit?
+
+A) The container is killed
+B) The container is throttled but not killed
+C) The Pod is evicted
+D) The node becomes NotReady
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a container exceeds its CPU limit, it is throttled by the kernel (using cgroups) but not killed. CPU is a compressible resource, so the container simply receives less CPU time. This can cause performance degradation but not container termination. Monitor for high throttling metrics.
+
+**Source:** [Resource Management for Pods and Containers | Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+</details>
+
+---
+
+### Question 47
+[HARD]
+
+How do you troubleshoot a Pod that keeps getting evicted?
+
+A) Increase the node count
+B) Check node conditions, resource pressure, Pod QoS class, and resource requests
+C) Delete and recreate the Pod
+D) Change the Pod priority
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For Pod eviction issues, check: node conditions for MemoryPressure/DiskPressure/PIDPressure, the Pod's QoS class (BestEffort Pods are evicted first), resource requests (unset requests result in BestEffort QoS), and node resource availability. Consider setting appropriate requests and limits.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
+---
+
+### Question 48
+[HARD]
+
+What is the QoS class of a Pod and how does it affect eviction?
+
+A) QoS class determines Pod priority; Guaranteed Pods are evicted last
+B) QoS class only affects scheduling
+C) QoS class determines network priority
+D) QoS class has no effect on eviction
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** A
+
+**Explanation:** Kubernetes assigns QoS classes based on resource requests and limits: Guaranteed (requests=limits for all containers), Burstable (at least one request set), or BestEffort (no requests/limits). During node pressure eviction, BestEffort Pods are evicted first, then Burstable, then Guaranteed.
+
+**Source:** [Pod Quality of Service Classes | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/)
+
+</details>
+
+---
+
+### Question 49
+[HARD]
+
+How do you check if a ResourceQuota is blocking Pod creation?
+
+A) kubectl logs
+B) kubectl describe resourcequota and kubectl describe pod to see quota-related events
+C) kubectl get quota --status
+D) kubectl quota check
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl describe resourcequota` to see current usage vs. hard limits. When creating a Pod that would exceed quota, check the Pod's events with `kubectl describe pod` for "exceeded quota" errors. The error message specifies which resource limit was exceeded.
+
+**Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+
+</details>
+
+---
+
+### Question 50
+[HARD]
+
+What does the "Evicted" Pod status indicate?
+
+A) The Pod was manually deleted
+B) The Pod was evicted due to node resource pressure
+C) The Pod completed successfully
+D) The Pod failed a health check
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The "Evicted" status indicates the Pod was evicted by kubelet due to node resource pressure (memory, disk, or PID pressure). Check `kubectl describe pod` for the eviction reason. Evicted Pods are not automatically recreated unless managed by a controller like Deployment or ReplicaSet.
+
+**Source:** [Node-pressure Eviction | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/)
+
+</details>
+
+---
+
+## Control Plane Troubleshooting
+
+### Question 51
+[HARD]
+
+How do you check the health of the kube-apiserver?
+
+A) kubectl get apiserver
+B) Access the /healthz or /livez endpoints, or check Pod status in kube-system
+C) kubectl describe apiserver
+D) kubectl health apiserver
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check API server health by accessing its /healthz, /livez, or /readyz endpoints (e.g., `curl -k https://<apiserver>:6443/healthz`). On kubeadm clusters, also check the kube-apiserver Pod status with `kubectl get pods -n kube-system`. Review API server logs for errors.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 52
+[HARD]
+
+What are the common symptoms of etcd issues?
+
+A) Only network problems
+B) Slow API responses, failed writes, cluster instability, leader election failures
+C) Only Pod scheduling issues
+D) Only authentication failures
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** etcd issues manifest as slow API responses, failed write operations, cluster instability, leader election problems, and request timeouts. Common causes include disk I/O bottlenecks, network latency between etcd members, insufficient resources, or quorum loss in the etcd cluster.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
+</details>
+
+---
+
+### Question 53
+[HARD]
+
+How do you view logs from control plane components on a kubeadm cluster?
+
+A) kubectl logs -n default
+B) kubectl logs -n kube-system <component-pod-name> or journalctl for static pods
+C) cat /var/log/kubernetes
+D) kubectl describe controlplane
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** On kubeadm clusters, control plane components run as static Pods. View their logs with `kubectl logs -n kube-system kube-apiserver-<node>` or similar. Alternatively, use `journalctl -u kubelet` on the control plane node, as kubelet logs include static Pod output. Check `/var/log/pods/` for log files.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 54
+[HARD]
+
+What happens when the kube-scheduler is not running?
+
+A) Pods are scheduled randomly
+B) New Pods remain in Pending state and are not assigned to nodes
+C) Existing Pods are terminated
+D) The cluster shuts down
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When the kube-scheduler is not running, new Pods that require scheduling remain in Pending state indefinitely because no component assigns them to nodes. Existing running Pods continue to run. The scheduler is responsible for the nodeName assignment based on resource requirements and constraints.
+
+**Source:** [Kubernetes Scheduler | Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+
+</details>
+
+---
+
+### Question 55
+[HARD]
+
+How do you check the status of the kube-controller-manager?
+
+A) kubectl get controllers
+B) kubectl get pods -n kube-system and check controller-manager pod, or access /healthz
+C) kubectl describe controller-manager
+D) kubectl status controller-manager
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check kube-controller-manager status by examining its Pod in kube-system namespace (`kubectl get pods -n kube-system | grep controller-manager`) and its logs. The /healthz endpoint provides health status. Controller-manager issues affect deployments, replicasets, and other controllers.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 56
+[HARD]
+
+What are common causes of API server unavailability?
+
+A) Only network issues
+B) Certificate expiry, etcd unavailability, resource exhaustion, misconfigurations
+C) Only Pod failures
+D) Only DNS issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** API server unavailability can be caused by: expired or invalid TLS certificates, etcd cluster issues or unavailability, resource exhaustion (CPU, memory, file descriptors), misconfigured flags, network connectivity problems, or authentication/authorization configuration errors.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 57
+[HARD]
+
+How do you troubleshoot certificate-related issues in Kubernetes?
+
+A) Restart all components
+B) Check certificate expiry dates, verify CA chain, check component logs for TLS errors
+C) Delete and recreate certificates automatically
+D) Ignore certificate errors
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For certificate issues: check expiry with `openssl x509 -in <cert> -noout -dates`, verify the CA chain is complete, examine component logs for TLS handshake errors, and ensure certificates match their intended purpose. For kubeadm clusters, use `kubeadm certs check-expiration`.
+
+**Source:** [PKI certificates and requirements | Kubernetes](https://kubernetes.io/docs/setup/best-practices/certificates/)
+
+</details>
+
+---
+
+### Question 58
+[HARD]
+
+What command checks the health of cluster components?
+
+A) kubectl health
+B) kubectl get componentstatuses (deprecated) or check /healthz endpoints
+C) kubectl cluster-health
+D) kubectl status components
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** The `kubectl get componentstatuses` (or `kubectl get cs`) command shows controller-manager, scheduler, and etcd health, but it is deprecated and may not work in all configurations. The recommended approach is to check /healthz endpoints of each component directly or verify Pod status in kube-system.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 59
+[HARD]
+
+How do you identify if etcd is the bottleneck?
+
+A) Only check CPU usage
+B) Monitor etcd metrics, check latency, disk I/O, and etcd logs for slow operations
+C) Restart etcd
+D) Check Pod logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify etcd bottlenecks by monitoring etcd metrics (disk sync duration, raft proposal latency), checking disk I/O performance (etcd is sensitive to disk latency), reviewing etcd logs for "slow request" warnings, and monitoring network latency between etcd members. Use etcdctl for direct health checks.
+
+**Source:** [Operating etcd clusters for Kubernetes | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+
+</details>
+
+---
+
+### Question 60
+[HARD]
+
+What logs should you check when Pods are not being scheduled?
+
+A) Only kubelet logs
+B) kube-scheduler logs and kubectl describe pod for scheduling events
+C) Only API server logs
+D) Only etcd logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When Pods are not being scheduled, first check `kubectl describe pod` for scheduling events and failure reasons (insufficient resources, node selectors, taints/tolerations). Then examine kube-scheduler logs for detailed scheduling decisions and errors. Common issues include resource constraints and affinity rules.
+
+**Source:** [Troubleshooting | Kubernetes](https://kubernetes.io/docs/tasks/debug/)
+
+</details>
+
+---
+
+## Kubelet and Container Runtime Issues
+
+### Question 61
+[HARD]
+
+How do you check the status of kubelet on a node?
+
+A) kubectl get kubelet
+B) systemctl status kubelet on the node
+C) kubectl describe kubelet
+D) kubectl logs kubelet
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubelet runs as a system service on each node. Check its status with `systemctl status kubelet` when SSH'd into the node. This shows whether kubelet is running, any recent errors, and the service state. Also check node conditions with `kubectl describe node`.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 62
+[HARD]
+
+Where are kubelet logs typically located?
+
+A) /var/log/pods
+B) journalctl -u kubelet or /var/log/kubelet.log depending on setup
+C) /etc/kubernetes/logs
+D) kubectl logs kubelet
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** On systemd-based systems, kubelet logs are accessed via `journalctl -u kubelet`. Some setups may write to /var/log/kubelet.log. The location depends on how kubelet is configured and the node's logging setup. Pod container logs are in /var/log/pods/ or /var/log/containers/.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 63
+[HARD]
+
+What are common causes of kubelet failing to start?
+
+A) Only network issues
+B) Configuration errors, certificate issues, container runtime not running, resource issues
+C) Only disk space issues
+D) Only memory issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Kubelet startup failures commonly result from: invalid configuration in kubelet config file, expired or invalid certificates, container runtime (containerd/CRI-O) not running, insufficient disk space for kubelet operations, or swap being enabled (when not allowed). Check kubelet logs for specific errors.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 64
+[HARD]
+
+How do you troubleshoot container runtime issues?
+
+A) Restart the node
+B) Check runtime status, logs, socket connectivity, and verify runtime configuration
+C) Reinstall Kubernetes
+D) Only check kubelet logs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot container runtime (containerd, CRI-O) by: checking service status (`systemctl status containerd`), reviewing runtime logs, verifying the CRI socket exists and is accessible, testing with crictl commands, and checking runtime configuration files for errors.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
+</details>
+
+---
+
+### Question 65
+[HARD]
+
+What does "container runtime is down" error indicate?
+
+A) The container is crashing
+B) Kubelet cannot communicate with the container runtime (containerd, CRI-O)
+C) The Pod is pending
+D) The image cannot be pulled
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** This error indicates kubelet cannot communicate with the container runtime over the CRI socket. Causes include: container runtime service not running, CRI socket permissions issues, socket path misconfiguration, or runtime process crash. Check runtime service status and socket connectivity.
+
+**Source:** [Container Runtimes | Kubernetes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+
+</details>
+
+---
+
+### Question 66
+[HARD]
+
+How do you check if the container runtime is responding?
+
+A) kubectl get runtime
+B) crictl info or systemctl status containerd/cri-o
+C) docker ps only
+D) kubectl describe runtime
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `crictl info` to check CRI runtime status and connectivity (requires proper socket configuration). Also use `systemctl status containerd` (or cri-o) to verify the service is running. crictl is the standard tool for interacting with CRI-compatible runtimes.
+
+**Source:** [Debugging Kubernetes nodes with crictl | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
+
+</details>
+
+---
+
+### Question 67
+[HARD]
+
+What is the CRI and how do you troubleshoot CRI issues?
+
+A) Container Runtime Integration; restart Docker
+B) Container Runtime Interface; check socket connectivity, runtime logs, and use crictl
+C) Container Resource Interface; increase resources
+D) Cluster Runtime Interface; restart the cluster
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** CRI (Container Runtime Interface) is the standard interface between kubelet and container runtimes. Troubleshoot by: verifying the CRI socket exists (e.g., /run/containerd/containerd.sock), checking runtime logs, using crictl commands to test runtime operations, and ensuring kubelet points to the correct socket.
+
+**Source:** [Container Runtime Interface (CRI) | Kubernetes](https://kubernetes.io/docs/concepts/architecture/cri/)
+
+</details>
+
+---
+
+### Question 68
+[HARD]
+
+How do you identify kubelet connectivity issues with the API server?
+
+A) Check Pod logs
+B) Check kubelet logs for connection errors, verify network, certificates, and API server health
+C) Restart the API server
+D) Only check firewall rules
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify kubelet-to-API-server connectivity issues by: checking kubelet logs for connection refused/timeout errors, verifying network connectivity between node and control plane, checking certificate validity (kubelet client cert), ensuring the API server address in kubelet config is correct, and verifying API server is healthy.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 69
+[HARD]
+
+What could cause kubelet to report "PLEG is not healthy"?
+
+A) Network issues only
+B) Container runtime issues, high Pod count, slow disk I/O, or runtime not responding
+C) Memory pressure only
+D) Certificate expiry only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** PLEG (Pod Lifecycle Event Generator) monitors container state changes. "PLEG is not healthy" indicates kubelet cannot list containers quickly enough, often caused by: container runtime being slow/unresponsive, very high Pod count on the node, slow disk I/O affecting runtime operations, or runtime socket issues.
+
+**Source:** [Debug Cluster | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+
+</details>
+
+---
+
+### Question 70
+[HARD]
+
+How do you troubleshoot image pull failures from private registries?
+
+A) Use public images only
+B) Check imagePullSecrets, registry credentials, network connectivity, and registry availability
+C) Restart kubelet
+D) Delete the Pod
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For private registry pull failures: verify imagePullSecrets is correctly configured in the Pod or ServiceAccount, check that the Secret contains valid credentials (base64 decoded), test network connectivity to the registry, verify the registry URL and image path are correct, and check if the registry requires authentication.
+
+**Source:** [Pull an Image from a Private Registry | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+
+</details>
+
+---
+
+## Storage Troubleshooting
+
+### Question 71
+[HARD]
+
+What does a PVC status of "Pending" indicate?
+
+A) The PVC is ready to use
+B) No matching PV is available or StorageClass cannot provision a volume
+C) The PVC is being deleted
+D) The volume is mounted
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** A Pending PVC indicates that no PersistentVolume matches the PVC requirements, or dynamic provisioning via StorageClass has not completed. Check `kubectl describe pvc` for events explaining why binding failed—common issues include no matching PV, storageClassName mismatch, or provisioner errors.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
+---
+
+### Question 72
+[HARD]
+
+How do you troubleshoot a Pod stuck waiting for volume mount?
+
+A) Delete the Pod
+B) Check PVC status, PV binding, node availability, and Pod events for mount errors
+C) Increase volume size
+D) Change storage class
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For volume mount issues: verify PVC is Bound, check PV status and accessibility, review Pod events for mount errors (`kubectl describe pod`), ensure the node can access the storage backend, check CSI driver status, and verify volume is not attached to another node (for single-attach volumes).
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 73
+[HARD]
+
+What causes a "FailedMount" warning in Pod events?
+
+A) Only permission issues
+B) Volume not found, mount path issues, node cannot access storage, or CSI driver issues
+C) Only network issues
+D) Only Pod configuration errors
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** FailedMount warnings occur when kubelet cannot mount a volume. Causes include: PV not found or not bound, storage backend unreachable, permission issues on mount, NFS/storage server unavailable, CSI driver not functioning, or timeout waiting for volume attachment.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
+---
+
+### Question 74
+[HARD]
+
+How do you check if a PersistentVolume is correctly bound?
+
+A) kubectl get volume
+B) kubectl get pv and verify STATUS is Bound and CLAIM shows the correct PVC
+C) kubectl describe storage
+D) kubectl check pv
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl get pv` to list all PersistentVolumes. A correctly bound PV shows STATUS as "Bound" and CLAIM shows the namespace/name of the bound PVC. Use `kubectl describe pv <name>` for detailed information including capacity, access modes, and storage class.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
+---
+
+### Question 75
+[HARD]
+
+What does "VolumeBindingWaitForFirstConsumer" mean?
+
+A) The volume failed to bind
+B) Volume binding is delayed until a Pod using the PVC is scheduled to a node
+C) The volume is corrupted
+D) The storage class is invalid
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** WaitForFirstConsumer is a volumeBindingMode in StorageClass that delays PV binding and provisioning until a Pod using the PVC is scheduled. This ensures the volume is created in the same topology (zone/region) as the Pod. The PVC shows Pending until a Pod is scheduled.
+
+**Source:** [Storage Classes | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode)
+
+</details>
+
+---
+
+### Question 76
+[HARD]
+
+How do you troubleshoot NFS mount failures?
+
+A) Restart the NFS server only
+B) Check NFS server availability, network connectivity, mount permissions, and firewall rules
+C) Delete the PVC
+D) Change to a different storage class
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For NFS mount failures: verify NFS server is running and accessible from nodes, test mount manually from the node, check NFS export permissions and allowed clients, verify firewall rules allow NFS ports (2049, etc.), and check that the export path exists on the server.
+
+**Source:** [Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
+
+</details>
+
+---
+
+### Question 77
+[HARD]
+
+What are common causes of "Unable to attach or mount volumes"?
+
+A) Only Pod configuration errors
+B) Volume already attached elsewhere, node issues, storage backend problems, or CSI driver failures
+C) Only network issues
+D) Only permission issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** This error has multiple potential causes: volume already attached to another node (for RWO volumes), node lacking access to storage network, storage backend unavailable or full, CSI driver pods not running, incorrect volume configuration, or cloud provider API issues for cloud volumes.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
+---
+
+### Question 78
+[HARD]
+
+How do you identify storage class issues?
+
+A) kubectl get pods
+B) kubectl describe storageclass, check provisioner status, and review PVC events
+C) kubectl logs storageclass
+D) kubectl debug storageclass
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify StorageClass issues by: examining StorageClass configuration (`kubectl describe sc`), verifying the provisioner exists and is running, checking PVC events for provisioning errors, and ensuring the provisioner has necessary permissions. For CSI provisioners, check the CSI controller logs.
+
+**Source:** [Storage Classes | Kubernetes](https://kubernetes.io/docs/concepts/storage/storage-classes/)
+
+</details>
+
+---
+
+### Question 79
+[HARD]
+
+What does the "FailedAttachVolume" event indicate?
+
+A) The volume is full
+B) The volume could not be attached to the node, often due to cloud provider or CSI issues
+C) The volume is corrupted
+D) The Pod is misconfigured
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** FailedAttachVolume indicates the volume attachment to the node failed. Common causes include: volume already attached to another node, cloud provider API errors, CSI driver issues, node not authorized to attach the volume, or volume in a different availability zone than the node.
+
+**Source:** [Persistent Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+</details>
+
+---
+
+### Question 80
+[HARD]
+
+How do you troubleshoot CSI driver issues?
+
+A) Restart all nodes
+B) Check CSI driver pods, controller logs, node plugin logs, and CSI socket connectivity
+C) Reinstall Kubernetes
+D) Delete all PVCs
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot CSI drivers by: checking CSI controller and node plugin pods are running (`kubectl get pods -n <csi-namespace>`), reviewing controller logs for provisioning errors, checking node plugin logs for mount issues, verifying CSI socket exists on nodes, and ensuring RBAC permissions are correct.
+
+**Source:** [Volumes | Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/#csi)
+
+</details>
+
+---
+
+## Application and Probe Issues
+
+### Question 81
+[HARD]
+
+What happens when a liveness probe fails?
+
+A) The Pod is rescheduled
+B) The container is restarted by kubelet
+C) The Pod is removed from Service endpoints
+D) Nothing happens
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a liveness probe fails (after failureThreshold consecutive failures), kubelet kills the container and restarts it according to the Pod's restartPolicy. Liveness probes detect if an application is stuck or deadlocked and need to be restarted to recover.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 82
+[HARD]
+
+What happens when a readiness probe fails?
+
+A) The container is restarted
+B) The Pod is removed from Service endpoints but keeps running
+C) The Pod is deleted
+D) The node is marked unhealthy
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** When a readiness probe fails, the Pod is removed from Service endpoints so it stops receiving traffic, but the container continues running. This is useful for temporarily unavailable applications (e.g., during initialization or maintenance). The Pod returns to Service endpoints when readiness succeeds again.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 83
+[HARD]
+
+How do you troubleshoot a container that keeps restarting due to probe failures?
+
+A) Disable all probes
+B) Check probe configuration, test the probe endpoint manually, review container logs and events
+C) Increase memory limits
+D) Change the container image
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot probe-related restarts by: checking probe configuration in Pod spec, testing the probe endpoint manually using `kubectl exec` (curl, wget), reviewing container logs for application errors, checking Pod events for Unhealthy warnings with specific probe failure details, and verifying timing settings.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 84
+[HARD]
+
+What are common causes of probe failures?
+
+A) Only network issues
+B) Application not ready, wrong port/path, timeout too short, or application crashes
+C) Only memory issues
+D) Only CPU issues
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Common probe failure causes include: application not listening on expected port/path, application still starting up (initialDelaySeconds too short), timeoutSeconds too short for slow responses, application crashed or hung, wrong HTTP scheme (http vs https), or the probe checking a dependent service that is unavailable.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 85
+[HARD]
+
+How do you check the probe configuration of a running Pod?
+
+A) kubectl logs <pod-name>
+B) kubectl get pod <pod-name> -o yaml or kubectl describe pod <pod-name>
+C) kubectl probe <pod-name>
+D) kubectl health <pod-name>
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** View probe configuration with `kubectl get pod <pod-name> -o yaml` which shows the complete spec including livenessProbe, readinessProbe, and startupProbe settings. `kubectl describe pod` also shows this information in a more readable format along with current probe status in events.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 86
+[HARD]
+
+What is the difference between startup probe and liveness probe failures?
+
+A) They are the same
+B) Startup probe failures delay liveness checks; liveness failures restart the container after startup succeeds
+C) Startup probes are only for init containers
+D) Liveness probes run before startup probes
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Startup probes run first and disable liveness/readiness probes until they succeed, protecting slow-starting containers. Once startup succeeds, liveness probes take over. Startup probe failures result in container restart (like liveness), but they have separate timing configurations for long startup times.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
+
+</details>
+
+---
+
+### Question 87
+[HARD]
+
+How do you identify if an application is failing health checks?
+
+A) Only check application logs
+B) Check Pod events for Unhealthy warnings, verify probe endpoints, and test manually with kubectl exec
+C) Restart the application
+D) Check node status
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Identify health check failures by: examining Pod events for "Unhealthy" warnings (which specify which probe failed and the error), verifying the probe endpoint responds correctly, using `kubectl exec` to test the endpoint from within the container, and checking container logs for application-level issues.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 88
+[HARD]
+
+What does "Unhealthy" in Pod events indicate?
+
+A) The node is unhealthy
+B) A probe (liveness, readiness, or startup) failed for the container
+C) The Pod is being deleted
+D) The image is corrupted
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** "Unhealthy" events indicate a probe failure. The event message specifies which probe type failed (Liveness, Readiness, or Startup) and includes details like the HTTP response code or connection error. Multiple consecutive failures (failureThreshold) trigger the probe's action.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+### Question 89
+[HARD]
+
+How do you troubleshoot slow-starting containers that fail liveness probes?
+
+A) Remove the liveness probe
+B) Add a startup probe or increase initialDelaySeconds for the liveness probe
+C) Decrease the timeout
+D) Increase CPU limits only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For slow-starting containers, add a startup probe with generous timing to protect the container during initialization. Alternatively, increase initialDelaySeconds on the liveness probe. Startup probes are preferred as they disable liveness checks until startup succeeds, providing clearer separation of concerns.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
+
+</details>
+
+---
+
+### Question 90
+[HARD]
+
+What probe settings should you check when containers keep restarting?
+
+A) Only the probe path
+B) initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold, and the probe endpoint
+C) Only the container port
+D) Only the image tag
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Check all probe timing settings: initialDelaySeconds (time before first probe), periodSeconds (how often to probe), timeoutSeconds (how long to wait for response), failureThreshold (failures before action), and the actual probe endpoint (port, path, command). Also verify successThreshold for readiness probes.
+
+**Source:** [Configure Liveness, Readiness and Startup Probes | Kubernetes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+</details>
+
+---
+
+## Advanced Troubleshooting
+
+### Question 91
+[HARD]
+
+How do you use ephemeral debug containers?
+
+A) kubectl exec --debug
+B) kubectl debug <pod-name> --image=<debug-image> --target=<container>
+C) kubectl attach --debug
+D) kubectl run --debug
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Use `kubectl debug <pod-name> --image=<debug-image> --target=<container>` to add an ephemeral container to a running Pod. The debug container shares the process namespace with the target container, allowing inspection with tools like strace or debuggers. The debug image should contain necessary troubleshooting tools.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container)
+
+</details>
+
+---
+
+### Question 92
+[HARD]
+
+What is the purpose of kubectl debug node?
+
+A) To debug network issues only
+B) To create a privileged Pod for debugging node-level issues with host access
+C) To restart the node
+D) To view node metrics
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** `kubectl debug node/<node-name>` creates a privileged Pod on the specified node with access to the host filesystem, network, and processes. This enables debugging node-level issues like filesystem problems, network configuration, or system service issues without direct SSH access.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#node-shell-session)
+
+</details>
+
+---
+
+### Question 93
+[HARD]
+
+How do you troubleshoot a Pod that cannot resolve external DNS names?
+
+A) Restart CoreDNS only
+B) Check CoreDNS pods, DNS policy, upstream DNS config, and network connectivity to DNS servers
+C) Delete the Pod
+D) Change the namespace
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** For external DNS resolution issues: verify CoreDNS pods are running and healthy, check the Pod's dnsPolicy setting, verify CoreDNS Corefile has correct upstream DNS servers configured, test network connectivity to upstream DNS servers, and check for NetworkPolicies blocking DNS traffic to external servers.
+
+**Source:** [Debugging DNS Resolution | Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+
+</details>
+
+---
+
+### Question 94
+[HARD]
+
+What tools can you use to capture network traffic in a Pod?
+
+A) Only kubectl logs
+B) tcpdump, wireshark, or similar tools via kubectl exec or ephemeral debug containers
+C) kubectl network capture
+D) kubectl debug --network
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Capture network traffic using tools like tcpdump via `kubectl exec` (if available in the container) or by adding an ephemeral debug container with network tools. You can also use `kubectl debug` with a debug image containing tcpdump. Copy capture files out using `kubectl cp` for analysis with Wireshark.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
+
+---
+
+### Question 95
+[HARD]
+
+How do you troubleshoot intermittent Pod failures?
+
+A) Ignore them
+B) Review historical logs, events, metrics, check for resource contention, and monitor over time
+C) Restart the cluster
+D) Delete and recreate the Pod
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot intermittent failures by: reviewing historical logs and events (including from previous container instances with `--previous`), analyzing metrics for patterns (resource spikes, timing), checking for resource contention, examining node health during failures, and setting up monitoring/alerting to capture issues when they occur.
+
+**Source:** [Debug Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+
+</details>
+
+---
+
+### Question 96
+[HARD]
+
+What is the purpose of the terminationMessagePath field?
+
+A) To specify where logs are stored
+B) To specify a file path where the container writes its termination message for debugging
+C) To configure graceful shutdown
+D) To set the termination grace period
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** terminationMessagePath specifies a file (default: /dev/termination-log) where the container can write a message before exiting. This message appears in the container's terminated state and `kubectl describe pod`. It's useful for providing custom error messages or diagnostic information when containers crash.
+
+**Source:** [Pod Lifecycle | Kubernetes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
+
+</details>
+
+---
+
+### Question 97
+[HARD]
+
+How do you analyze a core dump from a crashed container?
+
+A) Use kubectl logs
+B) Configure the container to write core dumps to a volume, then analyze with debugging tools
+C) Core dumps are not supported
+D) Use kubectl describe only
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** To analyze core dumps: configure the container's ulimit to allow core dumps, mount a PersistentVolume to store dumps, set the core_pattern to write to the volume, then retrieve the dump files and analyze with gdb or similar tools. Some debugging containers can also be attached to examine the crashed process.
+
+**Source:** [Debug Running Pods | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+
+</details>
+
+---
+
+### Question 98
+[HARD]
+
+What is the best approach to troubleshoot init container failures?
+
+A) Skip init containers
+B) Check init container logs with kubectl logs <pod> -c <init-container>, review events and status
+C) Delete the Pod
+D) Restart the node
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot init containers by: checking their logs with `kubectl logs <pod> -c <init-container-name>`, reviewing Pod events for init container specific errors, checking the Pod status for which init container failed, and examining the init container's exit code and termination reason in `kubectl describe pod`.
+
+**Source:** [Debug Init Containers | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/debug-init-containers/)
+
+</details>
+
+---
+
+### Question 99
+[HARD]
+
+How do you troubleshoot RBAC permission denied errors?
+
+A) Grant cluster-admin to everyone
+B) Use kubectl auth can-i, check RoleBindings/ClusterRoleBindings, and review API server audit logs
+C) Restart the API server
+D) Delete all RBAC resources
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Troubleshoot RBAC issues by: using `kubectl auth can-i <verb> <resource> --as=<user>` to test permissions, listing RoleBindings/ClusterRoleBindings to verify the subject is bound, checking the referenced Role/ClusterRole has required permissions, and reviewing API server audit logs for denied requests and their details.
+
+**Source:** [Using RBAC Authorization | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+</details>
+
+---
+
+### Question 100
+[HARD]
+
+What is the systematic approach to troubleshooting a non-responsive application?
+
+A) Immediately restart everything
+B) Check Pod status, events, logs, resource usage, network connectivity, and probe health systematically
+C) Delete and recreate the deployment
+D) Scale down to zero replicas
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer:** B
+
+**Explanation:** Systematic troubleshooting approach: 1) Check Pod status and phase, 2) Review events with kubectl describe, 3) Examine container logs, 4) Check resource usage vs limits, 5) Test network connectivity to the Pod, 6) Verify probe health, 7) Check dependent services. This methodical approach identifies the root cause without masking issues.
+
+**Source:** [Troubleshooting Applications | Kubernetes](https://kubernetes.io/docs/tasks/debug/debug-application/)
+
+</details>
+
+---
