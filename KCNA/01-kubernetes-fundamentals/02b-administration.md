@@ -2,7 +2,7 @@
 
 **Domain:** Kubernetes Fundamentals (44%)
 **Competency:** Administration
-**Difficulty Distribution:** 10% Medium | 70% Medium-Hard | 20% Hard
+**Difficulty Distribution:** 10% Medium | 20% Medium-Hard | 70% Hard
 
 ---
 
@@ -32,7 +32,7 @@ D) XML
 ---
 
 ### Question 2
-[MEDIUM-HARD]
+[MEDIUM]
 
 What does the `kubectl explain` command do?
 
@@ -55,7 +55,7 @@ D) Shows command history
 ---
 
 ### Question 3
-[MEDIUM-HARD]
+[HARD]
 
 What is the purpose of `kubectl apply` compared to `kubectl create`?
 
@@ -78,7 +78,7 @@ D) They are identical in functionality
 ---
 
 ### Question 4
-[MEDIUM-HARD]
+[HARD]
 
 Which command shows the differences between a local manifest and the live cluster state?
 
@@ -101,7 +101,7 @@ D) kubectl changes -f file.yaml
 ---
 
 ### Question 5
-[MEDIUM-HARD]
+[HARD]
 
 Which command immediately deletes a Pod without waiting for graceful termination?
 
@@ -124,7 +124,7 @@ D) kubectl delete pod nginx --skip-graceful
 ---
 
 ### Question 6
-[MEDIUM-HARD]
+[HARD]
 
 How do you watch resources continuously for changes using kubectl?
 
@@ -172,7 +172,7 @@ D) Endpoints, Tokens, Certificates
 ---
 
 ### Question 8
-[MEDIUM-HARD]
+[HARD]
 
 How can you specify a different kubeconfig file for a single command?
 
@@ -218,7 +218,7 @@ D) Both contexts are renamed
 ---
 
 ### Question 10
-[MEDIUM-HARD]
+[HARD]
 
 How do you set a default namespace for a context?
 
@@ -266,7 +266,7 @@ D) kube-scheduler
 ---
 
 ### Question 12
-[MEDIUM-HARD]
+[HARD]
 
 What is the primary function of the kube-controller-manager?
 
@@ -289,7 +289,7 @@ D) Manage network routing
 ---
 
 ### Question 13
-[MEDIUM-HARD]
+[HARD]
 
 What is the role of kube-proxy?
 
@@ -312,7 +312,7 @@ D) Secure inter-node communication
 ---
 
 ### Question 14
-[MEDIUM-HARD]
+[HARD]
 
 Which component validates and configures data for API objects?
 
@@ -335,7 +335,7 @@ D) etcd
 ---
 
 ### Question 15
-[MEDIUM-HARD]
+[HARD]
 
 Which controller is responsible for maintaining the correct number of pod replicas?
 
@@ -358,7 +358,7 @@ D) Namespace Controller
 ---
 
 ### Question 16
-[MEDIUM-HARD]
+[HARD]
 
 What port does the kube-apiserver typically listen on?
 
@@ -406,7 +406,7 @@ D) Deletion fails until namespace is empty
 ---
 
 ### Question 18
-[MEDIUM-HARD]
+[HARD]
 
 What is the purpose of the `kube-public` namespace?
 
@@ -452,7 +452,7 @@ D) To store node configuration
 ---
 
 ### Question 20
-[MEDIUM-HARD]
+[HARD]
 
 What constraint applies to namespace names?
 
@@ -500,7 +500,7 @@ D) matchExpressions
 ---
 
 ### Question 22
-[MEDIUM-HARD]
+[HARD]
 
 How do you filter pods by label using kubectl?
 
@@ -546,7 +546,7 @@ D) The change is silently ignored
 ---
 
 ### Question 24
-[MEDIUM-HARD]
+[HARD]
 
 How do you select resources that have a specific label key regardless of its value?
 
@@ -569,7 +569,7 @@ D) kubectl get pods -l app!=''
 ---
 
 ### Question 25
-[MEDIUM-HARD]
+[HARD]
 
 What is the maximum length allowed for a label key?
 
@@ -594,7 +594,7 @@ D) Unlimited
 ## Annotations
 
 ### Question 26
-[MEDIUM-HARD]
+[HARD]
 
 Which is a valid use case for annotations?
 
@@ -617,7 +617,7 @@ D) Defining replica counts
 ---
 
 ### Question 27
-[MEDIUM-HARD]
+[HARD]
 
 How do you add an annotation to a resource using kubectl?
 
@@ -665,7 +665,7 @@ D) Requests apply to memory, limits apply to CPU
 ---
 
 ### Question 29
-[MEDIUM-HARD]
+[HARD]
 
 What happens when a container tries to use more memory than its limit?
 
@@ -734,7 +734,7 @@ D) Reserved
 ---
 
 ### Question 32
-[MEDIUM-HARD]
+[HARD]
 
 What command shows resource usage of pods?
 
@@ -782,7 +782,7 @@ D) Subjects, Objects, Actions, Targets
 ---
 
 ### Question 34
-[MEDIUM-HARD]
+[HARD]
 
 Can a RoleBinding reference a ClusterRole?
 
@@ -805,7 +805,7 @@ D) Only if the ClusterRole is marked as "bindable"
 ---
 
 ### Question 35
-[MEDIUM-HARD]
+[HARD]
 
 Which verb allows creating new resources?
 
@@ -828,7 +828,7 @@ D) new
 ---
 
 ### Question 36
-[MEDIUM-HARD]
+[HARD]
 
 How do you check if a user can perform a specific action?
 
@@ -851,7 +851,7 @@ D) kubectl access check
 ---
 
 ### Question 37
-[MEDIUM-HARD]
+[HARD]
 
 Which command lists all RoleBindings in all namespaces?
 
@@ -899,7 +899,7 @@ D) Updates node labels
 ---
 
 ### Question 39
-[MEDIUM-HARD]
+[HARD]
 
 What flag allows draining a node with pods that have local storage?
 
@@ -922,7 +922,7 @@ D) --ignore-local
 ---
 
 ### Question 40
-[MEDIUM-HARD]
+[HARD]
 
 What are the three taint effects?
 
@@ -968,7 +968,7 @@ D) B or C depending on whether tolerationSeconds is specified
 ---
 
 ### Question 42
-[MEDIUM-HARD]
+[HARD]
 
 How do you view the taints on a node?
 
@@ -993,7 +993,7 @@ D) Both B and C
 ## etcd Administration
 
 ### Question 43
-[MEDIUM-HARD]
+[HARD]
 
 What port does etcd typically listen on for client connections?
 
@@ -1039,7 +1039,7 @@ D) kubectl etcd snapshot
 ---
 
 ### Question 45
-[MEDIUM-HARD]
+[HARD]
 
 What tool is used to restore an etcd cluster from a snapshot?
 
@@ -1062,7 +1062,7 @@ D) kubeadm etcd restore
 ---
 
 ### Question 46
-[MEDIUM-HARD]
+[HARD]
 
 Where is etcd data stored by default in a kubeadm cluster?
 
@@ -1087,7 +1087,7 @@ D) /data/etcd
 ## Cluster Upgrades
 
 ### Question 47
-[MEDIUM-HARD]
+[HARD]
 
 How many minor versions can kubelet lag behind the API server (Kubernetes 1.28+)?
 
@@ -1181,7 +1181,7 @@ D) kubeadm upgrade init
 ## API and Versioning
 
 ### Question 51
-[MEDIUM-HARD]
+[HARD]
 
 What does the API group contain in Kubernetes?
 
@@ -1298,7 +1298,7 @@ D) Random order
 ## Logging and Monitoring
 
 ### Question 56
-[MEDIUM-HARD]
+[HARD]
 
 How do you view logs from a previous container instance?
 
@@ -1321,7 +1321,7 @@ D) kubectl logs pod-name --last
 ---
 
 ### Question 57
-[MEDIUM-HARD]
+[HARD]
 
 Which metrics server is commonly used for `kubectl top` commands?
 
@@ -1344,7 +1344,7 @@ D) Grafana
 ---
 
 ### Question 58
-[MEDIUM-HARD]
+[HARD]
 
 What happens to container logs when a Pod is deleted?
 
@@ -1392,7 +1392,7 @@ D) A separate Pod dedicated to logging
 ## Service Accounts
 
 ### Question 60
-[MEDIUM-HARD]
+[HARD]
 
 How do you specify a custom ServiceAccount for a Pod?
 
@@ -1415,7 +1415,7 @@ D) In the Pod's annotations
 ---
 
 ### Question 61
-[MEDIUM-HARD]
+[HARD]
 
 How do you prevent automatic mounting of ServiceAccount tokens?
 
@@ -1843,7 +1843,7 @@ D) No limit
 ---
 
 ### Question 79
-[MEDIUM-HARD]
+[HARD]
 
 What is the difference between `--from-file` and `--from-literal` when creating ConfigMaps?
 
@@ -2279,7 +2279,7 @@ D) kubectl verify
 ## Dry Run Modes
 
 ### Question 97
-[HARD]
+[MEDIUM-HARD]
 
 When would you use `--dry-run=server` over `--dry-run=client`?
 
@@ -2327,7 +2327,7 @@ D) An encrypted field
 ---
 
 ### Question 99
-[HARD]
+[MEDIUM-HARD]
 
 What is the `--grace-period` flag used for?
 
