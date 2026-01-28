@@ -32,7 +32,7 @@ D) Deployment
 ---
 
 ### Question 2
-[MEDIUM-HARD]
+[MEDIUM]
 
 What happens when a container in a Pod with `restartPolicy: Always` exits with a non-zero exit code?
 
@@ -55,7 +55,7 @@ D) A new Pod is scheduled on a different node
 ---
 
 ### Question 3
-[MEDIUM-HARD]
+[MEDIUM]
 
 What is the purpose of an init container?
 
@@ -128,7 +128,7 @@ D) Init containers run in parallel, not sequentially
 ---
 
 ### Question 6
-[MEDIUM-HARD]
+[MEDIUM]
 
 How can you specify resource requests for a container?
 
@@ -220,7 +220,7 @@ D) `kubectl describe pod <pod>`
 ---
 
 ### Question 10
-[HARD]
+[MEDIUM-HARD]
 
 What is the purpose of `terminationGracePeriodSeconds` in a Pod spec?
 
@@ -289,7 +289,7 @@ D) `kubectl connect <pod> -- <command>`
 ---
 
 ### Question 13
-[HARD]
+[MEDIUM-HARD]
 
 What is the effect of setting `shareProcessNamespace: true` in a Pod spec?
 
@@ -496,7 +496,7 @@ D) PodRunning
 ---
 
 ### Question 22
-[HARD]
+[MEDIUM-HARD]
 
 What happens when you specify `imagePullPolicy: Always` with an image tagged `:latest`?
 
@@ -682,7 +682,7 @@ D) `kubectl revert deployment <name>`
 ---
 
 ### Question 30
-[HARD]
+[MEDIUM-HARD]
 
 What is the purpose of `minReadySeconds` in a Deployment?
 
@@ -912,7 +912,7 @@ D) Both B and C
 ---
 
 ### Question 40
-[HARD]
+[MEDIUM-HARD]
 
 A Deployment update fails because new Pods are crash-looping. The old Pods are still running. How does Kubernetes handle this?
 
@@ -1397,7 +1397,7 @@ D) Both A and B work
 ---
 
 ### Question 61
-[HARD]
+[MEDIUM-HARD]
 
 What is the difference between Service port `nodePort`, `port`, and `targetPort`?
 
@@ -1790,7 +1790,7 @@ D) It's not possible to use specific keys
 ---
 
 ### Question 78
-[HARD]
+[MEDIUM-HARD]
 
 You mount a ConfigMap as a volume. What permissions do the files have by default?
 
@@ -2116,7 +2116,7 @@ D) `kubectl tag pod <name> key=value`
 ---
 
 ### Question 92
-[HARD]
+[MEDIUM-HARD]
 
 What is the difference between `matchLabels` and `matchExpressions` in a selector?
 
@@ -2139,7 +2139,7 @@ D) `matchExpressions` is deprecated
 ---
 
 ### Question 93
-[HARD]
+[MEDIUM-HARD]
 
 What happens when you change a Pod's labels to no longer match its ReplicaSet's selector?
 
