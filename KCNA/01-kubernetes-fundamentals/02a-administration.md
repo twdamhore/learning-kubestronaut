@@ -2,7 +2,7 @@
 
 **Domain:** Kubernetes Fundamentals (44%)
 **Competency:** Administration
-**Difficulty Distribution:** 10% Medium | 70% Medium-Hard | 20% Hard
+**Difficulty Distribution:** 10% Medium | 20% Medium-Hard | 70% Hard
 
 ---
 
@@ -34,7 +34,7 @@ D) kubectl describe cluster
 ---
 
 ### Question 2
-[MEDIUM-HARD]
+[HARD]
 
 Which kubectl command would you use to view the API resources available in your cluster?
 
@@ -57,7 +57,7 @@ D) kubectl list resources
 ---
 
 ### Question 3
-[MEDIUM-HARD]
+[HARD]
 
 Which flag would you use with kubectl to see additional columns in the output?
 
@@ -103,7 +103,7 @@ D) In the kube-system namespace
 ---
 
 ### Question 5
-[MEDIUM-HARD]
+[HARD]
 
 What does the `--dry-run=client` flag do?
 
@@ -151,7 +151,7 @@ D) Skips confirmation prompt
 ## kubeconfig and Contexts
 
 ### Question 7
-[MEDIUM]
+[HARD]
 
 Where is the default kubeconfig file located?
 
@@ -174,7 +174,7 @@ D) ~/.kubernetes/config
 ---
 
 ### Question 8
-[MEDIUM-HARD]
+[HARD]
 
 Which command switches to a different context in kubectl?
 
@@ -197,7 +197,7 @@ D) kubectl switch-context
 ---
 
 ### Question 9
-[MEDIUM-HARD]
+[HARD]
 
 What does the KUBECONFIG environment variable support for working with multiple config files?
 
@@ -220,7 +220,7 @@ D) URL to remote config
 ---
 
 ### Question 10
-[MEDIUM-HARD]
+[HARD]
 
 Which command displays the current context?
 
@@ -291,7 +291,7 @@ D) kube-proxy
 ---
 
 ### Question 13
-[MEDIUM-HARD]
+[HARD]
 
 Which component runs on every node and ensures containers are running in Pods?
 
@@ -385,7 +385,7 @@ D) Billing and cost management
 ## Namespaces
 
 ### Question 17
-[MEDIUM]
+[HARD]
 
 Which namespace contains Kubernetes system components?
 
@@ -408,7 +408,7 @@ D) default
 ---
 
 ### Question 18
-[MEDIUM-HARD]
+[HARD]
 
 Which resources are NOT namespaced in Kubernetes?
 
@@ -431,7 +431,7 @@ D) Deployments and ReplicaSets
 ---
 
 ### Question 19
-[MEDIUM-HARD]
+[HARD]
 
 How do you list all pods across all namespaces?
 
@@ -454,7 +454,7 @@ D) kubectl get pods --cluster-wide
 ---
 
 ### Question 20
-[MEDIUM-HARD]
+[HARD]
 
 Which command creates a new namespace called "development"?
 
@@ -479,7 +479,7 @@ D) kubectl namespace create development
 ## Labels and Selectors
 
 ### Question 21
-[MEDIUM]
+[HARD]
 
 What is the primary purpose of labels in Kubernetes?
 
@@ -502,7 +502,7 @@ D) To specify container images
 ---
 
 ### Question 22
-[MEDIUM-HARD]
+[HARD]
 
 What is the difference between `matchLabels` and `matchExpressions`?
 
@@ -525,7 +525,7 @@ D) They are aliases for the same functionality
 ---
 
 ### Question 23
-[MEDIUM-HARD]
+[HARD]
 
 Which kubectl command adds a label to an existing resource?
 
@@ -548,7 +548,7 @@ D) kubectl set label pod nginx app=web
 ---
 
 ### Question 24
-[MEDIUM-HARD]
+[HARD]
 
 What is the result of the selector `-l 'env in (prod, staging)'`?
 
@@ -619,7 +619,7 @@ D) There is no difference
 ---
 
 ### Question 27
-[MEDIUM-HARD]
+[HARD]
 
 What is the maximum size limit for annotation values?
 
@@ -690,7 +690,7 @@ D) Threads
 ---
 
 ### Question 30
-[MEDIUM-HARD]
+[HARD]
 
 What happens when a container tries to use more CPU than its limit?
 
@@ -713,7 +713,7 @@ D) The container steals CPU from other pods
 ---
 
 ### Question 31
-[MEDIUM-HARD]
+[HARD]
 
 What is the purpose of ResourceQuota?
 
@@ -736,7 +736,7 @@ D) To monitor resource usage
 ---
 
 ### Question 32
-[MEDIUM-HARD]
+[HARD]
 
 Which QoS class pods are evicted first during node memory pressure?
 
@@ -807,7 +807,7 @@ D) There is no difference
 ---
 
 ### Question 35
-[MEDIUM-HARD]
+[HARD]
 
 What is a ServiceAccount used for?
 
@@ -901,7 +901,7 @@ D) A compressed ClusterRole for efficiency
 ## Node Management
 
 ### Question 39
-[MEDIUM-HARD]
+[HARD]
 
 What is the difference between `kubectl cordon` and `kubectl drain`?
 
@@ -947,7 +947,7 @@ D) To track node health metrics
 ---
 
 ### Question 41
-[MEDIUM-HARD]
+[HARD]
 
 How do you add a taint to a node?
 
@@ -970,7 +970,7 @@ D) kubectl set taint node worker1 key=value
 ---
 
 ### Question 42
-[MEDIUM-HARD]
+[HARD]
 
 What is the purpose of the node condition taint `node.kubernetes.io/not-ready`?
 
@@ -995,7 +995,7 @@ D) To mark nodes reserved for system pods
 ## etcd Administration
 
 ### Question 43
-[MEDIUM]
+[HARD]
 
 What type of data store is etcd?
 
@@ -1112,7 +1112,7 @@ D) etcd last
 ---
 
 ### Question 48
-[MEDIUM-HARD]
+[HARD]
 
 What tool is commonly used to upgrade kubeadm-based clusters?
 
@@ -1135,7 +1135,7 @@ D) cluster-upgrade
 ---
 
 ### Question 49
-[MEDIUM-HARD]
+[HARD]
 
 During a cluster upgrade, what happens to running pods?
 
@@ -1158,7 +1158,7 @@ D) They are deleted and recreated
 ---
 
 ### Question 50
-[MEDIUM-HARD]
+[HARD]
 
 What command shows the upgrade plan in a kubeadm cluster?
 
@@ -1206,7 +1206,7 @@ D) experimental, standard, deprecated
 ---
 
 ### Question 52
-[MEDIUM-HARD]
+[HARD]
 
 Which API group contains Deployments?
 
@@ -1229,7 +1229,7 @@ D) workloads
 ---
 
 ### Question 53
-[MEDIUM-HARD]
+[HARD]
 
 How do you list all API versions available in a cluster?
 
