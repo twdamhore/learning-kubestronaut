@@ -8,8 +8,6 @@
 
 ## Pods
 
-## Pods
-
 ### Question 1
 [MEDIUM]
 
@@ -2201,7 +2199,7 @@ D) To track resource utilization
 
 **Answer:** B
 
-**Explanation:** ResourceQuota limits total resource consumption in a namespace—like total CPU, memory, number of Pods, Services, etc. When a quota is set, resource requests become mandatory for Pods, and requests exceeding available quota are rejected.
+**Explanation:** ResourceQuota limits total resource consumption in a namespace—like total CPU, memory, number of Pods, Services, etc. If the quota includes CPU/memory requests or limits, Pods must specify those fields; otherwise only the counted resources are enforced. Requests exceeding available quota are rejected.
 
 **Source:** [Resource Quotas | Kubernetes](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
 
@@ -2239,7 +2237,7 @@ What annotation is often used to describe a resource's purpose?
 
 A) `description`
 B) `kubernetes.io/description`
-C) `meta.helm.sh/description` or custom annotations
+C) There is no standard; teams use custom annotations (e.g., `description`)
 D) Annotations shouldn't be used for descriptions
 
 <details>
@@ -2247,7 +2245,7 @@ D) Annotations shouldn't be used for descriptions
 
 **Answer:** C
 
-**Explanation:** There's no standard description annotation. Tools like Helm use their own (e.g., `meta.helm.sh/release-name`). Teams often use custom annotations like `description` or `app.kubernetes.io/description` for human-readable descriptions.
+**Explanation:** There's no standard description annotation. Teams often use custom annotations like `description` for human-readable metadata.
 
 **Source:** [Annotations | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
 
@@ -2323,4 +2321,3 @@ D) Both A and B
 </details>
 
 ---
-
