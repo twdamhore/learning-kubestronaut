@@ -1476,7 +1476,7 @@ D) A security feature for endpoints
 
 **Answer:** B
 
-**Explanation:** EndpointSlices are a more scalable way to track network endpoints. Unlike Endpoints (single object per Service), EndpointSlices split endpoints across multiple smaller objects. This improves performance for Services with many Pods (>100) by reducing etcd and network overhead.
+**Explanation:** EndpointSlices are a more scalable way to track network endpoints. Unlike Endpoints (single object per Service), EndpointSlices split endpoints across multiple smaller objects. This improves performance for Services with many endpoints by reducing etcd and network overhead.
 
 **Source:** [EndpointSlices | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/)
 
@@ -1522,7 +1522,7 @@ D) Traffic stays within the same zone
 
 **Answer:** B
 
-**Explanation:** `internalTrafficPolicy: Local` (introduced in v1.21) makes internal traffic (from within the cluster) route only to Pods on the same node as the client. This can reduce latency and cross-node traffic. If no local Pods exist, the request fails.
+**Explanation:** `internalTrafficPolicy: Local` makes internal traffic (from within the cluster) route only to Pods on the same node as the client. This can reduce latency and cross-node traffic. If no local Pods exist, the request fails.
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -1568,7 +1568,7 @@ D) Both A and B
 
 **Answer:** D
 
-**Explanation:** Topology-aware routing (topology hints) enables Services to prefer endpoints in the same zone as the client. This reduces cross-zone traffic and latency. Enable with annotation `service.kubernetes.io/topology-mode: auto` or through EndpointSlice hints.
+**Explanation:** Topology-aware routing (topology hints) enables Services to prefer endpoints in the same zone as the client. This reduces cross-zone traffic and latency.
 
 **Source:** [Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/)
 
