@@ -2245,7 +2245,7 @@ D) Annotations shouldn't be used for descriptions
 
 **Answer:** C
 
-**Explanation:** There's no standard description annotation. Teams often use custom annotations like `description` for human-readable metadata. Note: `app.kubernetes.io/description` is a recommended *label* in the Kubernetes app labels convention, not a built-in annotation.
+**Explanation:** There's no standard description annotation. Teams often use custom annotations like `description` for human-readable metadata.
 
 **Source:** [Annotations | Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
 
