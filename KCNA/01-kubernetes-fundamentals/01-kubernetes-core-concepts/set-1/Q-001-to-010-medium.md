@@ -11,21 +11,21 @@
 ### Question 1
 [MEDIUM]
 
-What is the smallest deployable unit in Kubernetes?
+A developer needs to run two tightly coupled containers that must share the same network interface and storage volumes. What Kubernetes construct should they use?
 
-A) Container
-B) Pod
-C) Node
-D) Deployment
+A) Deploy each container as a separate Deployment
+B) Place both containers in the same Pod
+C) Use a Service to link two Pods together
+D) Create a ReplicaSet with two container images
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** A Pod is the smallest deployable unit in Kubernetes. A Pod represents a single instance of a running process and can contain one or more containers that share the same network namespace and storage volumes. While containers run inside Pods, Kubernetes schedules and manages workloads at the Pod level, not the container level.
+**Explanation:** A Pod is the smallest deployable unit in Kubernetes and can contain multiple containers that share the same network namespace (localhost) and storage volumes. This sidecar pattern is the standard approach for tightly coupled containers that need to communicate over localhost or share files. Separate Deployments or Pods would give each container its own network namespace, preventing localhost communication.
 
-**Source:** https://kubernetes.io/docs/concepts/workloads/pods/
+**Source:** https://kubernetes.io/docs/concepts/workloads/pods/#how-pods-manage-multiple-containers
 
 </details>
 
@@ -34,21 +34,21 @@ D) Deployment
 ### Question 2
 [MEDIUM]
 
-Which control plane component serves as the front-end for the Kubernetes API?
+An operator notices that after restarting the kube-apiserver, the cluster state (Pods, Services, ConfigMaps) is fully preserved. Which component is responsible for persisting this state?
 
-A) etcd
-B) kube-scheduler
-C) kube-apiserver
-D) kube-controller-manager
+A) kube-controller-manager
+B) kubelet
+C) etcd
+D) kube-scheduler
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** C
 
-**Explanation:** The kube-apiserver is the front-end for the Kubernetes control plane. It exposes the Kubernetes API and is the central management entity that receives all REST requests for modifications to Pods, Services, ReplicaSets, and other resources. All communication between components goes through the API server.
+**Explanation:** etcd is a consistent, highly-available key-value store that serves as the single source of truth for all cluster data. Every object created through the API server — Pods, Services, ConfigMaps, Secrets, and more — is persisted in etcd. The kube-apiserver is stateless and reads from etcd on startup, which is why the cluster state survives an API server restart. The other components react to state; they do not store it.
 
-**Source:** https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver
+**Source:** https://kubernetes.io/docs/concepts/overview/components/#etcd
 
 </details>
 
@@ -57,19 +57,19 @@ D) kube-controller-manager
 ### Question 3
 [MEDIUM]
 
-What is the purpose of a Kubernetes Namespace?
+A team is running multiple projects in a single Kubernetes cluster and needs to prevent resource name collisions between projects while applying per-project resource quotas. Which Kubernetes feature best addresses both requirements?
 
-A) To provide persistent storage for Pods
-B) To divide cluster resources between multiple users or teams
-C) To define network routing rules between Pods
-D) To schedule Pods on specific nodes
+A) Labels and selectors
+B) Namespaces
+C) Annotations
+D) Node affinity rules
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** Namespaces provide a mechanism for isolating groups of resources within a single cluster. They are intended for use in environments with many users spread across multiple teams or projects. Namespaces provide a scope for names, and resource quotas can be applied per namespace to divide cluster resources.
+**Explanation:** Namespaces provide both a scope for names (preventing collisions — two Pods named "web" can exist in different Namespaces) and a boundary for applying ResourceQuotas and LimitRanges. Labels can organize objects but do not provide name scoping or quota boundaries. Annotations store metadata but have no impact on resource isolation.
 
 **Source:** https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
 
@@ -80,19 +80,19 @@ D) To schedule Pods on specific nodes
 ### Question 4
 [MEDIUM]
 
-Which component runs on every worker node and ensures that containers are running in a Pod?
+A Pod is scheduled to a worker node but its containers fail to start. Which component on the worker node is directly responsible for pulling the container image and starting the containers?
 
 A) kube-proxy
-B) kube-scheduler
+B) kube-controller-manager
 C) kubelet
-D) kube-controller-manager
+D) CoreDNS
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** C
 
-**Explanation:** The kubelet is an agent that runs on each worker node in the cluster. It watches for PodSpecs assigned to its node and ensures the containers described in those PodSpecs are running and healthy. The kubelet communicates with the API server and manages the lifecycle of containers on its node.
+**Explanation:** The kubelet is the primary node agent that runs on every worker node. After the kube-scheduler assigns a Pod to a node, the kubelet on that node receives the PodSpec via the API server and instructs the container runtime (e.g., containerd) to pull the image and start the containers. kube-proxy handles network rules, not container lifecycle. kube-controller-manager runs on the control plane, not the worker node.
 
 **Source:** https://kubernetes.io/docs/concepts/overview/components/#kubelet
 
@@ -103,21 +103,21 @@ D) kube-controller-manager
 ### Question 5
 [MEDIUM]
 
-What does etcd store in a Kubernetes cluster?
+In a Kubernetes cluster, all components (kubelet, kube-scheduler, kube-controller-manager) communicate with one central component to read and write cluster state. Which component is this?
 
-A) Container images
-B) Pod logs
-C) All cluster data and state
-D) Node metrics
+A) etcd
+B) kube-apiserver
+C) kube-proxy
+D) cloud-controller-manager
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
 
-**Explanation:** etcd is a consistent and highly-available key-value store used as Kubernetes' backing store for all cluster data. It stores the entire state of the cluster including configuration data, the state of each node and Pod, Secrets, ConfigMaps, and all other API objects. It is the single source of truth for the cluster.
+**Explanation:** The kube-apiserver is the only component that communicates directly with etcd. All other components — kubelet, kube-scheduler, kube-controller-manager — interact with the cluster state exclusively through the API server's RESTful interface. This design centralizes authentication, authorization, and admission control in one place. Components never read from or write to etcd directly.
 
-**Source:** https://kubernetes.io/docs/concepts/overview/components/#etcd
+**Source:** https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver
 
 </details>
 
@@ -126,19 +126,19 @@ D) Node metrics
 ### Question 6
 [MEDIUM]
 
-What is the role of a Kubernetes Service?
+A team deploys a backend application as multiple Pod replicas. They need a stable DNS name and IP address that load-balances traffic across all healthy replicas, even as Pods are replaced. What Kubernetes object provides this?
 
-A) To build container images
-B) To expose an application running on a set of Pods as a network service
-C) To schedule Pods across nodes
-D) To store configuration data
+A) Ingress
+B) Endpoint
+C) Service
+D) ConfigMap
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** A Kubernetes Service is an abstraction that defines a logical set of Pods and a policy by which to access them. Services enable loose coupling between dependent Pods. Since Pods are ephemeral and can be replaced at any time, a Service provides a stable endpoint (IP address and DNS name) to reach the Pods that match its selector.
+**Explanation:** A Service provides a stable virtual IP (ClusterIP) and DNS name that persists regardless of Pod lifecycle. It uses label selectors to discover backend Pods and distributes traffic across them. When Pods are replaced, the Service automatically updates its Endpoints to reflect the current healthy set. An Ingress operates at L7 and routes external HTTP traffic to Services, but does not itself provide the internal stable endpoint.
 
 **Source:** https://kubernetes.io/docs/concepts/services-networking/service/
 
@@ -149,19 +149,19 @@ D) To store configuration data
 ### Question 7
 [MEDIUM]
 
-Which of the following is a default Namespace in a new Kubernetes cluster?
+A new Kubernetes cluster has just been bootstrapped. An administrator runs `kubectl get pods -n kube-system` and sees CoreDNS and kube-proxy running. What does this tell you about the `kube-system` Namespace?
 
-A) kube-admin
-B) kube-system
-C) kube-core
-D) kube-master
+A) It was manually created by the administrator during setup
+B) It is an initial Namespace automatically created by Kubernetes for system components
+C) It is an alias for the default Namespace
+D) It only exists when CoreDNS is installed separately
 
 <details>
 <summary>Show Answer</summary>
 
 **Answer:** B
 
-**Explanation:** A new Kubernetes cluster comes with four initial Namespaces: `default` (for objects with no other namespace), `kube-system` (for objects created by the Kubernetes system), `kube-public` (readable by all users, reserved for cluster usage), and `kube-node-lease` (for node heartbeat data). `kube-system` contains core components like CoreDNS and the kube-proxy DaemonSet.
+**Explanation:** `kube-system` is one of four initial Namespaces created automatically in every Kubernetes cluster (along with `default`, `kube-public`, and `kube-node-lease`). It hosts objects created by the Kubernetes system itself, such as CoreDNS, kube-proxy, and other cluster add-ons. It is not an alias for `default` — they are separate Namespaces with distinct scopes.
 
 **Source:** https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/#initial-namespaces
 
@@ -172,21 +172,21 @@ D) kube-master
 ### Question 8
 [MEDIUM]
 
-What is the primary function of a Deployment in Kubernetes?
+A developer wants to update their application from v1 to v2 with zero downtime, and needs the ability to roll back if v2 has issues. Which Kubernetes object provides both rolling updates and rollback capabilities out of the box?
 
-A) To manage storage volumes
-B) To provide declarative updates for Pods and ReplicaSets
-C) To configure network policies
-D) To manage cluster-level permissions
+A) ReplicaSet
+B) Pod
+C) Deployment
+D) DaemonSet
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** A Deployment provides declarative updates for Pods and ReplicaSets. You describe a desired state in a Deployment, and the Deployment controller changes the actual state to the desired state at a controlled rate. Deployments manage the creation, scaling, and updating of ReplicaSets and the Pods they own, enabling features like rolling updates and rollbacks.
+**Explanation:** A Deployment manages ReplicaSets and provides declarative rolling update and rollback capabilities. When you update a Deployment's Pod template, it creates a new ReplicaSet and gradually scales it up while scaling down the old one (rolling update). If something goes wrong, `kubectl rollout undo` reverts to the previous ReplicaSet. A bare ReplicaSet does not provide update strategy or rollback history on its own.
 
-**Source:** https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+**Source:** https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment
 
 </details>
 
@@ -195,21 +195,21 @@ D) To manage cluster-level permissions
 ### Question 9
 [MEDIUM]
 
-Which component is responsible for assigning newly created Pods to nodes?
+A cluster has three worker nodes with varying CPU and memory capacities. When a new Pod with specific resource requests is created, which control plane component evaluates node capacity and constraints to decide where the Pod should run?
 
-A) kubelet
-B) kube-proxy
-C) kube-scheduler
+A) kube-controller-manager
+B) kube-scheduler
+C) kubelet
 D) etcd
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** C
+**Answer:** B
 
-**Explanation:** The kube-scheduler watches for newly created Pods that have no node assigned and selects a node for them to run on. Scheduling decisions take into account resource requirements, hardware/software constraints, affinity and anti-affinity specifications, data locality, and other factors. Once a decision is made, the scheduler updates the Pod's spec with the node assignment via the API server.
+**Explanation:** The kube-scheduler is responsible for watching for newly created Pods with no assigned node and selecting the best node based on resource availability, constraints (taints, tolerations, affinity rules), and scoring criteria. The kube-controller-manager manages controllers like ReplicaSet and Deployment controllers but does not make scheduling decisions. The kubelet executes the scheduling decision on the assigned node.
 
-**Source:** https://kubernetes.io/docs/concepts/overview/components/#kube-scheduler
+**Source:** https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/
 
 </details>
 
@@ -218,20 +218,20 @@ D) etcd
 ### Question 10
 [MEDIUM]
 
-What are Labels in Kubernetes primarily used for?
+A team uses `app: frontend` and `env: production` Labels on their Pods. A Service is configured with the selector `app: frontend, env: production`. A new Pod is created with only the label `app: frontend`. Will the Service route traffic to this new Pod?
 
-A) To store sensitive configuration data
-B) To organize and select subsets of objects
-C) To define resource limits for containers
-D) To specify container image versions
+A) Yes, because it matches at least one label in the selector
+B) Yes, because label selectors use OR logic by default
+C) No, because the selector requires all specified labels to match
+D) No, because Services can only match a single label
 
 <details>
 <summary>Show Answer</summary>
 
-**Answer:** B
+**Answer:** C
 
-**Explanation:** Labels are key/value pairs attached to Kubernetes objects such as Pods. They are used to organize and select subsets of objects. Labels allow efficient queries and watches and are used by Services, Deployments, and other controllers to identify and group the Pods they manage. Unlike annotations, labels are intended to be used with selectors to identify meaningful groupings.
+**Explanation:** Label selectors in Kubernetes use AND logic — all key-value pairs in the selector must match for a resource to be selected. Since the new Pod only has `app: frontend` but lacks `env: production`, it does not satisfy the full selector and the Service will not route traffic to it. This AND behavior applies to equality-based selectors across Services, Deployments, ReplicaSets, and other controllers.
 
-**Source:** https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+**Source:** https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
 
 </details>
